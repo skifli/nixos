@@ -1,11 +1,12 @@
 {
   pkgs,
+  pkgsUnstable,
   userVars,
   ...
 }:
 let
   advanced-review-bottom-bar = (
-    pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
+    pkgsUnstable.anki-utils.buildAnkiAddon (finalAttrs: {
       pname = "advanced-review-bottom-bar";
       version = "v3.6.1";
       src = pkgs.fetchFromGitHub {
@@ -31,7 +32,7 @@ in
 
     programs.anki = {
       enable = true;
-      addons = with pkgs; [
+      addons = with pkgsUnstable; [
         ankiAddons.review-heatmap
         (advanced-review-bottom-bar.withConfig {
           config = {
