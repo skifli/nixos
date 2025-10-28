@@ -22,6 +22,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     betterfox = {
       url = "github:yokoffing/Betterfox";
@@ -51,6 +52,7 @@
     {
       self,
       nixpkgs,
+      nixpkgs-unstable,
       ...
     }@inputs: # Captures all inputs into a variable
     let
@@ -65,6 +67,9 @@
           ];
           # Attribute set of extra arguments passed to Nix module functions
           specialArgs = {
+            pkgsUnstable = import nixpkgs-unstable {
+              inherit system;
+            };
             inherit
               self
               inputs
