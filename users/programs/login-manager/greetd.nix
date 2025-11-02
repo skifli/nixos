@@ -9,7 +9,7 @@
   services.greetd =
     let
       session = {
-        command = lib.mkIf (userVars.programs.compositor == "niri") "${pkgs.niri}/bin/niri-session";
+        command = lib.mkIf (userVars.programs.compositor == "niri") "${pkgs.uwsm}/bin/uwsm start ${pkgs.niri}/bin/niri-session";
         user = userVars.username;
       };
     in

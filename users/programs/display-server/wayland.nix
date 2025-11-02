@@ -1,6 +1,7 @@
 {
   hostVars,
   pkgs,
+  pkgsUnstable,
   userVars,
   ...
 }:
@@ -8,15 +9,9 @@
 {
   home-manager.users.${userVars.username} = {
     home = {
-      # Enable fundamental Wayland utilities and portals
-      packages = with pkgs; [
-        # Core wayland utils
-        wl-clipboard # CLI utilities for interacting with the Wayland clipboard
-        wlogout # Customisable GUI logout menu
-      ];
-
       # Set Wayland-friendly environment variables
       sessionVariables = {
+        APP2UNIT_SLICES = "a=app-graphical.slice b=background-graphical.slice s=session-graphical.slice"; # https://github.com/Vladimir-csp/app2unit?tab=readme-ov-file#uwsm-integration
         CLUTTER_BACKEND = "wayland";
         EGL_PLATFORM = "wayland";
         ELECTRON_OZONE_PLATFORM_HINT = "auto";
@@ -33,6 +28,18 @@
     };
   };
 
+  # Enable fundamental Wayland utilities and portals
+  environment.systemPackages = with pkgs; [
+    # Core wayland utils
+    wl-clipboard # CLI utilities for interacting with the Wayland clipboard
+
+    # X11 compatability for Wayland
+    xwayland-satellite
+
+    # Misc
+    pkgsUnstable.app2unit
+  ];
+
   # Enable XWayland support system-wide
   programs.xwayland.enable = true;
 
@@ -43,26 +50,11 @@
   services.gnome.gnome-keyring.enable = true;
 
   services.xserver = {
-    enable = true;
+    enable = false;
     exportConfiguration = false; # Would make /etc/X11/xkb populated so tools like localectl work
     xkb = {
       layout = "${hostVars.keyboardLayout}";
       variant = "${hostVars.kbdVariant}";
-    };
-  };
-
-  # Set up XDG environment and portal services for Wayland apps
-  xdg.portal = {
-    enable = true;
-    wlr.enable = true; # Automatically adds xdg-desktop-portal-wlr into extraPortals
-    extraPortals = with pkgs; [
-      xdg-desktop-portal-gtk
-    ];
-    config = {
-      common.default = [
-        "wlr"
-        "gtk"
-      ]; # Define portal priority
     };
   };
 }

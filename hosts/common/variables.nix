@@ -3,7 +3,7 @@
 {
   cursor = {
     package = pkgs.bibata-cursors;
-    size = 24;
+    size = 12;
     day.name = "Bibata-Modern-Ice";
     night.name = "Bibata-Modern-Classic";
   };
@@ -25,11 +25,18 @@
       name = "Noto Color Emoji";
       package = pkgs.noto-fonts-color-emoji;
     };
+
+    sizes = {
+      applications = 10;
+      desktop = 9;
+      popups = 9;
+      terminal = 9;
+    };
   };
   icons = {
     package = pkgs.papirus-icon-theme;
-    dark = "Papirus Dark";
-    light = "Papirus Light";
+    dark = "Papirus-Dark";
+    light = "Papirus-Light";
   };
   theme = {
     day = "terracotta";

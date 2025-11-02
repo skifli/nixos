@@ -86,13 +86,26 @@
     };
     "authenticator@mymindstorm" = {
       private_browsing = true;
+      default_area = "navbar";
       installation_mode = "force_installed";
-      install_url = "https://addons.mozilla.org/firefox/downloads/latest/authenticator/latest.xpi";
+      install_url = "https://addons.mozilla.org/firefox/downloads/latest/auth-helper/latest.xpi";
     };
     "78272b6fa58f4a1abaac99321d503a20@proton.me" = {
       private_browsing = true;
+      default_area = "navbar";
       installation_mode = "force_installed";
       install_url = "https://addons.mozilla.org/firefox/downloads/latest/proton-pass/latest.xpi";
+    };
+    "{d7742d87-e61d-4b78-b8a1-b469842139fa}" = {
+      private_browsing = true;
+      installation_mode = "force_installed";
+      install_url = "https://addons.mozilla.org/firefox/downloads/latest/vimium-ff/latest.xpi";
+    };
+    "addon@darkreader.org" = {
+      private_browsing = true;
+      default_area = "navbar";
+      installation_mode = "force_installed";
+      install_url = "https://addons.mozilla.org/firefox/downloads/latest/darkreader/latest.xpi";
     };
     # View Xpi Id's in Firefox Extension Store
     "queryamoid@kaply.com" = {
@@ -102,6 +115,26 @@
     };
   };
   "3rdparty".Extensions = {
+    "addon@darkreader.org" = {
+      enabled = true;
+      automation = {
+        enabled = true;
+        behavior = "OnOff";
+        mode = "system";
+      };
+
+      detectDarkTheme = true;
+      enabledByDefault = true;
+      changeBrowserTheme = true;
+      enableForProtectedPages = true;
+      fetchNews = true;
+      syncSitesFixes = true;
+      previewNewDesign = true;
+      # previewNewestDesign = true; # TODO: Mayhaps test
+
+      # enabledFor = [];
+      # disabledFor = [];
+    };
     "adnauseam@rednoise.org" = {
       enabled = true;
       firstInstall = false;
