@@ -26,17 +26,19 @@
     # Enable flakes + nix-command
     settings = {
       auto-optimise-store = false; # May make rebuilds longer but a smaller size if enabled, instead we have optimise.automatic enabled
+      download-buffer-size = 1048576000; # 1GB
       # Add flake support
       experimental-features = [
         "nix-command"
         "flakes"
       ];
       extra-platforms = [ "aarch64-linux" ]; # Allow cross-compilation
+      use-xdg-base-directories = true;
     };
   };
 
   nixpkgs.config.allowUnfree = true;
 
   programs.nix-ld.enable = true; # Run unpatched dynamic binaries on NixOS.
-  system.stateVersion = "23.11"; # Do not change!
+  system.stateVersion = "25.05"; # Do not change!
 }

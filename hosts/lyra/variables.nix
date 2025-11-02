@@ -15,6 +15,7 @@
     ../../modules/core/services.nix
     ../../modules/core/system.nix
     ../../modules/core/users.nix
+    ../../modules/core/zram.nix
 
     ../../modules/hardware/graphics.nix
 
@@ -27,27 +28,25 @@
   # Hardware configuration
   videoDriver = "intel"; # Empty to import none.
   outputs = {
-    "ROW-AAA" = {
-      name = "desc:ROW AAA";
+    "DP-1" = {
       mode = {
         width = 1440;
         height = 900;
         refresh = 59.89;
       };
       position = {
-        x = 0;
+        x = -1440;
         y = 0;
       };
     };
-    "Acer-KG241Q" = {
-      name = "desc:Acer Technologies Acer KG241Q 0x92918EF5";
+    "HDMI-A-2" = {
       mode = {
         width = 1920;
         height = 1080;
         refresh = 74.99;
       };
       position = {
-        x = 1440; # Right of the first monitor
+        x = 0; # Right of the first monitor
         y = 0;
       };
       focus-at-startup = true;
@@ -55,35 +54,29 @@
   };
   workspaces = {
     "1" = {
-      open-on-output = "Acer-KG241Q";
+      open-on-output = "HDMI-A-2";
     };
     "3" = {
-      open-on-output = "Acer-KG241Q";
+      open-on-output = "HDMI-A-2";
     };
     "5" = {
-      open-on-output = "Acer-KG241Q";
+      open-on-output = "HDMI-A-2";
     };
     "7" = {
-      open-on-output = "Acer-KG241Q";
-    };
-    "9" = {
-      open-on-output = "Acer-KG241Q";
+      open-on-output = "HDMI-A-2";
     };
 
     "2" = {
-      open-on-output = "ROW-AAA";
+      open-on-output = "DP-1";
     };
     "4" = {
-      open-on-output = "ROW-AAA";
+      open-on-output = "DP-1";
     };
     "6" = {
-      open-on-output = "ROW-AAA";
+      open-on-output = "DP-1";
     };
     "8" = {
-      open-on-output = "ROW-AAA";
-    };
-    "10" = {
-      open-on-output = "ROW-AAA";
+      open-on-output = "DP-1";
     };
   };
 

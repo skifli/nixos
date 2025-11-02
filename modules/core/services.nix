@@ -3,11 +3,12 @@
 {
   # Services to start
   services = {
-    # fstrim.enable = true; # Auto SSD trimming of no longer used blocks
+    fstrim.enable = true; # Auto SSD trimming of no longer used blocks
     devmon.enable = true; # For auto mounting USB & more (convenience)
     gvfs.enable = true; # Mounting MTP (Android phones), so in general extending devmon
     libinput.enable = true; # Essential standard input driver
     udisks2.enable = true; # Low-level system daemon that manages disks / storage devices
+    upower.enable = true;
 
     # Userspace CPU Scheduler for Improved Latency for Gaming (Hardware Specific)
     scx = {

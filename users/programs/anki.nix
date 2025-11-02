@@ -19,8 +19,15 @@ let
       sourceRoot = "${finalAttrs.src.name}";
     })
   );
+
+  add-unstable-anki = final: _prev: {
+    anki-utils = pkgsUnstable.anki-utils;
+  };
 in
 {
+  # HM tries to use add-anki-utils from (stable) pkgs which is only present in unstable pkgs
+  nixpkgs.overlays = [ add-unstable-anki ];
+
   home-manager.users.${userVars.username} = {
     home.file.".config/anki-keyFile" = {
       source = ../${userVars.username}/secrets/anki-keyFile;
@@ -32,6 +39,7 @@ in
 
     programs.anki = {
       enable = true;
+      package = pkgsUnstable.anki;
       addons = with pkgsUnstable; [
         ankiAddons.review-heatmap
         (advanced-review-bottom-bar.withConfig {

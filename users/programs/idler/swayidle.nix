@@ -9,23 +9,16 @@ let
   screen-lock-timeout = hostVars.screen-lock-timeout * minutes;
   screen-blank-timeout = hostVars.screen-blank-timeout * minutes;
 
-  loginctl = "${pkgs.systemd}/bin/loginctl";
+  loginctl = "${pkgs.systemd}/bin/loginctl lock-session";
   niri-bin = "${pkgs.niri}/bin/niri"; # IPC stuff so fine
-  swaylock = "${pkgs.swaylock}/bin/swaylock";
+  swaylock = "${pkgs.swaylock-effects}/bin/swaylock -f -i /home/${userVars.username}/.local/share/wallpaper.jpg --effect-blur 7x5 --fade-in 0.2";
 
-  lock-session = pkgs.writeShellScript "lock-session" ''
-    ${swaylock} -f
-    ${niri-bin} msg action power-off-monitors
-  '';
-
-  before-sleep = pkgs.writeShellScript "before-sleep" ''
-    ${loginctl} lock-session
-  '';
+  display = status: "${niri-bin} msg action power-${status}-monitors";
 in
 {
   home-manager.users.${userVars.username} = {
-    programs.swaylock = {
-      enable = true;
+    home.shellAliases = {
+      swaylock = swaylock; # Fancy by default!
     };
 
     services.swayidle = {
@@ -34,21 +27,31 @@ in
       timeouts = [
         {
           timeout = screen-blank-timeout;
-          command = "${niri-bin} msg action power-off-monitors";
+          command = display "off";
         }
         {
           timeout = screen-blank-timeout + screen-lock-timeout;
-          command = "${loginctl} lock-session";
+          command = loginctl;
         }
       ];
       events = [
         {
           event = "lock";
-          command = lock-session.outPath;
+          command = swaylock;
         }
+        /*
+          {
+            event = "unlock";
+            command = null;
+            }
+        */
         {
           event = "before-sleep";
-          command = before-sleep.outPath;
+          command = (display "off") + ";" + swaylock;
+        }
+        {
+          event = "after-resume";
+          command = display "on";
         }
       ];
 

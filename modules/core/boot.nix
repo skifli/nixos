@@ -15,10 +15,21 @@
     ];
 
     loader = {
-      efi.canTouchEfiVariables = true; # E.g., can set as default boot entry
-      grub.enable = false; # In favour of below
-      systemd-boot.enable = true; # Simpler, UEFI boot centric
+      efi = {
+        canTouchEfiVariables = true; # E.g., can set as default boot entry
+        efiSysMountPoint = "/boot";
+      };
       timeout = 5; # How long to wait on initial boot choices before proceeding into default sys
+
+      systemd-boot.enable = false; # In favour of below
+      grub = {
+        enable = true; # Tried systemd-boot, much more involved so grub it is
+
+        configurationLimit = 50;
+        device = "nodev";
+        efiSupport = true;
+        useOSProber = true;
+      };
     };
 
     # Filesystems support

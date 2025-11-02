@@ -177,12 +177,15 @@ in
   "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons" = false;
   "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features" = false;
   "browser.newtabpage.activity-stream.feeds.snippets" = false;
+  "browser.newtabpage.activity-stream.feeds.system.topsites" = true;
+  "browser.newtabpage.activity-stream.feeds.system.topstories" = false;
   "browser.newtabpage.activity-stream.improvesearch.topSiteSearchShortcuts.havePinned" = "";
   "browser.newtabpage.activity-stream.improvesearch.topSiteSearchShortcuts.searchEngines" = "";
   "browser.protections_panel.infoMessage.seen" = lock-true;
   "browser.ssb.enabled" = true;
   "browser.toolbars.bookmarks.visibility" = "never"; # always, never, newtab
   # "browser.urlbar.placeholderName" = "Google";
+  "browser.urlbar.suggest.history" = false;
   "browser.urlbar.suggest.topsites" = lock-false;
   "browser.urlbar.suggest.openpage" = lock-false;
   "browser.urlbar.suggest.recentsearches" = lock-false;
@@ -209,7 +212,7 @@ in
   # "zen.theme.accent-color" = "#ffb787";
   "zen.theme.acrylic-elements" = false;
   "zen.theme.border-radius" = 8;
-  "zen.theme.content-element-separation" = 8;
+  "zen.theme.content-element-separation" = 0;
   "zen.theme.dark-mode-bias" = 0.3;
   "zen.theme.disable-lightweight" = true;
   "zen.theme.essentials-favicon-bg" = true;
@@ -218,9 +221,11 @@ in
   "zen.theme.hide-tab-throbber" = true;
   "zen.theme.styled-status-panel" = false;
   "zen.theme.use-sysyem-colors" = false;
+  "zen.theme.use-system-colors" = false;
 
   "zen.urlbar.behavior" = "float";
   "zen.urlbar.replace-newtab" = true;
+  "zen.view.experimental-no-window-controls" = true;
 
   "extensions.autoDisableScopes" = {
     Value = 0;
