@@ -20,12 +20,18 @@ in
 {
   _module.args = { inherit commonHostVars hostVars usersVars; }; # Pass these to future imported modules automagically
 
+  environment.shellAliases = {
+    nup = "sudo nixos-rebuild switch --flake";
+    qnup = "cd /etc/nixos && nup";
+  };
+
   imports = [
     # Host unique files
     ../${hostname}/hardware-configuration.nix
     ../${hostname}/host-packages.nix
 
     # Common stuff
+    ./host-packages.nix
     ../../users/default.nix
   ]
   ++ lib.flatten (

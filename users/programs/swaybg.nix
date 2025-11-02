@@ -14,7 +14,7 @@
       };
       Service = {
         Type = "simple";
-        ExecStart = "${pkgs.swaybg}/bin/swaybg -i /home/${userVars.username}/.local/share/wallpaper.jpg";
+        ExecStart = "${pkgs.swaybg}/bin/swaybg -m fill -i /home/${userVars.username}/.local/share/wallpaper.jpg";
         Restart = "on-failure";
       };
       Install.WantedBy = [ "graphical-session.target" ];

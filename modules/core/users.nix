@@ -21,8 +21,13 @@ in
   };
 
   users = {
-    mutableUsers = false; # Don't allow commands to change user configurations
-    users = builtins.mapAttrs (username: userVars: mkUserConfig username userVars) usersVars;
+    mutableUsers = true; # Allow commands to change user configurations
+    users = (builtins.mapAttrs (username: userVars: mkUserConfig username userVars) usersVars) // {
+      rescue = {
+        isNormalUser = true;
+        password = "rescue";
+      };
+    };
   };
 
   nix.settings.allowed-users = builtins.attrNames usersVars; # Users allowed to connect to the Nix daemon
