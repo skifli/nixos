@@ -22,6 +22,9 @@
       # Niri automagically sets up a lot of needed stuff
       programs.niri = {
         enable = true;
+        package = inputs.niri.packages.x86_64-linux.niri-stable.override {
+          libdisplay-info = pkgs.libdisplay-info_0_2;
+        }; # Fix for https://github.com/sodiboo/niri-flake/issues/1406
         settings = {
           prefer-no-csd = true;
           hotkey-overlay.skip-at-startup = true;
@@ -42,7 +45,8 @@
 
           gestures.hot-corners.enable = false;
 
-          clipboard.disable-primary = false;
+          # https://github.com/YaLTeR/niri/issues/2430
+          clipboard.disable-primary = true;
 
           binds = import ./niri/binds.nix attrs;
           outputs = hostVars.outputs;
@@ -63,6 +67,66 @@
           window-rules = [
             {
               open-maximized = true;
+            }
+            {
+              matches = [ { is-focused = false; } ];
+
+              opacity = 0.90;
+            }
+            {
+              matches = [
+                {
+                  app-id = "(?i)anki";
+                  title = "Anki";
+                } # Doesn't match normal window, just some popups etc
+                {
+                  app-id = "(?i)anki";
+                  title = "^(Checking)(.*)$";
+                } # Syncing screen
+                {
+                  app-id = "(?i)anki";
+                  title = "^(Choose Deck)(.*)$";
+                }
+                {
+                  app-id = "(?i)anki";
+                  title = "^(Export)(.*)$";
+                }
+                {
+                  app-id = "(?i)anki";
+                  title = "^(Import File)(.*)$";
+                }
+                {
+                  app-id = "(?i)anki";
+                  title = "^(Note Type)(.*)$";
+                }
+                {
+                  app-id = "(?i)anki";
+                  title = "^(Preferences)(.*)$";
+                }
+                {
+                  app-id = "(?i)anki";
+                  title = "^(Reset Card)(.*)$";
+                }
+                {
+                  app-id = "(?i)anki";
+                  title = "^(Syncing)(.*)$";
+                }
+                {
+                  title = "^(Unlock Login Keyring)(.*)$";
+                } # GNOME Keyring
+                {
+                  app-id = "(?i)${userVars.programs.browser}";
+                  title = "^(Enter name of file to save to)(.*)$";
+                } # Meant to be Zen save file screen
+                {
+                  app-id = "(?i)${userVars.programs.browser}";
+                  title = "^(Removing Cookies and Site Data)(.*)$";
+                } # Meant to be Zen browser site data screen
+                {
+                  app-id = "(?i)${userVars.programs.browser}";
+                  title = "^(Save)(.*)$";
+                } # Meant to be Zen save screen
+              ];
 
               geometry-corner-radius = rec {
                 bottom-left = 12.0;
@@ -74,9 +138,14 @@
               clip-to-geometry = true;
             }
             {
-              matches = [ { is-focused = false; } ];
+              matches = [
+                {
+                  app-id = "(?i)anki";
+                  title = "^(Current Card (Study))(.*)$";
+                }
+              ];
 
-              opacity = 0.90;
+              open-floating = true;
             }
             {
               matches = [

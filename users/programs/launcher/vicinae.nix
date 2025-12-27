@@ -41,7 +41,9 @@
         };
         Service = {
           Type = "simple";
-          ExecStart = "${inputs.vicinae.packages.${pkgs.system}.default}/bin/vicinae server";
+          ExecStart = "${
+            inputs.vicinae.packages.${pkgs.stdenv.hostPlatform.system}.default
+          }/bin/vicinae server";
           Restart = "always";
           RestartSec = lib.mkDefault "5";
           KillMode = "process";

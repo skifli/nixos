@@ -15,6 +15,11 @@
       { command = [ "anytype" ]; }
       { command = [ "evince" ]; }
       { command = [ "ferdium" ]; }
+      { command = [ "kdeconnect-indicator" ]; }
+      { command = [ "lan-mouse" ]; }
+      { command = [ "remmina" ]; }
+      { command = [ "safeeyes" ]; }
+      { command = [ "weylus" ]; }
       { command = [ "zen" ]; }
     ];
 
@@ -38,6 +43,17 @@
 
         open-on-workspace = "2";
         open-maximized = true;
+      }
+      {
+        matches = [
+          {
+            app-id = "(?i)anki";
+            title = "(?i)Browse";
+          }
+        ];
+
+        open-on-workspace = "2";
+        open-maximized = false;
       }
       {
         matches = [
@@ -69,7 +85,51 @@
         open-on-workspace = "4";
         open-maximized = true;
       }
+      {
+        matches = [
+          {
+            app-id = "(?i)org.remmina.Remmina";
+          }
+        ];
+
+        open-on-workspace = "5";
+        open-maximized = true;
+      }
+      {
+        matches = [
+          {
+            app-id = "(?i)weylus";
+          }
+        ];
+
+        open-on-workspace = "6";
+        open-maximized = true;
+      }
+      {
+        matches = [
+          {
+            title = "(?i)Lan Mouse";
+          }
+        ];
+
+        open-on-workspace = "6";
+        open-maximized = true;
+      }
+      {
+        matches = [
+          {
+            title = "(?i)Safe Eyes";
+          }
+        ];
+
+        open-on-workspace = "6";
+        open-maximized = true;
+      }
     ];
+  };
+
+  waybar = {
+    output = "DP-1";
   };
 
   programs = {
@@ -79,7 +139,6 @@
     display-server = "wayland";
     idler = "swayidle";
     login-manager = "greetd";
-    logout-menu = "wleave";
     notifications = "swaync";
     osd = "swayosd";
 
@@ -87,17 +146,27 @@
     browser = "zen";
     editor = "hx";
     explorer-tui = "yazi";
-    explorer-gui = "nemo";
+    explorer-gui = "dolphin";
     launcher = "vicinae";
+    partition-manager = "kde";
     prompt = "starship";
     shell = "zsh";
+    system-monitor = "missioncenter";
     terminal = "ghostty";
     visual = "zeditor";
 
     other = [
       "anki"
+      "earlyoom"
+      "kde-connect"
+      "lan-mouse"
+      "nix-direnv"
+      "safeeyes"
       "stylix"
       "swaybg"
+      "typst"
+      "weylus"
+      "winapps"
       "wlsunset"
     ];
   };

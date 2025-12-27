@@ -2,7 +2,7 @@
   force = true;
   settings = [
     {
-      name = "Bookmarks Toolbar";
+      name = "Bookmarks";
       toolbar = false;
       bookmarks = [
         /*

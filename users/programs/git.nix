@@ -14,8 +14,8 @@
 
         settings = {
           user = {
-            email = userVars.git.name;
-            name = userVars.git.email;
+            email = userVars.git.email;
+            name = userVars.git.name;
           };
 
           core.editor = userVars.programs.editor;
