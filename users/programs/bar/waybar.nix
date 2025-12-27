@@ -1,18 +1,14 @@
 {
   commonHostVars,
+  hostVars,
   pkgs,
   userVars,
   ...
 }:
-
 {
   home-manager.users.${userVars.username} = {
     home.packages = with pkgs; [
-      # Font Stuff
       font-awesome
-      nerd-fonts.jetbrains-mono
-      nerd-fonts.noto
-      nerd-fonts.symbols-only
     ];
 
     programs.waybar = {
@@ -23,123 +19,91 @@
       };
 
       style = ''
-        /* Base background color */
         @define-color bg_main rgba(25, 25, 25, 0.65);
         @define-color bg_main_tooltip rgba(0, 0, 0, 0.7);
-
-        /* Base background color of selections */
-        @define-color bg_hover rgba(200, 200, 200, 0.3);
-        /* Base background color of active elements */
-        @define-color bg_active rgba(100, 100, 100, 0.5);
-
-        /* Bae border color */
         @define-color border_main rgba(255, 255, 255, 0.2);
-
-        /* Text color for entries, views and content in general */
         @define-color content_main white;
-        /* Text color for entries that are unselected */
-        @define-color content_inactive rgba(255, 255, 255, 0.25);
+        @define-color warning_color #ff6666;
 
         * {
           border: none;
           border-radius: 0;
-          font-family: ${commonHostVars.fonts.monospace.name}, FontAwesome6Free, JetBrainsMono, "NotoSansMono Nerd Font", SymbolsNerdFont; /* font-size: 13px; */
+          font-family: ${commonHostVars.fonts.monospace.name}, FontAwesome;
+          font-size: 13px;
+          min-height: 26px;
         }
 
         window#waybar {
           background: @bg_main;
           border-bottom: 1px solid @border_main;
           color: @content_main;
-          /* font-size: 6px; */
-          /* height: 20px; */
-        }
-
-        window#waybar:hover {
-          /* font-size: 9px; */
-          /* height: 50px; */
         }
 
         tooltip {
           background: @bg_main_tooltip;
           border-radius: 5px;
-          border-width: 1px;
-          border-style: solid;
-          border-color: @border_main;
+          border: 1px solid @border_main;
         }
 
-        tooltip label{
-          color: @content_main;
+        tooltip label { color: @content_main; }
+
+        /* === Module base === */
+        #cpu, #memory, #temperature, #network, #pulseaudio, #clock,
+        #tray, #privacy, #user, #load, #idle_inhibitor,
+        #custom-notification, #systemd-failed-units, #niri-window {
+          padding: 0 6px;
+          transition: background 200ms ease-in-out;
         }
 
-        #cpu, #memory {
-          padding: 3px;
+        /* consistent vertical alignment */
+        #cpu label, #memory label, #temperature label, #network label,
+        #pulseaudio label, #clock label, #tray label, #privacy label,
+        #user label, #load label, #idle_inhibitor label,
+        #custom-notification label, #systemd-failed-units label, #niri-window label {
+          padding-top: 2px;
+          padding-bottom: 2px;
         }
 
-        #temperature {
-          transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+        /* fixed icon width */
+        .icon, .fa, .fas, .far, .fab {
+          min-width: 1.2em;
+          padding-left: 4px;
+          padding-right: 4px;
         }
 
-        #temperature.critical {
-          padding-right: 3px;
-          color: @warning_color;
-          border-bottom: 3px dashed @warning_color;
-          transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+        /* add slight margins between groups */
+        #user, #cpu, #load, #temperature, #memory, #group-tray-expander {
+          margin-right: 2px;
         }
 
-        #window {
-          border-radius: 10px;
-          margin-left: 20px;
-          margin-right: 20px;
+        /* align right-side modules evenly */
+        #privacy, #idle_inhibitor, #network, #pulseaudio, #clock, #custom-notification {
+          padding-left: 6px;
+          padding-right: 6px;
         }
 
-        #tray {
-          margin-left: 5px;
-          margin-right: 5px;
+        /* make notification not hug the screen edge */
+        #custom-notification { margin-right: 6px; }
+
+        #tray { margin: 0 5px; }
+        #tray > .active { border-top: 3px solid white; }
+        #tray > .needs-attention { border-top: 3px solid @warning_color; }
+
+        #temperature.critical, #idle_inhibitor.activated {
+          background-color: @warning_color;
         }
 
-        #tray > .passive {
-          border-top: none;
+        #clock tooltip label { font-family: monospace; }
+
+        /* cpu + load visually grouped */
+        #cpu {
+          margin-right: 0px;
+          padding-right: 0px;
         }
 
-        #tray > .active {
-          border-top: 3px solid white;
-        }
-
-        #tray > .needs-attention {
-          border-top: 3px solid @warning_color;
-        }
-
-        #tray > widget {
-          transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
-        }
-
-        #tray > widget:hover {
-          background: @bg_hover;
-        }
-
-        #pulseaudio {
-          padding-left: 3px;
-          padding-right: 3px;
-          transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
-        }
-
-        #pulseaudio:hover, #network:hover {
-          background: @bg_hover;
-        }
-
-        #network {
-          padding-left: 3px;
-          padding-right: 3px;
-        }
-
-        #clock {
-          padding-right: 5px;
-          padding-left: 5px;
-          transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
-        }
-
-        #clock:hover {
-          background: @bg_hover;
+        #load {
+          margin-left: 0px;
+          padding-left: 0px;
         }
       '';
 
@@ -148,19 +112,25 @@
           reload_style_on_change = true;
           layer = "top";
           position = "top";
+          output = userVars.waybar.output;
           spacing = 0;
-          height = 26;
+
           modules-left = [
-            "custom/power"
+            "user"
             "cpu"
+            "load"
             "temperature"
             "memory"
             "group/tray-expander"
           ];
+
           modules-center = [
+            "systemd-failed-units"
             "niri/window"
           ];
+
           modules-right = [
+            "privacy"
             "idle_inhibitor"
             "network"
             "pulseaudio"
@@ -169,18 +139,14 @@
           ];
 
           # Custom modules
-          "custom/power" = {
-            format = " ❄︎ "; # Gap for spacing
-            tooltip = "Power Menu";
-            on-click = userVars.programs.logout-menu;
-          };
           "custom/expand-icon" = {
-            format = " "; # Gap for spacing
+            format = " "; # 1 trailing space fixes cut-off
             tooltip = false;
           };
+
           "custom/notification" = {
             tooltip = false;
-            format = " {icon} "; # Gaps for spacing
+            format = "{icon}";
             format-icons = {
               notification = "󱅫";
               none = "";
@@ -191,7 +157,6 @@
               dnd-inhibited-notification = "";
               dnd-inhibited-none = "";
             };
-
             return-type = "json";
             exec-if = "which swaync-client";
             exec = "swaync-client -swb";
@@ -200,29 +165,77 @@
             escape = true;
           };
 
+          "custom/weather" = {
+            exec = "/home/${userVars.username}/.local/bin/get_weather.sh ${hostVars.location}";
+            return-type = "json";
+            format = "{}";
+            tooltip = true;
+            interval = 3600;
+          };
+
           # Module groups
           "group/tray-expander" = {
             orientation = "inherit";
-            drawer = {
-              transition-duration = 250;
-            };
+            drawer.transition-duration = 250;
             modules = [
               "custom/expand-icon"
               "tray"
             ];
           };
 
-          # Other module config
+          user = {
+            format = "↑ {work_H}:{work_M}";
+            interval = 60;
+            icon = false;
+          };
+
           cpu = {
             interval = 5;
             format = " {usage}%";
-            on-click = "btop";
+          };
+
+          load = {
+            interval = 5;
+            format = "@{load1}";
           };
 
           memory = {
             interval = 5;
-            format = " {percentage}%";
-            max-length = 10;
+            format = " {percentage}%+{swapPercentage}%";
+          };
+
+          privacy = {
+            icon-spacing = 4;
+            icon-size = 16;
+            transition-duration = 250;
+            modules = [
+              {
+                type = "screenshare";
+                tooltip = true;
+                tooltip-icon-size = 18;
+              }
+              {
+                type = "audio-out";
+                tooltip = true;
+                tooltip-icon-size = 18;
+              }
+              {
+                type = "audio-in";
+                tooltip = true;
+                tooltip-icon-size = 18;
+              }
+            ];
+            ignore-monitor = true;
+            ignore = [
+              {
+                type = "audio-in";
+                name = "cava";
+              }
+              {
+                type = "screenshare";
+                name = "obs";
+              }
+            ];
           };
 
           temperature = {
@@ -230,9 +243,19 @@
             format-critical = " {temperatureC}°C";
             interval = 5;
             critical-threshold = 80;
-            on-click = "btop";
-
             hwmon-path = "/sys/class/hwmon/hwmon1/temp1_input";
+          };
+
+          systemd-failed-units = {
+            hide-on-ok = true;
+            format = "✗ {nr_failed_system}/{nr_failed_user}";
+            format-ok = "✓";
+            system = true;
+            user = true;
+          };
+
+          "niri/window" = {
+            format = "{title:.50}";
           };
 
           idle_inhibitor = {
@@ -241,7 +264,6 @@
               activated = "";
               deactivated = "";
             };
-
             tooltip-format-activated = "Inhibiting idle";
             tooltip-format-deactivated = "Allowing idle";
           };
@@ -253,7 +275,7 @@
             calendar = {
               mode = "year";
               mode-mon-col = 3;
-              weeks-pos = "right";
+              weeks-pos = "left";
               on-scroll = 1;
               on-click-right = "mode";
               format = {
@@ -264,7 +286,6 @@
                 today = "<span color='#ff6699'><b><u>{}</u></b></span>";
               };
             };
-
             actions = {
               on-click-right = "mode";
               on-click-forward = "tz_up";
@@ -275,7 +296,7 @@
           };
 
           tray = {
-            icon-size = 12;
+            icon-size = 16;
             spacing = 4;
           };
 
@@ -295,13 +316,15 @@
             tooltip-format-wifi = "{essid} ({frequency} GHz)\n⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}";
             tooltip-format-ethernet = "⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}";
             tooltip-format-disconnected = "Disconnected";
+            on-click = "nmcli dev wifi";
           };
 
           pulseaudio = {
-            format = "{icon}";
+            format = "{icon}  {volume}%";
             scroll-step = 5;
-            max-volume = 150;
-            on-click = "pavucontrol";
+            max-volume = 200;
+            on-click = "pactl set-sink-mute @DEFAULT_SINK@ toggle";
+            on-click-right = "pavucontrol";
             tooltip-format = "{volume}%";
             format-muted = "󰝟";
             format-icons = [

@@ -1,5 +1,4 @@
 {
-  lib,
   pkgs,
   userVars,
   ...
@@ -9,7 +8,13 @@
   services.greetd =
     let
       session = {
-        command = lib.mkIf (userVars.programs.compositor == "niri") "${pkgs.uwsm}/bin/uwsm start ${pkgs.niri}/bin/niri-session";
+        command =
+          "${pkgs.uwsm}/bin/uwsm start "
+          + (
+              if userVars.programs.compositor == "niri"
+              then "${pkgs.niri}/bin/niri-session"
+              else "${pkgs.${userVars.programs.compositor}}/bin/${userVars.programs.compositor}"
+            );
         user = userVars.username;
       };
     in
@@ -18,7 +23,7 @@
       enable = true;
       settings = {
         default_session = session;
-        initial_session = session;
+        # initial_session = session;
       };
     };
 

@@ -40,12 +40,14 @@ let
           lib.mkMerge [
             {
               lat = hostVars.latitude;
-              long = hostVars.longitude;
+              lng = hostVars.longitude;
               usegeoclue = false;
+
+              dbusserver = true;
+              portal = true;
 
               lightModeScripts."00-switch-hm-specialisation" = switch-hm-specialisation "day";
               darkModeScripts."00-switch-hm-specialisation" = switch-hm-specialisation "night";
-
             }
             (lib.mkIf (userVars.programs.compositor == "niri") {
               lightModeScripts."01-call-screen-transition" = call-screen-transition;
@@ -57,21 +59,22 @@ let
     };
 in
 {
-  imports = [ inputs.stylix.nixosModules.stylix ];
-
-  stylix = {
-    enable = true;
-    base16Scheme = lib.mkDefault "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.day}.yaml";
-    cursor = {
-      package = commonHostVars.cursor.package;
-      size = commonHostVars.cursor.size;
-      name = lib.mkDefault commonHostVars.cursor.day.name;
-    };
-    icons = commonHostVars.icons;
-    fonts = commonHostVars.fonts;
-  };
-
   home-manager.users.${userVars.username} = {
+    stylix = {
+      enable = true;
+      base16Scheme = lib.mkDefault "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.day}.yaml";
+
+      cursor = {
+        package = commonHostVars.cursor.package;
+        size = commonHostVars.cursor.size;
+        name = lib.mkDefault commonHostVars.cursor.day.name;
+      };
+      icons = commonHostVars.icons;
+      fonts = commonHostVars.fonts;
+
+      # targets."${userVars.programs.browser}-browser".enable = false;
+    };
+
     gtk = {
       enable = true;
 
@@ -88,13 +91,13 @@ in
         pkgs,
         ...
       }:
+      let
+        name = "day";
+      in
       {
-        system.nixos.tags = [ "day" ];
-
-        stylix = {
-          base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.day}.yaml";
-          cursor.name = commonHostVars.cursor.day.name;
-        };
+        # xdg.dataFile."home-manager/specialisation".text = name;
+        system.nixos.tags = [ name ];
+        environment.etc."specialisation".text = name;
 
         home-manager.users.${userVars.username} = {
           gtk.iconTheme.name = commonHostVars.icons.light;
@@ -102,6 +105,11 @@ in
           services.vicinae.settings.theme.name = lib.mkIf (
             userVars.programs.launcher == "vicinae"
           ) "vicinae-light";
+
+          stylix = {
+            base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.day}.yaml";
+            cursor.name = commonHostVars.cursor.day.name;
+          };
         };
       };
 
@@ -110,13 +118,13 @@ in
         pkgs,
         ...
       }:
+      let
+        name = "night";
+      in
       {
-        system.nixos.tags = [ "night" ];
-
-        stylix = {
-          base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.night}.yaml";
-          cursor.name = commonHostVars.cursor.night.name;
-        };
+        # xdg.dataFile."home-manager/specialisation".text = name;
+        system.nixos.tags = [ name ];
+        environment.etc."specialisation".text = name;
 
         home-manager.users.${userVars.username} = {
           gtk.iconTheme.name = commonHostVars.icons.dark;
@@ -124,11 +132,17 @@ in
           services.vicinae.settings.theme.name = lib.mkIf (
             userVars.programs.launcher == "vicinae"
           ) "vicinae-dark";
+
+          stylix = {
+            base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.night}.yaml";
+            cursor.name = commonHostVars.cursor.night.name;
+          };
         };
       };
   };
 
   home-manager.sharedModules = [
     enableDarkmanModule
+    inputs.stylix.homeModules.stylix
   ];
 }

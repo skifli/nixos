@@ -28,6 +28,9 @@
         vaapiVdpau
         libvdpau-va-gl
 
+        # intel-compute-runtime # >= 12th Gen
+        intel-compute-runtime-legacy1 # Gen 8,9,11
+
         vpl-gpu-rt # for newer GPUs on NixOS >24.05 or unstable
         # onevpl-intel-gpu  # for newer GPUs on NixOS <= 24.05
         # intel-media-sdk   # for older GPUs

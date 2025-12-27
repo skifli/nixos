@@ -2,7 +2,11 @@
   # Feature toggles
   # disableX = true;
 
+  optimiseBoot = true;
+  optimiseBuilds = true;
+
   # Host configuration
+  cpuFreqGovernor = "performance";
   enabledImports = [
     # Host specific modules
     ../../modules/core/audio.nix
@@ -35,7 +39,7 @@
         refresh = 59.89;
       };
       position = {
-        x = -1440;
+        x = 1920; # Right of the other monitor
         y = 0;
       };
     };
@@ -46,7 +50,7 @@
         refresh = 74.99;
       };
       position = {
-        x = 0; # Right of the first monitor
+        x = 0;
         y = 0;
       };
       focus-at-startup = true;
@@ -95,4 +99,5 @@
   locale = "en_GB.UTF-8"; # System locale
 
   timezone = "Europe/London"; # Your timezone
+  location = "London+England";
 }

@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, pkgsUnstable, ... }:
 
 {
   boot = {
@@ -19,11 +19,27 @@
         canTouchEfiVariables = true; # E.g., can set as default boot entry
         efiSysMountPoint = "/boot";
       };
-      timeout = 5; # How long to wait on initial boot choices before proceeding into default sys
+      timeout = 1; # How long to wait on initial boot choices before proceeding into default sys
 
-      systemd-boot.enable = false; # In favour of below
+      limine = {
+        enable = true;
+        biosSupport = false;
+        efiSupport = true;
+        maxGenerations = 50;
+        style = {
+          wallpapers = [ pkgsUnstable.nixos-artwork.wallpapers.binary-blue.gnomeFilePath ];
+          wallpaperStyle = "centered";
+        };
+      };
+
+      systemd-boot = {
+        enable = false;
+        consoleMode = "max";
+        configurationLimit = 50;
+      };
+
       grub = {
-        enable = true; # Tried systemd-boot, much more involved so grub it is
+        enable = false; # In favour of above
 
         configurationLimit = 50;
         device = "nodev";
@@ -34,12 +50,16 @@
 
     # Filesystems support
     supportedFilesystems = [
-      "ntfs"
+      "btrfs"
       # "exfat"
       "ext4"
-      # "fat32"
-      # "btrfs"
+      # "fat32" # Old eh
+      "ntfs"
     ];
     tmp.cleanOnBoot = true; # Cleanse tmp dir
   };
+
+  environment.systemPackages = with pkgs; [
+    btrfs-progs # BTRFS support
+  ];
 }

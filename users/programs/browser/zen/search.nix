@@ -2,21 +2,45 @@
 
 {
   force = true;
-  default = "google";
+  default = "Gooogle";
   privateDefault = "Startpage";
   order = [
+    "Gooogle"
+    "Gooogle (Web)"
     "Startpage"
     "NixOS Packages"
     "NixOS Options"
     "NixOS Wiki"
-    "Home Manager Options"
-    "google"
+    "Home Manager"
+    "My NixOS"
+    "Noogle"
+    "ChatGPT"
+    "Google Maps"
   ];
   engines =
     let
-      icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+      nix-icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+      google-icon = "https://www.gstatic.com/images/branding/searchlogo/ico/favicon.ico";
     in
     {
+      "Gooogle" = {
+        urls = [
+          {
+            template = "https://www.google.com/search?num=50&q={searchTerms}";
+          }
+        ];
+        icon = google-icon;
+        definedAliases = [ "@gs" "@google" ];
+      };
+      "Gooogle (Web)" = {
+        urls = [
+          {
+            template = "https://www.google.com/search?num=50&udm=14&q={searchTerms}";
+          }
+        ];
+        icon = google-icon;
+        definedAliases = [ "@gw" "@googleweb" ];
+      };
       "Startpage" = {
         urls = [
           {
@@ -28,7 +52,6 @@
         updateInterval = 24 * 60 * 60 * 1000;
       };
       "NixOS Packages" = {
-        inherit icon;
         urls = [
           {
             template = "https://search.nixos.org/packages";
@@ -44,13 +67,13 @@
             ];
           }
         ];
+        icon = nix-icon;
         definedAliases = [
           "@np"
           "@nixpkgs"
         ];
       };
       "NixOS Options" = {
-        inherit icon;
         urls = [
           {
             template = "https://search.nixos.org/options";
@@ -66,20 +89,21 @@
             ];
           }
         ];
+        icon = nix-icon;
         definedAliases = [
           "@no"
           "@nixopts"
         ];
       };
       "NixOS Wiki" = {
-        inherit icon;
         urls = [ { template = "https://nixos.wiki/index.php?search={searchTerms}"; } ];
+        icon = nix-icon;
         updateInterval = 24 * 60 * 60 * 1000; # every day
         definedAliases = [ "@nw" ];
       };
       "Home Manager" = {
-        inherit icon;
         urls = [ { template = "https://home-manager-options.extranix.com/?query={searchTerms}"; } ];
+        icon = nix-icon;
         definedAliases = [
           "@hm"
           "@home"
@@ -87,8 +111,8 @@
         ];
       };
       "My NixOS" = {
-        inherit icon;
         urls = [ { template = "https://mynixos.com/search?q={searchTerms}"; } ];
+        icon = nix-icon;
         definedAliases = [
           "@mn"
           "@nx"
@@ -96,20 +120,32 @@
         ];
       };
       "Noogle" = {
-        inherit icon;
         urls = [ { template = "https://noogle.dev/q?term={searchTerms}"; } ];
+        icon = nix-icon;
         updateInterval = 24 * 60 * 60 * 1000;
         definedAliases = [
           "@noogle"
           "@ng"
         ];
       };
-      "youtube" = {
-        urls = [ { template = "https://youtube.com/results?search_query={searchTerms}"; } ];
-        definedAliases = [ "@yt" ];
+      "ChatGPT" = {
+        urls = [
+          { template = "https://chat.openai.com/?q={searchTerms}"; }
+        ];
+        icon = "https://chatgpt.com/cdn/assets/favicon-eex17e9e.ico";
+        definedAliases = [ "@cg" "@chatgpt" ];
+      };
+      "Google Maps" = {
+        urls = [
+          { template = "https://www.google.com/maps/search/{searchTerms}"; }
+        ];
+        icon = "https://www.google.com/images/branding/product/ico/maps15_bnuw3a_32dp.ico";
+        definedAliases = [ "@maps" "@gmaps" ];
       };
       "bing".metaData.hidden = true;
-      "Ebay".metaData.hidden = true;
-      "google".metaData.alias = "@g"; # builtin engines only support specifying one additional alias
+      "ddg".metaData.hidden = true;
+      "ebay".metaData.hidden = true;
+      "google".metaData.hidden = true;
+      "Perplexity".metaData.hidden = true;
     };
 }

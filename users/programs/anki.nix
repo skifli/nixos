@@ -1,12 +1,11 @@
 {
   pkgs,
-  pkgsUnstable,
   userVars,
   ...
 }:
 let
   advanced-review-bottom-bar = (
-    pkgsUnstable.anki-utils.buildAnkiAddon (finalAttrs: {
+    pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
       pname = "advanced-review-bottom-bar";
       version = "v3.6.1";
       src = pkgs.fetchFromGitHub {
@@ -20,14 +19,22 @@ let
     })
   );
 
-  add-unstable-anki = final: _prev: {
-    anki-utils = pkgsUnstable.anki-utils;
-  };
+  anki-quizlet-importer-extended = (
+    pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
+      pname = "anki-quizlet-importer-extended";
+      version = "v2025.09.28";
+      src = pkgs.fetchFromGitHub {
+        owner = "sviatoslav-lebediev";
+        repo = "anki-quizlet-importer-extended";
+        rev = finalAttrs.version;
+        sparseCheckout = [ "" ];
+        hash = "sha256-j/ow/HCc70dD/BpMDqGx7rib7G0FfxazzjuPmEQbYTk=";
+      };
+      sourceRoot = "${finalAttrs.src.name}";
+    })
+  );
 in
 {
-  # HM tries to use add-anki-utils from (stable) pkgs which is only present in unstable pkgs
-  nixpkgs.overlays = [ add-unstable-anki ];
-
   home-manager.users.${userVars.username} = {
     home.file.".config/anki-keyFile" = {
       source = ../${userVars.username}/secrets/anki-keyFile;
@@ -37,11 +44,14 @@ in
       source = ../${userVars.username}/secrets/anki-usernameFile;
     };
 
+    stylix.targets.anki.enable = false;
+
     programs.anki = {
       enable = true;
-      package = pkgsUnstable.anki;
-      addons = with pkgsUnstable; [
+      addons = with pkgs; [
         ankiAddons.review-heatmap
+        ankiAddons.reviewer-refocus-card
+        anki-quizlet-importer-extended  # More up to date than their version (which as of writing is 2025.03.13)
         (advanced-review-bottom-bar.withConfig {
           config = {
             "  Button Colors" = true;
@@ -189,7 +199,7 @@ in
           key = "";
         }
       ];
-      spacebarRatesCard = false;
+      spacebarRatesCard = true;
       style = "anki";
       sync = {
         autoSync = true;
@@ -201,7 +211,7 @@ in
       };
       theme = "followSystem";
       uiScale = 0.5;
-      videoDriver = "vulkan";
+      videoDriver = "opengl";
     };
   };
 }
