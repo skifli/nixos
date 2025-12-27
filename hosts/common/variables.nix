@@ -18,8 +18,8 @@
     };
 
     monospace = {
-      name = "Fira Code";
-      package = pkgs.fira-code;
+      name = "JetBrainsMono Nerd Font";
+      package = pkgs.nerd-fonts.jetbrains-mono;
     };
     emoji = {
       name = "Noto Color Emoji";
@@ -41,5 +41,9 @@
   theme = {
     day = "terracotta";
     night = "terracotta-dark";
+  };
+  shellAliases = {
+    nup = "nh os switch . -H";
+    qnup = "cd /etc/nixos && nup";
   };
 }

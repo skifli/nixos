@@ -6,8 +6,6 @@
 }:
 
 {
-  xdg.terminal-exec.settings.default = [ "ghostty.desktop" ];
-
   home-manager.users.${userVars.username} = {
     home.packages = with pkgs; [
       # Packages for zsh plugins
@@ -18,6 +16,8 @@
       # rigrep-all
       zoxide
     ];
+
+    xdg.terminal-exec.settings.default = [ "ghostty.desktop" ];
 
     programs = {
       eza = {

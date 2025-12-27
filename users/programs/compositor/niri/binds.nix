@@ -6,6 +6,14 @@
 
 with config.home-manager.users.${userVars.username}.lib.niri.actions;
 {
+  "Mod+D" = {
+    action = spawn [
+      userVars.programs.launcher
+      (if userVars.programs.launcher == "vicinae" then "toggle" else "")
+    ];
+    hotkey-overlay.title = "Application launcher";
+  };
+
   # HELP & OVERVIEW
   "Mod+Slash" = {
     action = show-hotkey-overlay;
@@ -24,12 +32,12 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions;
     ];
     hotkey-overlay.title = "Terminal";
   };
-  "Mod+D" = {
+  "Mod+F" = {
     action = spawn [
-      userVars.programs.launcher
-      (if userVars.programs.launcher == "vicinae" then "toggle" else "")
+      "app2unit"
+      userVars.programs.explorer-gui
     ];
-    hotkey-overlay.title = "Application launcher";
+    hotkey-overlay.title = "File manager";
   };
   "Mod+V" = {
     action = spawn [
@@ -38,12 +46,12 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions;
     ];
     hotkey-overlay.title = "Visual editor";
   };
-  "Mod+F" = {
+  "Ctrl+Shift+Escape" = {
     action = spawn [
       "app2unit"
-      userVars.programs.explorer-gui
+      userVars.programs.system-monitor
     ];
-    hotkey-overlay.title = "File manager";
+    hotkey-overlay.title = "System monitor";
   };
 
   # WINDOW MANAGEMENT
@@ -162,15 +170,18 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions;
     action = switch-layout "prev";
     hotkey-overlay.title = "Previous layout";
   };
+  /*
+    TODO: Uncomment when flake gets update
+    "Alt+Tab".action = next-window;
+    "Alt+Shift+Tab".action = previous-window;
+    "Alt+grave".action = next-window;
+    "Alt+Shift+grave".action = next-window;
+  */
 
   # SYSTEM
   "Mod+Shift+E" = {
     action = quit;
     hotkey-overlay.title = "Exit Niri";
-  };
-  "Mod+Shift+W" = {
-    action = spawn [ userVars.programs.logout-menu ];
-    hotkey-overlay.title = "Lock screen";
   };
 
   # SCREENSHOTS

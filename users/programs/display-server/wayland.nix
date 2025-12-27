@@ -7,25 +7,21 @@
 }:
 
 {
-  home-manager.users.${userVars.username} = {
-    home = {
-      # Set Wayland-friendly environment variables
-      sessionVariables = {
-        APP2UNIT_SLICES = "a=app-graphical.slice b=background-graphical.slice s=session-graphical.slice"; # https://github.com/Vladimir-csp/app2unit?tab=readme-ov-file#uwsm-integration
-        CLUTTER_BACKEND = "wayland";
-        EGL_PLATFORM = "wayland";
-        ELECTRON_OZONE_PLATFORM_HINT = "auto";
-        GDK_BACKEND = "wayland";
-        MOZ_ENABLE_WAYLAND = "1";
-        NIXOS_OZONE_WL = "1";
-        OZONE_PLATFORM = "wayland";
-        QT_QPA_PLATFORM = "wayland";
-        QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
-        QT_WAYLAND_SHELL_INTEGRATION = "xdg-shell";
-        SDL_VIDEODRIVER = "wayland";
-        XDG_SESSION_TYPE = "wayland";
-      };
-    };
+  # Set Wayland-friendly environment variables
+  environment.sessionVariables = {
+    APP2UNIT_SLICES = "a=app-graphical.slice b=background-graphical.slice s=session-graphical.slice"; # https://github.com/Vladimir-csp/app2unit?tab=readme-ov-file#uwsm-integration
+    CLUTTER_BACKEND = "wayland";
+    EGL_PLATFORM = "wayland";
+    ELECTRON_OZONE_PLATFORM_HINT = "auto";
+    GDK_BACKEND = "wayland";
+    MOZ_ENABLE_WAYLAND = "1";
+    NIXOS_OZONE_WL = "1";
+    OZONE_PLATFORM = "wayland";
+    # QT_QPA_PLATFORM = "wayland"; # Not needed - https://discourse.nixos.org/t/davinci-resolve-only-launches-as-root/54258/6
+    QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
+    QT_WAYLAND_SHELL_INTEGRATION = "xdg-shell";
+    SDL_VIDEODRIVER = "wayland";
+    XDG_SESSION_TYPE = "wayland";
   };
 
   # Enable fundamental Wayland utilities and portals
@@ -38,6 +34,8 @@
 
     # Misc
     pkgsUnstable.app2unit
+
+    slurp # https://wiki.archlinux.org/title/XDG_Desktop_Portal#Using_multiple_monitors_with_xdg-desktop-portal-wlr
   ];
 
   # Enable XWayland support system-wide
@@ -52,6 +50,7 @@
   services.xserver = {
     enable = false;
     exportConfiguration = false; # Would make /etc/X11/xkb populated so tools like localectl work
+
     xkb = {
       layout = "${hostVars.keyboardLayout}";
       variant = "${hostVars.kbdVariant}";
