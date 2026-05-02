@@ -15,11 +15,17 @@ let
   switch-hm-specialisation = spec: ''
     hm_gen="$(${pkgs.coreutils}/bin/readlink -f ~/.local/state/nix/profiles/home-manager)"
     activate_script="$hm_gen/specialisation/${spec}/activate"
+    system_switch_script="/run/current-system/specialisation/${spec}/bin/switch-to-configuration"
+
     if [ -x "$activate_script" ]; then
       "$activate_script"
+    elif [ -x "$system_switch_script" ]; then
+      "$system_switch_script" test
     else
-      echo "Missing HM specialisation activate script: $activate_script" >&2
-      exit 1
+      echo "Missing HM and system specialisation scripts for '${spec}'" >&2
+      echo "Checked: $activate_script" >&2
+      echo "Checked: $system_switch_script" >&2
+      ${pkgs.coreutils}/bin/false
     fi
   '';
 
