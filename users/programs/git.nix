@@ -1,4 +1,4 @@
-{ lib, pkgs, userVars, ... }:
+{ pkgs, userVars, ... }:
 
 {
   home-manager.users.${userVars.username} = {
@@ -64,7 +64,7 @@
       source = ../../ami/secrets/github-pat;
     };
 
-    home.activation.copyGithubSecrets = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    home.activation.copyGithubSecrets = ''
       mkdir -p "$HOME/.local/share/secrets"
       chmod 700 "$HOME/.local/share/secrets"
       ln -sf "$HOME/.local/share/secrets/github-credentials" "$HOME/.git-credentials"
