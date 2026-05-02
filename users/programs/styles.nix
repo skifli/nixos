@@ -20,7 +20,7 @@ let
     if [ -x "$activate_script" ]; then
       "$activate_script"
     elif [ -x "$system_switch_script" ]; then
-      "$system_switch_script" test
+      ${pkgs.sudo}/bin/sudo -n "$system_switch_script" test
     else
       echo "Missing HM and system specialisation scripts for '${spec}'" >&2
       echo "Checked: $activate_script" >&2
@@ -60,6 +60,22 @@ let
     };
 in
 {
+  security.sudo.extraRules = [
+    {
+      users = [ userVars.username ];
+      commands = [
+        {
+          command = "/run/current-system/specialisation/day/bin/switch-to-configuration test";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "/run/current-system/specialisation/night/bin/switch-to-configuration test";
+          options = [ "NOPASSWD" ];
+        }
+      ];
+    }
+  ];
+
   home-manager.users.${userVars.username} = {
     stylix = {
       enable = true;
