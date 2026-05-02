@@ -157,6 +157,26 @@ in
         name = lib.mkDefault commonHostVars.icons.light;
       };
     };
+
+    specialisations = {
+      day = {
+        gtk.iconTheme.name = commonHostVars.icons.light;
+
+        stylix = {
+          base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.day}.yaml";
+          cursor.name = commonHostVars.cursor.day.name;
+        };
+      };
+
+      night = {
+        gtk.iconTheme.name = commonHostVars.icons.dark;
+
+        stylix = {
+          base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.night}.yaml";
+          cursor.name = commonHostVars.cursor.night.name;
+        };
+      };
+    };
   };
 
   specialisation = {
