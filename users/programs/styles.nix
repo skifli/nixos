@@ -13,9 +13,10 @@
     # Runtime color switching with vogix for instant day/night transitions
     programs.vogix = {
       enable = true;
-      scheme = "vogix16";
-      theme = "retro";
-      variant = "light";
+      appearance = {
+        theme = "retro";
+        variant = "light";
+      };
     };
 
     stylix = {
