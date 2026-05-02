@@ -184,6 +184,7 @@
       "swaybg"
       "tailscale"
       "typst"
+      "wlsunset"
       # "weylus"
       # "winapps"
     ];
