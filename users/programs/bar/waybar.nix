@@ -50,7 +50,7 @@
         /* === Module base === */
         #cpu, #memory, #temperature, #network, #pulseaudio, #clock,
         #tray, #privacy, #user, #load, #idle_inhibitor,
-        #custom-notification, #systemd-failed-units, #niri-window {
+        #systemd-failed-units, #niri-window {
           padding: 0 6px;
           transition: background 200ms ease-in-out;
         }
@@ -59,7 +59,7 @@
         #cpu label, #memory label, #temperature label, #network label,
         #pulseaudio label, #clock label, #tray label, #privacy label,
         #user label, #load label, #idle_inhibitor label,
-        #custom-notification label, #systemd-failed-units label, #niri-window label {
+        #systemd-failed-units label, #niri-window label {
           padding-top: 2px;
           padding-bottom: 2px;
         }
@@ -83,7 +83,13 @@
         }
 
         /* make notification not hug the screen edge */
-        #custom-notification { margin-right: 6px; }
+        #custom-notification {
+          margin-right: 6px;
+          padding: 0 8px;  /* Add proper padding to notification icon */
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 4px;
+          border: 1px solid @border_main;
+        }
 
         #tray { margin: 0 5px; }
         #tray > .active { border-top: 3px solid white; }
