@@ -10,7 +10,7 @@
         "connection.auth-retries" = 2;
       };
       # Use systemd-resolved for better DNS caching
-      dns = "systemd";
+      dns = "systemd-resolved";
     };
     
     # Better DNS resolution with fallbacks (reduces startup delays)
