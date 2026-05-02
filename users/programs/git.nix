@@ -1,4 +1,4 @@
-{ pkgs, userVars, ... }:
+{ lib, pkgs, userVars, ... }:
 
 {
   home-manager.users.${userVars.username} = {
@@ -64,15 +64,12 @@
       source = ../../ami/secrets/github-pat;
     };
 
-    home.activation.copyGithubSecrets = {
-      text = ''
-        mkdir -p "$HOME/.local/share/secrets"
-        chmod 700 "$HOME/.local/share/secrets"
-        ln -sf "$HOME/.local/share/secrets/github-credentials" "$HOME/.git-credentials"
-        ln -sf "$HOME/.local/share/secrets/github-pat" "$HOME/.github-pat"
-        chmod 600 "$HOME/.local/share/secrets/github-credentials" "$HOME/.local/share/secrets/github-pat"
-      '';
-      deps = [ "home-manager" ];
-    };
+    home.activation.copyGithubSecrets = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      mkdir -p "$HOME/.local/share/secrets"
+      chmod 700 "$HOME/.local/share/secrets"
+      ln -sf "$HOME/.local/share/secrets/github-credentials" "$HOME/.git-credentials"
+      ln -sf "$HOME/.local/share/secrets/github-pat" "$HOME/.github-pat"
+      chmod 600 "$HOME/.local/share/secrets/github-credentials" "$HOME/.local/share/secrets/github-pat"
+    '';
   };
 }
