@@ -62,7 +62,7 @@ in
   home-manager.users.${userVars.username} = {
     stylix = {
       enable = true;
-      base16Scheme = lib.mkDefault "${pkgs.base24-schemes}/share/themes/${commonHostVars.theme.day}.yaml";
+      base16Scheme = lib.mkDefault "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.day}.yaml";
 
       cursor = {
         package = commonHostVars.cursor.package;
@@ -103,7 +103,7 @@ in
           gtk.iconTheme.name = commonHostVars.icons.light;
 
           stylix = {
-            base16Scheme = "${pkgs.base24-schemes}/share/themes/${commonHostVars.theme.day}.yaml";
+            base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.day}.yaml";
             cursor.name = commonHostVars.cursor.day.name;
           };
         };
@@ -126,7 +126,7 @@ in
           gtk.iconTheme.name = commonHostVars.icons.dark;
 
           stylix = {
-            base16Scheme = "${pkgs.base24-schemes}/share/themes/${commonHostVars.theme.night}.yaml";
+            base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.night}.yaml";
             cursor.name = commonHostVars.cursor.night.name;
           };
         };
