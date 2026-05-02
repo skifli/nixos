@@ -81,44 +81,48 @@ let
         fi
 
         if [ -x "$activate_script" ]; then
-          retries=0
-          max_retries=5
-          backoff=5
-          ok=0
-          while [ $retries -lt $max_retries ]; do
-            echo "Attempting switch (try $((retries+1))/$max_retries)..."
-            set +e
-            output="$($activate_script switch 2>&1)"
-            status=$?
-            set -e
-            if [ "$status" -eq 0 ]; then
-              echo "Switch succeeded: $output"
-              ok=1
-              break
+          echo "Starting switch in background to survive system activation..."
+          # Run switch asynchronously in background so service survives system reconfiguration
+          (
+            retries=0
+            max_retries=5
+            backoff=5
+            ok=0
+            while [ $retries -lt $max_retries ]; do
+              echo "Attempting switch (try $((retries+1))/$max_retries)..."
+              set +e
+              output="$($activate_script switch 2>&1)"
+              status=$?
+              set -e
+              if [ "$status" -eq 0 ]; then
+                echo "Switch succeeded: $output"
+                ok=1
+                break
+              fi
+              echo "Switch failed (status=$status): $output" >&2
+              if echo "$output" | grep -qi "Could not acquire lock"; then
+                echo "Lock detected; backing off $backoff seconds and retrying..."
+                sleep $backoff
+                backoff=$((backoff*2))
+                retries=$((retries+1))
+                continue
+              else
+                echo "Non-retryable error during switch; aborting." >&2
+                break
+              fi
+            done
+            if [ $ok -ne 1 ]; then
+              echo "All switch attempts failed; will retry on next mode change." >&2
             fi
-            echo "Switch failed (status=$status): $output" >&2
-            if echo "$output" | grep -qi "Could not acquire lock"; then
-              echo "Lock detected; backing off $backoff seconds and retrying..."
-              sleep $backoff
-              backoff=$((backoff*2))
-              retries=$((retries+1))
-              continue
-            else
-              echo "Non-retryable error during switch; aborting." >&2
-              break
-            fi
-          done
-          if [ $ok -ne 1 ]; then
-            echo "All switch attempts failed; will retry on next mode change." >&2
-          fi
+          ) &
         else
           echo "Missing system specialisation switch script: $activate_script" >&2
         fi
 
         current_mode="$new_mode"
         echo "$new_mode" > /run/darkman-mode.current
-        echo "Triggering screen transition..."
-        ${call-screen-transition}
+        echo "Triggering screen transition in background..."
+        (${call-screen-transition}) &
       fi
 
       sleep 2
