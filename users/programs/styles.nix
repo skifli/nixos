@@ -88,14 +88,14 @@ in
           while true; do
             current_mode=$(cat /tmp/darkman-mode.current 2>/dev/null || echo light)
             new_mode=$(${pkgs.darkman}/bin/darkman get 2>/dev/null || echo light)
-            if [ "$new_mode" != "$current_mode" ]; then
-              if [ "$new_mode" = "dark" ]; then
+            if [ "''$new_mode" != "''$current_mode" ]; then
+              if [ "''$new_mode" = "dark" ]; then
                 ${switch-hm-specialisation "night"}
               else
                 ${switch-hm-specialisation "day"}
               fi
               ${call-screen-transition}
-              echo "$new_mode" > /tmp/darkman-mode.current
+              echo "''$new_mode" > /tmp/darkman-mode.current
             fi
             sleep 2
           done
