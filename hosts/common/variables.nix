@@ -39,8 +39,8 @@
     light = "Papirus-Light";
   };
   theme = {
-    day = "terracotta";
-    night = "terracotta-dark";
+    day = "papercolor-light";
+    night = "papercolor-dark";
   };
   shellAliases = {
     nup = "nh os switch . -H";
