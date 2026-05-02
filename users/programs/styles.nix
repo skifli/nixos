@@ -12,6 +12,18 @@
 }:
 
 let
+  switch-hm-specialisation = spec: ''
+    hm_gen="$(${pkgs.coreutils}/bin/readlink -f ~/.local/state/nix/profiles/home-manager)"
+    activate_script="$hm_gen/specialisation/${spec}/activate"
+
+    if [ -x "$activate_script" ]; then
+      "$activate_script"
+    else
+      echo "Missing HM specialisation activate script: $activate_script" >&2
+      exit 1
+    fi
+  '';
+
   call-screen-transition = ''
     export NIRI_SOCKET="''$(find /run/user/$(id -u) -name 'niri*.sock' 2>/dev/null | head -n 1)"
     if [[ -n "$NIRI_SOCKET" ]]; then
@@ -42,49 +54,8 @@ let
       };
     };
 
-  apply-specialisation = pkgs.writeShellScript "darkman-apply-specialisation" ''
-    set -euo pipefail
-
-    mode="$(${pkgs.coreutils}/bin/cat /tmp/darkman-mode.request 2>/dev/null || true)"
-    case "$mode" in
-      dark|night)
-        spec="night"
-        ;;
-      light|day)
-        spec="day"
-        ;;
-      *)
-        echo "darkman-apply-specialisation: unknown mode '$mode'" >&2
-        exit 0
-        ;;
-    esac
-
-    activate="/run/current-system/specialisation/$spec/bin/switch-to-configuration"
-    if [ ! -x "$activate" ]; then
-      echo "darkman-apply-specialisation: missing $activate" >&2
-      exit 1
-    fi
-
-    exec "$activate" switch
-  '';
 in
 {
-  systemd.services.darkman-apply-specialisation = {
-    description = "Apply darkman system specialisation";
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = "${apply-specialisation}";
-    };
-  };
-
-  systemd.paths.darkman-apply-specialisation = {
-    wantedBy = [ "multi-user.target" ];
-    pathConfig = {
-      PathChanged = [ "/tmp/darkman-mode.request" ];
-      Unit = "darkman-apply-specialisation.service";
-    };
-  };
-
   home-manager.users.${userVars.username} = {
     stylix = {
       enable = true;
@@ -127,7 +98,11 @@ in
               new_mode=$(${pkgs.darkman}/bin/darkman get 2>/dev/null || echo light)
               if [ "$new_mode" != "$current_mode" ]; then
                 echo "Switching from $current_mode to $new_mode"
-                printf '%s\n' "$new_mode" > /tmp/darkman-mode.request
+                if [ "$new_mode" = "dark" ]; then
+                  ${switch-hm-specialisation "night"}
+                else
+                  ${switch-hm-specialisation "day"}
+                fi
                 echo "$new_mode" > /tmp/darkman-mode.current
                 echo "Triggering screen transition..."
                 ${call-screen-transition}
