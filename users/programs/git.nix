@@ -26,34 +26,6 @@
         };
       };
 
-      # Provide two secret files from the repo's secrets directory.
-      # Copy them into a managed secrets directory under the user's
-      # home and then create symlinks at the well-known locations.
-      # This mirrors how other secret files are projected while keeping
-      # the canonical copy in ~/.local/share/secrets.
-      home.file.".local/share/secrets/github-credentials" = {
-        source = ../../ami/secrets/github-credentials;
-        fileMode = "0600";
-      };
-
-      home.file.".local/share/secrets/github-pat" = {
-        source = ../../ami/secrets/github-pat;
-        fileMode = "0600";
-      };
-
-      home.activation.copyGithubSecrets = {
-        text = ''
-          mkdir -p "$HOME/.local/share/secrets"
-          chmod 700 "$HOME/.local/share/secrets"
-          ln -sf "$HOME/.local/share/secrets/github-credentials" "$HOME/.git-credentials"
-          ln -sf "$HOME/.local/share/secrets/github-pat" "$HOME/.github-pat"
-          chmod 600 "$HOME/.local/share/secrets/github-credentials" "$HOME/.local/share/secrets/github-pat"
-        '';
-        deps = [ "home-manager" ];
-      };
-
-      };
-
       gh = {
         enable = true;
 
@@ -77,6 +49,32 @@
       lazygit = {
         enable = true;
       };
+    };
+
+    # Provide two secret files from the repo's secrets directory.
+    # Copy them into a managed secrets directory under the user's
+    # home and then create symlinks at the well-known locations.
+    # This mirrors how other secret files are projected while keeping
+    # the canonical copy in ~/.local/share/secrets.
+    home.file.".local/share/secrets/github-credentials" = {
+      source = ../../ami/secrets/github-credentials;
+      fileMode = "0600";
+    };
+
+    home.file.".local/share/secrets/github-pat" = {
+      source = ../../ami/secrets/github-pat;
+      fileMode = "0600";
+    };
+
+    home.activation.copyGithubSecrets = {
+      text = ''
+        mkdir -p "$HOME/.local/share/secrets"
+        chmod 700 "$HOME/.local/share/secrets"
+        ln -sf "$HOME/.local/share/secrets/github-credentials" "$HOME/.git-credentials"
+        ln -sf "$HOME/.local/share/secrets/github-pat" "$HOME/.github-pat"
+        chmod 600 "$HOME/.local/share/secrets/github-credentials" "$HOME/.local/share/secrets/github-pat"
+      '';
+      deps = [ "home-manager" ];
     };
   };
 }
