@@ -94,14 +94,16 @@ in
                 echo "Switching from $current_mode to $new_mode"
                 if [ "$new_mode" = "dark" ]; then
                   echo "Activating night specialisation..."
-                  if ${switch-hm-specialisation "night"}; then
+                  ${switch-hm-specialisation "night"}
+                  if [ $? -eq 0 ]; then
                     echo "Night specialisation activated"
                   else
                     echo "Night specialisation failed"
                   fi
                 else
                   echo "Activating day specialisation..."
-                  if ${switch-hm-specialisation "day"}; then
+                  ${switch-hm-specialisation "day"}
+                  if [ $? -eq 0 ]; then
                     echo "Day specialisation activated"
                   else
                     echo "Day specialisation failed"
