@@ -58,12 +58,10 @@
     # the canonical copy in ~/.local/share/secrets.
     home.file.".local/share/secrets/github-credentials" = {
       source = ../../ami/secrets/github-credentials;
-      fileMode = "0600";
     };
 
     home.file.".local/share/secrets/github-pat" = {
       source = ../../ami/secrets/github-pat;
-      fileMode = "0600";
     };
 
     home.activation.copyGithubSecrets = {
