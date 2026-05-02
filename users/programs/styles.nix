@@ -23,8 +23,8 @@ let
     fi
   '';
 
-  call-screen-transition = runtimeDir: ''
-    NIRI_SOCKET="''$(find ${runtimeDir} -name 'niri*.sock' 2>/dev/null | head -n 1)"
+  call-screen-transition = ''
+    NIRI_SOCKET="''$(find "$runtime_dir" -name 'niri*.sock' 2>/dev/null | head -n 1)"
     if [ -n "$NIRI_SOCKET" ]; then
       echo "Using socket found at $NIRI_SOCKET"
       ${lib.getExe config.programs.niri.package} msg action do-screen-transition
@@ -80,7 +80,7 @@ let
         current_mode="$new_mode"
         echo "$new_mode" > /run/darkman-mode.current
         echo "Triggering screen transition..."
-        ${call-screen-transition runtimeDir}
+        ${call-screen-transition}
       fi
 
       sleep 2
