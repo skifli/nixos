@@ -12,21 +12,20 @@
 }:
 
 let
-  switch-hm-specialisation = spec: ''
-    hm_gen="$(${pkgs.coreutils}/bin/readlink -f ~/.local/state/nix/profiles/home-manager)"
-    activate_script="$hm_gen/specialisation/${spec}/activate"
+  switch-system-specialisation = spec: ''
+    activate_script="/run/current-system/specialisation/${spec}/bin/switch-to-configuration"
 
     if [ -x "$activate_script" ]; then
-      "$activate_script"
+      "$activate_script" switch
     else
-      echo "Missing HM specialisation activate script: $activate_script" >&2
+      echo "Missing system specialisation switch script: $activate_script" >&2
       exit 1
     fi
   '';
 
-  call-screen-transition = ''
-    export NIRI_SOCKET="''$(find /run/user/$(id -u) -name 'niri*.sock' 2>/dev/null | head -n 1)"
-    if [[ -n "$NIRI_SOCKET" ]]; then
+  call-screen-transition = runtimeDir: ''
+    NIRI_SOCKET="''$(find ${runtimeDir} -name 'niri*.sock' 2>/dev/null | head -n 1)"
+    if [ -n "$NIRI_SOCKET" ]; then
       echo "Using socket found at $NIRI_SOCKET"
       ${lib.getExe config.programs.niri.package} msg action do-screen-transition
     else
@@ -48,14 +47,59 @@ let
 
           dbusserver = true;
           portal = true;
-          # Note: old darkModeScripts/lightModeScripts removed - newer darkman doesn't support them
-          # Theme switching is handled by the user service below.
+          # darkman config only; switching is handled by the root service below.
         };
       };
     };
 
+  darkman-switcher = pkgs.writeShellScript "darkman-theme-switcher" ''
+    set -euo pipefail
+
+    user_uid="$(${pkgs.coreutils}/bin/id -u ${userVars.username})"
+    runtime_dir="/run/user/$user_uid"
+    bus_addr="unix:path=$runtime_dir/bus"
+    current_mode=""
+
+    while true; do
+      if [ ! -S "$runtime_dir/bus" ]; then
+        sleep 2
+        continue
+      fi
+
+      new_mode="$(${pkgs.darkman}/bin/darkman get 2>/dev/null || XDG_RUNTIME_DIR="$runtime_dir" DBUS_SESSION_BUS_ADDRESS="$bus_addr" ${pkgs.darkman}/bin/darkman get 2>/dev/null || echo light)"
+
+      if [ "$new_mode" != "$current_mode" ]; then
+        echo "Switching from $current_mode to $new_mode"
+
+        if [ "$new_mode" = "dark" ]; then
+          ${switch-system-specialisation "night"}
+        else
+          ${switch-system-specialisation "day"}
+        fi
+
+        current_mode="$new_mode"
+        echo "$new_mode" > /run/darkman-mode.current
+        echo "Triggering screen transition..."
+        ${call-screen-transition runtimeDir}
+      fi
+
+      sleep 2
+    done
+  '';
 in
 {
+  systemd.services.darkman-theme-switcher = {
+    description = "Monitor darkman mode changes and switch system specialisations";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "network.target" ];
+    serviceConfig = {
+      Type = "simple";
+      ExecStart = "${darkman-switcher}";
+      Restart = "always";
+      RestartSec = 5;
+    };
+  };
+
   home-manager.users.${userVars.username} = {
     stylix = {
       enable = true;
@@ -79,43 +123,6 @@ in
         package = commonHostVars.icons.package;
         name = lib.mkDefault commonHostVars.icons.light;
       };
-    };
-
-    systemd.user.services.darkman-theme-switcher = {
-      Unit = {
-        Description = "Monitor darkman mode changes and switch specialisations";
-        After = [ "graphical-session.target" "darkman.service" ];
-        PartOf = [ "graphical-session.target" ];
-      };
-
-      Service = {
-        Type = "simple";
-        ExecStart = let
-          script = pkgs.writeShellScript "darkman-theme-switcher" ''
-            set -x
-            while true; do
-              current_mode=$(cat /tmp/darkman-mode.current 2>/dev/null || echo light)
-              new_mode=$(${pkgs.darkman}/bin/darkman get 2>/dev/null || echo light)
-              if [ "$new_mode" != "$current_mode" ]; then
-                echo "Switching from $current_mode to $new_mode"
-                if [ "$new_mode" = "dark" ]; then
-                  ${switch-hm-specialisation "night"}
-                else
-                  ${switch-hm-specialisation "day"}
-                fi
-                echo "$new_mode" > /tmp/darkman-mode.current
-                echo "Triggering screen transition..."
-                ${call-screen-transition}
-              fi
-              sleep 2
-            done
-          '';
-        in "${script}";
-        Restart = "on-failure";
-        RestartSec = 5;
-      };
-
-      Install.WantedBy = [ "graphical-session.target" ];
     };
   };
 
