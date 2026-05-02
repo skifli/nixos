@@ -132,8 +132,8 @@ in
 {
   systemd.services.darkman-theme-switcher = {
     description = "Monitor darkman mode changes and switch system specialisations";
-    wantedBy = [ "multi-user.target" ];
-    after = [ "network.target" ];
+    wantedBy = [ "graphical-session.target" ];
+    after = [ "graphical-session.target" ];
     serviceConfig = {
       Type = "simple";
       ExecStart = "${darkman-switcher}";
