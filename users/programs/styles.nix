@@ -20,7 +20,7 @@ let
     if [ -x "$activate_script" ]; then
       "$activate_script"
     elif [ -x "$system_switch_script" ]; then
-      ${pkgs.sudo}/bin/sudo -n "$system_switch_script" test
+      ${pkgs.sudo}/bin/sudo -n "$system_switch_script" switch
     else
       echo "Missing HM and system specialisation scripts for '${spec}'" >&2
       echo "Checked: $activate_script" >&2
@@ -65,11 +65,11 @@ in
       users = [ userVars.username ];
       commands = [
         {
-          command = "/run/current-system/specialisation/day/bin/switch-to-configuration test";
+          command = "/run/current-system/specialisation/day/bin/switch-to-configuration switch";
           options = [ "NOPASSWD" ];
         }
         {
-          command = "/run/current-system/specialisation/night/bin/switch-to-configuration test";
+          command = "/run/current-system/specialisation/night/bin/switch-to-configuration switch";
           options = [ "NOPASSWD" ];
         }
       ];
