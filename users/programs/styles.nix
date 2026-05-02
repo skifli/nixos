@@ -12,23 +12,6 @@
 }:
 
 let
-  switch-hm-specialisation = spec: ''
-    hm_gen="$(${pkgs.coreutils}/bin/readlink -f ~/.local/state/nix/profiles/home-manager)"
-    activate_script="$hm_gen/specialisation/${spec}/activate"
-    system_switch_script="/run/current-system/specialisation/${spec}/bin/switch-to-configuration"
-
-    if [ -x "$activate_script" ]; then
-      "$activate_script"
-    elif [ -x "$system_switch_script" ]; then
-      ${pkgs.sudo}/bin/sudo -n "$system_switch_script" switch
-    else
-      echo "Missing HM and system specialisation scripts for '${spec}'" >&2
-      echo "Checked: $activate_script" >&2
-      echo "Checked: $system_switch_script" >&2
-      ${pkgs.coreutils}/bin/false
-    fi
-  '';
-
   call-screen-transition = ''
     export NIRI_SOCKET="''$(find /run/user/$(id -u) -name 'niri*.sock' 2>/dev/null | head -n 1)"
     if [[ -n "$NIRI_SOCKET" ]]; then
@@ -54,27 +37,53 @@ let
           dbusserver = true;
           portal = true;
           # Note: old darkModeScripts/lightModeScripts removed - newer darkman doesn't support them
-          # We now handle theme switching via home.activation hook below
+          # Theme switching is handled by the user service below.
         };
       };
     };
+
+  apply-specialisation = pkgs.writeShellScript "darkman-apply-specialisation" ''
+    set -euo pipefail
+
+    mode="$(${pkgs.coreutils}/bin/cat /tmp/darkman-mode.request 2>/dev/null || true)"
+    case "$mode" in
+      dark|night)
+        spec="night"
+        ;;
+      light|day)
+        spec="day"
+        ;;
+      *)
+        echo "darkman-apply-specialisation: unknown mode '$mode'" >&2
+        exit 0
+        ;;
+    esac
+
+    activate="/run/current-system/specialisation/$spec/bin/switch-to-configuration"
+    if [ ! -x "$activate" ]; then
+      echo "darkman-apply-specialisation: missing $activate" >&2
+      exit 1
+    fi
+
+    exec "$activate" switch
+  '';
 in
 {
-  security.sudo.extraRules = [
-    {
-      users = [ userVars.username ];
-      commands = [
-        {
-          command = "/run/current-system/specialisation/day/bin/switch-to-configuration switch";
-          options = [ "NOPASSWD" ];
-        }
-        {
-          command = "/run/current-system/specialisation/night/bin/switch-to-configuration switch";
-          options = [ "NOPASSWD" ];
-        }
-      ];
-    }
-  ];
+  systemd.services.darkman-apply-specialisation = {
+    description = "Apply darkman system specialisation";
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${apply-specialisation}";
+    };
+  };
+
+  systemd.paths.darkman-apply-specialisation = {
+    wantedBy = [ "multi-user.target" ];
+    pathConfig = {
+      PathChanged = [ "/tmp/darkman-mode.request" ];
+      Unit = "darkman-apply-specialisation.service";
+    };
+  };
 
   home-manager.users.${userVars.username} = {
     stylix = {
@@ -118,33 +127,10 @@ in
               new_mode=$(${pkgs.darkman}/bin/darkman get 2>/dev/null || echo light)
               if [ "$new_mode" != "$current_mode" ]; then
                 echo "Switching from $current_mode to $new_mode"
-                switch_ok=0
-                if [ "$new_mode" = "dark" ]; then
-                  echo "Activating night specialisation..."
-                  ${switch-hm-specialisation "night"}
-                  if [ $? -eq 0 ]; then
-                    echo "Night specialisation activated"
-                    switch_ok=1
-                  else
-                    echo "Night specialisation failed"
-                  fi
-                else
-                  echo "Activating day specialisation..."
-                  ${switch-hm-specialisation "day"}
-                  if [ $? -eq 0 ]; then
-                    echo "Day specialisation activated"
-                    switch_ok=1
-                  else
-                    echo "Day specialisation failed"
-                  fi
-                fi
-                if [ "$switch_ok" -eq 1 ]; then
-                  echo "Triggering screen transition..."
-                  ${call-screen-transition}
-                  echo "$new_mode" > /tmp/darkman-mode.current
-                else
-                  echo "Theme activation failed; keeping previous mode cache for retry"
-                fi
+                printf '%s\n' "$new_mode" > /tmp/darkman-mode.request
+                echo "$new_mode" > /tmp/darkman-mode.current
+                echo "Triggering screen transition..."
+                ${call-screen-transition}
               fi
               sleep 2
             done
@@ -168,7 +154,6 @@ in
         name = "day";
       in
       {
-        # xdg.dataFile."home-manager/specialisation".text = name;
         system.nixos.tags = [ name ];
         environment.etc."specialisation".text = name;
 
@@ -191,7 +176,6 @@ in
         name = "night";
       in
       {
-        # xdg.dataFile."home-manager/specialisation".text = name;
         system.nixos.tags = [ name ];
         environment.etc."specialisation".text = name;
 
