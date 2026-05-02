@@ -58,7 +58,8 @@ let
     user_uid="$(${pkgs.coreutils}/bin/id -u ${userVars.username})"
     runtime_dir="/run/user/$user_uid"
     bus_addr="unix:path=$runtime_dir/bus"
-    current_mode=""
+    current_mode="$(${pkgs.darkman}/bin/darkman get 2>/dev/null || XDG_RUNTIME_DIR="$runtime_dir" DBUS_SESSION_BUS_ADDRESS="$bus_addr" ${pkgs.darkman}/bin/darkman get 2>/dev/null || echo light)"
+    echo "Initial mode: $current_mode"
 
     while true; do
       if [ ! -S "$runtime_dir/bus" ]; then
