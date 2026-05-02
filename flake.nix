@@ -9,12 +9,8 @@
       "https://niri.cachix.org/"
       "https://nix-community.cachix.org/"
       "https://vicinae.cachix.org/"
-<<<<<<< HEAD
       "https://nixpkgs-python.cachix.org"
       # "https://winapps.cachix.org/"
-=======
-      "https://winapps.cachix.org/"
->>>>>>> 98f10f82d6385071afd666d63032ffb49ab0e20c
     ];
     extra-trusted-public-keys = [
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
@@ -23,12 +19,8 @@
       "niri.cachix.org-1:Wv0OmO7PsuocRKzfDoJ3mulSl7Z6oezYhGhR+3W2964="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "vicinae.cachix.org-1:1kDrfienkGHPYbkpNj1mWTr7Fm1+zcenzgTizIcI3oc="
-<<<<<<< HEAD
       "nixpkgs-python.cachix.org-1:hxjI7pFxTyuTHn2NkvWCrAUcNZLNS3ZAvfYNuYifcEU="
       # "winapps.cachix.org-1:HI82jWrXZsQRar/PChgIx1unmuEsiQMQq+zt05CD36g="
-=======
-      "winapps.cachix.org-1:HI82jWrXZsQRar/PChgIx1unmuEsiQMQq+zt05CD36g="
->>>>>>> 98f10f82d6385071afd666d63032ffb49ab0e20c
     ];
   };
 
@@ -40,13 +32,10 @@
       url = "github:yokoffing/Betterfox";
       flake = false;
     };
-<<<<<<< HEAD
     browseros-ai = {
         url = "github:skifli/browseros-ai"; # Run nix store prefetch-file \
         inputs.nixpkgs.follows = "nixpkgs";
     };
-=======
->>>>>>> 98f10f82d6385071afd666d63032ffb49ab0e20c
     home-manager = {
       url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -64,7 +53,6 @@
       url = "github:way-edges/way-edges";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-<<<<<<< HEAD
     /*
       winapps = {
         url = "github:winapps-org/winapps";
@@ -78,18 +66,6 @@
     
     vicinae.url = "github:vicinaehq/vicinae"; # Following nixpkgs makes cache miss
     anki-mcp.url = "github:ankimcp/anki-mcp-server-addon";
-=======
-    winapps = {
-      url = "github:winapps-org/winapps";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    zen-browser = {
-      url = "github:0xc000022070/zen-browser-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    vicinae.url = "github:vicinaehq/vicinae"; # Following nixpkgs makes cache miss
->>>>>>> 98f10f82d6385071afd666d63032ffb49ab0e20c
   };
 
   outputs =
