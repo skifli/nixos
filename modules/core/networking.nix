@@ -7,7 +7,7 @@
       enable = true;
       # Reduce connect timeout for faster failure recovery
       connectionConfig = {
-        connection.auth-retries = 2;
+        "connection.auth-retries" = 2;
       };
       # Use systemd-resolved for better DNS caching
       dns = "systemd";
