@@ -36,25 +36,16 @@ let
       services.darkman = {
         enable = true;
 
-        settings = (
-          lib.mkMerge [
-            {
-              lat = hostVars.latitude;
-              lng = hostVars.longitude;
-              usegeoclue = false;
+        settings = {
+          lat = hostVars.latitude;
+          lng = hostVars.longitude;
+          usegeoclue = false;
 
-              dbusserver = true;
-              portal = true;
-
-              lightModeScripts."00-switch-hm-specialisation" = switch-hm-specialisation "day";
-              darkModeScripts."00-switch-hm-specialisation" = switch-hm-specialisation "night";
-            }
-            (lib.mkIf (userVars.programs.compositor == "niri") {
-              lightModeScripts."01-call-screen-transition" = call-screen-transition;
-              darkModeScripts."01-call-screen-transition" = call-screen-transition;
-            })
-          ]
-        );
+          dbusserver = true;
+          portal = true;
+          # Note: old darkModeScripts/lightModeScripts removed - newer darkman doesn't support them
+          # We now handle theme switching via home.activation hook below
+        };
       };
     };
 in
@@ -82,6 +73,41 @@ in
         package = commonHostVars.icons.package;
         name = lib.mkDefault commonHostVars.icons.light;
       };
+    };
+
+    systemd.user.services.darkman-theme-switcher = {
+      Unit = {
+        Description = "Monitor darkman mode changes and switch specialisations";
+        After = [ "graphical-session.target" "darkman.service" ];
+        PartOf = [ "graphical-session.target" ];
+      };
+
+      Service = {
+        Type = "simple";
+        ExecStart = lib.mkDefault (lib.concatStringsSep " " [
+          "${pkgs.bash}/bin/bash"
+          "-c"
+          "''"
+          "while true; do"
+          "  current_mode=\$(cat /tmp/darkman-mode.current 2>/dev/null || echo light);"
+          "  new_mode=\$(${pkgs.darkman}/bin/darkman get 2>/dev/null || echo light);"
+          "  if [ \"\$new_mode\" != \"\$current_mode\" ]; then"
+          "    if [ \"\$new_mode\" = \"dark\" ]; then"
+          "      ${switch-hm-specialisation "night"}"
+          "    else"
+          "      ${switch-hm-specialisation "day"}"
+          "    fi"
+          "    echo \"\$new_mode\" > /tmp/darkman-mode.current"
+          "  fi"
+          "  sleep 2"
+          "done"
+          "''"
+        ]);
+        Restart = "on-failure";
+        RestartSec = 5;
+      };
+
+      Install.WantedBy = [ "graphical-session.target" ];
     };
   };
 
