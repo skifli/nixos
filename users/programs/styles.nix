@@ -13,10 +13,14 @@
 
 let
   switch-hm-specialisation = spec: ''
-    hm_gens=$(${
-      if config.nix.package != null then config.nix.package else pkgs.nixVersions.latest
-    }/bin/nix-store -q --referrers ~/.local/state/nix/profiles/home-manager)
-    "$(${pkgs.toybox}/bin/find $hm_gens -maxdepth 1 -type d -name specialisation)/${spec}/activate"
+    hm_gen="$(${pkgs.coreutils}/bin/readlink -f ~/.local/state/nix/profiles/home-manager)"
+    activate_script="$hm_gen/specialisation/${spec}/activate"
+    if [ -x "$activate_script" ]; then
+      "$activate_script"
+    else
+      echo "Missing HM specialisation activate script: $activate_script" >&2
+      exit 1
+    fi
   '';
 
   call-screen-transition = ''
@@ -92,11 +96,13 @@ in
               new_mode=$(${pkgs.darkman}/bin/darkman get 2>/dev/null || echo light)
               if [ "$new_mode" != "$current_mode" ]; then
                 echo "Switching from $current_mode to $new_mode"
+                switch_ok=0
                 if [ "$new_mode" = "dark" ]; then
                   echo "Activating night specialisation..."
                   ${switch-hm-specialisation "night"}
                   if [ $? -eq 0 ]; then
                     echo "Night specialisation activated"
+                    switch_ok=1
                   else
                     echo "Night specialisation failed"
                   fi
@@ -105,13 +111,18 @@ in
                   ${switch-hm-specialisation "day"}
                   if [ $? -eq 0 ]; then
                     echo "Day specialisation activated"
+                    switch_ok=1
                   else
                     echo "Day specialisation failed"
                   fi
                 fi
-                echo "Triggering screen transition..."
-                ${call-screen-transition}
-                echo "$new_mode" > /tmp/darkman-mode.current
+                if [ "$switch_ok" -eq 1 ]; then
+                  echo "Triggering screen transition..."
+                  ${call-screen-transition}
+                  echo "$new_mode" > /tmp/darkman-mode.current
+                else
+                  echo "Theme activation failed; keeping previous mode cache for retry"
+                fi
               fi
               sleep 2
             done
