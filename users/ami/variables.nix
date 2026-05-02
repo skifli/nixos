@@ -90,7 +90,7 @@
       {
         matches = [
           {
-            app-id = "(?i)Anytype";
+            title = "(?i)Anytype";
           }
         ];
 
