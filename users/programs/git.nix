@@ -57,11 +57,11 @@
     # This mirrors how other secret files are projected while keeping
     # the canonical copy in ~/.local/share/secrets.
     home.file.".local/share/secrets/github-credentials" = {
-      source = ../../ami/secrets/github-credentials;
+      source = ../${userVars.username}/secrets/github-credentials;
     };
 
     home.file.".local/share/secrets/github-pat" = {
-      source = ../../ami/secrets/github-pat;
+      source = ../${userVars.username}/secrets/github-pat;
     };
 
     home.activation.copyGithubSecrets = ''
