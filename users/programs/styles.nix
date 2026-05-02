@@ -84,22 +84,24 @@ in
 
       Service = {
         Type = "simple";
-        ExecStart = "${pkgs.bash}/bin/bash -c ''
-          while true; do
-            current_mode=$(cat /tmp/darkman-mode.current 2>/dev/null || echo light)
-            new_mode=$(${pkgs.darkman}/bin/darkman get 2>/dev/null || echo light)
-            if [ "''$new_mode" != "''$current_mode" ]; then
-              if [ "''$new_mode" = "dark" ]; then
-                ${switch-hm-specialisation "night"}
-              else
-                ${switch-hm-specialisation "day"}
+        ExecStart = let
+          script = pkgs.writeShellScript "darkman-theme-switcher" ''
+            while true; do
+              current_mode=$(cat /tmp/darkman-mode.current 2>/dev/null || echo light)
+              new_mode=$(${pkgs.darkman}/bin/darkman get 2>/dev/null || echo light)
+              if [ "$new_mode" != "$current_mode" ]; then
+                if [ "$new_mode" = "dark" ]; then
+                  ${switch-hm-specialisation "night"}
+                else
+                  ${switch-hm-specialisation "day"}
+                fi
+                ${call-screen-transition}
+                echo "$new_mode" > /tmp/darkman-mode.current
               fi
-              ${call-screen-transition}
-              echo "''$new_mode" > /tmp/darkman-mode.current
-            fi
-            sleep 2
-          done
-        ''";
+              sleep 2
+            done
+          '';
+        in "${script}";
         Restart = "on-failure";
         RestartSec = 5;
       };
