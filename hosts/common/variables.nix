@@ -39,8 +39,8 @@
     light = "Papirus-Light";
   };
   theme = {
-    day = "base16-tomorrow";
-    night = "base16-vesper";
+    day = "tomorrow";
+    night = "vesper";
   };
   shellAliases = {
     nup = "nh os switch . -H";
