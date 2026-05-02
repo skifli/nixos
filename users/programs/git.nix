@@ -22,7 +22,7 @@
 
           # Use a credentials file (contains the PAT in the form
           # https://<PAT>@github.com) to avoid interactive prompts.
-          "credential.helper" = "store --file ~/.git-credentials";
+          credential.helper = "store --file ~/.git-credentials";
         };
       };
 
