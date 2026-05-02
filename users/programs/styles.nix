@@ -56,9 +56,9 @@ let
     set -euo pipefail
 
     user_uid="$(${pkgs.coreutils}/bin/id -u ${userVars.username})"
+    user_name="${userVars.username}"
     runtime_dir="/run/user/$user_uid"
-    bus_addr="unix:path=$runtime_dir/bus"
-    current_mode="$(XDG_RUNTIME_DIR="$runtime_dir" DBUS_SESSION_BUS_ADDRESS="$bus_addr" ${pkgs.darkman}/bin/darkman get 2>/dev/null || echo light)"
+    current_mode="$(${pkgs.util-linux}/bin/runuser -u "$user_name" -- ${pkgs.darkman}/bin/darkman get 2>/dev/null || echo light)"
     echo "Initial mode: $current_mode"
 
     while true; do
@@ -67,15 +67,47 @@ let
         continue
       fi
 
-      new_mode="$(XDG_RUNTIME_DIR="$runtime_dir" DBUS_SESSION_BUS_ADDRESS="$bus_addr" ${pkgs.darkman}/bin/darkman get 2>/dev/null || echo light)"
+      new_mode="$(${pkgs.util-linux}/bin/runuser -u "$user_name" -- ${pkgs.darkman}/bin/darkman get 2>/dev/null || echo light)"
 
       if [ "$new_mode" != "$current_mode" ]; then
         echo "Switching from $current_mode to $new_mode"
 
         if [ "$new_mode" = "dark" ]; then
-          ${switch-system-specialisation "night"}
+          activate_script="/run/current-system/specialisation/night/bin/switch-to-configuration"
         else
-          ${switch-system-specialisation "day"}
+          activate_script="/run/current-system/specialisation/day/bin/switch-to-configuration"
+        fi
+
+        if [ -x "$activate_script" ]; then
+          retries=0
+          max_retries=5
+          backoff=5
+          ok=0
+          while [ $retries -lt $max_retries ]; do
+            echo "Attempting switch (try $((retries+1))/$max_retries)..."
+            output="$($activate_script switch 2>&1)" || status=$?
+            if [ ${status:-0} -eq 0 ]; then
+              echo "Switch succeeded: $output"
+              ok=1
+              break
+            fi
+            echo "Switch failed (status=${status:-1}): $output" >&2
+            if echo "$output" | grep -qi "Could not acquire lock"; then
+              echo "Lock detected; backing off $backoff seconds and retrying..."
+              sleep $backoff
+              backoff=$((backoff*2))
+              retries=$((retries+1))
+              continue
+            else
+              echo "Non-retryable error during switch; aborting." >&2
+              break
+            fi
+          done
+          if [ $ok -ne 1 ]; then
+            echo "All switch attempts failed; will retry on next mode change." >&2
+          fi
+        else
+          echo "Missing system specialisation switch script: $activate_script" >&2
         fi
 
         current_mode="$new_mode"
