@@ -42,6 +42,14 @@
       ];
       extra-platforms = [ "aarch64-linux" ]; # Allow cross-compilation
       use-xdg-base-directories = true;
+      
+      # Better build caching to reduce kworker load
+      max-jobs = "auto"; # Automatic job parallelization
+      cores = 0; # Use all cores (will be balanced by auto limits)
+      
+      # Optimize disk I/O for builds
+      fsync-metadata = false; # Don't fsync metadata on every change
+      keep-build-log = false; # Don't keep build logs to reduce IO
     };
   };
 

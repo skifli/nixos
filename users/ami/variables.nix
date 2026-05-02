@@ -180,13 +180,12 @@
       "lan-mouse"
       "nix-direnv"
       "safeeyes"
-      "stylix"
+      "styles"
       "swaybg"
       "tailscale"
       "typst"
       # "weylus"
       # "winapps"
-      "wlsunset"
     ];
   };
 }
