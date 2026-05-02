@@ -86,15 +86,20 @@ in
         Type = "simple";
         ExecStart = let
           script = pkgs.writeShellScript "darkman-theme-switcher" ''
+            set -x
             while true; do
               current_mode=$(cat /tmp/darkman-mode.current 2>/dev/null || echo light)
               new_mode=$(${pkgs.darkman}/bin/darkman get 2>/dev/null || echo light)
               if [ "$new_mode" != "$current_mode" ]; then
+                echo "Switching from $current_mode to $new_mode"
                 if [ "$new_mode" = "dark" ]; then
-                  ${switch-hm-specialisation "night"}
+                  echo "Activating night specialisation..."
+                  ${switch-hm-specialisation "night"} && echo "Night specialisation activated" || echo "Night specialisation failed"
                 else
-                  ${switch-hm-specialisation "day"}
+                  echo "Activating day specialisation..."
+                  ${switch-hm-specialisation "day"} && echo "Day specialisation activated" || echo "Day specialisation failed"
                 fi
+                echo "Triggering screen transition..."
                 ${call-screen-transition}
                 echo "$new_mode" > /tmp/darkman-mode.current
               fi
