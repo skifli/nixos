@@ -65,6 +65,7 @@
     };
     
     vicinae.url = "github:vicinaehq/vicinae"; # Following nixpkgs makes cache miss
+    vogix.url = "github:i-am-logger/vogix";
     anki-mcp.url = "github:ankimcp/anki-mcp-server-addon";
   };
 

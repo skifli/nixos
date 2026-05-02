@@ -12,6 +12,11 @@
       "preempt=full" # Lower latency but less throughput
       # "quiet" # Non verbose boot mode
       # "splash" # Eye-candy loading screen
+      
+      # Reduce kworker IO pressure during heavy builds
+      "vm.dirty_ratio=10" # Percentage of RAM before aggressive writeback
+      "vm.dirty_background_ratio=5" # Background writeback threshold
+      "vm.dirty_writeback_centisecs=500" # Reduce frequency of writeback
     ];
 
     loader = {

@@ -112,8 +112,6 @@ in
       source = ../${userVars.username}/secrets/anki-usernameFile;
     };
 
-    stylix.targets.anki.enable = false;
-
     programs.anki = {
       enable = true;
       addons = with pkgs; [
