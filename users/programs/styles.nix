@@ -157,29 +157,53 @@ in
         name = lib.mkDefault commonHostVars.icons.light;
       };
     };
-
-    specialisations = {
-      day = {
-        gtk.iconTheme.name = commonHostVars.icons.light;
-
-        stylix = {
-          base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.day}.yaml";
-          cursor.name = commonHostVars.cursor.day.name;
-        };
-      };
-
-      night = {
-        gtk.iconTheme.name = commonHostVars.icons.dark;
-
-        stylix = {
-          base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.night}.yaml";
-          cursor.name = commonHostVars.cursor.night.name;
-        };
-      };
-    };
+ 
   };
+  specialisation = {
+    day.configuration =
+      {
+        pkgs,
+        ...
+      }:
+      let
+        name = "day";
+      in
+      {
+        system.nixos.tags = [ name ];
+        environment.etc."specialisation".text = name;
 
-  # specialisations are defined under Home Manager (see home-manager.users.<user>.specialisations)
+        home-manager.users.${userVars.username} = {
+          gtk.iconTheme.name = commonHostVars.icons.light;
+
+          stylix = {
+            base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.day}.yaml";
+            cursor.name = commonHostVars.cursor.day.name;
+          };
+        };
+      };
+
+    night.configuration =
+      {
+        pkgs,
+        ...
+      }:
+      let
+        name = "night";
+      in
+      {
+        system.nixos.tags = [ name ];
+        environment.etc."specialisation".text = name;
+
+        home-manager.users.${userVars.username} = {
+          gtk.iconTheme.name = commonHostVars.icons.dark;
+
+          stylix = {
+            base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.night}.yaml";
+            cursor.name = commonHostVars.cursor.night.name;
+          };
+        };
+      };
+  };
 
   home-manager.sharedModules = [
     enableDarkmanModule
