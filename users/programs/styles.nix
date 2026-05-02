@@ -94,10 +94,18 @@ in
                 echo "Switching from $current_mode to $new_mode"
                 if [ "$new_mode" = "dark" ]; then
                   echo "Activating night specialisation..."
-                  ${switch-hm-specialisation "night"} && echo "Night specialisation activated" || echo "Night specialisation failed"
+                  if ${switch-hm-specialisation "night"}; then
+                    echo "Night specialisation activated"
+                  else
+                    echo "Night specialisation failed"
+                  fi
                 else
                   echo "Activating day specialisation..."
-                  ${switch-hm-specialisation "day"} && echo "Day specialisation activated" || echo "Day specialisation failed"
+                  if ${switch-hm-specialisation "day"}; then
+                    echo "Day specialisation activated"
+                  else
+                    echo "Day specialisation failed"
+                  fi
                 fi
                 echo "Triggering screen transition..."
                 ${call-screen-transition}
