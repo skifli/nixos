@@ -85,13 +85,16 @@ let
           ok=0
           while [ $retries -lt $max_retries ]; do
             echo "Attempting switch (try $((retries+1))/$max_retries)..."
-            output="$($activate_script switch 2>&1)" || status=$?
-            if [ ${status:-0} -eq 0 ]; then
+            set +e
+            output="$($activate_script switch 2>&1)"
+            status=$?
+            set -e
+            if [ "$status" -eq 0 ]; then
               echo "Switch succeeded: $output"
               ok=1
               break
             fi
-            echo "Switch failed (status=${status:-1}): $output" >&2
+            echo "Switch failed (status=$status): $output" >&2
             if echo "$output" | grep -qi "Could not acquire lock"; then
               echo "Lock detected; backing off $backoff seconds and retrying..."
               sleep $backoff
