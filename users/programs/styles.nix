@@ -84,26 +84,22 @@ in
 
       Service = {
         Type = "simple";
-        ExecStart = lib.mkDefault (lib.concatStringsSep " " [
-          "${pkgs.bash}/bin/bash"
-          "-c"
-          "''"
-          "while true; do"
-          "  current_mode=\$(cat /tmp/darkman-mode.current 2>/dev/null || echo light);"
-          "  new_mode=\$(${pkgs.darkman}/bin/darkman get 2>/dev/null || echo light);"
-          "  if [ \"\$new_mode\" != \"\$current_mode\" ]; then"
-          "    if [ \"\$new_mode\" = \"dark\" ]; then"
-          "      ${switch-hm-specialisation "night"}"
-          "    else"
-          "      ${switch-hm-specialisation "day"}"
-          "    fi"
-          "    ${call-screen-transition}"
-          "    echo \"\$new_mode\" > /tmp/darkman-mode.current"
-          "  fi"
-          "  sleep 2"
-          "done"
-          "''"
-        ]);
+        ExecStart = "${pkgs.bash}/bin/bash -c ''
+          while true; do
+            current_mode=$(cat /tmp/darkman-mode.current 2>/dev/null || echo light)
+            new_mode=$(${pkgs.darkman}/bin/darkman get 2>/dev/null || echo light)
+            if [ "$new_mode" != "$current_mode" ]; then
+              if [ "$new_mode" = "dark" ]; then
+                ${switch-hm-specialisation "night"}
+              else
+                ${switch-hm-specialisation "day"}
+              fi
+              ${call-screen-transition}
+              echo "$new_mode" > /tmp/darkman-mode.current
+            fi
+            sleep 2
+          done
+        ''";
         Restart = "on-failure";
         RestartSec = 5;
       };
