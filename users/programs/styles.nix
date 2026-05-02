@@ -97,6 +97,7 @@ in
           "    else"
           "      ${switch-hm-specialisation "day"}"
           "    fi"
+          "    ${call-screen-transition}"
           "    echo \"\$new_mode\" > /tmp/darkman-mode.current"
           "  fi"
           "  sleep 2"
