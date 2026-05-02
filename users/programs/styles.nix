@@ -13,7 +13,7 @@
 
 let
   switch-system-specialisation = spec: ''
-    activate_script="/run/current-system/specialisation/${spec}/bin/switch-to-configuration"
+    activate_script="/run/booted-system/specialisation/${spec}/bin/switch-to-configuration"
 
     if [ -x "$activate_script" ]; then
       "$activate_script" switch
@@ -24,10 +24,12 @@ let
   '';
 
   call-screen-transition = ''
-    NIRI_SOCKET="''$(find "$runtime_dir" -name 'niri*.sock' 2>/dev/null | head -n 1)"
+    NIRI_SOCKET="$(${pkgs.findutils}/bin/find "$runtime_dir" -name 'niri*.sock' 2>/dev/null | head -n 1)"
     if [ -n "$NIRI_SOCKET" ]; then
       echo "Using socket found at $NIRI_SOCKET"
-      ${lib.getExe config.programs.niri.package} msg action do-screen-transition
+      set +e
+      ${lib.getExe config.programs.niri.package} msg action do-screen-transition || echo "niri msg failed with $?" >&2
+      set -e
     else
       echo "Cannot find NIRI_SOCKET; skipping screen transition"
     fi
@@ -73,9 +75,9 @@ let
         echo "Switching from $current_mode to $new_mode"
 
         if [ "$new_mode" = "dark" ]; then
-          activate_script="/run/current-system/specialisation/night/bin/switch-to-configuration"
+          activate_script="/run/booted-system/specialisation/night/bin/switch-to-configuration"
         else
-          activate_script="/run/current-system/specialisation/day/bin/switch-to-configuration"
+          activate_script="/run/booted-system/specialisation/day/bin/switch-to-configuration"
         fi
 
         if [ -x "$activate_script" ]; then
