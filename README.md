@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ## First-time install
 1. Run `kbuildsycoca6` (populates the binary cache of data for KDE - so default apps iirc in Dolphin).
 
@@ -33,6 +32,3 @@ sudo ln -s /home/$(whoami)/nixos /etc/nixos
 ```bash
 sudo nixos-rebuild switch
 ```
-=======
-1. Run `kbuildsycoca6`.
->>>>>>> 98f10f82d6385071afd666d63032ffb49ab0e20c
