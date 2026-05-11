@@ -152,6 +152,61 @@ in
       aw-qt
     ];
 
+    systemd.user.services.aw-watcher-afk = {
+      Unit = {
+        Description = "ActivityWatch AFK Watcher";
+        After = [ "graphical-session.target" ];
+      };
+
+      Service = {
+        Type = "simple";
+        ExecStart = "${pkgs.aw-watcher-afk}/bin/aw-watcher-afk";
+        Restart = "always";
+        RestartSec = 3;
+      };
+
+      Install = {
+        WantedBy = [ "default.target" ];
+      };
+    };
+
+    systemd.user.services.aw-watcher-window-wayland = {
+      Unit = {
+        Description = "ActivityWatch Wayland Window Watcher";
+        After = [ "graphical-session.target" ];
+      };
+
+      Service = {
+        Type = "simple";
+        ExecStartPre = "${pkgs.coreutils}/bin/sleep 60"; # Try stop lagging
+        ExecStart = "${pkgs.aw-watcher-window-wayland}/bin/aw-watcher-window-wayland";
+        Restart = "always";
+        RestartSec = 3;
+      };
+
+      Install = {
+        WantedBy = [ "default.target" ];
+      };
+    };
+
+    systemd.user.services.aw-notify = {
+      Unit = {
+        Description = "ActivityWatch Notify (Rust)";
+        After = [ "graphical-session.target" ];
+      };
+
+      Service = {
+        Type = "simple";
+        ExecStart = "${awNotifyRs}/bin/aw-notify start";
+        Restart = "always";
+        RestartSec = 3;
+      };
+
+      Install = {
+        WantedBy = [ "default.target" ];
+      };
+    };
+
     systemd.user.services.aw-watcher-input = {
       Unit = {
         Description = "ActivityWatch Input Watcher";
@@ -226,27 +281,6 @@ EOF
         WantedBy = [ "default.target" ];
       };
     };
-
-    # Should get auto-started by aw-qt
-    /*
-    systemd.user.services.aw-notify = {
-      Unit = {
-        Description = "ActivityWatch Notify (Rust)";
-        After = [ "graphical-session.target" ];
-      };
-
-      Service = {
-        Type = "simple";
-        ExecStart = "${awNotifyRs}/bin/aw-notify start";
-        Restart = "always";
-        RestartSec = 3;
-      };
-
-      Install = {
-        WantedBy = [ "default.target" ];
-      };
-    };
-    */
   };
 
   systemd.services.pifi-proxy = {
