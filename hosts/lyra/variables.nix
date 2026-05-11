@@ -97,6 +97,7 @@
   longitude = -0.1;
 
   locale = "en_GB.UTF-8"; # System locale
+  locale-simple = "en-GB"; # Simple locale for programs that don't like the full one
 
   timezone = "Europe/London"; # Your timezone
   location = "London+England";
