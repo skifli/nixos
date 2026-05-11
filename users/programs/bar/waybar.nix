@@ -50,7 +50,7 @@
         /* === Module base === */
         #cpu, #memory, #temperature, #network, #pulseaudio, #clock,
         #tray, #privacy, #user, #load, #idle_inhibitor,
-        #systemd-failed-units, #niri-window {
+        #custom-notification, #systemd-failed-units, #niri-window {
           padding: 0 6px;
           transition: background 200ms ease-in-out;
         }
@@ -59,7 +59,7 @@
         #cpu label, #memory label, #temperature label, #network label,
         #pulseaudio label, #clock label, #tray label, #privacy label,
         #user label, #load label, #idle_inhibitor label,
-        #systemd-failed-units label, #niri-window label {
+        #custom-notification label, #systemd-failed-units label, #niri-window label {
           padding-top: 2px;
           padding-bottom: 2px;
         }
