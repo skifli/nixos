@@ -1,6 +1,7 @@
 ## First-time install
 1. Run `kbuildsycoca6` (populates the binary cache of data for KDE - so default apps iirc in Dolphin)
 2. Run `hblock` (future note to self - declaratively set up https://github.com/hectorm/hblock/tree/master/resources/systemd).
+3. Zen Internet / AW extensions do NOT expose enterprise policy settings so manually have to go in and enable it the first time.
 
 ## How to setup in ~/nixos
 
