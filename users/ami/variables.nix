@@ -1,4 +1,4 @@
-{
+rec {
   # User configuration
   extraGroups = [ ];
   wallpaper = "1-0Q3A5252";
@@ -9,134 +9,147 @@
     email = "121291719+skifli@users.noreply.github.com";
   };
 
-  niri = {
-    spawn-at-startup = [
-      { command = [ userVars.programs.browser ]; }
-      { command = [ "anki" ]; }
-      { command = [ "anytype" ]; }
-      # { command = [ "cherry-studio" ]; }
-      { command = [ "evince" ]; }
-      { command = [ "ferdium" ]; }
-      { command = [ "kdeconnect-indicator" ]; }
-      { command = [ "ktailctl" ]; }
-      { command = [ "lan-mouse" ]; }
-      { command = [ "remmina" ]; }
-      { command = [ "safeeyes" ]; }
-      # { command = [ "weylus" ]; }
-    ];
+  niri =
+    let
+      primaryBrowser = builtins.elemAt programs.browsers 0;
 
-    window-rules = [
-      {
-        matches = [
-          {
-            app-id = "(?i)ferdium";
-          }
-        ];
+      browserStartup = map (browser: { command = [ browser ]; }) programs.browsers;
 
-        open-on-workspace = "1";
-        open-maximized = true;
-      }
-      {
-        matches = [
+      browserAppIdMatches = builtins.concatMap (
+        browser:
+        [
           {
-            app-id = "(?i)${userVars.programs.browser}"; # E.g., zen
+            app-id = "(?i)${browser}";
           }
-          {
-            app-id = "(?i)chromium-browser"; # BrowserOS is special... generic catch-all 'eh though?
-          }
-        ];
+        ]
+        # BrowserOS is special (often shows up as chromium-browser)
+        ++ (if browser == "browseros" then [ { app-id = "(?i)chromium-browser"; } ] else [ ])
+      ) programs.browsers;
+    in
+    {
+      spawn-at-startup = [
+        # Start all configured browsers for easy testing.
+      ]
+      ++ browserStartup
+      ++ [
+        { command = [ "anki" ]; }
+        { command = [ "anytype" ]; }
+        # { command = [ "cherry-studio" ]; }
+        { command = [ "evince" ]; }
+        { command = [ "ferdium" ]; }
+        { command = [ "kdeconnect-indicator" ]; }
+        { command = [ "ktailctl" ]; }
+        { command = [ "lan-mouse" ]; }
+        { command = [ "remmina" ]; }
+        { command = [ "safeeyes" ]; }
+        # { command = [ "weylus" ]; }
+      ];
 
-        open-on-workspace = "2";
-        open-maximized = true;
-      }
-      {
-        matches = [
-          {
-            app-id = "(?i)anki";
-          }
-        ];
+      window-rules = [
+        {
+          matches = [
+            {
+              app-id = "(?i)ferdium";
+            }
+          ];
 
-        open-on-workspace = "3";
-        open-maximized = true;
-      }
-      {
-        matches = [
-          {
-            app-id = "(?i)evince";
-          }
-        ];
+          open-on-workspace = "1";
+          open-maximized = true;
+        }
+        {
+          matches = browserAppIdMatches;
 
-        open-on-workspace = "3";
-        open-maximized = true;
-      }
-      {
-        matches = [
-          {
-            title = "(?i)Anytype";
-          }
-        ];
+          open-on-workspace = "2";
+          open-maximized = true;
+        }
+        {
+          matches = [
+            {
+              app-id = "(?i)anki";
+            }
+          ];
 
-        open-on-workspace = "4";
-        open-maximized = true;
-      }
-      {
-        matches = [
-          {
-            app-id = "(?i)anki";
-            title = "(?i)Preview";
-          }
-        ];
+          open-on-workspace = "3";
+          open-maximized = true;
+        }
+        {
+          matches = [
+            {
+              app-id = "(?i)evince";
+            }
+          ];
 
-        open-on-workspace = "5";
-        open-maximized = true;
-      }
-      {
-        matches = [
-          {
-            app-id = "(?i)org.remmina.Remmina";
-          }
-        ];
+          open-on-workspace = "3";
+          open-maximized = true;
+        }
+        {
+          matches = [
+            {
+              title = "(?i)Anytype";
+            }
+          ];
 
-        open-on-workspace = "5";
-        open-maximized = true;
-      }
-      /*
-      {
-        matches = [
-          {
-            app-id = "(?i)weylus";
-          }
-        ];
+          open-on-workspace = "4";
+          open-maximized = true;
+        }
+        {
+          matches = [
+            {
+              app-id = "(?i)anki";
+              title = "(?i)Preview";
+            }
+          ];
 
-        open-on-workspace = "6";
-        open-maximized = true;
-      }
-      */
-      {
-        matches = [
-          {
-            title = "(?i)Lan Mouse";
-          }
-          {
-            app-id = "(?i)org.fkoehler.KTailctl";
-          }
-        ];
+          open-on-workspace = "5";
+          open-maximized = true;
+        }
+        {
+          matches = [
+            {
+              app-id = "(?i)org.remmina.Remmina";
+            }
+          ];
 
-        open-on-workspace = "6";
-        open-maximized = true;
-      }
-      {
-        matches = [
-          {
-            title = "(?i)Safe Eyes";
-          }
-        ];
+          open-on-workspace = "5";
+          open-maximized = true;
+        }
+        /*
+        {
+          matches = [
+            {
+              app-id = "(?i)weylus";
+            }
+          ];
 
-        open-on-workspace = "6";
-        open-maximized = true;
-      }
-    ];
-  };
+          open-on-workspace = "6";
+          open-maximized = true;
+        }
+        */
+        {
+          matches = [
+            {
+              title = "(?i)Lan Mouse";
+            }
+            {
+              app-id = "(?i)org.fkoehler.KTailctl";
+            }
+          ];
+
+          open-on-workspace = "6";
+          open-maximized = true;
+        }
+        {
+          matches = [
+            {
+              title = "(?i)Safe Eyes";
+            }
+          ];
+
+          open-on-workspace = "6";
+          open-maximized = true;
+        }
+      ];
+    };
 
   waybar = {
     output = "DP-1";
@@ -153,7 +166,7 @@
     osd = "swayosd";
 
     # Kinda core apps
-    browser = "browseros";
+    browsers = [ "browseros" "zen" ];
     editor = "hx";
     explorer-tui = "yazi";
     explorer-gui = "dolphin";

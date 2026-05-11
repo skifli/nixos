@@ -67,13 +67,17 @@
           "/home/${userVars.username}/.cargo/bin"
         ];
 
-        sessionVariables = {
-          BROWSER = userVars.programs.browser;
-          EDITOR = userVars.programs.editor;
-          SHELL = userVars.programs.shell;
-          TERM = userVars.programs.terminal;
-          VISUAL = userVars.programs.visual;
-        };
+        sessionVariables =
+          let
+            primaryBrowser = builtins.elemAt userVars.programs.browsers 0;
+          in
+          {
+            BROWSER = primaryBrowser;
+            EDITOR = userVars.programs.editor;
+            SHELL = userVars.programs.shell;
+            TERM = userVars.programs.terminal;
+            VISUAL = userVars.programs.visual;
+          };
 
         shellAliases = {
           # --- OGs ---

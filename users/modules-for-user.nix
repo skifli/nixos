@@ -7,11 +7,29 @@
 let
   programs = userVars.programs;
 
+  categoryDirFor = category:
+    if builtins.pathExists (./programs/${category}) then
+      category
+    else if lib.hasSuffix "s" category && builtins.pathExists (./programs/${lib.removeSuffix "s" category}) then
+      lib.removeSuffix "s" category
+    else
+      category;
+
+  mkProgramModulePath = category: name: ./programs/${categoryDirFor category}/${name}.nix;
+
   regular = lib.concatMap (
     category:
-    lib.optional (
-      category != "other" && programs.${category} != "" # Don't get programs specified in the "other" variable, those are handled below
-    ) ./programs/${category}/${programs.${category}}.nix
+    let
+      value = programs.${category};
+    in
+    if category == "other" then
+      [ ]
+    else if builtins.isList value then
+      map (name: mkProgramModulePath category name) value
+    else if value != "" then
+      [ (mkProgramModulePath category value) ]
+    else
+      [ ]
   ) (builtins.attrNames programs); # Get all programs specified in the usual way
 
   others = map (program: ./programs/${program}.nix) (programs.other or [ ]); # Get all programs specified in the "other" variable

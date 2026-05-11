@@ -15,11 +15,11 @@
       let
         nonEmpty = builtins.filter (p: p != null && p != "");
 
+        browsers = userVars.programs.browsers;
+
         wrapEach = patterns: map (p: "(${p})") patterns;
 
-        prefer = wrapEach (nonEmpty [
-          userVars.programs.browser
-        ]);
+        prefer = wrapEach (nonEmpty browsers);
 
         avoid = wrapEach (nonEmpty [
           "sshd"
