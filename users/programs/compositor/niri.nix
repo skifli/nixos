@@ -85,18 +85,6 @@
                 {
                   title = "^(Unlock Login Keyring)(.*)$";
                 } # GNOME Keyring
-                {
-                  app-id = "(?i)${userVars.programs.browser}";
-                  title = "^(Enter name of file to save to)(.*)$";
-                } # Meant to be Zen save file screen
-                {
-                  app-id = "(?i)${userVars.programs.browser}";
-                  title = "^(Removing Cookies and Site Data)(.*)$";
-                } # Meant to be Zen browser site data screen
-                {
-                  app-id = "(?i)${userVars.programs.browser}";
-                  title = "^(Save)(.*)$";
-                } # Meant to be Zen save screen
               ];
 
               geometry-corner-radius = rec {

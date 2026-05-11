@@ -103,7 +103,7 @@
       };
       "Home Manager" = {
         urls = [ { template = "https://home-manager-options.extranix.com/?query={searchTerms}"; } ];
-        icon = nix-icon;
+        icon = "https://home-manager-options.extranix.com/images/favicon.png";
         definedAliases = [
           "@hm"
           "@home"
@@ -112,7 +112,7 @@
       };
       "My NixOS" = {
         urls = [ { template = "https://mynixos.com/search?q={searchTerms}"; } ];
-        icon = nix-icon;
+        icon = "https://mynixos.com/favicon.ico";
         definedAliases = [
           "@mn"
           "@nx"

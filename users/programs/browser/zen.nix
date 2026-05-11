@@ -1,4 +1,5 @@
 {
+  hostVars,
   inputs,
   lib,
   pkgs,
@@ -25,20 +26,17 @@
             id = 0;
             name = "default";
             isDefault = true;
-            /*
             containersForce = true;
             pinsForce = true;
             spacesForce = true;
-            */
             
-            settings = import ./zen/settings.nix;
+            settings = import ./zen/settings.nix { inherit hostVars; };
             bookmarks = import ./zen/bookmarks.nix;
             search = import ./zen/search.nix { inherit pkgs; };
-            /*
             containers = import ./zen/containers.nix;
             pins = import ./zen/pins.nix;
             spaces = import ./zen/spaces.nix;
-            */
+            
             /*
               userChrome = builtins.readFile "${arc2}/userChrome.css";
               userContent = builtins.readFile "${arc2}/userContent.css";
@@ -59,8 +57,6 @@
 
               // Common Overrides
               user_pref("browser.contentblocking.features.strict", "tp,tpPrivate,cookieBehavior5,cookieBehaviorPBM5,cm,fp,stp,emailTP,emailTPPrivate,-lvl2,rp,rpTop,ocsp,qps,qpsPBM,fpp,fppPrivate,3pcd,btp"); // https://github.com/yokoffing/Betterfox/wiki/Common-Overrides#example
-              user_pref("permissions.default.geo", 0); // https://github.com/yokoffing/Betterfox/wiki/Common-Overrides#location-requests
-              user_pref("permissions.default.desktop-notification", 0); // https://github.com/yokoffing/Betterfox/wiki/Common-Overrides#site-notifications
               user_pref("browser.ml.linkPreview.enabled", true); // https://github.com/yokoffing/Betterfox/wiki/Common-Overrides#ai-features
 
               // Optional Hardening
