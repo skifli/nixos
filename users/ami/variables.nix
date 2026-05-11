@@ -11,9 +11,9 @@
 
   niri = {
     spawn-at-startup = [
+      { command = [ userVars.programs.browser ]; }
       { command = [ "anki" ]; }
       { command = [ "anytype" ]; }
-      { command = [ "browseros" ]; }
       # { command = [ "cherry-studio" ]; }
       { command = [ "evince" ]; }
       { command = [ "ferdium" ]; }
@@ -23,7 +23,6 @@
       { command = [ "remmina" ]; }
       { command = [ "safeeyes" ]; }
       # { command = [ "weylus" ]; }
-      # { command = [ "zen" ]; }
     ];
 
     window-rules = [
@@ -40,13 +39,10 @@
       {
         matches = [
           {
-            app-id = "(?i)zen";
+            app-id = "(?i)${userVars.programs.browser}"; # E.g., zen
           }
           {
-            app-id = "(?i)chromium-browser";
-          }
-          {
-            app-id = "(?i)CherryStudio";
+            app-id = "(?i)chromium-browser"; # BrowserOS is special... generic catch-all 'eh though?
           }
         ];
 
