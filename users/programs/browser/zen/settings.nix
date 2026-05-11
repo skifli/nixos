@@ -48,6 +48,8 @@ in {
   "plugins.enumerable_names" = "";
   "plugin.state.flash" = 0;
   "browser.search.update" = false;
+  "browser.topsites.contile.enabled" = false;
+  "browser.newtabpage.activity-stream.feeds.topsites" = false;
   "extensions.ui.sitepermission.hidden" = lock-true;
   "extensions.ui.locale.hidden" = lock-true;
   "extensions.screenshots.disabled" = lock-true;
@@ -77,6 +79,7 @@ in {
   # Performance settings
   "gfx.webrender.all" = true; # Force enable GPU acceleration
   "media.ffmpeg.vaapi.enabled" = true;
+  "media.videocontrols.picture-in-picture.video-toggle.enabled" = true;
   "widget.dmabuf.force-enabled" = true; # Required in recent Firefoxes
   "reader.parse-on-load.force-enabled" = true;
   "privacy.webrtc.legacyGlobalIndicator" = false;
@@ -92,7 +95,19 @@ in {
   "privacy.query_stripping.enabled" = true;
   "privacy.query_stripping.enabled.pbmode" = lock-true;
   "privacy.resistFingerprinting" = false;
+  "privacy.resistFingerprinting.block_mozAddonManager" = true;
   "privacy.donottrackheader.enabled" = lock-true;
+
+  # Clear on shutdown (Only locks the options to true. Manually enable in firefox settings)
+  "privacy.sanitize.sanitizeOnShutdown" = true;
+  "privacy.clearOnShutdown.cache" = true;
+  "privacy.clearOnShutdown.cookies" = false;
+  "privacy.clearOnShutdown.downloads" = false;
+  "privacy.clearOnShutdown.formdata" = true;
+  "privacy.clearOnShutdown.history" = false;
+  "privacy.clearOnShutdown.offlineApps" = false;
+  "privacy.clearOnShutdown.sessions" = false;
+  "privacy.clearOnShutdown.siteSettings" = false;
 
   # Block telemetry
   "toolkit.telemetry.enabled" = lock-false;
@@ -108,7 +123,7 @@ in {
   "browser.newtabpage.activity-stream.telemetry" = lock-false;
   "browser.ping-centre.telemetry" = lock-false;
 
-    # Block more unwanted stuff
+  # Block more unwanted stuff
   "dom.block_multiple_popups" = lock-true;
   "browser.privatebrowsing.forceMediaMemoryCache" = lock-true;
   "browser.contentblocking.category" = {
@@ -238,4 +253,7 @@ in {
   "zen.welcome-screen.seen" = lock-true;
   "zen.widget.linux.transparency" = false; # Disable transparent sidebar
   "zen.workspaces.continue-where-left-off" = true;
+
+  "network.http.http3.enabled" = true;
+  "network.socket.ip_addr_any.disabled" = true; # Disallow binding to 0.0.0.0
 }
