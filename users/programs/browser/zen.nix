@@ -18,24 +18,46 @@
       
       programs.zen-browser = {
         enable = true;
+
+        # Native messaging hosts for browser-application communication
+        # Reference: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging
+        # Option 1: Via Home Manager
+        # Source: https://github.com/0xc000022070/zen-browser-flake/blob/main/examples/14-native-messaging.nix
         nativeMessagingHosts = [ pkgs.firefoxpwa ];
-        policies = import ./zen/policies.nix { inherit lib; };
-        languagePacks = [ "en-GB" ];
+
+        setAsDefaultBrowser = true;
+        enablePrivateDesktopEntry = true;
+
+        policies = import ./zen/policies.nix { inherit hostVars; };
+        languagePacks = [ hostVars.locale-simple ];
         profiles = {
           default = {
             id = 0;
             name = "default";
             isDefault = true;
-            containersForce = true;
+            containersForce = true; # Delete containers not declared below
             pinsForce = true;
-            spacesForce = true;
+            pinsForceAction = "demote"; # omit or "demote" to keep undeclared pins as normal tabs
+            spacesForce = true; # Delete spaces not declared below
             
             settings = import ./zen/settings.nix { inherit hostVars; };
             bookmarks = import ./zen/bookmarks.nix;
             search = import ./zen/search.nix { inherit pkgs; };
             containers = import ./zen/containers.nix;
             pins = import ./zen/pins.nix;
+            joinedTabs = import ./zen/joined-tabs.nix;
             spaces = import ./zen/spaces.nix;
+            mods = import ./zen/mods.nix;
+
+            keyboardShortcuts = import ./zen/keyboard-shortcuts.nix;
+            # In order to avoid breaking changes here, sometimes when you upgrade you
+            # should be asked to bump this version
+            keyboardShortcutsVersion = keyboardShortcuts.keyboardShortcutsVersion;
+
+            sine = {
+              # Disabled due to buggy and not (yet) documented https://github.com/0xc000022070/zen-browser-flake/issues/237
+              enable = false;
+            }
             
             /*
               userChrome = builtins.readFile "${arc2}/userChrome.css";

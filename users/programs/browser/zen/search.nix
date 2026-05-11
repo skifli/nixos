@@ -1,7 +1,7 @@
 { pkgs, ... }:
 
 {
-  force = true;
+  force = true; # Enforce declared search engines on each rebuild
   default = "Gooogle";
   privateDefault = "Startpage";
   order = [

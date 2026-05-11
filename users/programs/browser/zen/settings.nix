@@ -192,7 +192,7 @@ in {
   "browser.newtabpage.activity-stream.improvesearch.topSiteSearchShortcuts.searchEngines" = "";
   "browser.protections_panel.infoMessage.seen" = lock-true;
   "browser.ssb.enabled" = true;
-  "browser.tabs.allow_transparent_browser" = false;
+  "browser.tabs.allow_transparent_browser" = true;
   "browser.toolbars.bookmarks.visibility" = "never"; # always, never, newtab
   # "browser.urlbar.placeholderName" = "Google";
   "browser.urlbar.suggest.history" = false;
@@ -204,14 +204,20 @@ in {
 
   "layout.css.devPixelsPerPx" = -1;
   # "zen.theme.accent-color" = "#ffb787";
-  "zen.theme.acrylic-elements" = false;
+
+  # https://sameerasw.com/zen#intro
+  "zen.theme.acrylic-elements" = true;
+  "widget.transparent-windows" = true; 
+  "zen.theme.gradient.show-custom-colors" = true;
+  "mod.sammerasw.zen_transparent_glance_enabled" = true; # Config for the mod
+  "mod.sameerasw.zen_transparent_sidebar_enabled" = true;
+
   "zen.theme.border-radius" = 8;
   "zen.theme.content-element-separation" = 0;
   "zen.theme.dark-mode-bias" = 0.3;
   # "zen.theme.disable-lightweight" = true; Depracated https://github.com/zen-browser/desktop/issues/9522#issuecomment-3089206722
   "zen.theme.essentials-favicon-bg" = true;
   "zen.theme.gradient" = true;
-  "zen.theme.gradient.show-custom-colors" = false;
   "zen.theme.hide-tab-throbber" = true;
   "zen.theme.show-custom-colors" = true;
   "zen.theme.styled-status-panel" = false;
