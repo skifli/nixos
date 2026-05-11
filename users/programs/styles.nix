@@ -155,7 +155,7 @@ in
       icons = commonHostVars.icons;
       fonts = commonHostVars.fonts;
 
-      # targets."${userVars.programs.browser}-browser".enable = false;
+      # targets."${builtins.elemAt userVars.programs.browsers 0}-browser".enable = false;
     };
 
     gtk = {
