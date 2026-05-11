@@ -87,17 +87,6 @@
         matches = [
           {
             app-id = "(?i)anki";
-            title = "(?i)Browse.*";
-          }
-        ];
-
-        open-on-workspace = "5";
-        open-maximized = true;
-      }
-      {
-        matches = [
-          {
-            app-id = "(?i)anki";
             title = "(?i)Preview";
           }
         ];
@@ -105,7 +94,6 @@
         open-on-workspace = "5";
         open-maximized = true;
       }
-      
       {
         matches = [
           {

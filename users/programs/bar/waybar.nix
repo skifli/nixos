@@ -83,13 +83,7 @@
         }
 
         /* make notification not hug the screen edge */
-        #custom-notification {
-          margin-right: 6px;
-          padding: 0 8px;  /* Add proper padding to notification icon */
-          background: rgba(255, 255, 255, 0.05);
-          border-radius: 4px;
-          border: 1px solid @border_main;
-        }
+        #custom-notification { margin-right: 6px; }
 
         #tray { margin: 0 5px; }
         #tray > .active { border-top: 3px solid white; }
