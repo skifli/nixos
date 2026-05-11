@@ -24,23 +24,11 @@ let
 
   # Follows pattern "extension-ID" = "extension-name";
   mozillaExtensionIds = {
-    "{91aa3897-2634-4a8a-9092-279db23a7689}" = {
-      id = "zen-internet";
-    };
-    "{ef87d84c-2127-493f-b952-5b4e744245bc}" = {
-      id = "aw-watcher-web";
-    };
-    "adnauseam@rednoise.org" = {
-      id = "adnauseam";
-    };
-    "authenticator@mymindstorm" = {
-      id = "auth-helper";
-      pinned = true;
-    };
-    "78272b6fa58f4a1abaac99321d503a20@proton.me" = {
-      id = "proton-pass";
-      pinned = true;
-    };
+    "{91aa3897-2634-4a8a-9092-279db23a7689}".id = "zen-internet";
+    "{ef87d84c-2127-493f-b952-5b4e744245bc}".id = "aw-watcher-web";
+    "adnauseam@rednoise.org".id = "adnauseam";
+    "authenticator@mymindstorm".id = "auth-helper";
+    "78272b6fa58f4a1abaac99321d503a20@proton.me".id = "proton-pass";
   };
 
   customExtensionSettings = {
