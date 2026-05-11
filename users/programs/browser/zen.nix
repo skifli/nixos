@@ -31,7 +31,7 @@
         policies = import ./zen/policies.nix { inherit hostVars; };
         languagePacks = [ hostVars.locale-simple ];
         profiles = {
-          default = {
+          default = rec {
             id = 0;
             name = "default";
             isDefault = true;
@@ -57,7 +57,7 @@
             sine = {
               # Disabled due to buggy and not (yet) documented https://github.com/0xc000022070/zen-browser-flake/issues/237
               enable = false;
-            }
+            };
             
             /*
               userChrome = builtins.readFile "${arc2}/userChrome.css";
