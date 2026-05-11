@@ -12,6 +12,7 @@
     ferdium
     fira-code
     haruna # Media player
+    hblock
     imagemagick # mogrift EXIF
     kdePackages.gwenview # Image viewer
     # kdePackages.kate # Also installs kwrite

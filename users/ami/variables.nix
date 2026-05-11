@@ -13,9 +13,6 @@
     spawn-at-startup = [
       { command = [ "anki" ]; }
       { command = [ "anytype" ]; }
-      { command = [ "aw-notify" ]; }
-      { command = [ "aw-watcher-afk" ]; }
-      { command = [ "aw-watcher-window-wayland" ]; }
       { command = [ "browseros" ]; }
       # { command = [ "cherry-studio" ]; }
       { command = [ "evince" ]; }
@@ -26,7 +23,7 @@
       { command = [ "remmina" ]; }
       { command = [ "safeeyes" ]; }
       # { command = [ "weylus" ]; }
-      { command = [ "zen" ]; }
+      # { command = [ "zen" ]; }
     ];
 
     window-rules = [
@@ -60,17 +57,6 @@
         matches = [
           {
             app-id = "(?i)anki";
-            title = "(?i)Browse";
-          }
-        ];
-
-        open-on-workspace = "2";
-        open-maximized = false;
-      }
-      {
-        matches = [
-          {
-            app-id = "(?i)anki";
           }
         ];
 
@@ -97,6 +83,29 @@
         open-on-workspace = "4";
         open-maximized = true;
       }
+      {
+        matches = [
+          {
+            app-id = "(?i)anki";
+            title = "(?i)Browse.*";
+          }
+        ];
+
+        open-on-workspace = "5";
+        open-maximized = true;
+      }
+      {
+        matches = [
+          {
+            app-id = "(?i)anki";
+            title = "(?i)Preview";
+          }
+        ];
+
+        open-on-workspace = "5";
+        open-maximized = true;
+      }
+      
       {
         matches = [
           {

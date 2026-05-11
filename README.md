@@ -1,5 +1,6 @@
 ## First-time install
-1. Run `kbuildsycoca6` (populates the binary cache of data for KDE - so default apps iirc in Dolphin).
+1. Run `kbuildsycoca6` (populates the binary cache of data for KDE - so default apps iirc in Dolphin)
+2. Run `hblock` (future note to self - declaratively set up https://github.com/hectorm/hblock/tree/master/resources/systemd).
 
 ## How to setup in ~/nixos
 

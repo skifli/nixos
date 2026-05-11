@@ -50,6 +50,21 @@ let
     })
   );
 
+  anki-redesign-plus = (
+    pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
+      pname = "anki-redesign-plus";
+      version = "4c7621c";
+      src = pkgs.fetchFromGitHub {
+        owner = "qais8r";
+        repo = "anki-redesign-plus";
+        rev = finalAttrs.version;
+        sparseCheckout = [ "" ];
+        hash = "";
+      };
+      sourceRoot = "${finalAttrs.src.name}";
+    })
+  );
+
   aw-watcher-anki = (
     pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
       pname = "aw-watcher-anki";
@@ -122,7 +137,26 @@ in
             http_host = "0.0.0.0";
           };
         })
-        fsrs4anki-helper
+        (fsrs4anki-helper.withConfig {
+          config = {
+            easy_dates = [ ];
+            days_to_reschedule = 7;
+            auto_reschedule_after_sync = false;
+            auto_disperse_after_sync = false;
+            auto_disperse_when_review = false;
+            auto_disperse_after_reschedule = false;
+            mature_ivl = 21;
+            reschedule_threshold = 0;
+            debug_notify = false;
+            fsrs_stats = true;
+            display_memory_state = false;
+            has_rated = false;
+            show_steps_stats = true;
+            show_true_retention = true;
+            "reschedule-set-due-date" = false;
+          };
+        })
+        # anki-redesign-plus
         ankiAddons.reviewer-refocus-card
         (anki-connect.withConfig {
           config = {
@@ -131,7 +165,7 @@ in
           };
         })
         aw-watcher-anki
-        anki-quizlet-importer-extended  # More up to date than their version (which as of writing is 2025.03.13)
+        anki-quizlet-importer-extended # More up to date than their version (which as of writing is 2025.03.13)
         # onigiri-anki
         (advanced-review-bottom-bar.withConfig {
           config = {
@@ -313,12 +347,12 @@ in
     description = "PDF Reader MCP (User)";
     after = [ "graphical-session.target" ];
     wantedBy = [ "graphical-session.target" ];
-  
+
     serviceConfig = {
-    Type = "simple";
+      Type = "simple";
       Restart = "on-failure";
       Environment = [
-        "HOME=%h"                                   # your real home
+        "HOME=%h" # your real home
         "PATH=/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:/etc/profiles/per-user/%h/bin"
         "MCP_TRANSPORT=http"
         "MCP_HTTP_PORT=42069"
