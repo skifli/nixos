@@ -7,7 +7,8 @@
 }:
 
 {
-  environment.variables.MOZ_LEGACY_PROFILES = 1; # Workaround for https://github.com/0xc000022070/zen-browser-flake/issues/63;
+  # Breaks stuff now apparently
+  # environment.variables.MOZ_LEGACY_PROFILES = 1; # Workaround for https://github.com/0xc000022070/zen-browser-flake/issues/63;
 
   home-manager = {
     sharedModules = [ inputs.zen-browser.homeModules.beta ];
@@ -15,7 +16,7 @@
     users.${userVars.username} = {
       home.packages = with pkgs; [ speechd ];
 
-      stylix.targets.zen-browser.profileNames = [ "default" ];
+      stylix.targets.zen-browser.enable = false;
       
       programs.zen-browser = {
         enable = true;
