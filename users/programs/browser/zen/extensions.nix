@@ -1,38 +1,36 @@
 { hostVars, ... }:
 
+# Extension policy wiring for zen-browser-flake.
 # Learn more:
 # https://github.com/0xc000022070/zen-browser-flake/tree/b6b1e625e4aa049b59930611fc20790c0ccbc840?tab=readme-ov-file#extensions
 let
-  mkPluginUrl = id: "https://addons.mozilla.org/firefox/downloads/latest/${id}/latest.xpi";
+  mkAmoXpiUrl = amoSlug: "https://addons.mozilla.org/firefox/downloads/latest/${amoSlug}/latest.xpi";
 
-  mkExtensionEntry =
+  mkForceInstalled =
     {
-      id,
+      amoSlug,
       pinned ? false,
     }:
-    let
-      base = {
-        install_url = mkPluginUrl id;
-        installation_mode = "force_installed";
-      };
-    in
-    if pinned then base // { default_area = "navbar"; } else base;
+    {
+      install_url = mkAmoXpiUrl amoSlug;
+      installation_mode = "force_installed";
+    }
+    // (if pinned then { default_area = "navbar"; } else { });
 
-  mkExtensionSettings = builtins.mapAttrs (
-    _: entry: if builtins.isAttrs entry then entry else mkExtensionEntry { id = entry; }
-  );
-
-  # Follows pattern "extension-ID" = "extension-name";
-  mozillaExtensionIds = {
-    "{91aa3897-2634-4a8a-9092-279db23a7689}".id = "zen-internet";
-    "{ef87d84c-2127-493f-b952-5b4e744245bc}".id = "aw-watcher-web";
-    "adnauseam@rednoise.org".id = "adnauseam";
-    "authenticator@mymindstorm".id = "auth-helper";
-    "78272b6fa58f4a1abaac99321d503a20@proton.me".id = "proton-pass";
+  # Mapping: extension-id -> { amoSlug, pinned? }
+  # The attribute name is the *extension ID*; the slug is used to fetch from AMO.
+  amoExtensions = {
+    "{91aa3897-2634-4a8a-9092-279db23a7689}" = { amoSlug = "zen-internet"; };
+    "{ef87d84c-2127-493f-b952-5b4e744245bc}" = { amoSlug = "aw-watcher-web"; };
+    "adnauseam@rednoise.org" = { amoSlug = "adnauseam"; };
+    "authenticator@mymindstorm" = { amoSlug = "auth-helper"; };
+    "78272b6fa58f4a1abaac99321d503a20@proton.me" = { amoSlug = "proton-pass"; };
   };
 
+  extensionSettingsFromAmo = builtins.mapAttrs (_: spec: mkForceInstalled spec) amoExtensions;
+
   customExtensionSettings = {
-    # View Xpi Id's in Firefox Extension Store
+    # View XPI IDs in the Firefox Extension Store (or upstream release pages)
     "queryamoid@kaply.com" = {
       private_browsing = true;
       installation_mode = "force_installed";
@@ -48,8 +46,8 @@ in
         installation_mode = "blocked";
       };
     }
-    // mkExtensionSettings mozillaExtensionIds
-    // mkExtensionSettings customExtensionSettings;
+    // extensionSettingsFromAmo
+    // customExtensionSettings;
 
   "3rdparty".Extensions = {
     # Dunno if these actually work but still
@@ -65,7 +63,7 @@ in
         disableFooter = false;
         disableDarkReader = false;
         enableLogs = false;
-        fallbackBackgroundList = [];
+        fallbackBackgroundList = [ ];
         lastFetchedTime = 0;
         welcomeShown = true;
       };

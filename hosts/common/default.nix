@@ -1,5 +1,6 @@
 {
   hostname,
+  inputs,
   lib,
   pkgs,
   ...
@@ -77,6 +78,7 @@ in
 
     # Common stuff
     ./host-packages.nix
+    ../../modules/core/agenix.nix
     ../../users/default.nix
   ]
   ++ lib.flatten (

@@ -1,10 +1,14 @@
 { hostVars, ... }:
 
 let
-  extensions = import ./extensions.nix;
-in
-({
+  extensions = import ./extensions.nix { inherit hostVars; };
 
+  lockPref = value: {
+    Value = value;
+    Status = "locked";
+  };
+in
+{
   AllowFileSelectionDialogs = true;
   AppAutoUpdate = false;
   AutofillAddressEnabled = false;
@@ -30,9 +34,6 @@ in
   DisableTelemetry = true;
   DisableFeedbackCommands = true;
   DontCheckDefaultBrowser = true;
-  DNSOverHTTPS = {
-    Enabled = true;
-  };
   EnableTrackingProtection = {
     Value = true;
     Locked = true;
@@ -70,6 +71,18 @@ in
     "browser.tabs.warnOnClose" = {
       Value = false;
     };
+
+    # Keep most UI preferences user-changeable (defaults go in profile settings).
+    # These are the ones we actually want enforced.
+    "dom.security.https_only_mode" = lockPref true;
+    "dom.security.https_only_mode_ever_enabled" = lockPref true;
+
+    "privacy.globalprivacycontrol.enabled" = lockPref true;
+    "privacy.globalprivacycontrol.functionality.enabled" = lockPref true;
+
+    "extensions.autoDisableScopes" = lockPref 0;
+    "extensions.enabledScopes" = lockPref 15;
+    "extensions.webextensions.restrictedDomains" = lockPref "";
   };
   PromptForDownloadLocation = true;
   RequestPolicy = {
@@ -85,4 +98,5 @@ in
   };
   # Learn more:
   # https://github.com/0xc000022070/zen-browser-flake/tree/b6b1e625e4aa049b59930611fc20790c0ccbc840?tab=readme-ov-file#extensions
-} // extensions { inherit hostVars; } )
+}
+// extensions

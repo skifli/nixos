@@ -12,7 +12,7 @@ in
 mkJoinedTabs {
   "Example joined tabs vertical" = {
     id = "example-joined-tabs";
-    gridType = "vesp";
+    gridType = "vsep";
     tabs = [
       "Joined Example Tab 1"
       "Joined Example Tab 2"
@@ -21,7 +21,7 @@ mkJoinedTabs {
 
   "Example joined tabs horizontal" = {
     id = "example-joined-tabs-hesp";
-    gridType = "hesp";
+    gridType = "hsep";
     tabs = [
       "Joined Example Tab 3"
       "Joined Example Tab 4"
