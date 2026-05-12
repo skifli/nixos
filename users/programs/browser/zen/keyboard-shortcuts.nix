@@ -63,5 +63,5 @@
 
   # In order to avoid breaking changes here, sometimes when you upgrade you
   # should be asked to bump this version
-  keyboardShortcutsVersion = 17;
+  keyboardShortcutsVersion = 18;
 }
