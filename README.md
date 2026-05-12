@@ -6,6 +6,8 @@
   - [Layout](#layout)
   - [Screenshots](#screenshots)
 
+![Example image of my configuration in use!](assets/cover.png)
+
 A modular NixOS + Home Manager configuration. It is easily extensible but comes with the following opinionated default setup:
 
 - A Wayland display server running the niri compositor, with auto-login via greetd.
