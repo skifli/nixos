@@ -1,5 +1,6 @@
 {
   commonHostVars,
+  config,
   inputs,
   pkgs,
   usersVars,
@@ -21,7 +22,7 @@
     backupFileExtension = "hm-backup";
     # overwriteBackup = true;
 
-    useGlobalPkgs = true; # Use the same nixpkgs instance and its settings as the main system config
+    useGlobalPkgs = false; # Stylix HM module sets nixpkgs overlays; avoid warnings by letting HM manage its own pkgs
     useUserPackages = true; # Make packages not available system-wide, instead in ~/.nix-profile
     # extraSpecialArgs = { inherit commonHostVars hostVars; }; # Home manager WHY do you use this ;-;
 
@@ -72,7 +73,7 @@
             primaryBrowser = builtins.elemAt userVars.programs.browsers 0;
           in
           {
-            BROWSER = primaryBrowser;
+            BROWSER = pkgs.lib.mkForce primaryBrowser;
             EDITOR = userVars.programs.editor;
             SHELL = userVars.programs.shell;
             TERM = userVars.programs.terminal;
@@ -107,8 +108,13 @@
         username = username;
         homeDirectory = "/home/${username}";
 
-        file.".config/hashedPasswordFile".source = ./${username}/secrets/hashedPasswordFile;
-        file.".local/share/wallpaper.jpg".source = ./${username}/secrets/${userVars.wallpaper}.jpg;
+        file.".local/share/wallpaper.jpg" =
+          let
+            asset = ./${username}/assets/wallpapers/${userVars.wallpaper}.jpg;
+          in
+          pkgs.lib.mkIf (builtins.pathExists asset) {
+            source = asset;
+          };
 
         file = {
           ".local/bin" = {

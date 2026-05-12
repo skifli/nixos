@@ -1,5 +1,8 @@
-{ pkgs, userVars, ... }:
-
+{
+  pkgs,
+  userVars,
+  ...
+}:
 {
   home-manager.users.${userVars.username} = {
     programs = {
@@ -20,10 +23,13 @@
           core.editor = userVars.programs.editor;
           init.defaultBranch = "main";
 
-          # TODO: FIXME - Still doesn't work!?
-          # Use a credentials file (contains the PAT in the form
-          # https://<PAT>@github.com) to avoid interactive prompts.
-          credential.helper = "store --file ~/.git-credentials";
+          # Use a credentials file to avoid interactive prompts.
+          # The file should contain lines like:
+          # https://<TOKEN>@github.com
+          credential = {
+            helper = "store --file ~/.git-credentials";
+            useHttpPath = true;
+          };
         };
       };
 
@@ -50,17 +56,6 @@
       lazygit = {
         enable = true;
       };
-    };
-
-    # Provide two secret files from the repo's secrets directory.
-    # Copy them directly into the user's home so they exist during
-    # activation (avoids timing/order issues with activation hooks).
-    home.file.".git-credentials" = {
-      source = ../${userVars.username}/secrets/github-credentials;
-    };
-
-    home.file.".github-pat" = {
-      source = ../${userVars.username}/secrets/github-pat;
     };
   };
 }

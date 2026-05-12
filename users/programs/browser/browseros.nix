@@ -7,9 +7,14 @@
 
 {
   home-manager = {
-    users.${userVars.username} = {
+    users.${userVars.username} =
+      let
+        system = pkgs.stdenv.hostPlatform.system;
+        browseros = inputs.browseros-ai.packages.${system}.default;
+      in
+      {
       home.packages = [
-        inputs.browseros-ai.packages.${pkgs.system}.default
+        browseros
       ];
 
       /*
@@ -19,7 +24,7 @@
           After = [ "graphical-session.target" ];
         };
         Service = {
-          ExecStart = "${inputs.browseros-ai.packages.${pkgs.system}.default}/bin/browseros";
+          ExecStart = "${browseros}/bin/browseros";
           Restart = "on-failure";
         };
         Install = {

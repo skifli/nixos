@@ -119,14 +119,6 @@ in
   ];
 
   home-manager.users.${userVars.username} = {
-    home.file.".config/anki-keyFile" = {
-      source = ../${userVars.username}/secrets/anki-keyFile;
-    };
-
-    home.file.".config/anki-usernameFile" = {
-      source = ../${userVars.username}/secrets/anki-usernameFile;
-    };
-
     stylix.targets.anki.enable = false;
 
     programs.anki = {
