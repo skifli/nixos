@@ -39,7 +39,7 @@ rec {
         { command = [ "ktailctl" ]; }
         { command = [ "lan-mouse" ]; }
         { command = [ "remmina" ]; }
-        { command = [ "safeeyes" ]; }
+        { command = [ "sh" "-c" "sleep 10 && safeeyes" ]; }
         # { command = [ "weylus" ]; }
       ];
 
