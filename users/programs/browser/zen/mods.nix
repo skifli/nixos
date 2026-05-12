@@ -3,7 +3,7 @@
 # Note: Browser must be restarted for changes to take effect.
 [
   # Chosen on 11-05-2026, at which point the store showed 7 pages (12 per page, 77 items)  "a6335949-4465-4b71-926c-4a52d34bc9c0" # Better Find Bar
-  "a6335949-4465-4b71-926c-4a52d34bc9c0" # Better Find Bar
+  # "a6335949-4465-4b71-926c-4a52d34bc9c0" # Better Find Bar - Looks bad with accent colouring
   "c45c4894-d6bd-47fc-997a-0c4d015334f1" # No pinned tab reset btn
   "4a222d82-2803-4ed2-a390-90abfce4f195" # Back Fwd Always Hidden
   "906c6915-5677-48ff-9bfc-096a02a72379" # Floating Status Bar
@@ -19,4 +19,5 @@
   "599a1599-e6ab-4749-ab22-de533860de2c" # Pimp your PiP
   "664c54f9-d97d-410b-a479-23dd8a08a628" # Better Tab Indicators
   "bc25808c-a012-4c0d-ad9a-aa86be616019" # sleek border
+  "cb5efa80-f1e1-43ce-8c0b-fece8462d225" # Container Halo
 ]
