@@ -261,7 +261,7 @@
   "browser.tabs.allow_transparent_browser" = true;
 
   # Based on: https://sameerasw.com/zen#intro
-  "zen.theme.acrylic-elements" = true;
+  "zen.theme.acrylic-elements" = false;
   "widget.transparent-windows" = true;
   "zen.theme.gradient.show-custom-colors" = true;
 
