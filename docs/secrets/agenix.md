@@ -8,9 +8,7 @@
   - [4. Create or edit secrets](#4-create-or-edit-secrets)
   - [5. Rebuild](#5-rebuild)
 
-Secrets are managed using Agenix.
-
-Encrypted secret files live under:
+Secrets are managed using Agenix. Encrypted secret files live under:
 
 ```text
 secrets/<username>/<name>.age
@@ -33,6 +31,8 @@ flowchart LR
 - Secrets are committed encrypted
 - NixOS imports `modules/core/agenix.nix`
 - Decryption uses host SSH keys
+
+![Example setup of Agenix (first time run)](../../assets/agenix-example.png)
 
 ## 1. Ensure the CLI exists
 

@@ -11,8 +11,6 @@ rec {
 
   niri =
     let
-      primaryBrowser = builtins.elemAt programs.browsers 0;
-
       browserStartup = map (browser: { command = [ browser ]; }) programs.browsers;
 
       browserAppIdMatches = builtins.concatMap (
@@ -167,7 +165,7 @@ rec {
     wallpaper = "swaybg";
 
     # Kinda core apps
-    browsers = [ "browseros" "zen" ];
+    browsers = [ "browseros" "zen-beta" ];
     editor = "hx";
     explorer-tui = "yazi";
     explorer-gui = "dolphin";
