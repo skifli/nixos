@@ -18,17 +18,6 @@ let
       parent = "pinnedFolder";
       position = 3001;
     };
-
-    plainFolder = {
-      id = "00000000-0000-4000-8000-000000000003";
-      position = 3100;
-    };
-
-    plainSubFolder = {
-      id = "00000000-0000-4000-8000-000000000004";
-      parent = "plainFolder";
-      position = 3101;
-    };
   };
 
   folderIds = builtins.mapAttrs (_: spec: spec.id) folderSpecs;
@@ -110,30 +99,18 @@ let
       position = 2201;
     };
 
-    plainFolderTab = {
-      id = "d1111111-1111-4111-8111-111111111111";
-      url = "https://www.google.com/search?q=9";
-      folder = "plainFolder";
-      position = 2300;
-    };
-
-    plainSubFolderTab = {
-      id = "d2222222-2222-4222-8222-222222222222";
-      url = "https://www.google.com/search?q=10";
-      folder = "plainSubFolder";
-      position = 2301;
-    };
-
     # Root tabs for joined-tabs example
     joinedExampleTab1 = {
       id = "e1111111-1111-4111-8111-111111111111";
       url = "https://www.google.com/search?q=joined1";
+      folder = "pinnedFolder";
       position = 2400;
     };
 
     joinedExampleTab2 = {
       id = "e2222222-2222-4222-8222-222222222222";
       url = "https://www.google.com/search?q=joined2";
+      folder = "pinnedFolder";
       position = 2401;
     };
 
@@ -178,8 +155,6 @@ in {
   # Folders
   "Pinned Folder" = folders.pinnedFolder;
   "Pinned Sub Folder" = folders.pinnedSubFolder;
-  "Non-Pinned Folder" = folders.plainFolder;
-  "Non-Pinned Sub Folder" = folders.plainSubFolder;
 
   # Pins
   "Home container tab" = pins.homeContainerTab;
@@ -190,8 +165,6 @@ in {
   "Home workspace essential tab" = pins.homeWorkspaceEssentialTab;
   "Pinned Folder Tab" = pins.pinnedFolderTab;
   "Pinned Sub Folder Tab" = pins.pinnedSubFolderTab;
-  "Non-Pinned Folder Tab" = pins.plainFolderTab;
-  "Non-Pinned Sub Folder Tab" = pins.plainSubFolderTab;
 
   # Joined-tabs example tabs
   "Joined Example Tab 1" = pins.joinedExampleTab1;
