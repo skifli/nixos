@@ -265,11 +265,7 @@
   "widget.transparent-windows" = true;
   "zen.theme.gradient.show-custom-colors" = true;
 
-  # Transparent Zen mod settings
-  "mod.sammerasw.zen_transparent_glance_enabled" = true;
-  "mod.sameerasw.zen_transparent_sidebar_enabled" = true;
-
-  "zen.theme.accent-color" = "#FFFFFF";
+  # "zen.theme.accent-color" = "#FFFFFF"; # Doesn't work?
   "zen.theme.border-radius" = 8;
   "zen.theme.content-element-separation" = 0;
   "zen.theme.dark-mode-bias" = 0.3;
