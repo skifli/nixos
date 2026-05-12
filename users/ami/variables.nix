@@ -1,6 +1,6 @@
 rec {
   # User configuration
-  extraGroups = [ ];
+  extraGroups = [];
   wallpaper = "1-0Q3A5252";
 
   git = {
@@ -9,145 +9,156 @@ rec {
     email = "121291719+skifli@users.noreply.github.com";
   };
 
-  niri =
-    let
-      browserStartup = map (browser: { command = [ browser ]; }) programs.browsers;
+  niri = let
+    browserStartup = map (browser: {command = [browser];}) programs.browsers;
 
-      browserAppIdMatches = builtins.concatMap (
+    browserAppIdMatches =
+      builtins.concatMap (
         browser:
-        [
-          {
-            app-id = "(?i)${browser}";
-          }
-        ]
-        # BrowserOS is special (often shows up as chromium-browser)
-        ++ (if browser == "browseros" then [ { app-id = "(?i)chromium-browser"; } ] else [ ])
-      ) programs.browsers;
-    in
-    {
-      spawn-at-startup = [
+          [
+            {
+              app-id = "(?i)${browser}";
+            }
+          ]
+          # BrowserOS is special (often shows up as chromium-browser)
+          ++ (
+            if browser == "browseros"
+            then [{app-id = "(?i)chromium-browser";}]
+            else []
+          )
+      )
+      programs.browsers;
+  in {
+    spawn-at-startup =
+      [
         # Start all configured browsers for easy testing.
       ]
       ++ browserStartup
       ++ [
-        { command = [ "anki" ]; }
-        { command = [ "anytype" ]; }
+        {command = ["anki"];}
+        {command = ["anytype"];}
         # { command = [ "cherry-studio" ]; }
-        { command = [ "evince" ]; }
-        { command = [ "ferdium" ]; }
-        { command = [ "kdeconnect-indicator" ]; }
-        { command = [ "ktailctl" ]; }
-        { command = [ "lan-mouse" ]; }
-        { command = [ "remmina" ]; }
-        { command = [ "sh" "-c" "sleep 10 && safeeyes" ]; }
+        {command = ["evince"];}
+        {command = ["ferdium"];}
+        {command = ["kdeconnect-indicator"];}
+        {command = ["ktailctl"];}
+        {command = ["lan-mouse"];}
+        {command = ["remmina"];}
+        {
+          command = [
+            "sh"
+            "-c"
+            "sleep 10 && safeeyes"
+          ];
+        }
         # { command = [ "weylus" ]; }
       ];
 
-      window-rules = [
-        {
-          matches = [
-            {
-              app-id = "(?i)ferdium";
-            }
-          ];
+    window-rules = [
+      {
+        matches = [
+          {
+            app-id = "(?i)ferdium";
+          }
+        ];
 
-          open-on-workspace = "1";
-          open-maximized = true;
-        }
-        {
-          matches = browserAppIdMatches;
+        open-on-workspace = "1";
+        open-maximized = true;
+      }
+      {
+        matches = browserAppIdMatches;
 
-          open-on-workspace = "2";
-          open-maximized = true;
-        }
-        {
-          matches = [
-            {
-              app-id = "(?i)anki";
-            }
-          ];
+        open-on-workspace = "2";
+        open-maximized = true;
+      }
+      {
+        matches = [
+          {
+            app-id = "(?i)anki";
+          }
+        ];
 
-          open-on-workspace = "3";
-          open-maximized = true;
-        }
-        {
-          matches = [
-            {
-              app-id = "(?i)evince";
-            }
-          ];
+        open-on-workspace = "3";
+        open-maximized = true;
+      }
+      {
+        matches = [
+          {
+            app-id = "(?i)evince";
+          }
+        ];
 
-          open-on-workspace = "3";
-          open-maximized = true;
-        }
-        {
-          matches = [
-            {
-              title = "(?i)Anytype";
-            }
-          ];
+        open-on-workspace = "3";
+        open-maximized = true;
+      }
+      {
+        matches = [
+          {
+            title = "(?i)Anytype";
+          }
+        ];
 
-          open-on-workspace = "4";
-          open-maximized = true;
-        }
-        {
-          matches = [
-            {
-              app-id = "(?i)anki";
-              title = "(?i)Preview";
-            }
-          ];
+        open-on-workspace = "4";
+        open-maximized = true;
+      }
+      {
+        matches = [
+          {
+            app-id = "(?i)anki";
+            title = "(?i)Preview";
+          }
+        ];
 
-          open-on-workspace = "5";
-          open-maximized = true;
-        }
-        {
-          matches = [
-            {
-              app-id = "(?i)org.remmina.Remmina";
-            }
-          ];
+        open-on-workspace = "5";
+        open-maximized = true;
+      }
+      {
+        matches = [
+          {
+            app-id = "(?i)org.remmina.Remmina";
+          }
+        ];
 
-          open-on-workspace = "5";
-          open-maximized = true;
-        }
-        /*
-        {
-          matches = [
-            {
-              app-id = "(?i)weylus";
-            }
-          ];
+        open-on-workspace = "5";
+        open-maximized = true;
+      }
+      /*
+      {
+        matches = [
+          {
+            app-id = "(?i)weylus";
+          }
+        ];
 
-          open-on-workspace = "6";
-          open-maximized = true;
-        }
-        */
-        {
-          matches = [
-            {
-              title = "(?i)Lan Mouse";
-            }
-            {
-              app-id = "(?i)org.fkoehler.KTailctl";
-            }
-          ];
+        open-on-workspace = "6";
+        open-maximized = true;
+      }
+      */
+      {
+        matches = [
+          {
+            title = "(?i)Lan Mouse";
+          }
+          {
+            app-id = "(?i)org.fkoehler.KTailctl";
+          }
+        ];
 
-          open-on-workspace = "6";
-          open-maximized = true;
-        }
-        {
-          matches = [
-            {
-              title = "(?i)Safe Eyes";
-            }
-          ];
+        open-on-workspace = "6";
+        open-maximized = true;
+      }
+      {
+        matches = [
+          {
+            title = "(?i)Safe Eyes";
+          }
+        ];
 
-          open-on-workspace = "6";
-          open-maximized = true;
-        }
-      ];
-    };
+        open-on-workspace = "6";
+        open-maximized = true;
+      }
+    ];
+  };
 
   waybar = {
     output = "DP-1";
@@ -165,7 +176,10 @@ rec {
     wallpaper = "swaybg";
 
     # Kinda core apps
-    browsers = [ "browseros" "zen-beta" ];
+    browsers = [
+      "browseros"
+      "zen-beta"
+    ];
     editor = "hx";
     explorer-tui = "yazi";
     explorer-gui = "dolphin";

@@ -1,6 +1,4 @@
-{ userVars, ... }:
-
-{
+{userVars, ...}: {
   home-manager.users.${userVars.username} = {
     programs.zed-editor = {
       enable = true;

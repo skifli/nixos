@@ -3,8 +3,7 @@
   pkgs,
   userVars,
   ...
-}:
-let
+}: let
   advanced-review-bottom-bar = (
     pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
       pname = "advanced-review-bottom-bar";
@@ -13,7 +12,7 @@ let
         owner = "noobj2";
         repo = "Anki-Advanced-Review-Bottombar";
         rev = finalAttrs.version;
-        sparseCheckout = [ "" ];
+        sparseCheckout = [""];
         hash = "sha256-ah51DWf1DbULF580hMj360R5qPh3fHnYM6KGBtJrgh8=";
       };
       sourceRoot = "${finalAttrs.src.name}";
@@ -43,7 +42,7 @@ let
         owner = "sviatoslav-lebediev";
         repo = "anki-quizlet-importer-extended";
         rev = finalAttrs.version;
-        sparseCheckout = [ "" ];
+        sparseCheckout = [""];
         hash = "sha256-j/ow/HCc70dD/BpMDqGx7rib7G0FfxazzjuPmEQbYTk=";
       };
       sourceRoot = "${finalAttrs.src.name}";
@@ -58,7 +57,7 @@ let
         owner = "qais8r";
         repo = "anki-redesign-plus";
         rev = finalAttrs.version;
-        sparseCheckout = [ "" ];
+        sparseCheckout = [""];
         hash = "";
       };
       sourceRoot = "${finalAttrs.src.name}";
@@ -106,14 +105,13 @@ let
         owner = "thepeacemonk";
         repo = "Onigiri";
         rev = finalAttrs.version;
-        sparseCheckout = [ "" ];
+        sparseCheckout = [""];
         hash = "sha256-Vy/IZo8N8zSMDDNNjchWHAZ9kTcWTHCox4ihYn2/GBE=";
       };
       sourceRoot = "${finalAttrs.src.name}";
     })
   );
-in
-{
+in {
   nixpkgs.overlays = [
     inputs.anki-mcp.overlays.default
   ];
@@ -131,7 +129,7 @@ in
         })
         (fsrs4anki-helper.withConfig {
           config = {
-            easy_dates = [ ];
+            easy_dates = [];
             days_to_reschedule = 7;
             auto_reschedule_after_sync = false;
             auto_disperse_after_sync = false;
@@ -153,7 +151,7 @@ in
         (anki-connect.withConfig {
           config = {
             webBindAddress = "0.0.0.0";
-            webCorsOriginList = [ "*" ];
+            webCorsOriginList = ["*"];
           };
         })
         aw-watcher-anki
@@ -333,12 +331,12 @@ in
   };
 
   # 1. Make Node.js available (npx comes with it)
-  environment.systemPackages = with pkgs; [ nodejs_22 ];
+  environment.systemPackages = with pkgs; [nodejs_22];
 
   systemd.user.services.pdf-reader-mcp = {
     description = "PDF Reader MCP (User)";
-    after = [ "graphical-session.target" ];
-    wantedBy = [ "graphical-session.target" ];
+    after = ["graphical-session.target"];
+    wantedBy = ["graphical-session.target"];
 
     serviceConfig = {
       Type = "simple";

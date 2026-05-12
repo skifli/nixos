@@ -2,9 +2,7 @@
   hostVars,
   userVars,
   ...
-}:
-
-{
+}: {
   home-manager.users.${userVars.username} = {
     # Enable screen colour automatic changing
     services.wlsunset = {

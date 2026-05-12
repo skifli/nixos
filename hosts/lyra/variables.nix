@@ -27,7 +27,7 @@
   ];
 
   # User configuration
-  enabledUsers = [ "ami" ];
+  enabledUsers = ["ami"];
 
   # Hardware configuration
   videoDriver = "intel"; # Empty to import none.

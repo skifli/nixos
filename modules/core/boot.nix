@@ -1,6 +1,8 @@
-{ pkgs, pkgsUnstable, ... }:
-
 {
+  pkgs,
+  pkgsUnstable,
+  ...
+}: {
   boot = {
     # Allow cross-compilation
     binfmt.emulatedSystems = [
@@ -12,7 +14,7 @@
       "preempt=full" # Lower latency but less throughput
       # "quiet" # Non verbose boot mode
       # "splash" # Eye-candy loading screen
-      
+
       # Reduce kworker IO pressure during heavy builds
       "vm.dirty_ratio=10" # Percentage of RAM before aggressive writeback
       "vm.dirty_background_ratio=5" # Background writeback threshold
@@ -32,7 +34,7 @@
         efiSupport = true;
         maxGenerations = 50;
         style = {
-          wallpapers = [ pkgsUnstable.nixos-artwork.wallpapers.binary-blue.gnomeFilePath ];
+          wallpapers = [pkgsUnstable.nixos-artwork.wallpapers.binary-blue.gnomeFilePath];
           wallpaperStyle = "centered";
         };
       };

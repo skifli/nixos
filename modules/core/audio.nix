@@ -1,6 +1,4 @@
-{ pkgs, ... }:
-
-{
+{pkgs, ...}: {
   services = {
     pipewire = {
       enable = true;
@@ -17,5 +15,5 @@
     pulseaudio.enable = false; # Disable in favour of pipewire
   };
 
-  environment.systemPackages = with pkgs; [ pavucontrol ]; # GUI
+  environment.systemPackages = with pkgs; [pavucontrol]; # GUI
 }

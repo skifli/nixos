@@ -1,5 +1,4 @@
 # Partially based on code from https://github.com/Weathercold/nixfiles/blob/master/home/modules/services/scheduling/darkman.nix
-
 {
   commonHostVars,
   config,
@@ -9,9 +8,7 @@
   pkgs,
   userVars,
   ...
-}:
-
-let
+}: let
   switch-system-specialisation = spec: ''
     activate_script="/run/booted-system/specialisation/${spec}/bin/switch-to-configuration"
 
@@ -35,24 +32,21 @@ let
     fi
   '';
 
-  enableDarkmanModule =
-    { ... }:
+  enableDarkmanModule = {...}: {
+    services.darkman = {
+      enable = true;
 
-    {
-      services.darkman = {
-        enable = true;
+      settings = {
+        lat = hostVars.latitude;
+        lng = hostVars.longitude;
+        usegeoclue = false;
 
-        settings = {
-          lat = hostVars.latitude;
-          lng = hostVars.longitude;
-          usegeoclue = false;
-
-          dbusserver = true;
-          portal = true;
-          # darkman config only; switching is handled by the root service below.
-        };
+        dbusserver = true;
+        portal = true;
+        # darkman config only; switching is handled by the root service below.
       };
     };
+  };
 
   darkman-switcher = pkgs.writeShellScript "darkman-theme-switcher" ''
     set -euo pipefail
@@ -128,12 +122,11 @@ let
       sleep 2
     done
   '';
-in
-{
+in {
   systemd.services.darkman-theme-switcher = {
     description = "Monitor darkman mode changes and switch system specialisations";
-    wantedBy = [ "graphical-session.target" ];
-    after = [ "graphical-session.target" ];
+    wantedBy = ["graphical-session.target"];
+    after = ["graphical-session.target"];
     serviceConfig = {
       Type = "simple";
       ExecStart = "${darkman-switcher}";
@@ -166,52 +159,39 @@ in
         name = lib.mkDefault commonHostVars.icons.light;
       };
     };
- 
   };
   specialisation = {
-    day.configuration =
-      {
-        pkgs,
-        ...
-      }:
-      let
-        name = "day";
-      in
-      {
-        system.nixos.tags = [ name ];
-        environment.etc."specialisation".text = name;
+    day.configuration = {pkgs, ...}: let
+      name = "day";
+    in {
+      system.nixos.tags = [name];
+      environment.etc."specialisation".text = name;
 
-        home-manager.users.${userVars.username} = {
-          gtk.iconTheme.name = commonHostVars.icons.light;
+      home-manager.users.${userVars.username} = {
+        gtk.iconTheme.name = commonHostVars.icons.light;
 
-          stylix = {
-            base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.day}.yaml";
-            cursor.name = commonHostVars.cursor.day.name;
-          };
+        stylix = {
+          base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.day}.yaml";
+          cursor.name = commonHostVars.cursor.day.name;
         };
       };
+    };
 
-    night.configuration =
-      {
-        pkgs,
-        ...
-      }:
-      let
-        name = "night";
-      in
-      {
-        system.nixos.tags = [ name ];
-        environment.etc."specialisation".text = name;
+    night.configuration = {pkgs, ...}: let
+      name = "night";
+    in {
+      system.nixos.tags = [name];
+      environment.etc."specialisation".text = name;
 
-        home-manager.users.${userVars.username} = {
-          gtk.iconTheme.name = commonHostVars.icons.dark;
+      home-manager.users.${userVars.username} = {
+        gtk.iconTheme.name = commonHostVars.icons.dark;
 
-          stylix = {
-            base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.night}.yaml";
-            cursor.name = commonHostVars.cursor.night.name;
-          };
+        stylix = {
+          base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.night}.yaml";
+          cursor.name = commonHostVars.cursor.night.name;
         };
       };
+    };
   };
 
   home-manager.sharedModules = [

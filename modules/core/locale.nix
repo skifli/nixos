@@ -1,6 +1,4 @@
-{ hostVars, ... }:
-
-{
+{hostVars, ...}: {
   console.keyMap = hostVars.consoleKeymap; # Defines for virtual console (TUI not GUI)
   i18n = {
     defaultLocale = hostVars.locale;

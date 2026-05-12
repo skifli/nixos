@@ -2,22 +2,19 @@
   pkgs,
   userVars,
   ...
-}:
-
-{
-  services.greetd =
-    let
-      session = {
-        command =
-          "${pkgs.uwsm}/bin/uwsm start "
-          + (
-              if userVars.programs.compositor == "niri"
-              then "${pkgs.niri}/bin/niri-session"
-              else "${pkgs.${userVars.programs.compositor}}/bin/${userVars.programs.compositor}"
-            );
-        user = userVars.username;
-      };
-    in
+}: {
+  services.greetd = let
+    session = {
+      command =
+        "${pkgs.uwsm}/bin/uwsm start "
+        + (
+          if userVars.programs.compositor == "niri"
+          then "${pkgs.niri}/bin/niri-session"
+          else "${pkgs.${userVars.programs.compositor}}/bin/${userVars.programs.compositor}"
+        );
+      user = userVars.username;
+    };
+  in
     # Or can do rec to enable recursive mentioning
     {
       enable = true;

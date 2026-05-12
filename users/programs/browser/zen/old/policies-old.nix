@@ -1,6 +1,4 @@
-{ ... }:
-
-{
+{...}: {
   AllowFileSelectionDialogs = true;
   AppAutoUpdate = false;
   AutofillAddressEnabled = false;
@@ -58,7 +56,7 @@
     Enabled = true;
   };
   PopupBlocking = {
-    Allow = [ ];
+    Allow = [];
     Default = true;
     Locked = false;
   };
@@ -160,4 +158,3 @@
     };
   };
 }
-

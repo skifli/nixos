@@ -3,12 +3,9 @@
   hostVars,
   pkgs,
   ...
-}:
-
-let
+}: let
   caches = import ../../caches.nix;
-in
-{
+in {
   environment.systemPackages = with pkgs; [
     git # Great insinuating tool
     wget # Downloader
@@ -30,7 +27,7 @@ in
     # Periodic optimisation of the nix store
     optimise = {
       automatic = true;
-      dates = [ "weekly" ];
+      dates = ["weekly"];
       persistent = true; # Catch up on missed runs
     };
 
@@ -43,13 +40,13 @@ in
         "nix-command"
         "flakes"
       ];
-      extra-platforms = [ "aarch64-linux" ]; # Allow cross-compilation
+      extra-platforms = ["aarch64-linux"]; # Allow cross-compilation
       use-xdg-base-directories = true;
-      
+
       # Better build caching to reduce kworker load
       max-jobs = "auto"; # Automatic job parallelization
       cores = 0; # Use all cores (will be balanced by auto limits)
-      
+
       # Optimize disk I/O for builds
       fsync-metadata = false; # Don't fsync metadata on every change
       keep-build-log = false; # Don't keep build logs to reduce IO

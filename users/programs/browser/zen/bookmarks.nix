@@ -1,5 +1,8 @@
-{ lib, libx, ... }:
 {
+  lib,
+  libx,
+  ...
+}: {
   force = true; # Rewrite bookmarks on each rebuild (overwrite browser changes)
   settings = [
     {
