@@ -5,7 +5,7 @@
   userVars,
   ...
 }: {
-  # Breaks stuff now apparently
+  # Breaks stuff now apparently - https://github.com/0xc000022070/zen-browser-flake#missing-configuration-after-update
   # environment.variables.MOZ_LEGACY_PROFILES = 1; # Workaround for https://github.com/0xc000022070/zen-browser-flake/issues/63;
 
   home-manager = {
