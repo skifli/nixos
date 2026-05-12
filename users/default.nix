@@ -5,9 +5,7 @@
   pkgs,
   usersVars,
   ...
-}:
-
-{
+}: {
   imports = [
     inputs.home-manager.nixosModules.home-manager
   ];
@@ -26,53 +24,53 @@
     useUserPackages = true; # Make packages not available system-wide, instead in ~/.nix-profile
     # extraSpecialArgs = { inherit commonHostVars hostVars; }; # Home manager WHY do you use this ;-;
 
-    users = builtins.mapAttrs (username: userVars: {
-      programs.home-manager.enable = true; # Let Home Manager install and manage itself.
+    users =
+      builtins.mapAttrs (username: userVars: {
+        programs.home-manager.enable = true; # Let Home Manager install and manage itself.
 
-      xdg = {
-        configFile."mimeapps.list".force = true;
+        xdg = {
+          configFile."mimeapps.list".force = true;
 
-        enable = true; # Ensures ENV variables are set up so apps follow the XDG Base Dir Spec
+          enable = true; # Ensures ENV variables are set up so apps follow the XDG Base Dir Spec
 
-        /* Disabled due to https://cashmere.rs/blog/20250612002456-how-to-fix-screensharing-for-niri-wm-under-nixos#solution
-        portal = {
-          enable = true;
+          /*
+             Disabled due to https://cashmere.rs/blog/20250612002456-how-to-fix-screensharing-for-niri-wm-under-nixos#solution
+          portal = {
+            enable = true;
 
-          # https://mynixos.com/home-manager/option/xdg.portal.xdgOpenUsePortal
-          xdgOpenUsePortal = true;
+            # https://mynixos.com/home-manager/option/xdg.portal.xdgOpenUsePortal
+            xdgOpenUsePortal = true;
 
-          config.common = {
-            default = [
-              "luminous"
-              "kde"
+            config.common = {
+              default = [
+                "luminous"
+                "kde"
+              ];
+            };
+
+            extraPortals = with pkgs; [
+              xdg-desktop-portal-luminous
+              kdePackages.xdg-desktop-portal-kde
+              # xdg-desktop-portal-luminous
             ];
           };
+          */
 
-          extraPortals = with pkgs; [
-            xdg-desktop-portal-luminous
-            kdePackages.xdg-desktop-portal-kde
-            # xdg-desktop-portal-luminous
+          mimeApps.enable = true;
+          userDirs = {
+            enable = true;
+            createDirectories = true;
+          };
+        };
+
+        home = {
+          sessionPath = [
+            "/home/${userVars.username}/.cargo/bin"
           ];
-        };
-        */
 
-        mimeApps.enable = true;
-        userDirs = {
-          enable = true;
-          createDirectories = true;
-        };
-      };
-
-      home = {
-        sessionPath = [
-          "/home/${userVars.username}/.cargo/bin"
-        ];
-
-        sessionVariables =
-          let
+          sessionVariables = let
             primaryBrowser = builtins.elemAt userVars.programs.browsers 0;
-          in
-          {
+          in {
             BROWSER = pkgs.lib.mkForce primaryBrowser;
             EDITOR = userVars.programs.editor;
             SHELL = userVars.programs.shell;
@@ -80,52 +78,54 @@
             VISUAL = userVars.programs.visual;
           };
 
-        shellAliases = {
-          # --- OGs ---
-          sup = "sudo -E";
-          nfu = "nix flake update";
-          nhsw = "nh os switch . --accept-flake-config -H";
-          nisw = "sudo nixos-rebuild switch --flake .#";
-          nunh = "nix flake update && nh os switch . --accept-flake-config -H";
-          nuni = "nix flake update && sudo nixos-rebuild switch --flake .#";
+          shellAliases =
+            {
+              # --- OGs ---
+              sup = "sudo -E";
+              nfu = "nix flake update";
+              nhsw = "nh os switch . --accept-flake-config -H";
+              nisw = "sudo nixos-rebuild switch --flake .#";
+              nunh = "nix flake update && nh os switch . --accept-flake-config -H";
+              nuni = "nix flake update && sudo nixos-rebuild switch --flake .#";
 
-          # --- Testing & Dry Runs ---
-          nhtest = "nh os test . --accept-flake-config -H"; # Apply immediately, revert on reboot
-          nhdry = "nh os switch . --dry --accept-flake-config -H"; # See what WOULD happen
-          nhask = "nh os switch . --ask --accept-flake-config -H"; # Ask for confirmation after diff
-  
-          # --- VM Prototyping (Sandbox) ---
-          # Standard rebuild VM command
-          nivm = "nixos-rebuild build-vm --flake .#"; 
-          # nh equivalent (available in newer versions)
-          nhvm = "nh os build-vm . --accept-flake-config -H"; 
+              # --- Testing & Dry Runs ---
+              nhtest = "nh os test . --accept-flake-config -H"; # Apply immediately, revert on reboot
+              nhdry = "nh os switch . --dry --accept-flake-config -H"; # See what WOULD happen
+              nhask = "nh os switch . --ask --accept-flake-config -H"; # Ask for confirmation after diff
 
-          # --- Comparison & Cleanup ---
-          # Quick diff between current system and a potential build
-          nhdiff = "nix build .#nixosConfigurations.$(hostname).config.system.build.toplevel --dry-run && nvd diff /run/current-system ./result";
-        } // commonHostVars.shellAliases;
+              # --- VM Prototyping (Sandbox) ---
+              # Standard rebuild VM command
+              nivm = "nixos-rebuild build-vm --flake .#";
+              # nh equivalent (available in newer versions)
+              nhvm = "nh os build-vm . --accept-flake-config -H";
 
-        username = username;
-        homeDirectory = "/home/${username}";
+              # --- Comparison & Cleanup ---
+              # Quick diff between current system and a potential build
+              nhdiff = "nix build .#nixosConfigurations.$(hostname).config.system.build.toplevel --dry-run && nvd diff /run/current-system ./result";
+            }
+            // commonHostVars.shellAliases;
 
-        file.".local/share/wallpaper.jpg" =
-          let
+          username = username;
+          homeDirectory = "/home/${username}";
+
+          file.".local/share/wallpaper.jpg" = let
             asset = ./${username}/assets/wallpapers/${userVars.wallpaper}.jpg;
           in
-          pkgs.lib.mkIf (builtins.pathExists asset) {
-            source = asset;
+            pkgs.lib.mkIf (builtins.pathExists asset) {
+              source = asset;
+            };
+
+          file = {
+            ".local/bin" = {
+              source = ./${userVars.username}/scripts;
+              recursive = true;
+            };
           };
 
-        file = {
-          ".local/bin" = {
-            source = ./${userVars.username}/scripts;
-            recursive = true;
-          };
+          stateVersion = "25.05"; # DO NOT CHANGE!
         };
-
-        stateVersion = "25.05"; # DO NOT CHANGE!
-      };
-    }) usersVars; # For each user
+      })
+      usersVars; # For each user
   };
 
   xdg = {
@@ -151,9 +151,9 @@
             "kde"
             "wlr"
           ];
-          
-          "org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
-          "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
+
+          "org.freedesktop.impl.portal.ScreenCast" = ["wlr"];
+          "org.freedesktop.impl.portal.Screenshot" = ["wlr"];
         };
       };
 
@@ -169,7 +169,7 @@
   environment.systemPackages = with pkgs; [
     nix-output-monitor
     nvd
-    
+
     xdg-utils
 
     xdg-desktop-portal

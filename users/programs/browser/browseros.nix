@@ -3,16 +3,12 @@
   pkgs,
   userVars,
   ...
-}:
-
-{
+}: {
   home-manager = {
-    users.${userVars.username} =
-      let
-        system = pkgs.stdenv.hostPlatform.system;
-        browseros = inputs.browseros-ai.packages.${system}.default;
-      in
-      {
+    users.${userVars.username} = let
+      system = pkgs.stdenv.hostPlatform.system;
+      browseros = inputs.browseros-ai.packages.${system}.default;
+    in {
       home.packages = [
         browseros
       ];

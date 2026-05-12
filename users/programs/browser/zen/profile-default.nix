@@ -1,9 +1,12 @@
-{ hostVars, inputs, pkgs, ... }:
-
-let
-  settings = import ./settings.nix { inherit hostVars; };
+{
+  hostVars,
+  inputs,
+  pkgs,
+  ...
+}: let
+  settings = import ./settings.nix {inherit hostVars;};
   bookmarks = import ./bookmarks.nix;
-  search = import ./search.nix { inherit pkgs; };
+  search = import ./search.nix {inherit pkgs;};
   containers = import ./containers.nix;
   pins = import ./pins.nix;
   joinedTabs = import ./joined-tabs.nix;
@@ -11,12 +14,11 @@ let
   mods = import ./mods.nix;
 
   keyboardShortcutsSpec = import ./keyboard-shortcuts.nix;
-  extraConfig = import ./extra-config.nix { inherit inputs; };
+  extraConfig = import ./extra-config.nix {inherit inputs;};
 
   profileId = 0;
   profileName = "default";
-in
-{
+in {
   id = profileId;
   name = profileName;
   isDefault = true;

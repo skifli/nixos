@@ -1,8 +1,9 @@
-{ pkgs, userVars, ... }:
-
 {
-  environment.etc."xdg/menus/applications.menu".source =
-    "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu"; # TODO: 3REMOVE AFTER https://github.com/NixOS/nixpkgs/issues/409986 IS SOLVED
+  pkgs,
+  userVars,
+  ...
+}: {
+  environment.etc."xdg/menus/applications.menu".source = "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu"; # TODO: 3REMOVE AFTER https://github.com/NixOS/nixpkgs/issues/409986 IS SOLVED
 
   home-manager.users.${userVars.username} = {
     home.packages = with pkgs; [
@@ -35,39 +36,39 @@
     ];
 
     xdg.mimeApps.defaultApplications = {
-      "inode/directory" = [ "dolphin.desktop" ];
+      "inode/directory" = ["dolphin.desktop"];
       # "application/x-gnome-saved-search" = [ "dolphin.desktop" ];
     };
 
     xdg.configFile."kdeglobals".text = ''
-[KFileDialog Settings]
-Allow Expansion=false
-Automatically select filename extension=true
-Breadcrumb Navigation=true
-Decoration position=2
-Show Full Path=false
-Show Inline Previews=true
-Show Preview=false
-Show Speedbar=true
-Show hidden files=true
-Sort by=Name
-Sort directories first=true
-Sort hidden files last=false
-Sort reversed=false
-Speedbar Width=156
-View Style=DetailTree
+      [KFileDialog Settings]
+      Allow Expansion=false
+      Automatically select filename extension=true
+      Breadcrumb Navigation=true
+      Decoration position=2
+      Show Full Path=false
+      Show Inline Previews=true
+      Show Preview=false
+      Show Speedbar=true
+      Show hidden files=true
+      Sort by=Name
+      Sort directories first=true
+      Sort hidden files last=false
+      Sort reversed=false
+      Speedbar Width=156
+      View Style=DetailTree
 
-[PreviewSettings]
-EnableRemoteFolderThumbnail=false
-MaximumRemoteSize=0
+      [PreviewSettings]
+      EnableRemoteFolderThumbnail=false
+      MaximumRemoteSize=0
 
-[General]
-TerminalApplication=${userVars.programs.terminal}
-TerminalService=${
-  if userVars.programs.terminal == "ghostty"
-  then "com.mitchellh.ghostty"
-  else userVars.programs.terminal
-}.desktop
-'';
+      [General]
+      TerminalApplication=${userVars.programs.terminal}
+      TerminalService=${
+        if userVars.programs.terminal == "ghostty"
+        then "com.mitchellh.ghostty"
+        else userVars.programs.terminal
+      }.desktop
+    '';
   };
 }

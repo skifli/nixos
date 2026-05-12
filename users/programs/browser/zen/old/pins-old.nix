@@ -4,7 +4,7 @@ let
   spaces = import ./spaces.nix;
 
   # ---- Home Space Folders ----
-  
+
   # Main folders in Home space
   artThouRight = {
     id = "e1111111-1111-4111-8111-111111111111";
@@ -288,7 +288,7 @@ let
   };
 
   # ---- Programming Space Folders ----
-  
+
   # Moved from Home space per your request
   devIces = {
     id = "k1111111-1111-4111-8111-111111111111";
@@ -326,9 +326,7 @@ let
     editedTitle = true;
     position = 3400;
   };
-
-in
-{
+in {
   # ---- Essential pins (Home container) ----
 
   Spotify = {

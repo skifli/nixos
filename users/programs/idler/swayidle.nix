@@ -3,8 +3,7 @@
   pkgs,
   userVars,
   ...
-}:
-let
+}: let
   minutes = 60; # Seconds
   screen-lock-timeout = hostVars.screen-lock-timeout * minutes;
   screen-blank-timeout = hostVars.screen-blank-timeout * minutes;
@@ -14,8 +13,7 @@ let
   swaylock = "${pkgs.swaylock-effects}/bin/swaylock -f -i /home/${userVars.username}/.local/share/wallpaper.jpg --effect-blur 7x5 --fade-in 0.2";
 
   display = status: "${niri-bin} msg action power-${status}-monitors";
-in
-{
+in {
   home-manager.users.${userVars.username} = {
     home.shellAliases = {
       swaylock = swaylock; # Fancy by default!
@@ -40,10 +38,10 @@ in
           command = swaylock;
         }
         /*
-          {
-            event = "unlock";
-            command = null;
-            }
+        {
+          event = "unlock";
+          command = null;
+          }
         */
         {
           event = "before-sleep";
@@ -60,5 +58,5 @@ in
   };
 
   # Work around to https://github.com/NixOS/nixpkgs/issues/143365
-  security.pam.services.swaylock = { };
+  security.pam.services.swaylock = {};
 }

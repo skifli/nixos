@@ -3,11 +3,9 @@
   pkgs,
   userVars,
   ...
-}:
-
-{
+}: {
   home-manager = {
-    sharedModules = [ inputs.lan-mouse.homeManagerModules.default ];
+    sharedModules = [inputs.lan-mouse.homeManagerModules.default];
 
     users.${userVars.username} = {
       home.packages = with pkgs; [

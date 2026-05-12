@@ -2,9 +2,7 @@
   inputs,
   pkgs,
   ...
-}:
-
-{
+}: {
   # Specify which packages to install on a system level
   environment.systemPackages = with pkgs; [
     inputs.agenix.packages.${pkgs.stdenv.hostPlatform.system}.default # agenix CLI

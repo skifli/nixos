@@ -6,9 +6,7 @@
   pkgsUnstable,
   userVars,
   ...
-}@attrs:
-
-{
+} @ attrs: {
   nixpkgs.overlays = [
     inputs.niri.overlays.niri
   ]; # Add Niri overlay
@@ -22,10 +20,9 @@
       # Niri automagically sets up a lot of needed stuff
       programs.niri = {
         enable = true;
-        package =
-          let
-            system = pkgs.stdenv.hostPlatform.system;
-          in
+        package = let
+          system = pkgs.stdenv.hostPlatform.system;
+        in
           inputs.niri.packages.${system}.niri-stable.override {
             libdisplay-info = pkgs.libdisplay-info_0_2;
           }; # Fix for https://github.com/sodiboo/niri-flake/issues/1406
@@ -70,39 +67,40 @@
             window-resize.enable = true;
           };
 
-          spawn-at-startup = [ ] ++ userVars.niri.spawn-at-startup;
+          spawn-at-startup = [] ++ userVars.niri.spawn-at-startup;
 
-          window-rules = [
-            {
-              matches = [ { is-focused = false; } ];
+          window-rules =
+            [
+              {
+                matches = [{is-focused = false;}];
 
-              opacity = 0.90;
-            }
-            {
-              matches = [ { app-id = "(?i)${userVars.programs.terminal}"; } ];
+                opacity = 0.90;
+              }
+              {
+                matches = [{app-id = "(?i)${userVars.programs.terminal}";}];
 
-              open-maximized = true;
-            }
-            /*
-            {
-              matches = [
-                {
-                  title = "^(Unlock Login Keyring)(.*)$";
-                } # GNOME Keyring
-              ];
+                open-maximized = true;
+              }
+              /*
+              {
+                matches = [
+                  {
+                    title = "^(Unlock Login Keyring)(.*)$";
+                  } # GNOME Keyring
+                ];
 
-              geometry-corner-radius = rec {
-                bottom-left = 12.0;
-                bottom-right = bottom-left;
-                top-left = bottom-left;
-                top-right = bottom-left;
-              };
+                geometry-corner-radius = rec {
+                  bottom-left = 12.0;
+                  bottom-right = bottom-left;
+                  top-left = bottom-left;
+                  top-right = bottom-left;
+                };
 
-              clip-to-geometry = true;
-            }
-            */
-          ]
-          ++ userVars.niri.window-rules;
+                clip-to-geometry = true;
+              }
+              */
+            ]
+            ++ userVars.niri.window-rules;
 
           layout = {
             gaps = 0;
@@ -147,27 +145,27 @@
       };
 
       /*
-        # NOT NEEDED ANYMORE: NIRI JUST REQUIRES IT TO BE INSTALLED, IT DOES THE REST
-        # Switch from `Install.WantedBy = [ "graphical-session.target" ]` as defined
-        # in the service file provided by the xwayland-satellite package. This links
-        # xwayland-satellite to niri specifically, and schedules it so that there is
-        # a wayland session available when it starts.
-        systemd.user.services.xwayland-satellite = {
-          Unit = {
-            Description = "Xwayland outside your Wayland";
-            BindsTo = "graphical-session.target";
-            PartOf = "graphical-session.target";
-            After = "graphical-session.target";
-            Requisite = "graphical-session.target";
-          };
-          Service = {
-            Type = "notify";
-            NotifyAccess = "all";
-            ExecStart = "${pkgs.xwayland-satellite}/bin/xwayland-satellite";
-            StandardOutput = "journal";
-          };
-          Install.WantedBy = [ "graphical-session.target" ];
+      # NOT NEEDED ANYMORE: NIRI JUST REQUIRES IT TO BE INSTALLED, IT DOES THE REST
+      # Switch from `Install.WantedBy = [ "graphical-session.target" ]` as defined
+      # in the service file provided by the xwayland-satellite package. This links
+      # xwayland-satellite to niri specifically, and schedules it so that there is
+      # a wayland session available when it starts.
+      systemd.user.services.xwayland-satellite = {
+        Unit = {
+          Description = "Xwayland outside your Wayland";
+          BindsTo = "graphical-session.target";
+          PartOf = "graphical-session.target";
+          After = "graphical-session.target";
+          Requisite = "graphical-session.target";
         };
+        Service = {
+          Type = "notify";
+          NotifyAccess = "all";
+          ExecStart = "${pkgs.xwayland-satellite}/bin/xwayland-satellite";
+          StandardOutput = "journal";
+        };
+        Install.WantedBy = [ "graphical-session.target" ];
+      };
       */
     };
   };
@@ -195,5 +193,5 @@
 
   # services.polkit-gnome.enable = true;
 
-  xdg.portal.configPackages = [ pkgs.niri ];
+  xdg.portal.configPackages = [pkgs.niri];
 }

@@ -7,8 +7,7 @@ let
     Value = true;
     Status = "locked";
   };
-in
-{
+in {
   "zen.view.use-single-toolbar" = true;
   "zen.view.sidebar-expanded" = true;
 
@@ -197,10 +196,10 @@ in
   "datareporting.policy.dataSubmissionPolicyAcceptedVersion" = 2;
 
   /*
-    "cfs.font.size.workspace.title" = "0.9em";
-    "cfs.font.size.tabbar.tabs" = "1.1em";
-    "cfs.font.size.searchbar" = "1.1em";
-    "cfs.font.size.footer" = "0.9em";
+  "cfs.font.size.workspace.title" = "0.9em";
+  "cfs.font.size.tabbar.tabs" = "1.1em";
+  "cfs.font.size.searchbar" = "1.1em";
+  "cfs.font.size.footer" = "0.9em";
   */
 
   "extensions.screenshots.disabled" = lock-true;
@@ -259,7 +258,7 @@ in
     currentVersion = 20;
     newElementCount = 7;
     placements = {
-      widget-overflow-fixed-list = [ ];
+      widget-overflow-fixed-list = [];
       # unified-extensions-area = [ ];
       nav-bar = [
         "back-button"
@@ -272,7 +271,7 @@ in
 
         # Extensions
       ];
-      toolbar-menubar = [ "menubar-items" ];
+      toolbar-menubar = ["menubar-items"];
       TabsToolbar = [
         "firefox-view-button"
         "tabbrowser-tabs"
@@ -286,4 +285,3 @@ in
     };
   };
 }
-

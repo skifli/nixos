@@ -1,6 +1,8 @@
-{ pkgs, userVars, ... }:
-
-let
+{
+  pkgs,
+  userVars,
+  ...
+}: let
   awWatcherUtilizationSrc = pkgs.fetchFromGitHub {
     owner = "Alwinator";
     repo = "aw-watcher-utilization";
@@ -37,112 +39,113 @@ let
     ];
   };
 
-  pyEnv = pkgs.python313.withPackages (ps: with ps; [
-    aw-client
-    aw-core
-    psutil
-
-    (ps.buildPythonPackage rec {
-      pname = "aw-watcher-netstatus";
-      version = "1.0.1";
-
-      src = ps.fetchPypi {
-        pname = "aw_watcher_netstatus";
-        inherit version;
-        sha256 = "sha256-3STAWussghCzqyR9OCYZf8oNi113QCerQJq3GZOwBoc=";
-      };
-
-      pyproject = true;
-
-      build-system = with ps; [
-        poetry-core
-      ];
-
-      propagatedBuildInputs = with ps; [
+  pyEnv = pkgs.python313.withPackages (
+    ps:
+      with ps; [
         aw-client
         aw-core
-      ];
-    })
-  ]);
+        psutil
 
-in
-{
+        (ps.buildPythonPackage rec {
+          pname = "aw-watcher-netstatus";
+          version = "1.0.1";
+
+          src = ps.fetchPypi {
+            pname = "aw_watcher_netstatus";
+            inherit version;
+            sha256 = "sha256-3STAWussghCzqyR9OCYZf8oNi113QCerQJq3GZOwBoc=";
+          };
+
+          pyproject = true;
+
+          build-system = with ps; [
+            poetry-core
+          ];
+
+          propagatedBuildInputs = with ps; [
+            aw-client
+            aw-core
+          ];
+        })
+      ]
+  );
+in {
   environment.systemPackages = with pkgs; [
     evtest
     libinput
   ];
-  
+
   users.users.${userVars.username} = {
     extraGroups = [
       "input"
     ];
   };
-    
+
   home-manager.users.${userVars.username} = {
     xdg.configFile."activitywatch/aw-notify/config.toml".text = ''
-    hourly_checkins = true
-    new_day_greetings = true
-    server_monitoring = true
+      hourly_checkins = true
+      new_day_greetings = true
+      server_monitoring = true
 
-    [[alerts]]
-    category = "Programming"
-    label = "💻 Programming"
-    thresholds_minutes = [30, 60, 120, 180, 240]
-    positive = true
+      [[alerts]]
+      category = "Programming"
+      label = "💻 Programming"
+      thresholds_minutes = [30, 60, 120, 180, 240]
+      positive = true
 
-    [[alerts]]
-    category = "Revision"
-    label = "📘 Revision"
-    thresholds_minutes = [30, 60, 90, 120]
-    positive = true
+      [[alerts]]
+      category = "Revision"
+      label = "📘 Revision"
+      thresholds_minutes = [30, 60, 90, 120]
+      positive = true
 
-    [[alerts]]
-    category = "Work"
-    label = "🧠 Work"
-    thresholds_minutes = [60, 120, 180, 240]
-    positive = true
+      [[alerts]]
+      category = "Work"
+      label = "🧠 Work"
+      thresholds_minutes = [60, 120, 180, 240]
+      positive = true
 
-    [[alerts]]
-    category = "Anki"
-    label = "🧠 Anki"
-    thresholds_minutes = [15, 30, 60]
-    positive = true
+      [[alerts]]
+      category = "Anki"
+      label = "🧠 Anki"
+      thresholds_minutes = [15, 30, 60]
+      positive = true
 
-    [[alerts]]
-    category = "Social Media"
-    label = "📱 Social Media"
-    thresholds_minutes = [15, 30]
-    positive = false
-  
-    [[alerts]]
-    category = "Platforms"
-    label = "📉 Reddit / Instagram"
-    thresholds_minutes = [15, 30]
-    positive = false
+      [[alerts]]
+      category = "Social Media"
+      label = "📱 Social Media"
+      thresholds_minutes = [15, 30]
+      positive = false
 
-    [[alerts]]
-    category = "Chats"
-    label = "💬 Discord"
-    thresholds_minutes = [20, 40]
-    positive = false
+      [[alerts]]
+      category = "Platforms"
+      label = "📉 Reddit / Instagram"
+      thresholds_minutes = [15, 30]
+      positive = false
 
-    [[alerts]]
-    category = "Long Format"
-    label = "📺 YouTube"
-    thresholds_minutes = [20, 45, 90]
-    positive = false
+      [[alerts]]
+      category = "Chats"
+      label = "💬 Discord"
+      thresholds_minutes = [20, 40]
+      positive = false
 
-    [[alerts]]
-    category = "Games"
-    label = "🎮 Games"
-    thresholds_minutes = [30, 60, 120]
-    positive = false
+      [[alerts]]
+      category = "Long Format"
+      label = "📺 YouTube"
+      thresholds_minutes = [20, 45, 90]
+      positive = false
 
-    [[alerts]]
-    category = "All"
-    label = "⏱️ Total Activity"
-    thresholds_minutes = [360, 480]
-    positive = false
+      [[alerts]]
+      category = "Games"
+      label = "🎮 Games"
+      thresholds_minutes = [30, 60, 120]
+      positive = false
+
+      [[alerts]]
+      category = "All"
+      label = "⏱️ Total Activity"
+      thresholds_minutes = [360, 480]
+      positive = false
     '';
 
     home.packages = with pkgs; [
@@ -155,7 +158,7 @@ in
     systemd.user.services.aw-watcher-afk = {
       Unit = {
         Description = "ActivityWatch AFK Watcher";
-        After = [ "graphical-session.target" ];
+        After = ["graphical-session.target"];
       };
 
       Service = {
@@ -166,14 +169,14 @@ in
       };
 
       Install = {
-        WantedBy = [ "default.target" ];
+        WantedBy = ["default.target"];
       };
     };
 
     systemd.user.services.aw-watcher-window-wayland = {
       Unit = {
         Description = "ActivityWatch Wayland Window Watcher";
-        After = [ "graphical-session.target" ];
+        After = ["graphical-session.target"];
       };
 
       Service = {
@@ -185,14 +188,14 @@ in
       };
 
       Install = {
-        WantedBy = [ "default.target" ];
+        WantedBy = ["default.target"];
       };
     };
 
     systemd.user.services.aw-notify = {
       Unit = {
         Description = "ActivityWatch Notify (Rust)";
-        After = [ "graphical-session.target" ];
+        After = ["graphical-session.target"];
       };
 
       Service = {
@@ -203,14 +206,14 @@ in
       };
 
       Install = {
-        WantedBy = [ "default.target" ];
+        WantedBy = ["default.target"];
       };
     };
 
     systemd.user.services.aw-watcher-input = {
       Unit = {
         Description = "ActivityWatch Input Watcher";
-        After = [ "graphical-session.target" ];
+        After = ["graphical-session.target"];
       };
 
       Service = {
@@ -224,19 +227,25 @@ in
         Restart = "always";
         RestartSec = 3;
         Environment = [
-          "PATH=${pkgs.lib.makeBinPath [ pkgs.poetry pkgs.libinput pkgs.evtest ]}"
+          "PATH=${
+            pkgs.lib.makeBinPath [
+              pkgs.poetry
+              pkgs.libinput
+              pkgs.evtest
+            ]
+          }"
         ];
       };
 
       Install = {
-        WantedBy = [ "default.target" ];
+        WantedBy = ["default.target"];
       };
     };
 
     systemd.user.services.aw-watcher-netstatus = {
       Unit = {
         Description = "ActivityWatch Netstatus Watcher";
-        After = [ "graphical-session.target" ];
+        After = ["graphical-session.target"];
       };
 
       Service = {
@@ -247,14 +256,14 @@ in
       };
 
       Install = {
-        WantedBy = [ "default.target" ];
+        WantedBy = ["default.target"];
       };
     };
 
     systemd.user.services.aw-watcher-utilization = {
       Unit = {
         Description = "ActivityWatch Utilization Watcher";
-        After = [ "graphical-session.target" ];
+        After = ["graphical-session.target"];
       };
 
       Service = {
@@ -262,14 +271,14 @@ in
 
         ExecStart = let
           script = pkgs.writeShellScript "aw-utilization" ''
-            exec ${pyEnv}/bin/python - <<'EOF'
-import sys
-sys.path.insert(0, "${awWatcherUtilizationSrc}")
+                        exec ${pyEnv}/bin/python - <<'EOF'
+            import sys
+            sys.path.insert(0, "${awWatcherUtilizationSrc}")
 
-from aw_watcher_utilization.watcher import UtilizationWatcher
+            from aw_watcher_utilization.watcher import UtilizationWatcher
 
-UtilizationWatcher().run()
-EOF
+            UtilizationWatcher().run()
+            EOF
           '';
         in "${script}";
 
@@ -278,15 +287,18 @@ EOF
       };
 
       Install = {
-        WantedBy = [ "default.target" ];
+        WantedBy = ["default.target"];
       };
     };
   };
 
   systemd.services.pifi-proxy = {
     description = "Port forward 5600 to pifi via Tailscale";
-    after = [ "network.target" "tailscaled.service" ];
-    wantedBy = [ "multi-user.target" ];
+    after = [
+      "network.target"
+      "tailscaled.service"
+    ];
+    wantedBy = ["multi-user.target"];
 
     serviceConfig = {
       ExecStart = "${pkgs.socat}/bin/socat TCP-LISTEN:5600,fork,reuseaddr,bind=127.0.0.1 TCP:pifi:5600";

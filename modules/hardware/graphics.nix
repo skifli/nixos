@@ -1,8 +1,4 @@
-{
-  ...
-}:
-
-{
+{...}: {
   hardware = {
     graphics = {
       enable = true;

@@ -2,8 +2,7 @@
   pkgs,
   userVars,
   ...
-}:
-{
+}: {
   home-manager.users.${userVars.username} = {
     programs = {
       delta = {

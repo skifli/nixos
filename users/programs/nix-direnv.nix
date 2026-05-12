@@ -1,9 +1,4 @@
-{
-  userVars,
-  ...
-}:
-
-{
+{userVars, ...}: {
   home-manager.users.${userVars.username} = {
     programs.direnv = {
       enable = true;

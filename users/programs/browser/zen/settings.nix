@@ -19,16 +19,19 @@
 # https://github.com/0xc000022070/zen-browser-flake/issues/293
 #
 # Source - https://github.com/0xc000022070/zen-browser-flake/blob/main/examples/02b-settings-preferences.nix
-{ hostVars, ... }:
-{
-  /***************************************************************************
-   * Locale                                                                   *
-   ***************************************************************************/
+{hostVars, ...}: {
+  /**
+   *************************************************************************
+  * Locale                                                                   *
+  **************************************************************************
+  */
   "intl.locale.requested" = hostVars.locale-simple; # Browser UI language
 
-  /***************************************************************************
-   * Startup, onboarding, "default browser" nags                              *
-   ***************************************************************************/
+  /**
+   *************************************************************************
+  * Startup, onboarding, "default browser" nags                              *
+  **************************************************************************
+  */
   "browser.startup.page" = 3; # Restore previous session
   "browser.startup.homepage" = "";
   "browser.startup.firstrunSkipsHomepage" = true;
@@ -41,9 +44,11 @@
   "browser.shell.checkDefaultBrowser" = false;
   "browser.tabs.firefox-view" = false;
 
-  /***************************************************************************
-   * New tab / Activity Stream                                                *
-   ***************************************************************************/
+  /**
+   *************************************************************************
+  * New tab / Activity Stream                                                *
+  **************************************************************************
+  */
   "browser.newtab.url" = "about:blank";
   "browser.newtabpage.activity-stream.enabled" = false;
   "browser.newtabpage.enhanced" = false;
@@ -61,9 +66,11 @@
   "browser.newtabpage.activity-stream.improvesearch.topSiteSearchShortcuts.havePinned" = "";
   "browser.newtabpage.activity-stream.improvesearch.topSiteSearchShortcuts.searchEngines" = "";
 
-  /***************************************************************************
-   * UI / tabs / URL bar                                                      *
-   ***************************************************************************/
+  /**
+   *************************************************************************
+  * UI / tabs / URL bar                                                      *
+  **************************************************************************
+  */
   "browser.ctrlTab.recentlyUsedOrder" = true;
   "browser.ctrlTab.previews" = true;
   "browser.ctrlTab.sortByRecentlyUsed" = true;
@@ -77,9 +84,11 @@
   "browser.urlbar.suggest.recentsearches" = false;
   "browser.urlbar.suggest.topsites" = false;
 
-  /***************************************************************************
-   * Search, recommendations, discovery                                       *
-   ***************************************************************************/
+  /**
+   *************************************************************************
+  * Search, recommendations, discovery                                       *
+  **************************************************************************
+  */
   "browser.search.update" = false;
   "browser.search.suggest.enabled" = false;
   "browser.search.suggest.enabled.private" = false;
@@ -88,9 +97,11 @@
   "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons" = false;
   "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features" = false;
 
-  /***************************************************************************
-   * Extensions                                                                *
-   ***************************************************************************/
+  /**
+   *************************************************************************
+  * Extensions                                                                *
+  **************************************************************************
+  */
   "extensions.update.enabled" = true;
   "extensions.extensions.activeThemeID" = "firefox-compact-light@mozilla.org";
 
@@ -123,9 +134,11 @@
   "extensions.webcompat.perform_injections" = true;
   "extensions.webcompat.perform_ua_overrides" = true;
 
-  /***************************************************************************
-   * Privacy & security                                                       *
-   ***************************************************************************/
+  /**
+   *************************************************************************
+  * Privacy & security                                                       *
+  **************************************************************************
+  */
   # Do not reveal enabled plugins:
   # https://mail.mozilla.org/pipermail/firefox-dev/2013-November/001186.html
   "plugins.enumerable_names" = "";
@@ -169,9 +182,11 @@
   "signon.rememberSignons" = false;
   "browser.formfill.enable" = false;
 
-  /***************************************************************************
-   * Telemetry, studies, crash reporting                                      *
-   ***************************************************************************/
+  /**
+   *************************************************************************
+  * Telemetry, studies, crash reporting                                      *
+  **************************************************************************
+  */
   "app.shield.optoutstudies.enabled" = false;
   "experiments.supported" = false;
   "experiments.enabled" = false;
@@ -206,9 +221,11 @@
   "browser.tabs.crashReporting.sendReport" = false;
   "browser.crashReports.unsubmittedCheck.autoSubmit2" = false;
 
-  /***************************************************************************
-   * Permissions defaults                                                     *
-   ***************************************************************************/
+  /**
+   *************************************************************************
+  * Permissions defaults                                                     *
+  **************************************************************************
+  */
   # 0=always ask (default), 1=allow, 2=block
   "permissions.default.geo" = 0;
   "permissions.default.camera" = 0;
@@ -219,9 +236,11 @@
   "dom.webnotifications.enabled" = false;
   "dom.webnotifications.serviceworker.enabled" = false;
 
-  /***************************************************************************
-   * Performance / media                                                      *
-   ***************************************************************************/
+  /**
+   *************************************************************************
+  * Performance / media                                                      *
+  **************************************************************************
+  */
   "gfx.webrender.all" = true; # Force enable GPU acceleration
   "widget.dmabuf.force-enabled" = true; # Required in recent Firefoxes
   "media.ffmpeg.vaapi.enabled" = true;
@@ -231,9 +250,11 @@
 
   "network.http.http3.enabled" = true;
 
-  /***************************************************************************
-   * Zen-specific UI prefs                                                    *
-   ***************************************************************************/
+  /**
+   *************************************************************************
+  * Zen-specific UI prefs                                                    *
+  **************************************************************************
+  */
   "layout.css.devPixelsPerPx" = -1;
 
   "browser.ssb.enabled" = true;
@@ -274,9 +295,11 @@
   "zen.widget.linux.transparency" = false; # Disable transparent sidebar
   "zen.workspaces.continue-where-left-off" = true;
 
-  /***************************************************************************
-   * Optional ideas (commented out)                                           *
-   ***************************************************************************/
+  /**
+   *************************************************************************
+  * Optional ideas (commented out)                                           *
+  **************************************************************************
+  */
   # UI customization state is a large JSON blob; declare only if you want fully
   # reproducible toolbar layouts.
   # "browser.uiCustomization.state" = builtins.toJSON { };
