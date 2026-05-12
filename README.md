@@ -30,43 +30,43 @@ More are available (that I've added myself to the code but not the below concise
 <details>
 <summary>Desktop session</summary>
 
-| Key in `userVars.programs` | Available values | Upstream |
-| --- | --- | --- |
-| `compositor` | `niri` | [niri](https://github.com/YaLTeR/niri) |
-| `display-server` | `wayland` | [wayland](https://wayland.freedesktop.org/) |
-| `bar` | `waybar` | [Waybar](https://github.com/Alexays/Waybar) |
-| `idler` | `swayidle` | [swayidle](https://github.com/swaywm/swayidle) |
-| `launcher` | `vicinae` | [Vicinae](https://vicinae.com/) |
-| `login-manager` | `greetd` | [greetd](https://github.com/kennylevinsen/greetd) |
-| `logout-menu` | `wleave` | [wleave](https://github.com/AMenon2003/wleave) |
-| `notifications` | `swaync` | [swaync](https://github.com/ErikReider/SwayNotificationCenter) |
-| `osd` | `swayosd` | [swayosd](https://github.com/ErikReider/SwayOSD) |
+| Key in `userVars.programs` | Available values | Upstream                                                       |
+|----------------------------|------------------|----------------------------------------------------------------|
+| `compositor`               | `niri`           | [niri](https://github.com/YaLTeR/niri)                         |
+| `display-server`           | `wayland`        | [wayland](https://wayland.freedesktop.org/)                    |
+| `bar`                      | `waybar`         | [Waybar](https://github.com/Alexays/Waybar)                    |
+| `idler`                    | `swayidle`       | [swayidle](https://github.com/swaywm/swayidle)                 |
+| `launcher`                 | `vicinae`        | [Vicinae](https://vicinae.com/)                                |
+| `login-manager`            | `greetd`         | [greetd](https://github.com/kennylevinsen/greetd)              |
+| `logout-menu`              | `wleave`         | [wleave](https://github.com/AMenon2003/wleave)                 |
+| `notifications`            | `swaync`         | [swaync](https://github.com/ErikReider/SwayNotificationCenter) |
+| `osd`                      | `swayosd`        | [swayosd](https://github.com/ErikReider/SwayOSD)               |
 
 </details>
 
 <details>
 <summary>Apps and tools</summary>
 
-| Key in `userVars.programs` | Available values | Upstream |
-| --- | --- | --- |
-| `browsers` (list) | `browseros`, `zen` | [BrowserOS](https://browseros.com/), [Zen Browser](https://zen-browser.app/) |
-| `terminal` | `ghostty` | [Ghostty](https://ghostty.org/) |
-| `editor` | `hx` | [Helix](https://helix-editor.com/) |
-| `explorer-gui` | `dolphin`, `nemo` | [Dolphin](https://apps.kde.org/dolphin/), [Nemo](https://github.com/linuxmint/nemo) |
-| `explorer-tui` | `yazi` | [Yazi](https://yazi-rs.github.io/) |
-| `partition-manager` | `kde` | [KDE Partition Manager](https://apps.kde.org/partitionmanager/) |
-| `system-monitor` | `missioncenter` | [Mission Center](https://missioncenter.io/) |
+| Key in `userVars.programs` | Available values   | Upstream                                                                            |
+|----------------------------|--------------------|-------------------------------------------------------------------------------------|
+| `browsers` (list)          | `browseros`, `zen` | [BrowserOS](https://browseros.com/), [Zen Browser](https://zen-browser.app/)        |
+| `terminal`                 | `ghostty`          | [Ghostty](https://ghostty.org/)                                                     |
+| `editor`                   | `hx`               | [Helix](https://helix-editor.com/)                                                  |
+| `explorer-gui`             | `dolphin`, `nemo`  | [Dolphin](https://apps.kde.org/dolphin/), [Nemo](https://github.com/linuxmint/nemo) |
+| `explorer-tui`             | `yazi`             | [Yazi](https://yazi-rs.github.io/)                                                  |
+| `partition-manager`        | `kde`              | [KDE Partition Manager](https://apps.kde.org/partitionmanager/)                     |
+| `system-monitor`           | `missioncenter`    | [Mission Center](https://missioncenter.io/)                                         |
 
 </details>
 
 <details>
 <summary>Shell and prompt</summary>
 
-| Key in `userVars.programs` | Available values | Upstream |
-| --- | --- | --- |
-| `shell` | `zsh` | [Zsh](https://www.zsh.org/) |
-| `prompt` | `starship` | [Starship](https://starship.rs/) |
-| `visual` | `zeditor` | [Zeditor](https://zeditor.dev/) |
+| Key in `userVars.programs` | Available values | Upstream                         |
+|----------------------------|------------------|----------------------------------|
+| `shell`                    | `zsh`            | [Zsh](https://www.zsh.org/)      |
+| `prompt`                   | `starship`       | [Starship](https://starship.rs/) |
+| `visual`                   | `zeditor`        | [Zeditor](https://zeditor.dev/)  |
 
 </details>
 
