@@ -5,6 +5,9 @@
   ...
 }:
 
+let
+  caches = import ../../caches.nix;
+in
 {
   environment.systemPackages = with pkgs; [
     git # Great insinuating tool
@@ -50,6 +53,9 @@
       # Optimize disk I/O for builds
       fsync-metadata = false; # Don't fsync metadata on every change
       keep-build-log = false; # Don't keep build logs to reduce IO
+
+      substituters = caches.substituters;
+      trusted-public-keys = caches.trustedPublicKeys;
     };
   };
 

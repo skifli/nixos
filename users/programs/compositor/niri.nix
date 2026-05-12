@@ -22,9 +22,13 @@
       # Niri automagically sets up a lot of needed stuff
       programs.niri = {
         enable = true;
-        package = inputs.niri.packages.x86_64-linux.niri-stable.override {
-          libdisplay-info = pkgs.libdisplay-info_0_2;
-        }; # Fix for https://github.com/sodiboo/niri-flake/issues/1406
+        package =
+          let
+            system = pkgs.stdenv.hostPlatform.system;
+          in
+          inputs.niri.packages.${system}.niri-stable.override {
+            libdisplay-info = pkgs.libdisplay-info_0_2;
+          }; # Fix for https://github.com/sodiboo/niri-flake/issues/1406
         settings = {
           prefer-no-csd = true;
           hotkey-overlay.skip-at-startup = true;
