@@ -20,7 +20,6 @@ let
   # Mapping: extension-id -> { amoSlug, pinned? }
   # The attribute name is the *extension ID*; the slug is used to fetch from AMO.
   amoExtensions = {
-    "{91aa3897-2634-4a8a-9092-279db23a7689}" = { amoSlug = "zen-internet"; };
     "{ef87d84c-2127-493f-b952-5b4e744245bc}" = { amoSlug = "aw-watcher-web"; };
     "adnauseam@rednoise.org" = { amoSlug = "adnauseam"; };
     "authenticator@mymindstorm" = { amoSlug = "auth-helper"; };
@@ -51,23 +50,6 @@ in
 
   "3rdparty".Extensions = {
     # Dunno if these actually work but still
-    "{91aa3897-2634-4a8a-9092-279db23a7689}" = {
-      "transparentZenSettings" = {
-        enableStyling = true;
-        autoUpdate = true;
-        forceStyling = true;
-        whitelistMode = false;
-        whitelistStyleMode = false;
-        disableTransparency = false;
-        disableHover = false;
-        disableFooter = false;
-        disableDarkReader = false;
-        enableLogs = false;
-        fallbackBackgroundList = [ ];
-        lastFetchedTime = 0;
-        welcomeShown = true;
-      };
-    };
     "{ef87d84c-2127-493f-b952-5b4e744245bc}" = {
       "baseUrl" = "http://0.0.0.0:5600";
       browserName = "zen";
