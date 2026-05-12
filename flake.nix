@@ -15,8 +15,8 @@
       flake = false;
     };
     browseros-ai = {
-        url = "github:skifli/browseros-ai"; # Run nix store prefetch-file \
-        inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:skifli/browseros-ai"; # Run nix store prefetch-file \
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     home-manager = {
       url = "github:nix-community/home-manager/release-25.11";
@@ -36,32 +36,32 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     /*
-      winapps = {
-        url = "github:winapps-org/winapps";
-        inputs.nixpkgs.follows = "nixpkgs";
-      };
+    winapps = {
+      url = "github:winapps-org/winapps";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     */
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
-    
+
     vicinae.url = "github:vicinaehq/vicinae"; # Following nixpkgs makes cache miss
     anki-mcp.url = "github:ankimcp/anki-mcp-server-addon";
   };
 
-  outputs =
-    {
-      self,
-      nixpkgs,
-      nixpkgs-unstable,
-      ...
-    }@inputs: # Captures all inputs into a variable
-    let
-      # Helper function to generate attributes for all systems in the list
-      mkHost =
-        # Pass host and system into the function
-        hostname: system:
+  outputs = {
+    self,
+    nixpkgs,
+    nixpkgs-unstable,
+    ...
+  } @ inputs:
+  # Captures all inputs into a variable
+  let
+    # Helper function to generate attributes for all systems in the list
+    mkHost =
+      # Pass host and system into the function
+      hostname: system:
         nixpkgs.lib.nixosSystem {
           # Import required modules
           modules = [
@@ -76,25 +76,23 @@
             inherit
               self
               inputs
-
               hostname
               system
               ;
           };
         };
 
-      # Define the hosts and their respective architecture
-      hosts = {
-        lyra = {
-          system = "x86_64-linux";
-          builder = mkHost;
-        };
+    # Define the hosts and their respective architecture
+    hosts = {
+      lyra = {
+        system = "x86_64-linux";
+        builder = mkHost;
       };
-    in
-    {
-      # Automatically generate nixosConfigurations from hosts list
-      nixosConfigurations = builtins.mapAttrs (hostname: cfg: cfg.builder hostname cfg.system) hosts;
-
-      formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-rfc-style;
     };
+  in {
+    # Automatically generate nixosConfigurations from hosts list
+    nixosConfigurations = builtins.mapAttrs (hostname: cfg: cfg.builder hostname cfg.system) hosts;
+
+    formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-rfc-style;
+  };
 }

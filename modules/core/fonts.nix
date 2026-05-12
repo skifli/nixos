@@ -1,6 +1,4 @@
-{ commonHostVars, ... }:
-
-{
+{commonHostVars, ...}: {
   fonts = {
     enableDefaultPackages = true;
 
@@ -9,10 +7,10 @@
       enable = true;
       antialias = true;
       defaultFonts = {
-        sansSerif = [ commonHostVars.fonts.sansSerif.name ];
-        serif = [ commonHostVars.fonts.serif.name ];
-        monospace = [ commonHostVars.fonts.monospace.name ];
-        emoji = [ commonHostVars.fonts.emoji.name ];
+        sansSerif = [commonHostVars.fonts.sansSerif.name];
+        serif = [commonHostVars.fonts.serif.name];
+        monospace = [commonHostVars.fonts.monospace.name];
+        emoji = [commonHostVars.fonts.emoji.name];
       };
     };
     packages = [

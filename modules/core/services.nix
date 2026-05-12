@@ -3,9 +3,7 @@
   pkgs,
   usersVars,
   ...
-}:
-
-{
+}: {
   # Services to start
   services = {
     fstrim.enable = true; # Auto SSD trimming of no longer used blocks
@@ -22,7 +20,8 @@
       openFirewall = false;
     };
 
-    /* CAN CAUSE A BUNCH O' PROBLEMS
+    /*
+       CAN CAUSE A BUNCH O' PROBLEMS
     # Userspace CPU Scheduler for Improved Latency for Gaming (Hardware Specific)
     scx = {
       enable = true;
@@ -35,29 +34,28 @@
   # KDE service cache refresh.
   # This fixes missing/incorrect desktop integration after rebuilds
   # (for example default app handlers in Dolphin).
-  system.activationScripts.kbuildsycoca6-refresh.text =
-    let
-      kbuildsycoca6 = "${pkgs.kdePackages.kservice}/bin/kbuildsycoca6";
-      users = builtins.attrNames usersVars;
-      userCmds = lib.concatStringsSep "\n" (
-        map (u: ''
-          if [ -x "${kbuildsycoca6}" ] && [ -d "/home/${u}" ]; then
-            ${pkgs.util-linux}/bin/runuser -u "${u}" -- "${kbuildsycoca6}" >/dev/null 2>&1 || true
-          fi
-        '') users
-      );
-    in
-    ''
-      # Refresh KDE app cache for enabled users
-      ${userCmds}
-    '';
+  system.activationScripts.kbuildsycoca6-refresh.text = let
+    kbuildsycoca6 = "${pkgs.kdePackages.kservice}/bin/kbuildsycoca6";
+    users = builtins.attrNames usersVars;
+    userCmds = lib.concatStringsSep "\n" (
+      map (u: ''
+        if [ -x "${kbuildsycoca6}" ] && [ -d "/home/${u}" ]; then
+          ${pkgs.util-linux}/bin/runuser -u "${u}" -- "${kbuildsycoca6}" >/dev/null 2>&1 || true
+        fi
+      '')
+      users
+    );
+  in ''
+    # Refresh KDE app cache for enabled users
+    ${userCmds}
+  '';
 
   # Weekly hosts blocklist refresh.
   # Run as root (it updates system hosts) but never hard-fail the system.
   systemd.services.hblock-update = {
     description = "Update hblock hosts blocklist";
-    after = [ "network-online.target" ];
-    wants = [ "network-online.target" ];
+    after = ["network-online.target"];
+    wants = ["network-online.target"];
     serviceConfig = {
       Type = "oneshot";
     };
@@ -70,7 +68,7 @@
   };
 
   systemd.timers.hblock-update = {
-    wantedBy = [ "timers.target" ];
+    wantedBy = ["timers.target"];
     timerConfig = {
       OnCalendar = "weekly";
       Persistent = true;

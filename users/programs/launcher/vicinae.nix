@@ -3,12 +3,9 @@
   lib,
   userVars,
   ...
-}:
-
-{
-
+}: {
   home-manager = {
-    sharedModules = [ inputs.vicinae.homeManagerModules.default ];
+    sharedModules = [inputs.vicinae.homeManagerModules.default];
 
     users.${userVars.username} = {
       programs.vicinae = {

@@ -3,13 +3,15 @@
   userVars,
   ...
 }:
-
-with config.home-manager.users.${userVars.username}.lib.niri.actions;
-{
+with config.home-manager.users.${userVars.username}.lib.niri.actions; {
   "Mod+D" = {
     action = spawn [
       userVars.programs.launcher
-      (if userVars.programs.launcher == "vicinae" then "toggle" else "")
+      (
+        if userVars.programs.launcher == "vicinae"
+        then "toggle"
+        else ""
+      )
     ];
     hotkey-overlay.title = "Application launcher";
   };
@@ -171,11 +173,11 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions;
     hotkey-overlay.title = "Previous layout";
   };
   /*
-    TODO: Uncomment when flake gets update
-    "Alt+Tab".action = next-window;
-    "Alt+Shift+Tab".action = previous-window;
-    "Alt+grave".action = next-window;
-    "Alt+Shift+grave".action = next-window;
+  TODO: Uncomment when flake gets update
+  "Alt+Tab".action = next-window;
+  "Alt+Shift+Tab".action = previous-window;
+  "Alt+grave".action = next-window;
+  "Alt+Shift+grave".action = next-window;
   */
 
   # SYSTEM
@@ -186,15 +188,15 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions;
 
   # SCREENSHOTS
   "Print" = {
-    action.screenshot = [ ];
+    action.screenshot = [];
     hotkey-overlay.title = "Screenshot";
   };
   "Shift+Print" = {
-    action.screenshot-window = [ ];
+    action.screenshot-window = [];
     hotkey-overlay.title = "Screenshot window";
   };
   "Ctrl+Print" = {
-    action = spawn [ "normcap" ];
+    action = spawn ["normcap"];
     hotkey-overlay.title = "OCR screenshot";
   };
 

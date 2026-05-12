@@ -1,6 +1,4 @@
-{ userVars, ... }:
-
-{
+{userVars, ...}: {
   home-manager.users.${userVars.username} = {
     xdg.mimeApps.defaultApplications = {
       "text/plain" = ""; # Unformatted text

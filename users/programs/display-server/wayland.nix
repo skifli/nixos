@@ -4,9 +4,7 @@
   pkgsUnstable,
   userVars,
   ...
-}:
-
-{
+}: {
   # Set Wayland-friendly environment variables
   environment.sessionVariables = {
     APP2UNIT_SLICES = "a=app-graphical.slice b=background-graphical.slice s=session-graphical.slice"; # https://github.com/Vladimir-csp/app2unit?tab=readme-ov-file#uwsm-integration

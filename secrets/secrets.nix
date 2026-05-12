@@ -10,7 +10,6 @@ let
   # Notes:
   # - This file contains only public keys; it is safe to commit.
   # - Add more recipients if you want multiple machines/users to decrypt.
-
   # Raspberry Pi / pifi
   pifi = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOhF6vPHavSoFf/TiQI8fc4rHsplwe7ucGFhX5g/oaMY root@raspberrypi";
 
@@ -20,8 +19,10 @@ let
   # Optionally add a personal key too (example):
   # ami = "ssh-ed25519 AAAA...";
 
-  all = [ pifi lyra ];
-
+  all = [
+    pifi
+    lyra
+  ];
 in {
   # Per-user secrets (filenames match secrets/<user>/<name>.age)
   "secrets/ami/hashedPasswordFile.age".publicKeys = all;

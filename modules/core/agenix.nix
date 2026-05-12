@@ -1,28 +1,31 @@
-{ inputs, lib, usersVars, ... }:
-
-let
+{
+  inputs,
+  lib,
+  usersVars,
+  ...
+}: let
   # Location for encrypted secrets tracked in git.
   # Create these with `agenix -e`.
   secretsDir = ../../secrets;
 
   # Helper for defining a per-user secret if the encrypted file exists.
-  mkUserSecret =
-    username: name: extra:
-    let
-      file = secretsDir + "/${username}/${name}.age";
-    in
+  mkUserSecret = username: name: extra: let
+    file = secretsDir + "/${username}/${name}.age";
+  in
     lib.mkIf (builtins.pathExists file) {
-      "${username}-${name}" = {
-        inherit file;
-        owner = username;
-        group = "users";
-        mode = "0400";
-      } // extra;
+      "${username}-${name}" =
+        {
+          inherit file;
+          owner = username;
+          group = "users";
+          mode = "0400";
+        }
+        // extra;
     };
 
   mkUserSecrets = username: _userVars:
     lib.mkMerge [
-      (mkUserSecret username "hashedPasswordFile" { })
+      (mkUserSecret username "hashedPasswordFile" {})
 
       # Decrypt directly where apps expect them.
       (mkUserSecret username "github-credentials" {
@@ -46,9 +49,8 @@ let
     "d /home/${username}/.config 0700 ${username} users -"
     "d /home/${username}/.config/gh 0700 ${username} users -"
   ];
-in
-{
-  imports = [ inputs.agenix.nixosModules.default ];
+in {
+  imports = [inputs.agenix.nixosModules.default];
 
   age.secrets = lib.mkMerge (lib.mapAttrsToList mkUserSecrets usersVars);
 

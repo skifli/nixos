@@ -3,9 +3,7 @@
   pkgs,
   userVars,
   ...
-}:
-
-{
+}: {
   home-manager.users.${userVars.username} = {
     home.packages = with pkgs; [
       # Packages for zsh plugins
@@ -17,7 +15,7 @@
       zoxide
     ];
 
-    xdg.terminal-exec.settings.default = [ "ghostty.desktop" ];
+    xdg.terminal-exec.settings.default = ["ghostty.desktop"];
 
     programs = {
       eza = {
@@ -35,10 +33,10 @@
       };
 
       /*
-        vivid = {
-          enable = true;
-          enableZshIntegration = true;
-        };
+      vivid = {
+        enable = true;
+        enableZshIntegration = true;
+      };
       */
 
       zoxide = {
@@ -59,22 +57,23 @@
 
         oh-my-zsh = {
           enable = true;
-          plugins = [
-            "colored-man-pages"
-            "colorize"
-            "copyfile"
-            "copypath"
-            "dirhistory"
-            "dotenv"
-            "extract"
-            "eza"
-            "git"
-            "history-substring-search"
-            "safe-paste"
-            "sudo"
-            "zoxide"
-          ]
-          ++ lib.optional (userVars.programs.prompt == "starship") "starship";
+          plugins =
+            [
+              "colored-man-pages"
+              "colorize"
+              "copyfile"
+              "copypath"
+              "dirhistory"
+              "dotenv"
+              "extract"
+              "eza"
+              "git"
+              "history-substring-search"
+              "safe-paste"
+              "sudo"
+              "zoxide"
+            ]
+            ++ lib.optional (userVars.programs.prompt == "starship") "starship";
         };
       };
     };

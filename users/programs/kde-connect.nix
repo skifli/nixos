@@ -1,6 +1,8 @@
-{ pkgs, userVars, ... }:
-
 {
+  pkgs,
+  userVars,
+  ...
+}: {
   home-manager.users.${userVars.username} = {
     services.kdeconnect = {
       enable = true;
@@ -22,7 +24,7 @@
         AccuracySec = "10s";
       };
       Install = {
-        WantedBy = [ "default.target" ];
+        WantedBy = ["default.target"];
       };
     };
   };

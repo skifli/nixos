@@ -41,7 +41,11 @@ let
       isFolderCollapsed = false;
       editedTitle = true;
     }
-    // (if spec ? parent then { folderParentId = folderIds.${spec.parent}; } else { });
+    // (
+      if spec ? parent
+      then {folderParentId = folderIds.${spec.parent};}
+      else {}
+    );
 
   folders = builtins.mapAttrs (_: spec: mkFolder spec) folderSpecs;
 
@@ -150,14 +154,27 @@ let
     {
       inherit (spec) id position url;
     }
-    // (if spec ? container then { container = spec.container; } else { workspace = spaces.Home.id; })
-    // (if spec ? folder then { workspace = spaces.Home.id; folderParentId = folderIds.${spec.folder}; } else { })
-    // (if spec ? isEssential then { isEssential = true; } else { });
+    // (
+      if spec ? container
+      then {container = spec.container;}
+      else {workspace = spaces.Home.id;}
+    )
+    // (
+      if spec ? folder
+      then {
+        workspace = spaces.Home.id;
+        folderParentId = folderIds.${spec.folder};
+      }
+      else {}
+    )
+    // (
+      if spec ? isEssential
+      then {isEssential = true;}
+      else {}
+    );
 
   pins = builtins.mapAttrs (_: spec: mkPin spec) pinSpecs;
-
-in
-{
+in {
   # Folders
   "Pinned Folder" = folders.pinnedFolder;
   "Pinned Sub Folder" = folders.pinnedSubFolder;
