@@ -19,8 +19,8 @@ let
       else {}
     );
 
-  # Mapping: extension-id -> { amoSlug, pinned? }
-  # The attribute name is the *extension ID*; the slug is used to fetch from AMO.
+  # Mapping: extension-id to { amoSlug, pinned? }
+  # The attribute name is the extension ID; the slug is used to fetch from AMO.
   amoExtensions = {
     "{ef87d84c-2127-493f-b952-5b4e744245bc}" = {
       amoSlug = "aw-watcher-web";

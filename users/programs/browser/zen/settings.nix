@@ -260,10 +260,10 @@
   "browser.ssb.enabled" = true;
   "browser.tabs.allow_transparent_browser" = true;
 
-  # Based on: https://sameerasw.com/zen#intro
+  # Not using https://sameerasw.com/zen#intro anymore so now set to false
   "zen.theme.acrylic-elements" = false;
-  "widget.transparent-windows" = true;
-  "zen.theme.gradient.show-custom-colors" = true;
+  "widget.transparent-windows" = false;
+  "zen.theme.gradient.show-custom-colors" = false;
 
   # "zen.theme.accent-color" = "#FFFFFF"; # Doesn't work?
   "zen.theme.border-radius" = 8;
