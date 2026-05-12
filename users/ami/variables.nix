@@ -164,6 +164,7 @@ rec {
     login-manager = "greetd";
     notifications = "swaync";
     osd = "swayosd";
+    wallpaper = "swaybg";
 
     # Kinda core apps
     browsers = [ "browseros" "zen" ];
@@ -177,6 +178,7 @@ rec {
     system-monitor = "missioncenter";
     terminal = "ghostty";
     visual = "zeditor";
+    vpn = "tailscale";
 
     other = [
       "anki"
@@ -187,8 +189,6 @@ rec {
       "nix-direnv"
       "safeeyes"
       "styles"
-      "swaybg"
-      "tailscale"
       "typst"
       "wlsunset"
       # "weylus"
