@@ -1,4 +1,4 @@
-{username, ...}: rec {
+rec {
   # User configuration
   extraGroups = [];
   wallpaper = "Berries.JPG";
