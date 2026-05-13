@@ -86,7 +86,6 @@
       pkgs.python313Packages.aw-client
     ];
   });
-
   /*
   onigiri-anki = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
     pname = "onigiri-anki";

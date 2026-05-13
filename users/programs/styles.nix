@@ -21,7 +21,6 @@
     fi
   '';
   */
-
   call-screen-transition = ''
     NIRI_SOCKET="$(${pkgs.findutils}/bin/find "$runtime_dir" -name 'niri*.sock' 2>/dev/null | head -n 1)"
     if [ -n "$NIRI_SOCKET" ]; then
