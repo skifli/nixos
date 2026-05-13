@@ -15,7 +15,7 @@ in {
     sharedModules = [inputs.zen-browser.homeModules.beta];
 
     users.${userVars.username} = {
-      home.packages = with pkgs; [speechd];
+      home.packages = with pkgs; [kdePackages.kdialog speechd];
 
       home.activation = {
         zenBrowserPrepare =
