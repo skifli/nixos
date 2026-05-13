@@ -7,12 +7,12 @@ rec {
     nfsShares = [
       {
         mountPoint = "/mnt/pifi";
-        server = "pifi.local";
+        server = "pifi";
         remotePath = "/home/ami";
       }
       {
         mountPoint = "/mnt/Main";
-        server = "pifi.local";
+        server = "pifi";
         remotePath = "/media/ami/Main";
       }
     ];
