@@ -36,7 +36,7 @@ let
     };
   };
 
-  extensionSettingsFromAmo = builtins.mapAttrs (_: spec: mkForceInstalled spec) amoExtensions;
+  extensionSettingsFromAmo = builtins.mapAttrs (_: mkForceInstalled) amoExtensions;
 
   customExtensionSettings = {
     # View XPI IDs in the Firefox Extension Store (or upstream release pages)
@@ -65,7 +65,7 @@ in {
       consent = true;
       consentRequired = true;
       enabled = true;
-      hostname = hostVars.hostname;
+      inherit (hostVars) hostname;
       lastSyncSuccess = true;
     };
     "adnauseam@rednoise.org" = {

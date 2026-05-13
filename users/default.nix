@@ -1,6 +1,5 @@
 {
   commonHostVars,
-  config,
   inputs,
   pkgs,
   usersVars,
@@ -105,11 +104,11 @@
             }
             // commonHostVars.shellAliases;
 
-          username = username;
+          inherit username;
           homeDirectory = "/home/${username}";
 
-          file.".local/share/wallpaper.jpg" = let
-            asset = ./${username}/assets/wallpapers/${userVars.wallpaper}.jpg;
+          file.".local/share/wallpaper" = let
+            asset = ./${username}/assets/wallpapers/${userVars.wallpaper};
           in
             pkgs.lib.mkIf (builtins.pathExists asset) {
               source = asset;

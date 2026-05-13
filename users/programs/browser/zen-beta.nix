@@ -11,5 +11,4 @@
 #   keeping the implementation in the more discoverable zen.nix file.
 #
 # To update Zen Browser config: edit zen.nix, not this file.
-
 args: (import ./zen.nix args)

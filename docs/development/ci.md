@@ -4,15 +4,14 @@
   - [CI overview](#ci-overview)
   - [Current workflow](#current-workflow)
   - [Goals](#goals)
-  - [Future improvements](#future-improvements)
-  - [Example future workflow](#example-future-workflow)
   - [Suggested tooling](#suggested-tooling)
     - [Formatting](#formatting)
     - [Linting](#linting)
     - [Validation](#validation)
+  - [Pre-commit hooks](#pre-commit-hooks)
   - [Example local validation](#example-local-validation)
 
-This repository includes lightweight CI checks for flake hygiene and evaluation.
+This repository includes lightweight CI checks for flake hygiene, formatting, and evaluation.
 
 ## CI overview
 
@@ -34,11 +33,16 @@ The repository currently includes:
 
 ```text
 .github/workflows/flake-checker.yml
+.github/workflows/nix-ci.yml
+.github/workflows/alejandra-autoformat.yml
 ```
 
 using:
 
 - Determinate Systems flake checker
+- `pre-commit run --all-files`
+- `nix flake check --all-systems`
+- automated `alejandra` commits on `main`
 
 ## Goals
 
@@ -49,35 +53,6 @@ The CI pipeline aims to:
 - Prevent accidental regressions
 - Ensure configurations still evaluate
 
-## Future improvements
-
-Potential future additions:
-
-| Feature | Purpose |
-|---|---|
-| `nix flake check` | Validate flake outputs |
-| Host evaluation matrix | Test all hosts |
-| Dead link checker | Validate documentation |
-| Formatting checks | Enforce style consistency |
-| Statix | Nix linting |
-| Deadnix | Detect unused code |
-| Treefmt | Unified formatting |
-| Cachix integration | Binary cache uploads |
-
-## Example future workflow
-
-```mermaid
-graph LR
-
-    A[Push]
-    B[Format checks]
-    C[Linting]
-    D[Flake evaluation]
-    E[Host builds]
-    F[CI success]
-
-    A --> B --> C --> D --> E --> F
-```
 
 ## Suggested tooling
 
@@ -93,25 +68,65 @@ graph LR
 
 ### Validation
 
-- `nix flake check`
+- `nix flake check --all-systems`
+
+## Pre-commit hooks
+
+This repository also exposes a real pre-commit setup via https://pre-commit.com.
+
+Enter the development shell and the hooks will install automatically:
+
+```bash
+nix develop
+```
+
+The hook set currently runs:
+
+- `alejandra`
+- `statix`
+- `deadnix`
+
+To run them manually:
+
+```bash
+pre-commit run --all-files
+```
+
+To make pre-commit run automatically during normal `git commit` outside a
+`nix develop` shell, enable the committed wrapper hook and make it executable:
+
+```bash
+git config core.hooksPath .githooks
+chmod +x .githooks/pre-commit
+```
+
+This wrapper runs `pre-commit` inside `nix develop` so the system-language
+hooks (`alejandra`, `statix`, `deadnix`) are available even when you're not
+already in the dev shell.
 
 ## Example local validation
 
 Run checks locally before pushing:
 
 ```bash
-nix flake check
+nix run nixpkgs#alejandra -- --check .
+nix run nixpkgs#statix -- check .
+nix run nixpkgs#deadnix -- .
+nix flake check --all-systems
 ```
 
 Linting:
 
 ```bash
-statix check .
-deadnix .
+nix run nixpkgs#statix -- check .
+nix run nixpkgs#deadnix -- .
 ```
+
+Note: these lint tools currently emit warnings in the existing tree, so they are
+kept advisory in CI until the repo is cleaned up.
 
 Formatting:
 
 ```bash
-alejandra .
+nix run nixpkgs#alejandra -- .
 ```

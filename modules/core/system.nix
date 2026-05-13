@@ -51,8 +51,7 @@ in {
       fsync-metadata = false; # Don't fsync metadata on every change
       keep-build-log = false; # Don't keep build logs to reduce IO
 
-      substituters = caches.substituters;
-      trusted-public-keys = caches.trustedPublicKeys;
+      inherit (caches) substituters trustedPublicKeys;
     };
   };
 
@@ -60,7 +59,7 @@ in {
 
   powerManagement = {
     enable = true;
-    cpuFreqGovernor = hostVars.cpuFreqGovernor;
+    inherit (hostVars) cpuFreqGovernor;
   };
 
   programs = {

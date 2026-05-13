@@ -1,4 +1,4 @@
-{...}: {
+_: {
   AllowFileSelectionDialogs = true;
   AppAutoUpdate = false;
   AutofillAddressEnabled = false;
