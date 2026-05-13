@@ -1,5 +1,0 @@
-#!/bin/sh
-# Run pre-commit inside this flake's dev shell so system hooks are available.
-# This wrapper calls `nix develop` which provides `alejandra`, `statix`, and
-# `deadnix` from the dev shell defined in `flake.nix`.
-exec nix develop --command pre-commit run --all-files
