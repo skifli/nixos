@@ -3,20 +3,20 @@ repos:
     hooks:
       - id: alejandra
         name: alejandra
-        entry: alejandra
+        entry: nix develop --command alejandra --check
         language: system
         files: \.nix$
 
       - id: statix
         name: statix
-        entry: statix check .
+        entry: nix develop --command statix check .
         language: system
         pass_filenames: false
         files: \.nix$
 
       - id: deadnix
         name: deadnix
-        entry: deadnix .
+        entry: nix develop --command deadnix .
         language: system
         pass_filenames: false
         files: \.nix$

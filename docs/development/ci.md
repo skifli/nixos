@@ -74,35 +74,26 @@ The CI pipeline aims to:
 
 This repository also exposes a real pre-commit setup via https://pre-commit.com.
 
-Enter the development shell and the hooks will install automatically:
-
-```bash
-nix develop
-```
-
 The hook set currently runs:
 
 - `alejandra`
 - `statix`
 - `deadnix`
 
+Each hook runs `nix develop --command ...`, so the Nix packages from the flake
+dev shell are available even when the commit is launched outside `nix develop`.
+
+To install the hooks once:
+
+```bash
+pre-commit install
+```
+
 To run them manually:
 
 ```bash
 pre-commit run --all-files
 ```
-
-To make pre-commit run automatically during normal `git commit` outside a
-`nix develop` shell, enable the committed wrapper hook and make it executable:
-
-```bash
-git config core.hooksPath .githooks
-chmod +x .githooks/pre-commit
-```
-
-This wrapper runs `pre-commit` inside `nix develop` so the system-language
-hooks (`alejandra`, `statix`, `deadnix`) are available even when you're not
-already in the dev shell.
 
 ## Example local validation
 
