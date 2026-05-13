@@ -5,8 +5,7 @@ let
 
   mkJoinedTabs = builtins.mapAttrs (
     _: spec: {
-      id = spec.id;
-      gridType = spec.gridType;
+      inherit (spec) id gridType;
       tabs = map (pinName: pins.${pinName}.id) spec.tabs;
     }
   );

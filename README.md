@@ -56,6 +56,7 @@ More are available (that I've added myself to the code but not the below concise
 | `editor`                   | `hx`               | [Helix](https://helix-editor.com/)                                                  |
 | `explorer-gui`             | `dolphin`, `nemo`  | [Dolphin](https://apps.kde.org/dolphin/), [Nemo](https://github.com/linuxmint/nemo) |
 | `explorer-tui`             | `yazi`             | [Yazi](https://yazi-rs.github.io/)                                                  |
+| `network-mounts`           | `nfs`              | NFS mounts for remote disks/fileshares                                             |
 | `partition-manager`        | `kde`              | [KDE Partition Manager](https://apps.kde.org/partitionmanager/)                     |
 | `system-monitor`           | `missioncenter`    | [Mission Center](https://missioncenter.io/)                                         |
 

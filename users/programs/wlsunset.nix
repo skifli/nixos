@@ -7,8 +7,7 @@
     # Enable screen colour automatic changing
     services.wlsunset = {
       enable = true;
-      latitude = hostVars.latitude;
-      longitude = hostVars.longitude;
+      inherit (hostVars) latitude longitude;
       systemdTarget = "graphical-session.target";
     };
   };

@@ -36,7 +36,7 @@ let
       else {}
     );
 
-  folders = builtins.mapAttrs (_: spec: mkFolder spec) folderSpecs;
+  folders = builtins.mapAttrs (_: mkFolder) folderSpecs;
 
   pinSpecs = {
     # Container tabs
@@ -133,7 +133,7 @@ let
     }
     // (
       if spec ? container
-      then {container = spec.container;}
+      then {inherit (spec) container;}
       else {workspace = spaces.Home.id;}
     )
     // (
@@ -146,11 +146,11 @@ let
     )
     // (
       if spec ? isEssential
-      then {isEssential = true;}
+      then {inherit (spec) isEssential;}
       else {}
     );
 
-  pins = builtins.mapAttrs (_: spec: mkPin spec) pinSpecs;
+  pins = builtins.mapAttrs (_: mkPin) pinSpecs;
 in {
   # Folders
   "Pinned Folder" = folders.pinnedFolder;

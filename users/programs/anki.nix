@@ -4,113 +4,99 @@
   userVars,
   ...
 }: let
-  advanced-review-bottom-bar = (
-    pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
-      pname = "advanced-review-bottom-bar";
-      version = "v3.6.1";
-      src = pkgs.fetchFromGitHub {
-        owner = "noobj2";
-        repo = "Anki-Advanced-Review-Bottombar";
-        rev = finalAttrs.version;
-        sparseCheckout = [""];
-        hash = "sha256-ah51DWf1DbULF580hMj360R5qPh3fHnYM6KGBtJrgh8=";
-      };
-      sourceRoot = "${finalAttrs.src.name}";
-    })
-  );
+  advanced-review-bottom-bar = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
+    pname = "advanced-review-bottom-bar";
+    version = "v3.6.1";
+    src = pkgs.fetchFromGitHub {
+      owner = "noobj2";
+      repo = "Anki-Advanced-Review-Bottombar";
+      rev = finalAttrs.version;
+      sparseCheckout = [""];
+      hash = "sha256-ah51DWf1DbULF580hMj360R5qPh3fHnYM6KGBtJrgh8=";
+    };
+    sourceRoot = "${finalAttrs.src.name}";
+  });
 
-  anki-connect = (
-    pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
-      pname = "anki-connect";
-      version = "de6e6e1b";
-      src = pkgs.fetchFromSourcehut {
-        domain = "sr.ht";
-        owner = "~foosoft";
-        repo = "anki-connect";
-        rev = finalAttrs.version;
-        hash = "sha256-27ZQpk/5aGlE0FVqftU6x7cUj8ZIOiOGFvy/tt/HzNU=";
-      };
-      sourceRoot = "${finalAttrs.src.name}/plugin";
-    })
-  );
+  anki-connect = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
+    pname = "anki-connect";
+    version = "de6e6e1b";
+    src = pkgs.fetchFromSourcehut {
+      domain = "sr.ht";
+      owner = "~foosoft";
+      repo = "anki-connect";
+      rev = finalAttrs.version;
+      hash = "sha256-27ZQpk/5aGlE0FVqftU6x7cUj8ZIOiOGFvy/tt/HzNU=";
+    };
+    sourceRoot = "${finalAttrs.src.name}/plugin";
+  });
 
-  anki-quizlet-importer-extended = (
-    pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
-      pname = "anki-quizlet-importer-extended";
-      version = "v2025.09.28";
-      src = pkgs.fetchFromGitHub {
-        owner = "sviatoslav-lebediev";
-        repo = "anki-quizlet-importer-extended";
-        rev = finalAttrs.version;
-        sparseCheckout = [""];
-        hash = "sha256-j/ow/HCc70dD/BpMDqGx7rib7G0FfxazzjuPmEQbYTk=";
-      };
-      sourceRoot = "${finalAttrs.src.name}";
-    })
-  );
+  anki-quizlet-importer-extended = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
+    pname = "anki-quizlet-importer-extended";
+    version = "v2025.09.28";
+    src = pkgs.fetchFromGitHub {
+      owner = "sviatoslav-lebediev";
+      repo = "anki-quizlet-importer-extended";
+      rev = finalAttrs.version;
+      sparseCheckout = [""];
+      hash = "sha256-j/ow/HCc70dD/BpMDqGx7rib7G0FfxazzjuPmEQbYTk=";
+    };
+    sourceRoot = "${finalAttrs.src.name}";
+  });
 
-  anki-redesign-plus = (
-    pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
-      pname = "anki-redesign-plus";
-      version = "4c7621c";
-      src = pkgs.fetchFromGitHub {
-        owner = "qais8r";
-        repo = "anki-redesign-plus";
-        rev = finalAttrs.version;
-        sparseCheckout = [""];
-        hash = "";
-      };
-      sourceRoot = "${finalAttrs.src.name}";
-    })
-  );
+  anki-redesign-plus = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
+    pname = "anki-redesign-plus";
+    version = "4c7621c";
+    src = pkgs.fetchFromGitHub {
+      owner = "qais8r";
+      repo = "anki-redesign-plus";
+      rev = finalAttrs.version;
+      sparseCheckout = [""];
+      hash = "";
+    };
+    sourceRoot = "${finalAttrs.src.name}";
+  });
 
-  aw-watcher-anki = (
-    pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
-      pname = "aw-watcher-anki";
-      version = "1d83e35";
-      src = pkgs.fetchFromGitHub {
-        owner = "skifli";
-        repo = "aw-watcher-anki";
-        rev = finalAttrs.version;
-        hash = "sha256-lqYtr4pBvOIiJ49etrgaI2RqQQaEnP/R9kXOA0mlI18=";
-        fetchSubmodules = true;
-      };
-      sourceRoot = "${finalAttrs.src.name}/src";
-    })
-  );
+  aw-watcher-anki = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
+    pname = "aw-watcher-anki";
+    version = "1d83e35";
+    src = pkgs.fetchFromGitHub {
+      owner = "skifli";
+      repo = "aw-watcher-anki";
+      rev = finalAttrs.version;
+      hash = "sha256-lqYtr4pBvOIiJ49etrgaI2RqQQaEnP/R9kXOA0mlI18=";
+      fetchSubmodules = true;
+    };
+    sourceRoot = "${finalAttrs.src.name}/src";
+  });
 
-  fsrs4anki-helper = (
-    pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
-      pname = "fsrs4anki-helper";
-      version = "703c99f";
-      src = pkgs.fetchFromGitHub {
-        owner = "open-spaced-repetition";
-        repo = "fsrs4anki-helper";
-        rev = finalAttrs.version;
-        hash = "sha256-kSLWBeSIsIjCo9rRfOkqkng5WHhCQPEFAbF1g79Gsy4=";
-        fetchSubmodules = true;
-      };
-      sourceRoot = "${finalAttrs.src.name}";
-      propagatedBuildInputs = [
-        pkgs.python313Packages.aw-client
-      ];
-    })
-  );
+  fsrs4anki-helper = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
+    pname = "fsrs4anki-helper";
+    version = "703c99f";
+    src = pkgs.fetchFromGitHub {
+      owner = "open-spaced-repetition";
+      repo = "fsrs4anki-helper";
+      rev = finalAttrs.version;
+      hash = "sha256-kSLWBeSIsIjCo9rRfOkqkng5WHhCQPEFAbF1g79Gsy4=";
+      fetchSubmodules = true;
+    };
+    sourceRoot = "${finalAttrs.src.name}";
+    propagatedBuildInputs = [
+      pkgs.python313Packages.aw-client
+    ];
+  });
 
-  onigiri-anki = (
-    pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
-      pname = "onigiri-anki";
-      version = "e8ad970";
-      src = pkgs.fetchFromGitHub {
-        owner = "thepeacemonk";
-        repo = "Onigiri";
-        rev = finalAttrs.version;
-        sparseCheckout = [""];
-        hash = "sha256-Vy/IZo8N8zSMDDNNjchWHAZ9kTcWTHCox4ihYn2/GBE=";
-      };
-      sourceRoot = "${finalAttrs.src.name}";
-    })
-  );
+  onigiri-anki = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
+    pname = "onigiri-anki";
+    version = "e8ad970";
+    src = pkgs.fetchFromGitHub {
+      owner = "thepeacemonk";
+      repo = "Onigiri";
+      rev = finalAttrs.version;
+      sparseCheckout = [""];
+      hash = "sha256-Vy/IZo8N8zSMDDNNjchWHAZ9kTcWTHCox4ihYn2/GBE=";
+    };
+    sourceRoot = "${finalAttrs.src.name}";
+  });
 in {
   nixpkgs.overlays = [
     inputs.anki-mcp.overlays.default

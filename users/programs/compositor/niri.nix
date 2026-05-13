@@ -54,8 +54,7 @@
           clipboard.disable-primary = true;
 
           binds = import ./niri/binds.nix attrs;
-          outputs = hostVars.outputs;
-          workspaces = hostVars.workspaces;
+          inherit (hostVars) outputs workspaces;
 
           animations = {
             enable = true;
@@ -67,7 +66,7 @@
             window-resize.enable = true;
           };
 
-          spawn-at-startup = [] ++ userVars.niri.spawn-at-startup;
+          spawn-at-startup = userVars.niri.spawn-at-startup;
 
           window-rules =
             [
