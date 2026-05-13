@@ -9,6 +9,7 @@
   userVars,
   ...
 }: let
+  /*
   switch-system-specialisation = spec: ''
     activate_script="/run/booted-system/specialisation/${spec}/bin/switch-to-configuration"
 
@@ -19,6 +20,7 @@
       exit 1
     fi
   '';
+  */
 
   call-screen-transition = ''
     NIRI_SOCKET="$(${pkgs.findutils}/bin/find "$runtime_dir" -name 'niri*.sock' 2>/dev/null | head -n 1)"
@@ -141,8 +143,7 @@ in {
       base16Scheme = lib.mkDefault "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.day}.yaml";
 
       cursor = {
-        package = commonHostVars.cursor.package;
-        size = commonHostVars.cursor.size;
+        inherit (commonHostVars.cursor) package size;
         name = lib.mkDefault commonHostVars.cursor.day.name;
       };
       inherit (commonHostVars) icons fonts;
@@ -154,7 +155,7 @@ in {
       enable = true;
 
       iconTheme = {
-        package = commonHostVars.icons.package;
+        inherit (commonHostVars.icons) package;
         name = lib.mkDefault commonHostVars.icons.light;
       };
     };

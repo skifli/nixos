@@ -63,6 +63,7 @@ let
     position = 1002;
   };
 
+  /*
   # Subfolders of yr11
   workExperienceY11 = {
     id = "f3333333-3333-4333-8333-333333333333";
@@ -73,6 +74,7 @@ let
     editedTitle = true;
     position = 1101;
   };
+  */
 
   # Subfolders of yr12
   calcUSlayter = {
@@ -197,6 +199,7 @@ let
     position = 1303;
   };
 
+  /*
   revisionResourcesY13 = {
     id = "h5555555-5555-4555-8555-555555555555";
     workspace = spaces.Home.id;
@@ -206,6 +209,7 @@ let
     editedTitle = true;
     position = 1304;
   };
+  */
 
   # New folders for better organization
   ayoLevelResources = {
