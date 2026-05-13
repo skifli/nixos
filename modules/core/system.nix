@@ -51,7 +51,7 @@ in {
       fsync-metadata = false; # Don't fsync metadata on every change
       keep-build-log = false; # Don't keep build logs to reduce IO
 
-      inherit (caches) substituters trustedPublicKeys;
+      inherit (caches) substituters trusted-public-keys;
     };
   };
 
