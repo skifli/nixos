@@ -10,13 +10,13 @@
 
   loginctl = "${pkgs.systemd}/bin/loginctl lock-session";
   niri-bin = "${pkgs.niri}/bin/niri"; # IPC stuff so fine
-  swaylock = "${pkgs.swaylock-effects}/bin/swaylock -f -i /home/${userVars.username}/.local/share/wallpaper.jpg --effect-blur 7x5 --fade-in 0.2";
+  swaylock = "${pkgs.swaylock-effects}/bin/swaylock -f -i /home/${userVars.username}/.local/share/wallpaper --effect-blur 7x5 --fade-in 0.2";
 
   display = status: "${niri-bin} msg action power-${status}-monitors";
 in {
   home-manager.users.${userVars.username} = {
     home.shellAliases = {
-      swaylock = swaylock; # Fancy by default!
+      inherit swaylock; # Fancy by default!
     };
 
     services.swayidle = {

@@ -14,11 +14,12 @@ let
       inherit hostname;
     }; # Merges hostname with the other config, to more seamlessly combine
 
-  usersVars =
-    (import ../../users/variables.nix {
-      inherit (hostVars) enabledUsers;
-      inherit lib;
-    }).usersVars; # Get variables for all users enabled for this host
+  usersVarsFile = import ../../users/variables.nix {
+    inherit (hostVars) enabledUsers;
+    inherit lib;
+  };
+
+  inherit (usersVarsFile) usersVars; # Get variables for all users enabled for this host
 
   idleConfig = {
     CPUWeight = "20"; # Defaults to 100 for all processes. Lower value means lower priority. This is a arbitrary weight integer.

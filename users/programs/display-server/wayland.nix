@@ -40,18 +40,20 @@
   programs.xwayland.enable = true;
 
   # Enable systemd user session support
-  services.dbus.enable = true;
+  services = {
+    dbus.enable = true;
 
-  # Session management
-  services.gnome.gnome-keyring.enable = true;
+    # Session management
+    gnome.gnome-keyring.enable = true;
 
-  services.xserver = {
-    enable = false;
-    exportConfiguration = false; # Would make /etc/X11/xkb populated so tools like localectl work
+    xserver = {
+      enable = false;
+      exportConfiguration = false; # Would make /etc/X11/xkb populated so tools like localectl work
 
-    xkb = {
-      layout = "${hostVars.keyboardLayout}";
-      variant = "${hostVars.kbdVariant}";
+      xkb = {
+        layout = "${hostVars.keyboardLayout}";
+        variant = "${hostVars.kbdVariant}";
+      };
     };
   };
 }

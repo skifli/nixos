@@ -155,139 +155,127 @@ in {
       aw-qt
     ];
 
-    systemd.user.services.aw-watcher-afk = {
-      Unit = {
-        Description = "ActivityWatch AFK Watcher";
-        After = ["graphical-session.target"];
-      };
+    systemd = {
+      user.services = {
+        "aw-watcher-afk" = {
+          Unit = {
+            Description = "ActivityWatch AFK Watcher";
+            After = ["graphical-session.target"];
+          };
 
-      Service = {
-        Type = "simple";
-        ExecStart = "${pkgs.aw-watcher-afk}/bin/aw-watcher-afk";
-        Restart = "always";
-        RestartSec = 3;
-      };
+          Service = {
+            Type = "simple";
+            ExecStart = "${pkgs.aw-watcher-afk}/bin/aw-watcher-afk";
+            Restart = "always";
+            RestartSec = 3;
+          };
 
-      Install = {
-        WantedBy = ["default.target"];
-      };
-    };
+          Install = {WantedBy = ["default.target"];};
+        };
 
-    systemd.user.services.aw-watcher-window-wayland = {
-      Unit = {
-        Description = "ActivityWatch Wayland Window Watcher";
-        After = ["graphical-session.target"];
-      };
+        "aw-watcher-window-wayland" = {
+          Unit = {
+            Description = "ActivityWatch Wayland Window Watcher";
+            After = ["graphical-session.target"];
+          };
 
-      Service = {
-        Type = "simple";
-        ExecStartPre = "${pkgs.coreutils}/bin/sleep 60"; # Try stop lagging
-        ExecStart = "${pkgs.aw-watcher-window-wayland}/bin/aw-watcher-window-wayland";
-        Restart = "always";
-        RestartSec = 3;
-      };
+          Service = {
+            Type = "simple";
+            ExecStartPre = "${pkgs.coreutils}/bin/sleep 60"; # Try stop lagging
+            ExecStart = "${pkgs.aw-watcher-window-wayland}/bin/aw-watcher-window-wayland";
+            Restart = "always";
+            RestartSec = 3;
+          };
 
-      Install = {
-        WantedBy = ["default.target"];
-      };
-    };
+          Install = {WantedBy = ["default.target"];};
+        };
 
-    systemd.user.services.aw-notify = {
-      Unit = {
-        Description = "ActivityWatch Notify (Rust)";
-        After = ["graphical-session.target"];
-      };
+        "aw-notify" = {
+          Unit = {
+            Description = "ActivityWatch Notify (Rust)";
+            After = ["graphical-session.target"];
+          };
 
-      Service = {
-        Type = "simple";
-        ExecStart = "${awNotifyRs}/bin/aw-notify start";
-        Restart = "always";
-        RestartSec = 3;
-      };
+          Service = {
+            Type = "simple";
+            ExecStart = "${awNotifyRs}/bin/aw-notify start";
+            Restart = "always";
+            RestartSec = 3;
+          };
 
-      Install = {
-        WantedBy = ["default.target"];
-      };
-    };
+          Install = {WantedBy = ["default.target"];};
+        };
 
-    systemd.user.services.aw-watcher-input = {
-      Unit = {
-        Description = "ActivityWatch Input Watcher";
-        After = ["graphical-session.target"];
-      };
+        "aw-watcher-input" = {
+          Unit = {
+            Description = "ActivityWatch Input Watcher";
+            After = ["graphical-session.target"];
+          };
 
-      Service = {
-        Type = "simple";
-        WorkingDirectory = "${awWatcherInputSrc}/src";
+          Service = {
+            Type = "simple";
+            WorkingDirectory = "${awWatcherInputSrc}/src";
 
-        ExecStart = ''
-          ${pyEnv}/bin/python -c "from aw_watcher_input.main import main; main()"
-        '';
+            ExecStart = ''
+              ${pyEnv}/bin/python -c "from aw_watcher_input.main import main; main()"
+            '';
 
-        Restart = "always";
-        RestartSec = 3;
-        Environment = [
-          "PATH=${
-            pkgs.lib.makeBinPath [
-              pkgs.poetry
-              pkgs.libinput
-              pkgs.evtest
-            ]
-          }"
-        ];
-      };
+            Restart = "always";
+            RestartSec = 3;
+            Environment = [
+              "PATH=${
+                pkgs.lib.makeBinPath [pkgs.poetry pkgs.libinput pkgs.evtest]
+              }"
+            ];
+          };
 
-      Install = {
-        WantedBy = ["default.target"];
-      };
-    };
+          Install = {WantedBy = ["default.target"];};
+        };
 
-    systemd.user.services.aw-watcher-netstatus = {
-      Unit = {
-        Description = "ActivityWatch Netstatus Watcher";
-        After = ["graphical-session.target"];
-      };
+        "aw-watcher-netstatus" = {
+          Unit = {
+            Description = "ActivityWatch Netstatus Watcher";
+            After = ["graphical-session.target"];
+          };
 
-      Service = {
-        Type = "simple";
-        ExecStart = "${pyEnv}/bin/aw-watcher-netstatus";
-        Restart = "always";
-        RestartSec = 3;
-      };
+          Service = {
+            Type = "simple";
+            ExecStart = "${pyEnv}/bin/aw-watcher-netstatus";
+            Restart = "always";
+            RestartSec = 3;
+          };
 
-      Install = {
-        WantedBy = ["default.target"];
-      };
-    };
+          Install = {WantedBy = ["default.target"];};
+        };
 
-    systemd.user.services.aw-watcher-utilization = {
-      Unit = {
-        Description = "ActivityWatch Utilization Watcher";
-        After = ["graphical-session.target"];
-      };
+        "aw-watcher-utilization" = {
+          Unit = {
+            Description = "ActivityWatch Utilization Watcher";
+            After = ["graphical-session.target"];
+          };
 
-      Service = {
-        Type = "simple";
+          Service = {
+            Type = "simple";
 
-        ExecStart = let
-          script = pkgs.writeShellScript "aw-utilization" ''
-                        exec ${pyEnv}/bin/python - <<'EOF'
-            import sys
-            sys.path.insert(0, "${awWatcherUtilizationSrc}")
+            ExecStart = let
+              script = pkgs.writeShellScript "aw-utilization" ''
+                              exec ${pyEnv}/bin/python - <<'EOF'
+                import sys
+                sys.path.insert(0, "${awWatcherUtilizationSrc}")
 
-            from aw_watcher_utilization.watcher import UtilizationWatcher
+                from aw_watcher_utilization.watcher import UtilizationWatcher
 
-            UtilizationWatcher().run()
-            EOF
-          '';
-        in "${script}";
+                UtilizationWatcher().run()
+                EOF
+              '';
+            in "${script}";
 
-        Restart = "always";
-        RestartSec = 3;
-      };
+            Restart = "always";
+            RestartSec = 3;
+          };
 
-      Install = {
-        WantedBy = ["default.target"];
+          Install = {WantedBy = ["default.target"];};
+        };
       };
     };
   };

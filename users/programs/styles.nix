@@ -32,7 +32,7 @@
     fi
   '';
 
-  enableDarkmanModule = {...}: {
+  enableDarkmanModule = _: {
     services.darkman = {
       enable = true;
 
@@ -145,8 +145,7 @@ in {
         size = commonHostVars.cursor.size;
         name = lib.mkDefault commonHostVars.cursor.day.name;
       };
-      icons = commonHostVars.icons;
-      fonts = commonHostVars.fonts;
+      inherit (commonHostVars) icons fonts;
 
       # targets."${builtins.elemAt userVars.programs.browsers 0}-browser".enable = false;
     };

@@ -1,7 +1,22 @@
-rec {
+{username, ...}: rec {
   # User configuration
   extraGroups = [];
-  wallpaper = "1-0Q3A5252";
+  wallpaper = "Berries.JPG";
+
+  networkMounts = {
+    nfsShares = [
+      {
+        mountPoint = "/mnt/pifi";
+        server = "pifi.local";
+        remotePath = "/home/ami";
+      }
+      {
+        mountPoint = "/mnt/Main";
+        server = "pifi.local";
+        remotePath = "/media/ami/Main";
+      }
+    ];
+  };
 
   git = {
     enabled = true;
@@ -30,10 +45,7 @@ rec {
       programs.browsers;
   in {
     spawn-at-startup =
-      [
-        # Start all configured browsers for easy testing.
-      ]
-      ++ browserStartup
+      browserStartup
       ++ [
         {command = ["anki"];}
         {command = ["anytype"];}
@@ -184,6 +196,7 @@ rec {
     explorer-tui = "yazi";
     explorer-gui = "dolphin";
     launcher = "vicinae";
+    network-mounts = "nfs";
     partition-manager = "kde";
     prompt = "starship";
     shell = "zsh";

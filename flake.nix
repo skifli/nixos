@@ -89,9 +89,49 @@
         builder = mkHost;
       };
     };
+
+    systems = nixpkgs.lib.unique ((map (cfg: cfg.system) (builtins.attrValues hosts)) ++ ["aarch64-linux"]);
+    hostsForSystem = system: builtins.attrNames (nixpkgs.lib.filterAttrs (_: cfg: cfg.system == system) hosts);
   in {
     # Automatically generate nixosConfigurations from hosts list
     nixosConfigurations = builtins.mapAttrs (hostname: cfg: cfg.builder hostname cfg.system) hosts;
+
+    checks = nixpkgs.lib.genAttrs systems (
+      system: let
+        pkgs = nixpkgs.legacyPackages.${system};
+      in
+        builtins.listToAttrs (
+          map (
+            hostname: {
+              name = "eval-${hostname}";
+              value = pkgs.runCommand "eval-${hostname}" {} ''
+                echo "${self.nixosConfigurations.${hostname}.config.system.build.toplevel.drvPath}" > "$out"
+              '';
+            }
+          ) (hostsForSystem system)
+        )
+    );
+
+    devShells = nixpkgs.lib.genAttrs systems (
+      system: let
+        pkgs = nixpkgs.legacyPackages.${system};
+      in {
+        default = pkgs.mkShell {
+          packages = with pkgs; [
+            pre-commit
+            alejandra
+            statix
+            deadnix
+          ];
+
+          shellHook = ''
+            if [ -d .git ]; then
+              pre-commit install --install-hooks >/dev/null 2>&1 || true
+            fi
+          '';
+        };
+      }
+    );
 
     formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-rfc-style;
   };

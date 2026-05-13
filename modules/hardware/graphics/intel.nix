@@ -15,8 +15,14 @@
     "nvme.noacpi=1" # Helps with NVME power consumption
   ];
 
-  # Load the driver
-  services.xserver.videoDrivers = ["modesetting"];
+  services = {
+    # Load the driver
+    xserver.videoDrivers = ["modesetting"];
+
+    # Thermal and Noise Management
+    thermald.enable = true;
+    throttled.enable = true;
+  };
 
   # OpenGL
   hardware = {
@@ -36,8 +42,4 @@
       ];
     };
   };
-
-  # Thermal and Noise Management
-  services.thermald.enable = true;
-  services.throttled.enable = true;
 }

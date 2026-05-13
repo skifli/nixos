@@ -41,8 +41,7 @@ in {
     mods
     ;
 
-  keyboardShortcuts = keyboardShortcutsSpec.keyboardShortcuts;
-  keyboardShortcutsVersion = keyboardShortcutsSpec.keyboardShortcutsVersion;
+  inherit (keyboardShortcutsSpec) keyboardShortcuts keyboardShortcutsVersion;
 
   sine = {
     # Disabled due to buggy and not (yet) documented:

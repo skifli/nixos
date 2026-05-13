@@ -3,7 +3,12 @@
   userVars,
   ...
 } @ attrs: let
-  programs = userVars.programs;
+  inherit (userVars) programs;
+
+  requireModulePath = kind: path:
+    if builtins.pathExists path
+    then path
+    else throw "Missing ${kind} module for user '${userVars.username}': ${toString path}";
 
   categoryDirFor = category:
     if builtins.pathExists (./programs/${category})
@@ -12,7 +17,8 @@
     then lib.removeSuffix "s" category
     else category;
 
-  mkProgramModulePath = category: name: ./programs/${categoryDirFor category}/${name}.nix;
+  mkProgramModulePath = category: name:
+    requireModulePath "program" ./programs/${categoryDirFor category}/${name}.nix;
 
   regular = lib.concatMap (
     category: let
@@ -27,13 +33,13 @@
       else []
   ) (builtins.attrNames programs); # Get all programs specified in the usual way
 
-  others = map (program: ./programs/${program}.nix) (programs.other or []); # Get all programs specified in the "other" variable
+  others = map (program: requireModulePath "other" ./programs/${program}.nix) (programs.other or []); # Get all programs specified in the "other" variable
 
   all =
     [
-      ./${userVars.username}/user-packages.nix
+      (requireModulePath "user-packages" ./${userVars.username}/user-packages.nix)
     ]
-    ++ lib.optional (userVars.git.enabled) ./programs/git.nix
+    ++ lib.optional userVars.git.enabled ./programs/git.nix
     ++ regular
     ++ others;
 

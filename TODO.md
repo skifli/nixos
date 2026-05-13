@@ -1,4 +1,4 @@
-- [ ] Wait for blur options to land in Niri - https://github.com/sodiboo/nir i-flake/issues/1721.
+- [ ] Wait for blur options to land in Niri - https://github.com/sodiboo/niri-flake/issues/1721.
 - [ ] Relook at Zen blurring.
 - [ ] Ghostty bg blur?
 - [ ] Workflow for auto formatting?
