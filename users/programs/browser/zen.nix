@@ -32,7 +32,7 @@ in {
             }
 
             prompt_close_zen() {
-              local prompt_text=$'Zen Browser is running, and Nix wants to apply profile changes.\n\nClose Zen now and reopen it after activation?\nIf you keep it open, the rebuild will skip the auto-close step.'
+              local prompt_text=$'Zen Browser is running, and Nix wants to apply profile changes.\n\nSelect "Yes" to close Zen now and reopen it after activation.\n\nSelect "No" to skip closing Zen and applying profile changes, which may lead to errors during activation.';
 
               if command -v kdialog >/dev/null 2>&1; then
                 kdialog --title="Zen Browser update" --yesno "$prompt_text"
