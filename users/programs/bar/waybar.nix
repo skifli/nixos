@@ -111,7 +111,7 @@
           reload_style_on_change = true;
           layer = "top";
           position = "top";
-          output = userVars.waybar.output;
+          inherit (userVars.waybar) output;
           spacing = 0;
 
           modules-left = [

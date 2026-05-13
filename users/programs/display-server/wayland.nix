@@ -2,7 +2,6 @@
   hostVars,
   pkgs,
   pkgsUnstable,
-  userVars,
   ...
 }: {
   # Set Wayland-friendly environment variables

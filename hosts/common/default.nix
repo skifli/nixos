@@ -1,6 +1,5 @@
 {
   hostname,
-  inputs,
   lib,
   pkgs,
   ...
@@ -86,7 +85,7 @@ in {
     ]
     ++ lib.flatten (
       lib.mapAttrsToList (
-        username: userVars:
+        _: userVars:
           import ../../users/modules-for-user.nix (
             attrs
             // {

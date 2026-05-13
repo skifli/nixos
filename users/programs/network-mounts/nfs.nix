@@ -20,8 +20,6 @@
       ++ (share.options or []);
   };
 in {
-  services.nfs.client.enable = true;
-
   fileSystems = builtins.listToAttrs (
     map (share: {
       name = share.mountPoint;

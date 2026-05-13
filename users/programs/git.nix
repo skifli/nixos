@@ -15,8 +15,7 @@
         enable = true;
         settings = {
           user = {
-            email = userVars.git.email;
-            name = userVars.git.name;
+            inherit (userVars.git) email name;
           };
 
           core.editor = userVars.programs.editor;

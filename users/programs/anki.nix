@@ -43,6 +43,7 @@
     sourceRoot = "${finalAttrs.src.name}";
   });
 
+  /*
   anki-redesign-plus = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
     pname = "anki-redesign-plus";
     version = "4c7621c";
@@ -55,6 +56,7 @@
     };
     sourceRoot = "${finalAttrs.src.name}";
   });
+  */
 
   aw-watcher-anki = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
     pname = "aw-watcher-anki";
@@ -85,6 +87,7 @@
     ];
   });
 
+  /*
   onigiri-anki = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
     pname = "onigiri-anki";
     version = "e8ad970";
@@ -97,6 +100,7 @@
     };
     sourceRoot = "${finalAttrs.src.name}";
   });
+  */
 in {
   nixpkgs.overlays = [
     inputs.anki-mcp.overlays.default

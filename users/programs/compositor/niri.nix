@@ -3,7 +3,6 @@
   inputs,
   lib,
   pkgs,
-  pkgsUnstable,
   userVars,
   ...
 } @ attrs: {
@@ -21,7 +20,7 @@
       programs.niri = {
         enable = true;
         package = let
-          system = pkgs.stdenv.hostPlatform.system;
+          inherit (pkgs.stdenv.hostPlatform) system;
         in
           inputs.niri.packages.${system}.niri-stable.override {
             libdisplay-info = pkgs.libdisplay-info_0_2;
@@ -66,7 +65,7 @@
             window-resize.enable = true;
           };
 
-          spawn-at-startup = userVars.niri.spawn-at-startup;
+          inherit (userVars.niri) spawn-at-startup;
 
           window-rules =
             [

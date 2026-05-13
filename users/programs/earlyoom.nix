@@ -9,7 +9,7 @@
     extraArgs = let
       nonEmpty = builtins.filter (p: p != null && p != "");
 
-      browsers = userVars.programs.browsers;
+      inherit (userVars.programs) browsers;
 
       wrapEach = patterns: map (p: "(${p})") patterns;
 

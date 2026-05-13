@@ -6,7 +6,7 @@
 }: {
   home-manager = {
     users.${userVars.username} = let
-      system = pkgs.stdenv.hostPlatform.system;
+      inherit (pkgs.stdenv.hostPlatform) system;
       browseros = inputs.browseros-ai.packages.${system}.default;
       primaryBrowser = builtins.elemAt userVars.programs.browsers 0;
     in {
