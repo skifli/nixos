@@ -1,8 +1,10 @@
-/* {
+/*
+   {
   lib,
   libx,
   ...
-}: */
+}:
+*/
 _: {
   force = true; # Rewrite bookmarks on each rebuild (overwrite browser changes)
   settings = [
