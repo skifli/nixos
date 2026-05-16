@@ -28,10 +28,7 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions; {
 
   # APPLICATIONS
   "Mod+Return" = {
-    action = spawn [
-      "app2unit"
-      "-T"
-    ];
+    action = spawn (if userVars.programs.terminal == "ghostty" then [ "ghostty" "+new-window" ] else [ "app2unit" "-T" ]);
     hotkey-overlay.title = "Terminal";
   };
   "Mod+F" = {
