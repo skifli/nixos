@@ -48,7 +48,7 @@
       owner = "2e3s";
       repo = "awatcher";
       rev = "v${version}";
-      hash = "sha256-7qH1KqVv0oM0YIqYEv5K0vZPFqYv7WZyBQmM9uQ0dGE=";
+      hash = "sha256-wxnbyWkfRFN+aWa7rrSIv5PdNHNU/D/w7y/VIwzxxaI=";
     };
 
     nativeBuildInputs = with pkgs; [pkg-config];
