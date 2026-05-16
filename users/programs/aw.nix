@@ -39,6 +39,33 @@
     ];
   };
 
+  # Override with newer awatcher version (nixpkgs package is outdated at 0.3.1)
+  awatcherPkg = pkgs.rustPlatform.buildRustPackage rec {
+    pname = "awatcher";
+    version = "0.3.3";
+
+    src = pkgs.fetchFromGitHub {
+      owner = "2e3s";
+      repo = "awatcher";
+      rev = "v${version}";
+      hash = "sha256-7qH1KqVv0oM0YIqYEv5K0vZPFqYv7WZyBQmM9uQ0dGE=";
+    };
+
+    nativeBuildInputs = with pkgs; [pkg-config];
+    buildInputs = with pkgs; [openssl];
+    doCheck = false;
+    cargoHash = "sha256-pUqwg7jblSWRLPcsUDqkir/asSM8zY0jrvrre4OIeZc=";
+
+    meta = {
+      description = "Activity and idle watchers";
+      homepage = "https://github.com/2e3s/awatcher";
+      license = pkgs.lib.licenses.mpl20;
+      maintainers = [];
+      mainProgram = "awatcher";
+      platforms = pkgs.lib.platforms.linux;
+    };
+  };
+
   pyEnv = pkgs.python313.withPackages (
     ps:
       with ps; [
@@ -150,7 +177,7 @@ in {
 
     home.packages = with pkgs; [
       awNotifyRs
-      awatcher
+      awatcherPkg
       aw-qt
     ];
 
@@ -165,7 +192,7 @@ in {
           Service = {
             Type = "simple";
             ExecStartPre = "${pkgs.coreutils}/bin/sleep 60"; # Try stop lagging
-            ExecStart = "${pkgs.awatcher}/bin/awatcher";
+            ExecStart = "${awatcherPkg}/bin/awatcher";
             Restart = "always";
             RestartSec = 3;
           };
