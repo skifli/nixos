@@ -39,6 +39,22 @@
     ];
   };
 
+  # awatcher: unified watcher from https://github.com/2e3s/awatcher
+  awatcherSrc = pkgs.fetchFromGitHub {
+    owner = "2e3s";
+    repo = "awatcher";
+    rev = "ef0eee1";
+    sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+  };
+
+  awatcherPkg = pkgs.rustPlatform.buildRustPackage {
+    pname = "awatcher";
+    version = "0";
+    src = awatcherSrc;
+    cargoHash = null;
+    nativeBuildInputs = with pkgs; [pkg-config];
+  };
+
   pyEnv = pkgs.python313.withPackages (
     ps:
       with ps; [
@@ -150,39 +166,22 @@ in {
 
     home.packages = with pkgs; [
       awNotifyRs
-      aw-watcher-afk
-      aw-watcher-window-wayland
+      awatcherPkg
       aw-qt
     ];
 
     systemd = {
       user.services = {
-        "aw-watcher-afk" = {
+        "awatcher" = {
           Unit = {
-            Description = "ActivityWatch AFK Watcher";
-            After = ["graphical-session.target"];
-          };
-
-          Service = {
-            Type = "simple";
-            ExecStart = "${pkgs.aw-watcher-afk}/bin/aw-watcher-afk";
-            Restart = "always";
-            RestartSec = 3;
-          };
-
-          Install = {WantedBy = ["default.target"];};
-        };
-
-        "aw-watcher-window-wayland" = {
-          Unit = {
-            Description = "ActivityWatch Wayland Window Watcher";
+            Description = "ActivityWatch unified watcher (awatcher)";
             After = ["graphical-session.target"];
           };
 
           Service = {
             Type = "simple";
             ExecStartPre = "${pkgs.coreutils}/bin/sleep 60"; # Try stop lagging
-            ExecStart = "${pkgs.aw-watcher-window-wayland}/bin/aw-watcher-window-wayland";
+            ExecStart = "${awatcherPkg}/bin/awatcher";
             Restart = "always";
             RestartSec = 3;
           };
