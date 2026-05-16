@@ -39,23 +39,6 @@
     ];
   };
 
-  # awatcher: unified watcher from https://github.com/2e3s/awatcher
-  awatcherSrc = pkgs.fetchFromGitHub {
-    owner = "2e3s";
-    repo = "awatcher";
-    rev = "ef0eee1";
-    sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
-  };
-
-  awatcherPkg = pkgs.rustPlatform.buildRustPackage {
-    pname = "awatcher";
-    version = "0";
-    src = awatcherSrc;
-    # Use the repository Cargo.lock so the builder can resolve dependencies
-    cargoLock = "${awatcherSrc}/Cargo.lock";
-    nativeBuildInputs = with pkgs; [pkg-config];
-  };
-
   pyEnv = pkgs.python313.withPackages (
     ps:
       with ps; [
@@ -167,7 +150,7 @@ in {
 
     home.packages = with pkgs; [
       awNotifyRs
-      awatcherPkg
+      awatcher
       aw-qt
     ];
 
@@ -182,7 +165,7 @@ in {
           Service = {
             Type = "simple";
             ExecStartPre = "${pkgs.coreutils}/bin/sleep 60"; # Try stop lagging
-            ExecStart = "${awatcherPkg}/bin/awatcher";
+            ExecStart = "${pkgs.awatcher}/bin/awatcher";
             Restart = "always";
             RestartSec = 3;
           };
