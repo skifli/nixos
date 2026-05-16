@@ -42,12 +42,12 @@
   # Override with newer awatcher version (nixpkgs package is outdated at 0.3.1)
   awatcherPkg = pkgs.rustPlatform.buildRustPackage rec {
     pname = "awatcher";
-    version = "0.3.3";
+    version = "copilot/fix-awatcher-bucket-creation-error";
 
     src = pkgs.fetchFromGitHub {
-      owner = "2e3s";
+      owner = "skifli";
       repo = "awatcher";
-      rev = "v${version}";
+      rev = "${version}";
       hash = "sha256-wxnbyWkfRFN+aWa7rrSIv5PdNHNU/D/w7y/VIwzxxaI=";
     };
 
