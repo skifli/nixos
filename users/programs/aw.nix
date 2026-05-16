@@ -54,7 +54,7 @@
     nativeBuildInputs = with pkgs; [pkg-config];
     buildInputs = with pkgs; [openssl libxkbcommon];
     doCheck = false;
-    cargoHash = "";
+    cargoHash = "sha256-4s0/fjtnX7YtTICW0mnthmw5Jb7Z+f5kr79H10F3I+8=";
 
     meta = {
       description = "Activity and idle watchers";
