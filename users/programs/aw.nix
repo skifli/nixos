@@ -48,7 +48,7 @@
       owner = "skifli";
       repo = "awatcher";
       rev = "${version}";
-      hash = "";
+      hash = "sha256-pDXU/InjLFBoY0fY05gZ8ntJu7cdtRUQz3v3jbUsdBk=";
     };
 
     nativeBuildInputs = with pkgs; [pkg-config];
