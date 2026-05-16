@@ -51,7 +51,8 @@
     pname = "awatcher";
     version = "0";
     src = awatcherSrc;
-    cargoHash = null;
+    # Use the repository Cargo.lock so the builder can resolve dependencies
+    cargoLock = "${awatcherSrc}/Cargo.lock";
     nativeBuildInputs = with pkgs; [pkg-config];
   };
 
