@@ -1,8 +1,20 @@
-_: {
+{pkgs, ...}: {
   services = {
     printing = {
       enable = true;
-      drivers = [];
+      drivers = with pkgs; [
+        splix
+      ];
+    };
+
+    avahi = {
+      enable = true;
+      nssmdns4 = true;
+      openFirewall = true;
     };
   };
+
+  environment.systemPackages = with pkgs; [
+    system-config-printer
+  ];
 }
