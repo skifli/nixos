@@ -31,7 +31,7 @@
 
   # Hardware configuration
   videoDriver = "intel"; # Empty to import none.
-  outputs = {
+  outputs-old = {
     "DP-1" = {
       mode = {
         width = 1440;
@@ -48,6 +48,31 @@
         width = 1920;
         height = 1080;
         refresh = 74.99;
+      };
+      position = {
+        x = 0;
+        y = 0;
+      };
+      focus-at-startup = true;
+    };
+  };
+  outputs = {
+    "DP-1" = {
+      mode = {
+        width = 1920;
+        height = 1080;
+        refresh = 60.000;
+      };
+      position = {
+        x = 1920; # Right of the other monitor
+        y = 0;
+      };
+    };
+    "HDMI-A-2" = {
+      mode = {
+        width = 1920;
+        height = 1080;
+        refresh = 74.973;
       };
       position = {
         x = 0;
