@@ -213,6 +213,7 @@ rec {
       "lan-mouse"
       "nix-direnv"
       "safeeyes"
+      "steam"
       "styles"
       "typst"
       "wlsunset"
