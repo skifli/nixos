@@ -32,28 +32,13 @@ in {
           command = loginctl;
         }
       ];
-      events = [
-        {
-          event = "lock";
-          command = swaylock;
-        }
-        /*
-        {
-          event = "unlock";
-          command = null;
-          }
-        */
-        {
-          event = "before-sleep";
-          command = (display "off") + ";" + swaylock;
-        }
-        {
-          event = "after-resume";
-          command = display "on";
-        }
-      ];
+      events = {
+        lock = swaylock;
+        before-sleep = (display "off") + ";" + swaylock;
+        after-resume = display "on";
+      };
 
-      systemdTarget = "graphical-session.target";
+      systemdTargets = ["graphical-session.target"];
     };
   };
 
