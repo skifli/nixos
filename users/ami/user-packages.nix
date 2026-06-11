@@ -4,6 +4,7 @@
   ...
 }: {
   home-manager.users.${userVars.username}.home.packages = with pkgs; [
+    android-tools
     anytype
     cameractrls
     cameractrls-gtk4
@@ -35,6 +36,6 @@
     mpv
   ];
 
-  programs.adb.enable = true;
+  # programs.adb.enable = true; # No longer needed in 26.05 Yarara
   # For DroidCam
 }
