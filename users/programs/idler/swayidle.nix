@@ -38,7 +38,7 @@ in {
         after-resume = display "on";
       };
 
-      systemdTarget = ["graphical-session.target"];
+      systemdTargets = ["graphical-session.target"];
     };
   };
 
