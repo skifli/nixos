@@ -295,13 +295,15 @@ in {
       ];
       spacebarRatesCard = true;
       style = "anki";
-      sync = {
-        autoSync = true;
-        autoSyncMediaMinutes = 60;
-        keyFile = "/home/${userVars.username}/.config/anki-keyFile";
-        networkTimeout = 5;
-        syncMedia = true;
-        usernameFile = "/home/${userVars.username}/.config/anki-usernameFile";
+      profiles."User 1" = {
+        sync = {
+          autoSync = true;
+          autoSyncMediaMinutes = 60;
+          keyFile = "/home/${userVars.username}/.config/anki-keyFile";
+          networkTimeout = 5;
+          syncMedia = true;
+          usernameFile = "/home/${userVars.username}/.config/anki-usernameFile";
+        };
       };
       minimalistMode = true;
       theme = "followSystem";
