@@ -1,4 +1,4 @@
-# nixOS - An indubitably splendiferous configuration [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Open Source Love svg2](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/) ![NixOS](https://img.shields.io/badge/NixOS-26.05-blue?logo=nixos) ![Flakes](https://img.shields.io/badge/Flakes-enabled-blue) ![Wayland](https://img.shields.io/badge/Wayland-Niri-purple)
+# nixOS - An indubitably splendiferous configuration [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Open Source Love svg2](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/) ![NixOS](https://img.shields.io/badge/NixOS-25.11-blue?logo=nixos) ![Flakes](https://img.shields.io/badge/Flakes-enabled-blue) ![Wayland](https://img.shields.io/badge/Wayland-Niri-purple)
 
 
 - [nixOS - An indubitably splendiferous configuration     ](#nixos---an-indubitably-splendiferous-configuration-----)
