@@ -9,19 +9,19 @@
 {
   Personal = {
     color = "pink";
-    icon = "🫆";
+    icon = "fingerprint";
     id = 1;
   };
 
   School = {
     color = "green";
-    icon = "🏫";
+    icon = "briefcase";
     id = 2;
   };
 
   StemRacing = {
     color = "red";
-    icon = "🏎️";
+    icon = "vacation";
     id = 3;
   };
 }
