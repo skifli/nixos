@@ -32,7 +32,7 @@
 
   # Hardware configuration
   videoDriver = "intel"; # Empty to import none.
-  outputs-old = {
+  outputs = {
     "DP-1" = {
       mode = {
         width = 1440;
@@ -57,7 +57,7 @@
       focus-at-startup = true;
     };
   };
-  outputs = {
+  outputs-nice = { # Not anymore :(
     "DP-1" = {
       mode = {
         width = 1920;
