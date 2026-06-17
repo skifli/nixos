@@ -14,7 +14,7 @@
       enable = true;
       systemd = {
         enable = true;
-        targets = ["graphical-session.target"];
+        target = "graphical-session.target";
       };
 
       style = ''
