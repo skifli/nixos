@@ -307,7 +307,7 @@ in {
       };
       minimalistMode = true;
       theme = "followSystem";
-      uiScale = 1.0;
+      uiScale = 0.5;
       videoDriver = "opengl";
     };
   };
