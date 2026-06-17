@@ -3,7 +3,6 @@
     programs.yazi = {
       enable = true;
       settings = {};
-      shellWrapperName = "y";
     };
   };
 }
