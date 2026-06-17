@@ -10,7 +10,7 @@
     fastfetch # Neofetch C alternative
 
     nix-index # Quickly locate the package providing a certain file
-    nixfmt
+    nixfmt-rfc-style
     nixd # Nix language server
 
     coreutils # Some Unix CLI utilities

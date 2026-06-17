@@ -1,7 +1,6 @@
 {
   commonHostVars,
   inputs,
-  lib,
   pkgs,
   usersVars,
   ...
@@ -60,7 +59,6 @@
           userDirs = {
             enable = true;
             createDirectories = true;
-            setSessionVariables = false;
           };
         };
 
@@ -123,7 +121,7 @@
             };
           };
 
-          stateVersion = "26.05"; # DO NOT CHANGE!
+          stateVersion = "25.05"; # DO NOT CHANGE!
         };
       })
       usersVars; # For each user
@@ -147,7 +145,7 @@
         };
 
         # https://cashmere.rs/blog/20250612002456-how-to-fix-screensharing-for-niri-wm-under-nixos/
-        niri = lib.mkForce {
+        niri = {
           default = [
             "kde"
             "wlr"
