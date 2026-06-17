@@ -129,10 +129,32 @@ rec {
           {
             app-id = "(?i)org.remmina.Remmina";
           }
+          {
+            app-id = "(?i)steam";
+          }
         ];
 
         open-on-workspace = "5";
         open-maximized = true;
+      }
+      ## https://www.reddit.com/r/niri/comments/1skrhet/steam_notifications_appear_in_the_center_of_the/
+      {
+        # Do above
+        matches = [
+          {
+            app-id = "(?i)steam";
+            title = "(?i)notificationtoasts_\\d+_desktop";
+          }
+        ];
+
+        open-on-workspace = "5";
+        open-maximized = false;
+        open-focused = false;
+        default-floating-position = {
+          x = 0;
+          y = 0;
+          relative-to = "bottom-right";
+        };
       }
       /*
       {
