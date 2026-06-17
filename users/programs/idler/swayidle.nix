@@ -53,7 +53,7 @@ in {
         }
       ];
 
-      systemdTarget = "graphical-session.target";
+      systemdTargets = ["graphical-session.target"];
     };
   };
 

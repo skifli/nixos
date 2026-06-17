@@ -8,7 +8,7 @@
     services.wlsunset = {
       enable = true;
       inherit (hostVars) latitude longitude;
-      systemdTarget = "graphical-session.target";
+      systemdTargets = ["graphical-session.target"];
     };
   };
 }
