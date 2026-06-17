@@ -82,6 +82,7 @@ rec {
 
         open-on-workspace = "2";
         open-maximized = true;
+        clip-to-geometry = true;
       }
       {
         matches = [
@@ -211,8 +212,8 @@ rec {
 
     # Kinda core apps
     browsers = [
-      "browseros"
       "zen-beta"
+      "browseros"
     ];
     editor = "hx";
     explorer-tui = "yazi";
