@@ -57,7 +57,8 @@
       focus-at-startup = true;
     };
   };
-  outputs-nice = { # Not anymore :(
+  outputs-nice = {
+    # Not anymore :(
     "DP-1" = {
       mode = {
         width = 1920;
