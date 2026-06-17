@@ -75,7 +75,7 @@ let
     }
     // (
       if spec ? parent
-      then { folderParentId = folderIds.${spec.parent}; }
+      then {folderParentId = folderIds.${spec.parent};}
       else {}
     );
 
@@ -803,20 +803,19 @@ let
     }
     // (
       if spec ? folder
-      then { folderParentId = folderIds.${spec.folder}; }
+      then {folderParentId = folderIds.${spec.folder};}
       else {}
     )
     // (
       if spec ? isEssential
-      then { inherit (spec) isEssential; }
+      then {inherit (spec) isEssential;}
       else {}
     );
 
   pins = builtins.mapAttrs (_: mkPin) pinSpecs;
-
-# --------------------------------------------------------------------------
-# Final output – order here determines the display order.
-# --------------------------------------------------------------------------
+  # --------------------------------------------------------------------------
+  # Final output – order here determines the display order.
+  # --------------------------------------------------------------------------
 in {
   # Personal Space
   "Spotify" = pins.space-personal_container-personal_Spotify;
