@@ -10,22 +10,4 @@ let
     }
   );
 in
-  mkJoinedTabs {
-    "Example joined tabs vertical" = {
-      id = "example-joined-tabs";
-      gridType = "vsep";
-      tabs = [
-        "Joined Example Tab 1"
-        "Joined Example Tab 2"
-      ];
-    };
-
-    "Example joined tabs horizontal" = {
-      id = "example-joined-tabs-hesp";
-      gridType = "hsep";
-      tabs = [
-        "Joined Example Tab 3"
-        "Joined Example Tab 4"
-      ];
-    };
-  }
+  mkJoinedTabs {}

@@ -7,15 +7,21 @@
 # Note: containersForce = true (as I have done) deletes containers not declared here.
 # Set to false to keep manually created containers.
 {
-  Home = {
-    color = "green";
-    icon = "briefcase";
+  Personal = {
+    color = "pink";
+    icon = "🫆";
     id = 1;
   };
 
-  Work = {
-    color = "blue";
-    icon = "fingerprint";
+  School = {
+    color = "green";
+    icon = "🏫";
     id = 2;
+  };
+
+  StemRacing = {
+    color = "red";
+    icon = "🏎️";
+    id = 3;
   };
 }
