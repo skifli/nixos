@@ -780,24 +780,22 @@ in {
   "Kimi" = pins.space-personal_container-personal_Kimi;
 
   "AI" = folders.space-personal_container-personal_AI;
+  "Rate Limiting" = folders.space-personal_container-personal_AI_RateLimiting;
+  "Copilot Usage" = pins.space-personal_container-personal_AI_RateLimiting_CopilotUsage;
+  "Gemini API Rate Limit" = pins.space-personal_container-personal_AI_RateLimiting_GeminiAPIRateLimit;
+  "Gemini API Usage" = pins.space-personal_container-personal_AI_RateLimiting_GeminiAPIUsage;
   "Claude" = pins.space-personal_container-personal_AI_Claude;
   "Google Gemini" = pins.space-personal_container-personal_AI_GoogleGemini;
   "Perplexity" = pins.space-personal_container-personal_AI_Perplexity;
   "Maple" = pins.space-personal_container-personal_AI_Maple;
 
-  "Rate Limiting" = folders.space-personal_container-personal_AI_RateLimiting;
-  "Copilot Usage" = pins.space-personal_container-personal_AI_RateLimiting_CopilotUsage;
-  "Gemini API Rate Limit" = pins.space-personal_container-personal_AI_RateLimiting_GeminiAPIRateLimit;
-  "Gemini API Usage" = pins.space-personal_container-personal_AI_RateLimiting_GeminiAPIUsage;
-
   "Arkwright" = folders.space-personal_container-personal_Arkwright;
-  "MentorNet" = pins.space-personal_container-personal_Arkwright_sfgMentorNet;
-  "Smallpiece Events" = pins.space-personal_container-personal_Arkwright_SmallpieceEvents;
-  "WCSIM Login" = pins.space-personal_container-personal_Arkwright_WCSIMLogin;
-
   "Photos" = folders.space-personal_container-personal_Arkwright_Photos;
   "Gallery" = pins.space-personal_container-personal_Arkwright_Photos_Gallery;
   "General Photography" = pins.space-personal_container-personal_Arkwright_Photos_GeneralPhotography;
+  "MentorNet" = pins.space-personal_container-personal_Arkwright_sfgMentorNet;
+  "Smallpiece Events" = pins.space-personal_container-personal_Arkwright_SmallpieceEvents;
+  "WCSIM Login" = pins.space-personal_container-personal_Arkwright_WCSIMLogin;
 
   "LastFM" = pins.space-personal_container-personal_LastFM;
   "FMHY" = pins.space-personal_container-personal_FMHY;
@@ -808,11 +806,6 @@ in {
   "UATUK" = pins.space-school_container-school_UATUK;
   "Integral" = pins.space-school_container-school_Integral;
   "OneDrive" = pins.space-school_container-school_OneDrive;
-  "Microsoft Account" = pins.space-school_container-school_MSAccount;
-  "SIMS Student" = pins.space-school_container-school_SIMSStudent;
-  "SOUN" = pins.space-school_container-school_SOUN;
-  "ExamQ" = pins.space-school_container-school_ExamQ;
-  "Xtreme Papers - Mathematics" = pins.space-school_container-school_XtremePapers-Mathematics;
 
   "ESAT" = folders.space-school_container-school_ESAT;
   "Prepare" = pins.space-school_container-school_ESAT_Prepare;
@@ -832,17 +825,15 @@ in {
   "AM NEA" = pins.space-school_container-school_CSNEA-AMNEA;
   "MQ NEA" = pins.space-school_container-school_CSNEA-MQNEA;
 
+  "Microsoft Account" = pins.space-school_container-school_MSAccount;
+  "SIMS Student" = pins.space-school_container-school_SIMSStudent;
+  "SOUN" = pins.space-school_container-school_SOUN;
+  "ExamQ" = pins.space-school_container-school_ExamQ;
+  "Xtreme Papers - Mathematics" = pins.space-school_container-school_XtremePapers-Mathematics;
+
   # StemRacing Space
   "SR OneDrive" = pins.space-stemracing_container-stemracing_OneDrive;
   "Todo" = pins.space-stemracing_container-stemracing_Todo;
-  "Sustainability & Innovations" = pins.space-stemracing_container-stemracing_SustainabilityAndInnovations;
-  "Enterprise Portfolio Feedback" = pins.space-stemracing_container-stemracing_EnterprisePortfolioFeedback;
-  "WF Combo Main" = pins.space-stemracing_container-stemracing_WFComboMain;
-  "WF Combo Digital/Social Media" = pins.space-stemracing_container-stemracing_WFComboDigital-SocialMedia;
-  "WF Combo Enterprise" = pins.space-stemracing_container-stemracing_WFComboEnterprise;
-  "WF Combo Pit Display" = pins.space-stemracing_container-stemracing_WFComboPitDisplay;
-  "WF Combo Verbal Presentation" = pins.space-stemracing_container-stemracing_WFComboVerbalPresentation;
-
   "Tools" = folders.space-stemracing_container-stemracing_Tools;
   "Bauhaus Pattern" = pins.space-stemracing_container-stemracing_Tools_BauhausPattern;
   "JPG Glitch" = pins.space-stemracing_container-stemracing_Tools_JPGGlitch;
@@ -860,6 +851,14 @@ in {
   "3D GIF Maker" = pins.space-stemracing_container-stemracing_Tools_3DGifMaker;
   "Photo Gradient" = pins.space-stemracing_container-stemracing_Tools_PhotoGradient;
   "Space Type Generator" = pins.space-stemracing_container-stemracing_Tools_SpaceType;
+
+  "Sustainability & Innovations" = pins.space-stemracing_container-stemracing_SustainabilityAndInnovations;
+  "Enterprise Portfolio Feedback" = pins.space-stemracing_container-stemracing_EnterprisePortfolioFeedback;
+  "WF Combo Main" = pins.space-stemracing_container-stemracing_WFComboMain;
+  "WF Combo Digital/Social Media" = pins.space-stemracing_container-stemracing_WFComboDigital-SocialMedia;
+  "WF Combo Enterprise" = pins.space-stemracing_container-stemracing_WFComboEnterprise;
+  "WF Combo Pit Display" = pins.space-stemracing_container-stemracing_WFComboPitDisplay;
+  "WF Combo Verbal Presentation" = pins.space-stemracing_container-stemracing_WFComboVerbalPresentation;
 
   # Computing Space
   "RPI Connect" = pins.space-computing_container-personal_RPIConnect;
