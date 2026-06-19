@@ -9,12 +9,12 @@ let
 
   # --------------------------------------------------------------------------
   # Folders – UUID‑like IDs (unique)
-  # Positions follow the final output order (1001, 1008, 1017, 1024, 1043, 1061, 1083)
+  # Positions follow the final output order (1..81, sequential)
   # --------------------------------------------------------------------------
   folderSpecs = {
     space-personal_container-personal_AI = {
       id = "f0000001-0000-4000-8000-000000000001";
-      position = 1001;
+      position = 7;   # after Kimi, before Rate Limiting
       workspace = spaces.Personal.id;
       container = containers.Personal.id;
     };
@@ -22,14 +22,14 @@ let
     space-personal_container-personal_AI_RateLimiting = {
       id = "f0000002-0000-4000-8000-000000000002";
       parent = "space-personal_container-personal_AI";
-      position = 1008;
+      position = 8;   # after AI folder
       workspace = spaces.Personal.id;
       container = containers.Personal.id;
     };
 
     space-personal_container-personal_Arkwright = {
       id = "f0000003-0000-4000-8000-000000000003";
-      position = 1017;
+      position = 16;  # after Maple
       workspace = spaces.Personal.id;
       container = containers.Personal.id;
     };
@@ -37,28 +37,28 @@ let
     space-personal_container-personal_Arkwright_Photos = {
       id = "f0000004-0000-4000-8000-000000000004";
       parent = "space-personal_container-personal_Arkwright";
-      position = 1024;
+      position = 17;  # after Arkwright folder
       workspace = spaces.Personal.id;
       container = containers.Personal.id;
     };
 
     space-school_container-school_ESAT = {
       id = "f0000005-0000-4000-8000-000000000005";
-      position = 1043;
+      position = 30;  # after OneDrive
       workspace = spaces.School.id;
       container = containers.School.id;
     };
 
     space-school_container-school_CSNEA = {
       id = "f0000006-0000-4000-8000-000000000006";
-      position = 1061;
+      position = 41;  # after Isaac Tests
       workspace = spaces.School.id;
       container = containers.School.id;
     };
 
     space-stemracing_container-stemracing_Tools = {
       id = "f0000007-0000-4000-8000-000000000007";
-      position = 1083;
+      position = 53;  # after Todo
       workspace = spaces.StemRacing.id;
       container = containers.StemRacing.id;
     };
@@ -83,7 +83,7 @@ let
 
   # --------------------------------------------------------------------------
   # Pins – UUID‑like IDs, all unique (a0000001 … a0000074)
-  # Positions are set to match the final output order (with gaps)
+  # Positions are set to match the final output order (1..81, sequential)
   # --------------------------------------------------------------------------
   pinSpecs = {
     # Personal Space – top‑level pins
@@ -93,7 +93,7 @@ let
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
       isEssential = true;
-      position = 1000;
+      position = 1;
     };
 
     space-personal_container-personal_Discord = {
@@ -102,7 +102,7 @@ let
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
       isEssential = true;
-      position = 1002;
+      position = 2;
     };
 
     space-personal_container-personal_ActivityWatch = {
@@ -111,7 +111,7 @@ let
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
       isEssential = true;
-      position = 1003;
+      position = 3;
     };
 
     space-personal_container-personal_DeepSeek = {
@@ -120,7 +120,7 @@ let
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
       isEssential = true;
-      position = 1004;
+      position = 4;
     };
 
     space-personal_container-personal_GoogleAIStudio = {
@@ -129,7 +129,7 @@ let
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
       isEssential = true;
-      position = 1005;
+      position = 5;
     };
 
     space-personal_container-personal_Kimi = {
@@ -138,17 +138,17 @@ let
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
       isEssential = true;
-      position = 1006;
+      position = 6;
     };
 
-    # AI folder (position 1001)
+    # AI folder (position 7) – children
     space-personal_container-personal_AI_Claude = {
       id = "a0000007-0000-4000-8000-000000000007";
       url = "https://claude.ai/new";
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
       folder = "space-personal_container-personal_AI";
-      position = 1007;
+      position = 12;  # after Rate Limiting pins
     };
 
     space-personal_container-personal_AI_GoogleGemini = {
@@ -157,7 +157,7 @@ let
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
       folder = "space-personal_container-personal_AI";
-      position = 1008;
+      position = 13;
     };
 
     space-personal_container-personal_AI_Perplexity = {
@@ -166,7 +166,7 @@ let
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
       folder = "space-personal_container-personal_AI";
-      position = 1009;
+      position = 14;
     };
 
     space-personal_container-personal_AI_Maple = {
@@ -175,17 +175,17 @@ let
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
       folder = "space-personal_container-personal_AI";
-      position = 1010;
+      position = 15;
     };
 
-    # Rate Limiting folder (position 1008)
+    # Rate Limiting folder (position 8) – children
     space-personal_container-personal_AI_RateLimiting_CopilotUsage = {
       id = "a0000011-0000-4000-8000-000000000011";
       url = "https://github.com/settings/billing";
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
       folder = "space-personal_container-personal_AI_RateLimiting";
-      position = 1011;
+      position = 9;
     };
 
     space-personal_container-personal_AI_RateLimiting_GeminiAPIRateLimit = {
@@ -194,7 +194,7 @@ let
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
       folder = "space-personal_container-personal_AI_RateLimiting";
-      position = 1012;
+      position = 10;
     };
 
     space-personal_container-personal_AI_RateLimiting_GeminiAPIUsage = {
@@ -203,17 +203,17 @@ let
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
       folder = "space-personal_container-personal_AI_RateLimiting";
-      position = 1013;
+      position = 11;
     };
 
-    # Arkwright folder (position 1017)
+    # Arkwright folder (position 16) – children
     space-personal_container-personal_Arkwright_sfgMentorNet = {
       id = "a0000014-0000-4000-8000-000000000014";
       url = "https://smallpeicetrust.sfgmentornet.com/spa/";
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
       folder = "space-personal_container-personal_Arkwright";
-      position = 1018;
+      position = 20;  # after Photos pins
     };
 
     space-personal_container-personal_Arkwright_SmallpieceEvents = {
@@ -222,7 +222,7 @@ let
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
       folder = "space-personal_container-personal_Arkwright";
-      position = 1019;
+      position = 21;
     };
 
     space-personal_container-personal_Arkwright_WCSIMLogin = {
@@ -231,17 +231,17 @@ let
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
       folder = "space-personal_container-personal_Arkwright";
-      position = 1020;
+      position = 22;
     };
 
-    # Photos folder (position 1024)
+    # Photos folder (position 17) – children
     space-personal_container-personal_Arkwright_Photos_Gallery = {
       id = "a0000017-0000-4000-8000-000000000017";
       url = "https://gallery.squireandsquire.co.uk/-arkwrightengineeringscholarshipsnetworkingeventsouth/gallery";
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
       folder = "space-personal_container-personal_Arkwright_Photos";
-      position = 1025;
+      position = 18;
     };
 
     space-personal_container-personal_Arkwright_Photos_GeneralPhotography = {
@@ -250,7 +250,7 @@ let
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
       folder = "space-personal_container-personal_Arkwright_Photos";
-      position = 1026;
+      position = 19;
     };
 
     # Other personal stuff
@@ -259,7 +259,7 @@ let
       url = "https://www.last.fm/user/skifli";
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
-      position = 1027;
+      position = 23;
     };
 
     space-personal_container-personal_FMHY = {
@@ -267,7 +267,7 @@ let
       url = "https://fmhy.net/";
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
-      position = 1028;
+      position = 24;
     };
 
     space-personal_container-personal_Converter = {
@@ -275,7 +275,7 @@ let
       url = "https://p2r3.github.io/convert/";
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
-      position = 1029;
+      position = 25;
     };
 
     # ------------------------------------------------------------------------
@@ -287,7 +287,7 @@ let
       container = containers.School.id;
       workspace = spaces.School.id;
       isEssential = true;
-      position = 1030;
+      position = 26;
     };
 
     space-school_container-school_UATUK = {
@@ -296,7 +296,7 @@ let
       container = containers.School.id;
       workspace = spaces.School.id;
       isEssential = true;
-      position = 1031;
+      position = 27;
     };
 
     space-school_container-school_Integral = {
@@ -305,7 +305,7 @@ let
       container = containers.School.id;
       workspace = spaces.School.id;
       isEssential = true;
-      position = 1032;
+      position = 28;
     };
 
     space-school_container-school_OneDrive = {
@@ -314,7 +314,7 @@ let
       container = containers.School.id;
       workspace = spaces.School.id;
       isEssential = true;
-      position = 1033;
+      position = 29;
     };
 
     space-school_container-school_MSAccount = {
@@ -322,7 +322,7 @@ let
       url = "https://myaccount.microsoft.com/";
       container = containers.School.id;
       workspace = spaces.School.id;
-      position = 1034;
+      position = 46;
     };
 
     space-school_container-school_SIMSStudent = {
@@ -330,7 +330,7 @@ let
       url = "https://www.sims-student.co.uk/#!/schools/deb7228f-ad38-4678-8692-12ccf6422749/home";
       container = containers.School.id;
       workspace = spaces.School.id;
-      position = 1035;
+      position = 47;
     };
 
     space-school_container-school_SOUN = {
@@ -338,7 +338,7 @@ let
       url = "https://olavesunofficialnews.wordpress.com/";
       container = containers.School.id;
       workspace = spaces.School.id;
-      position = 1036;
+      position = 48;
     };
 
     space-school_container-school_ExamQ = {
@@ -346,7 +346,7 @@ let
       url = "https://www.examq.co.uk/qualification/ahtaxu";
       container = containers.School.id;
       workspace = spaces.School.id;
-      position = 1037;
+      position = 49;
     };
 
     space-school_container-school_XtremePapers-Mathematics = {
@@ -354,17 +354,17 @@ let
       url = "https://papers.xtremepape.rs/index.php?dirpath=./Edexcel/Advanced+Level/Mathematics/&order=0";
       container = containers.School.id;
       workspace = spaces.School.id;
-      position = 1038;
+      position = 50;
     };
 
-    # ESAT folder (position 1043)
+    # ESAT folder (position 30) – children
     space-school_container-school_ESAT_Prepare = {
       id = "a0000031-0000-4000-8000-000000000031";
       url = "https://esat-tmua.ac.uk/prepare/";
       container = containers.School.id;
       workspace = spaces.School.id;
       folder = "space-school_container-school_ESAT";
-      position = 1044;
+      position = 31;
     };
 
     space-school_container-school_ESAT_Guide = {
@@ -373,7 +373,7 @@ let
       container = containers.School.id;
       workspace = spaces.School.id;
       folder = "space-school_container-school_ESAT";
-      position = 1045;
+      position = 32;
     };
 
     space-school_container-school_ENGAA-NSAA-PPQs = {
@@ -382,7 +382,7 @@ let
       container = containers.School.id;
       workspace = spaces.School.id;
       folder = "space-school_container-school_ESAT";
-      position = 1046;
+      position = 33;
     };
 
     space-school_container-school_ECAA-PPQs = {
@@ -391,7 +391,7 @@ let
       container = containers.School.id;
       workspace = spaces.School.id;
       folder = "space-school_container-school_ESAT";
-      position = 1047;
+      position = 34;
     };
 
     space-school_container-school_BMAT-PPQs = {
@@ -400,7 +400,7 @@ let
       container = containers.School.id;
       workspace = spaces.School.id;
       folder = "space-school_container-school_ESAT";
-      position = 1048;
+      position = 35;
     };
 
     space-school_container-school_PAT-PPQs = {
@@ -409,7 +409,7 @@ let
       container = containers.School.id;
       workspace = spaces.School.id;
       folder = "space-school_container-school_ESAT";
-      position = 1049;
+      position = 36;
     };
 
     space-school_container-school_MAT-PPQs = {
@@ -418,7 +418,7 @@ let
       container = containers.School.id;
       workspace = spaces.School.id;
       folder = "space-school_container-school_ESAT";
-      position = 1050;
+      position = 37;
     };
 
     space-school_container-school_SMC-PPQs = {
@@ -427,7 +427,7 @@ let
       container = containers.School.id;
       workspace = spaces.School.id;
       folder = "space-school_container-school_ESAT";
-      position = 1051;
+      position = 38;
     };
 
     space-school_container-school_TMUA-PPQs = {
@@ -436,7 +436,7 @@ let
       container = containers.School.id;
       workspace = spaces.School.id;
       folder = "space-school_container-school_ESAT";
-      position = 1052;
+      position = 39;
     };
 
     space-school_container-school_Isaac-Tests = {
@@ -445,17 +445,17 @@ let
       container = containers.School.id;
       workspace = spaces.School.id;
       folder = "space-school_container-school_ESAT";
-      position = 1053;
+      position = 40;
     };
 
-    # CS NEA folder (position 1061)
+    # CS NEA folder (position 41) – children
     space-school_container-school_CSNEA-MS = {
       id = "a0000041-0000-4000-8000-000000000041";
       url = "file:///home/ami/Downloads/CS%20NEA/MS.pdf";
       container = containers.School.id;
       workspace = spaces.School.id;
       folder = "space-school_container-school_CSNEA";
-      position = 1062;
+      position = 42;
     };
 
     space-school_container-school_CSNEA-Exemplar = {
@@ -464,7 +464,7 @@ let
       container = containers.School.id;
       workspace = spaces.School.id;
       folder = "space-school_container-school_CSNEA";
-      position = 1063;
+      position = 43;
     };
 
     space-school_container-school_CSNEA-AMNEA = {
@@ -473,7 +473,7 @@ let
       container = containers.School.id;
       workspace = spaces.School.id;
       folder = "space-school_container-school_CSNEA";
-      position = 1064;
+      position = 44;
     };
 
     space-school_container-school_CSNEA-MQNEA = {
@@ -482,7 +482,7 @@ let
       container = containers.School.id;
       workspace = spaces.School.id;
       folder = "space-school_container-school_CSNEA";
-      position = 1065;
+      position = 45;
     };
 
     # ------------------------------------------------------------------------
@@ -494,7 +494,7 @@ let
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       isEssential = true;
-      position = 1066;
+      position = 51;
     };
 
     space-stemracing_container-stemracing_Todo = {
@@ -503,7 +503,7 @@ let
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       isEssential = true;
-      position = 1067;
+      position = 52;
     };
 
     space-stemracing_container-stemracing_SustainabilityAndInnovations = {
@@ -511,7 +511,7 @@ let
       url = "https://stolavesgrammarschool-my.sharepoint.com/my?id=%2Fpersonal%2Faneeq%5Fweerasinghe%5Fsaintolaves%5Fnet%2FDocuments%2FF1%20in%20Schools%2FF1%20in%20Schools%202025%20%2D%202026%2FSustainability%20%26%20Innovations&viewid=8d376b40%2D6297%2D42a5%2D9a9e%2Dfa5720076727&login_hint=Aneeq%2EWeerasinghe%40saintolaves%2Enet&source=waffle";
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
-      position = 1068;
+      position = 70;
     };
 
     space-stemracing_container-stemracing_EnterprisePortfolioFeedback = {
@@ -519,7 +519,7 @@ let
       url = "https://stolavesgrammarschool-my.sharepoint.com/:w:/r/personal/aneeq_weerasinghe_saintolaves_net/_layouts/15/Doc.aspx?sourcedoc=%7B93B23519-4267-45C9-B768-BAC9C6DCF5CA%7D&file=Enterprise%20Portfolio%20Feedback.docx&action=default&mobileredirect=true";
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
-      position = 1069;
+      position = 71;
     };
 
     space-stemracing_container-stemracing_WFComboMain = {
@@ -527,7 +527,7 @@ let
       url = "https://stolavesgrammarschool-my.sharepoint.com/:w:/r/personal/aneeq_weerasinghe_saintolaves_net/_layouts/15/Doc.aspx?sourcedoc=%7BD606DF8E-8F7A-43E1-89EB-8D7C65A37F98%7D&file=WF%20Combo%20Main.docx&action=default&mobileredirect=true";
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
-      position = 1070;
+      position = 72;
     };
 
     space-stemracing_container-stemracing_WFComboDigital-SocialMedia = {
@@ -535,7 +535,7 @@ let
       url = "https://stolavesgrammarschool-my.sharepoint.com/:w:/r/personal/aneeq_weerasinghe_saintolaves_net/_layouts/15/Doc.aspx?sourcedoc=%7B549154C4-1788-44FC-AC6E-F76636901FBB%7D&file=WF%20Combo%20Digital-Social%20Media.docx&action=default&mobileredirect=true";
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
-      position = 1071;
+      position = 73;
     };
 
     space-stemracing_container-stemracing_WFComboEnterprise = {
@@ -543,7 +543,7 @@ let
       url = "https://stolavesgrammarschool-my.sharepoint.com/:w:/r/personal/aneeq_weerasinghe_saintolaves_net/_layouts/15/Doc.aspx?sourcedoc=%7B88D31E37-9CEF-48E5-BC0F-9451C01A2F73%7D&file=WF%20Combo%20Enterprise.docx&action=default&mobileredirect=true";
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
-      position = 1072;
+      position = 74;
     };
 
     space-stemracing_container-stemracing_WFComboPitDisplay = {
@@ -551,7 +551,7 @@ let
       url = "https://stolavesgrammarschool-my.sharepoint.com/:w:/r/personal/aneeq_weerasinghe_saintolaves_net/_layouts/15/Doc.aspx?sourcedoc=%7B5655B289-D378-4A78-B8AD-E29325EFE048%7D&file=WF%20Combo%20Pit%20Display.docx&action=default&mobileredirect=true";
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
-      position = 1073;
+      position = 75;
     };
 
     space-stemracing_container-stemracing_WFComboVerbalPresentation = {
@@ -559,17 +559,17 @@ let
       url = "https://stolavesgrammarschool-my.sharepoint.com/:w:/r/personal/aneeq_weerasinghe_saintolaves_net/_layouts/15/Doc.aspx?sourcedoc=%7BEE02AA17-BB54-464D-BAB7-EB87B471A26C%7D&file=WF%20Combo%20Verbal%20Pres.docx&action=default&mobileredirect=true";
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
-      position = 1074;
+      position = 76;
     };
 
-    # Tools folder (position 1083)
+    # Tools folder (position 53) – children
     space-stemracing_container-stemracing_Tools_BauhausPattern = {
       id = "a0000054-0000-4000-8000-000000000054";
       url = "https://bauhaus-pattern.netlify.app/";
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       folder = "space-stemracing_container-stemracing_Tools";
-      position = 1084;
+      position = 54;
     };
 
     space-stemracing_container-stemracing_Tools_JPGGlitch = {
@@ -578,7 +578,7 @@ let
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       folder = "space-stemracing_container-stemracing_Tools";
-      position = 1085;
+      position = 55;
     };
 
     space-stemracing_container-stemracing_Tools_MoshPro = {
@@ -587,7 +587,7 @@ let
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       folder = "space-stemracing_container-stemracing_Tools";
-      position = 1086;
+      position = 56;
     };
 
     space-stemracing_container-stemracing_Tools_BeFunky = {
@@ -596,7 +596,7 @@ let
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       folder = "space-stemracing_container-stemracing_Tools";
-      position = 1087;
+      position = 57;
     };
 
     space-stemracing_container-stemracing_Tools_EndlessTools = {
@@ -605,7 +605,7 @@ let
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       folder = "space-stemracing_container-stemracing_Tools";
-      position = 1088;
+      position = 58;
     };
 
     space-stemracing_container-stemracing_Tools_Tooools = {
@@ -614,7 +614,7 @@ let
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       folder = "space-stemracing_container-stemracing_Tools";
-      position = 1089;
+      position = 59;
     };
 
     space-stemracing_container-stemracing_Tools_ShadersPaper = {
@@ -623,7 +623,7 @@ let
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       folder = "space-stemracing_container-stemracing_Tools";
-      position = 1090;
+      position = 60;
     };
 
     space-stemracing_container-stemracing_Tools_EffectApp = {
@@ -632,7 +632,7 @@ let
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       folder = "space-stemracing_container-stemracing_Tools";
-      position = 1091;
+      position = 61;
     };
 
     space-stemracing_container-stemracing_Tools_PixelCrash = {
@@ -641,7 +641,7 @@ let
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       folder = "space-stemracing_container-stemracing_Tools";
-      position = 1092;
+      position = 62;
     };
 
     space-stemracing_container-stemracing_Tools_CodePenGlitch = {
@@ -650,7 +650,7 @@ let
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       folder = "space-stemracing_container-stemracing_Tools";
-      position = 1093;
+      position = 63;
     };
 
     space-stemracing_container-stemracing_Tools_GrainRad = {
@@ -659,7 +659,7 @@ let
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       folder = "space-stemracing_container-stemracing_Tools";
-      position = 1094;
+      position = 64;
     };
 
     space-stemracing_container-stemracing_Tools_JitterVideo = {
@@ -668,7 +668,7 @@ let
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       folder = "space-stemracing_container-stemracing_Tools";
-      position = 1095;
+      position = 65;
     };
 
     space-stemracing_container-stemracing_Tools_DitherIt = {
@@ -677,7 +677,7 @@ let
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       folder = "space-stemracing_container-stemracing_Tools";
-      position = 1096;
+      position = 66;
     };
 
     space-stemracing_container-stemracing_Tools_3DGifMaker = {
@@ -686,7 +686,7 @@ let
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       folder = "space-stemracing_container-stemracing_Tools";
-      position = 1097;
+      position = 67;
     };
 
     space-stemracing_container-stemracing_Tools_PhotoGradient = {
@@ -695,7 +695,7 @@ let
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       folder = "space-stemracing_container-stemracing_Tools";
-      position = 1098;
+      position = 68;
     };
 
     space-stemracing_container-stemracing_Tools_SpaceType = {
@@ -704,7 +704,7 @@ let
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       folder = "space-stemracing_container-stemracing_Tools";
-      position = 1099;
+      position = 69;
     };
 
     # ------------------------------------------------------------------------
@@ -715,7 +715,7 @@ let
       url = "https://connect.raspberrypi.com/devices";
       container = containers.Personal.id;
       workspace = spaces.Computing.id;
-      position = 1100;
+      position = 77;
     };
 
     space-computing_container-personal_pifiSS = {
@@ -723,7 +723,7 @@ let
       url = "https://connect.raspberrypi.com/devices/0ddb991f-8e0d-4dee-853c-64693b5acde7/screen-sharing-session/";
       container = containers.Personal.id;
       workspace = spaces.Computing.id;
-      position = 1101;
+      position = 78;
     };
 
     space-computing_container-personal_pistorSS = {
@@ -731,7 +731,7 @@ let
       url = "https://connect.raspberrypi.com/devices/7af88ae4-a215-4508-8aa1-b757e8be6b0d/screen-sharing-session";
       container = containers.Personal.id;
       workspace = spaces.Computing.id;
-      position = 1102;
+      position = 79;
     };
 
     space-computing_container-personal_Tailscale = {
@@ -739,7 +739,7 @@ let
       url = "https://login.tailscale.com/admin/machines";
       container = containers.Personal.id;
       workspace = spaces.Computing.id;
-      position = 1103;
+      position = 80;
     };
 
     space-computing_container-personal_selfhst = {
@@ -747,7 +747,7 @@ let
       url = "https://selfh.st/apps/";
       container = containers.Personal.id;
       workspace = spaces.Computing.id;
-      position = 1104;
+      position = 81;
     };
   };
 
