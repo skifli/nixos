@@ -291,6 +291,8 @@
   "zen.widget.linux.transparency" = false; # Disable transparent sidebar
   "zen.workspaces.continue-where-left-off" = true;
 
+  "uc.tabs.dim_unloaded" = true; # For Better Tab Indicators extension
+
   /**
    *************************************************************************
   * Optional ideas (commented out)                                           *

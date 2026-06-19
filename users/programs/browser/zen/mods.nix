@@ -18,6 +18,6 @@
   "6f11c932-b992-433e-8c80-56a613cc511e" # Left close button
   "599a1599-e6ab-4749-ab22-de533860de2c" # Pimp your PiP
   "664c54f9-d97d-410b-a479-23dd8a08a628" # Better Tab Indicators
-  "bc25808c-a012-4c0d-ad9a-aa86be616019" # sleek border
-  "cb5efa80-f1e1-43ce-8c0b-fece8462d225" # Container Halo
+  # "bc25808c-a012-4c0d-ad9a-aa86be616019" # sleek border
+  # "cb5efa80-f1e1-43ce-8c0b-fece8462d225" # Container Halo
 ]
