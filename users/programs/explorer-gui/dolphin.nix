@@ -42,13 +42,13 @@
 
     xdg.configFile."kdeglobals".text = ''
       [KFileDialog Settings]
-      Allow Expansion=false
+      Allow Expansion=true
       Automatically select filename extension=true
       Breadcrumb Navigation=true
       Decoration position=2
-      Show Full Path=false
+      Show Full Path=true
       Show Inline Previews=true
-      Show Preview=false
+      Show Preview=true
       Show Speedbar=true
       Show hidden files=true
       Sort by=Name
@@ -59,8 +59,13 @@
       View Style=DetailTree
 
       [PreviewSettings]
-      EnableRemoteFolderThumbnail=false
-      MaximumRemoteSize=0
+      EnableRemoteFolderThumbnail=true
+      MaximumRemoteSize=-1
+      UseDefaultRemotePreviewSizeLimit=false
+      RemotePreviewSizeLimit=-1
+
+      Plugins=imagethumbnail,jpegthumbnail,directorythumbnail,ffmpegthumbs,exethumbnail,comicbookthumbnail,office Marcothumbnail
+      RemotePlugins=imagethumbnail,jpegthumbnail,directorythumbnail,ffmpegthumbs,exethumbnail,comicbookthumbnail,officeMarcothumbnail
 
       [General]
       TerminalApplication=${userVars.programs.terminal}
