@@ -141,14 +141,13 @@ let
       position = 1006;
     };
 
-    # AI folder (position 1001) and its pins
+    # AI folder (position 1001)
     space-personal_container-personal_AI_Claude = {
       id = "a0000007-0000-4000-8000-000000000007";
       url = "https://claude.ai/new";
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
       folder = "space-personal_container-personal_AI";
-      isEssential = true;
       position = 1007;
     };
 
@@ -158,7 +157,6 @@ let
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
       folder = "space-personal_container-personal_AI";
-      isEssential = true;
       position = 1008;
     };
 
@@ -168,7 +166,6 @@ let
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
       folder = "space-personal_container-personal_AI";
-      isEssential = true;
       position = 1009;
     };
 
@@ -178,18 +175,16 @@ let
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
       folder = "space-personal_container-personal_AI";
-      isEssential = true;
       position = 1010;
     };
 
-    # Rate Limiting folder (position 1008) and pins
+    # Rate Limiting folder (position 1008)
     space-personal_container-personal_AI_RateLimiting_CopilotUsage = {
       id = "a0000011-0000-4000-8000-000000000011";
       url = "https://github.com/settings/billing";
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
       folder = "space-personal_container-personal_AI_RateLimiting";
-      isEssential = true;
       position = 1011;
     };
 
@@ -199,7 +194,6 @@ let
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
       folder = "space-personal_container-personal_AI_RateLimiting";
-      isEssential = true;
       position = 1012;
     };
 
@@ -209,18 +203,16 @@ let
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
       folder = "space-personal_container-personal_AI_RateLimiting";
-      isEssential = true;
       position = 1013;
     };
 
-    # Arkwright folder (position 1017) and pins
+    # Arkwright folder (position 1017)
     space-personal_container-personal_Arkwright_sfgMentorNet = {
       id = "a0000014-0000-4000-8000-000000000014";
       url = "https://smallpeicetrust.sfgmentornet.com/spa/";
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
       folder = "space-personal_container-personal_Arkwright";
-      isEssential = true;
       position = 1018;
     };
 
@@ -230,7 +222,6 @@ let
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
       folder = "space-personal_container-personal_Arkwright";
-      isEssential = true;
       position = 1019;
     };
 
@@ -240,18 +231,16 @@ let
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
       folder = "space-personal_container-personal_Arkwright";
-      isEssential = true;
       position = 1020;
     };
 
-    # Photos folder (position 1024) and pins
+    # Photos folder (position 1024)
     space-personal_container-personal_Arkwright_Photos_Gallery = {
       id = "a0000017-0000-4000-8000-000000000017";
       url = "https://gallery.squireandsquire.co.uk/-arkwrightengineeringscholarshipsnetworkingeventsouth/gallery";
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
       folder = "space-personal_container-personal_Arkwright_Photos";
-      isEssential = true;
       position = 1025;
     };
 
@@ -261,17 +250,15 @@ let
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
       folder = "space-personal_container-personal_Arkwright_Photos";
-      isEssential = true;
       position = 1026;
     };
 
-    # Other personal pins
+    # Other personal stuff
     space-personal_container-personal_LastFM = {
       id = "a0000019-0000-4000-8000-000000000019";
       url = "https://www.last.fm/user/skifli";
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
-      isEssential = true;
       position = 1027;
     };
 
@@ -280,7 +267,6 @@ let
       url = "https://fmhy.net/";
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
-      isEssential = true;
       position = 1028;
     };
 
@@ -289,12 +275,11 @@ let
       url = "https://p2r3.github.io/convert/";
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
-      isEssential = true;
       position = 1029;
     };
 
     # ------------------------------------------------------------------------
-    # School Space – top‑level pins
+    # School Space
     # ------------------------------------------------------------------------
     space-school_container-school_UCAS = {
       id = "a0000022-0000-4000-8000-000000000022";
@@ -372,7 +357,7 @@ let
       position = 1038;
     };
 
-    # ESAT folder (position 1043) and pins
+    # ESAT folder (position 1043)
     space-school_container-school_ESAT_Prepare = {
       id = "a0000031-0000-4000-8000-000000000031";
       url = "https://esat-tmua.ac.uk/prepare/";
@@ -463,7 +448,7 @@ let
       position = 1053;
     };
 
-    # CS NEA folder (position 1061) and pins
+    # CS NEA folder (position 1061)
     space-school_container-school_CSNEA-MS = {
       id = "a0000041-0000-4000-8000-000000000041";
       url = "file:///home/ami/Downloads/CS%20NEA/MS.pdf";
@@ -501,7 +486,7 @@ let
     };
 
     # ------------------------------------------------------------------------
-    # StemRacing Space – top‑level pins
+    # StemRacing Space
     # ------------------------------------------------------------------------
     space-stemracing_container-stemracing_OneDrive = {
       id = "a0000045-0000-4000-8000-000000000045";
@@ -526,7 +511,6 @@ let
       url = "https://stolavesgrammarschool-my.sharepoint.com/my?id=%2Fpersonal%2Faneeq%5Fweerasinghe%5Fsaintolaves%5Fnet%2FDocuments%2FF1%20in%20Schools%2FF1%20in%20Schools%202025%20%2D%202026%2FSustainability%20%26%20Innovations&viewid=8d376b40%2D6297%2D42a5%2D9a9e%2Dfa5720076727&login_hint=Aneeq%2EWeerasinghe%40saintolaves%2Enet&source=waffle";
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
-      isEssential = true;
       position = 1068;
     };
 
@@ -535,7 +519,6 @@ let
       url = "https://stolavesgrammarschool-my.sharepoint.com/:w:/r/personal/aneeq_weerasinghe_saintolaves_net/_layouts/15/Doc.aspx?sourcedoc=%7B93B23519-4267-45C9-B768-BAC9C6DCF5CA%7D&file=Enterprise%20Portfolio%20Feedback.docx&action=default&mobileredirect=true";
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
-      isEssential = true;
       position = 1069;
     };
 
@@ -544,7 +527,6 @@ let
       url = "https://stolavesgrammarschool-my.sharepoint.com/:w:/r/personal/aneeq_weerasinghe_saintolaves_net/_layouts/15/Doc.aspx?sourcedoc=%7BD606DF8E-8F7A-43E1-89EB-8D7C65A37F98%7D&file=WF%20Combo%20Main.docx&action=default&mobileredirect=true";
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
-      isEssential = true;
       position = 1070;
     };
 
@@ -553,7 +535,6 @@ let
       url = "https://stolavesgrammarschool-my.sharepoint.com/:w:/r/personal/aneeq_weerasinghe_saintolaves_net/_layouts/15/Doc.aspx?sourcedoc=%7B549154C4-1788-44FC-AC6E-F76636901FBB%7D&file=WF%20Combo%20Digital-Social%20Media.docx&action=default&mobileredirect=true";
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
-      isEssential = true;
       position = 1071;
     };
 
@@ -562,7 +543,6 @@ let
       url = "https://stolavesgrammarschool-my.sharepoint.com/:w:/r/personal/aneeq_weerasinghe_saintolaves_net/_layouts/15/Doc.aspx?sourcedoc=%7B88D31E37-9CEF-48E5-BC0F-9451C01A2F73%7D&file=WF%20Combo%20Enterprise.docx&action=default&mobileredirect=true";
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
-      isEssential = true;
       position = 1072;
     };
 
@@ -571,7 +551,6 @@ let
       url = "https://stolavesgrammarschool-my.sharepoint.com/:w:/r/personal/aneeq_weerasinghe_saintolaves_net/_layouts/15/Doc.aspx?sourcedoc=%7B5655B289-D378-4A78-B8AD-E29325EFE048%7D&file=WF%20Combo%20Pit%20Display.docx&action=default&mobileredirect=true";
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
-      isEssential = true;
       position = 1073;
     };
 
@@ -580,18 +559,16 @@ let
       url = "https://stolavesgrammarschool-my.sharepoint.com/:w:/r/personal/aneeq_weerasinghe_saintolaves_net/_layouts/15/Doc.aspx?sourcedoc=%7BEE02AA17-BB54-464D-BAB7-EB87B471A26C%7D&file=WF%20Combo%20Verbal%20Pres.docx&action=default&mobileredirect=true";
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
-      isEssential = true;
       position = 1074;
     };
 
-    # Tools folder (position 1083) and pins
+    # Tools folder (position 1083)
     space-stemracing_container-stemracing_Tools_BauhausPattern = {
       id = "a0000054-0000-4000-8000-000000000054";
       url = "https://bauhaus-pattern.netlify.app/";
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       folder = "space-stemracing_container-stemracing_Tools";
-      isEssential = true;
       position = 1084;
     };
 
@@ -601,7 +578,6 @@ let
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       folder = "space-stemracing_container-stemracing_Tools";
-      isEssential = true;
       position = 1085;
     };
 
@@ -611,7 +587,6 @@ let
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       folder = "space-stemracing_container-stemracing_Tools";
-      isEssential = true;
       position = 1086;
     };
 
@@ -621,7 +596,6 @@ let
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       folder = "space-stemracing_container-stemracing_Tools";
-      isEssential = true;
       position = 1087;
     };
 
@@ -631,7 +605,6 @@ let
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       folder = "space-stemracing_container-stemracing_Tools";
-      isEssential = true;
       position = 1088;
     };
 
@@ -641,7 +614,6 @@ let
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       folder = "space-stemracing_container-stemracing_Tools";
-      isEssential = true;
       position = 1089;
     };
 
@@ -651,7 +623,6 @@ let
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       folder = "space-stemracing_container-stemracing_Tools";
-      isEssential = true;
       position = 1090;
     };
 
@@ -661,7 +632,6 @@ let
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       folder = "space-stemracing_container-stemracing_Tools";
-      isEssential = true;
       position = 1091;
     };
 
@@ -671,7 +641,6 @@ let
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       folder = "space-stemracing_container-stemracing_Tools";
-      isEssential = true;
       position = 1092;
     };
 
@@ -681,7 +650,6 @@ let
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       folder = "space-stemracing_container-stemracing_Tools";
-      isEssential = true;
       position = 1093;
     };
 
@@ -691,7 +659,6 @@ let
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       folder = "space-stemracing_container-stemracing_Tools";
-      isEssential = true;
       position = 1094;
     };
 
@@ -701,7 +668,6 @@ let
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       folder = "space-stemracing_container-stemracing_Tools";
-      isEssential = true;
       position = 1095;
     };
 
@@ -711,7 +677,6 @@ let
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       folder = "space-stemracing_container-stemracing_Tools";
-      isEssential = true;
       position = 1096;
     };
 
@@ -721,7 +686,6 @@ let
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       folder = "space-stemracing_container-stemracing_Tools";
-      isEssential = true;
       position = 1097;
     };
 
@@ -731,7 +695,6 @@ let
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       folder = "space-stemracing_container-stemracing_Tools";
-      isEssential = true;
       position = 1098;
     };
 
@@ -741,19 +704,17 @@ let
       container = containers.StemRacing.id;
       workspace = spaces.StemRacing.id;
       folder = "space-stemracing_container-stemracing_Tools";
-      isEssential = true;
       position = 1099;
     };
 
     # ------------------------------------------------------------------------
-    # Computing Space – all pins
+    # Computing Space
     # ------------------------------------------------------------------------
     space-computing_container-personal_RPIConnect = {
       id = "a0000070-0000-4000-8000-000000000070";
       url = "https://connect.raspberrypi.com/devices";
       container = containers.Personal.id;
       workspace = spaces.Computing.id;
-      isEssential = true;
       position = 1100;
     };
 
@@ -762,7 +723,6 @@ let
       url = "https://connect.raspberrypi.com/devices/0ddb991f-8e0d-4dee-853c-64693b5acde7/screen-sharing-session/";
       container = containers.Personal.id;
       workspace = spaces.Computing.id;
-      isEssential = true;
       position = 1101;
     };
 
@@ -771,7 +731,6 @@ let
       url = "https://connect.raspberrypi.com/devices/7af88ae4-a215-4508-8aa1-b757e8be6b0d/screen-sharing-session";
       container = containers.Personal.id;
       workspace = spaces.Computing.id;
-      isEssential = true;
       position = 1102;
     };
 
@@ -780,7 +739,6 @@ let
       url = "https://login.tailscale.com/admin/machines";
       container = containers.Personal.id;
       workspace = spaces.Computing.id;
-      isEssential = true;
       position = 1103;
     };
 
@@ -789,7 +747,6 @@ let
       url = "https://selfh.st/apps/";
       container = containers.Personal.id;
       workspace = spaces.Computing.id;
-      isEssential = true;
       position = 1104;
     };
   };
@@ -813,9 +770,6 @@ let
     );
 
   pins = builtins.mapAttrs (_: mkPin) pinSpecs;
-  # --------------------------------------------------------------------------
-  # Final output – order here determines the display order.
-  # --------------------------------------------------------------------------
 in {
   # Personal Space
   "Spotify" = pins.space-personal_container-personal_Spotify;
