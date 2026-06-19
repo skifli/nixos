@@ -14,7 +14,7 @@ let
   folderSpecs = {
     space-personal_container-personal_AI = {
       id = "f0000001-0000-4000-8000-000000000001";
-      position = 7;   # after Kimi, before Rate Limiting
+      position = 7; # after Kimi, before Rate Limiting
       workspace = spaces.Personal.id;
       container = containers.Personal.id;
     };
@@ -22,14 +22,14 @@ let
     space-personal_container-personal_AI_RateLimiting = {
       id = "f0000002-0000-4000-8000-000000000002";
       parent = "space-personal_container-personal_AI";
-      position = 8;   # after AI folder
+      position = 8; # after AI folder
       workspace = spaces.Personal.id;
       container = containers.Personal.id;
     };
 
     space-personal_container-personal_Arkwright = {
       id = "f0000003-0000-4000-8000-000000000003";
-      position = 16;  # after Maple
+      position = 16; # after Maple
       workspace = spaces.Personal.id;
       container = containers.Personal.id;
     };
@@ -37,28 +37,28 @@ let
     space-personal_container-personal_Arkwright_Photos = {
       id = "f0000004-0000-4000-8000-000000000004";
       parent = "space-personal_container-personal_Arkwright";
-      position = 17;  # after Arkwright folder
+      position = 17; # after Arkwright folder
       workspace = spaces.Personal.id;
       container = containers.Personal.id;
     };
 
     space-school_container-school_ESAT = {
       id = "f0000005-0000-4000-8000-000000000005";
-      position = 30;  # after OneDrive
+      position = 30; # after OneDrive
       workspace = spaces.School.id;
       container = containers.School.id;
     };
 
     space-school_container-school_CSNEA = {
       id = "f0000006-0000-4000-8000-000000000006";
-      position = 41;  # after Isaac Tests
+      position = 41; # after Isaac Tests
       workspace = spaces.School.id;
       container = containers.School.id;
     };
 
     space-stemracing_container-stemracing_Tools = {
       id = "f0000007-0000-4000-8000-000000000007";
-      position = 53;  # after Todo
+      position = 53; # after Todo
       workspace = spaces.StemRacing.id;
       container = containers.StemRacing.id;
     };
@@ -148,7 +148,7 @@ let
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
       folder = "space-personal_container-personal_AI";
-      position = 12;  # after Rate Limiting pins
+      position = 12; # after Rate Limiting pins
     };
 
     space-personal_container-personal_AI_GoogleGemini = {
@@ -213,7 +213,7 @@ let
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
       folder = "space-personal_container-personal_Arkwright";
-      position = 20;  # after Photos pins
+      position = 20; # after Photos pins
     };
 
     space-personal_container-personal_Arkwright_SmallpieceEvents = {
