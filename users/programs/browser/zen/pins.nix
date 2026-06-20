@@ -439,8 +439,17 @@ let
       position = 39;
     };
 
-    space-school_container-school_TMUA-PPQs = {
+    space-school_container-school_TMUA-PMT = {
       id = "a0000040-0000-4000-8000-000000000040";
+      url = "https://www.physicsandmathstutor.com/admissions/tmua/";
+      container = containers.School.id;
+      workspace = spaces.School.id;
+      folder = "space-school_container-school_ESAT";
+      position = 40;
+    };
+
+    space-school_container-school_TMUA-PPQs = {
+      id = "a0000040-0000-4000-8000-000000000041";
       url = "https://www.tylertutoring.com/tmua";
       container = containers.School.id;
       workspace = spaces.School.id;
@@ -826,7 +835,8 @@ in {
   "PAT PPQs" = pins.space-school_container-school_PAT-PPQs;
   "MAT PPQs" = pins.space-school_container-school_MAT-PPQs;
   "SMC PPQs" = pins.space-school_container-school_SMC-PPQs;
-  "TMUA PPQs" = pins.space-school_container-school_TMUA-PPQs;
+  "TMUA PPQs" = pins.space-school_container-school_PMT-PPQs;
+  "TMUA Preparation" = pins.space-school_container-school_TMUA-PPQs;
   "Isaac Tests" = pins.space-school_container-school_Isaac-Tests;
 
   "CS NEA" = folders.space-school_container-school_CSNEA;
