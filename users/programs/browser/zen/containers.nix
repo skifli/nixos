@@ -19,7 +19,7 @@
     id = 2;
   };
 
-  StemRacing = {
+  "Stem Racing" = {
     color = "red";
     icon = "vacation";
     id = 3;

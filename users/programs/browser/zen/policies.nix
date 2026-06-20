@@ -82,6 +82,9 @@ in
       "extensions.enabledScopes" = lockPref 15;
       "extensions.webextensions.restrictedDomains" = lockPref "";
     };
+    HttpAllowlist = [
+      "http://pifi:5600"
+    ];
     PromptForDownloadLocation = true;
     RequestPolicy = {
       EnableTrackingProtection = true;
