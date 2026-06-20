@@ -14,7 +14,7 @@
   "253a3a74-0cc4-47b7-8b82-996a64f030d5" # Floating History
   "e122b5d9-d385-4bf8-9971-e137809097d0" # No Top Sites
   "e51b85e6-cef5-45d4-9fff-6986637974e1" # smaller zen toast popup
-  "7d577b21-4685-4db2-bb17-d39d08eec199" # Bleeding Corners Fix
+  # Bugged out some pages and added not coloured correctly corners "7d577b21-4685-4db2-bb17-d39d08eec199" # Bleeding Corners Fix
   # Caused some graphical issues with favicons "6f11c932-b992-433e-8c80-56a613cc511e" # Left close button
   "599a1599-e6ab-4749-ab22-de533860de2c" # Pimp your PiP
   "664c54f9-d97d-410b-a479-23dd8a08a628" # Better Tab Indicators
