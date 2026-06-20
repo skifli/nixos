@@ -292,7 +292,7 @@
   "zen.workspaces.continue-where-left-off" = true;
 
   # I actually prefer this a lot for a few reasons, 1 being my browser is on my right monitor and so I can just yeet my cursor to the edge of the screen and it'll bring up the tabs sidebar, but if it's on the left there's a risk I do that and the cursor just moves onto my monitor on the left. And also it doesn't cover up a lot of navigation things on pages which tend to be on the left, at least in my experience.
-  "zen.tabs.vertical.right-side" = true; 
+  "zen.tabs.vertical.right-side" = true;
 
   "uc.tabs.dim_unloaded" = true; # For Better Tab Indicators extension
 
