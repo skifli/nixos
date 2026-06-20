@@ -778,7 +778,7 @@ in {
   "SIMS Student" = pins.space-school_container-school_SIMSStudent;
   "SOUN" = pins.space-school_container-school_SOUN;
   "ExamQ" = pins.space-school_container-school_ExamQ;
-  "Xtreme Papers - Mathematics" = pins.space-school_container-school_XtremePapers-Mathematics;
+  "Xtreme Mathematics" = pins.space-school_container-school_XtremePapers-Mathematics;
 
   # "Stem Racing" Space
   "SR OneDrive" = pins.space-stemracing_container-stemracing_OneDrive;
