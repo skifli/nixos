@@ -7,7 +7,7 @@
   "c45c4894-d6bd-47fc-997a-0c4d015334f1" # No pinned tab reset btn
   "4a222d82-2803-4ed2-a390-90abfce4f195" # Back Fwd Always Hidden
   "906c6915-5677-48ff-9bfc-096a02a72379" # Floating Status Bar
-  "2317fd93-c3ed-4f37-b55a-304c1816819e" # Audio Indicator Enhanced
+  # I think cus of new updates looks bad "2317fd93-c3ed-4f37-b55a-304c1816819e" # Audio Indicator Enhanced
   "4ab93b88-151c-451b-a1b7-a1e0e28fa7f8" # No Sidebar Scrollbar
   "79dde383-4fe7-404a-a8e6-9be440022542" # Tidy Popup
   "ad97bb70-0066-4e42-9b5f-173a5e42c6fc" # SuperPins

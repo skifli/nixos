@@ -367,90 +367,99 @@ let
       position = 31;
     };
 
-    space-school_container-school_ESAT_Guide = {
+    space-school_container-school_ESAT_Specification = {
       id = "a0000032-0000-4000-8000-000000000032";
-      url = "https://exams.ninja/esat/guide/";
+      url = "https://uat-wp.s3.eu-west-2.amazonaws.com/wp-content/uploads/2025/04/30103004/ESAT_Content_Specification_April2025.pdf";
       container = containers.School.id;
       workspace = spaces.School.id;
       folder = "space-school_container-school_ESAT";
       position = 32;
     };
 
-    space-school_container-school_ENGAA-NSAA-PPQs = {
+    space-school_container-school_ESAT_Guide = {
       id = "a0000033-0000-4000-8000-000000000033";
-      url = "https://esat-tmua.ac.uk/esat-preparation-materials/";
+      url = "https://exams.ninja/esat/guide/";
       container = containers.School.id;
       workspace = spaces.School.id;
       folder = "space-school_container-school_ESAT";
       position = 33;
     };
 
-    space-school_container-school_ECAA-PPQs = {
+    space-school_container-school_ENGAA-NSAA-PPQs = {
       id = "a0000034-0000-4000-8000-000000000034";
-      url = "https://www.physicsandmathstutor.com/admissions/ecaa/";
+      url = "https://esat-tmua.ac.uk/esat-preparation-materials/";
       container = containers.School.id;
       workspace = spaces.School.id;
       folder = "space-school_container-school_ESAT";
       position = 34;
     };
 
-    space-school_container-school_BMAT-PPQs = {
+    space-school_container-school_ECAA-PPQs = {
       id = "a0000035-0000-4000-8000-000000000035";
-      url = "https://www.physicsandmathstutor.com/admissions/bmat/papers/";
+      url = "https://www.physicsandmathstutor.com/admissions/ecaa/";
       container = containers.School.id;
       workspace = spaces.School.id;
       folder = "space-school_container-school_ESAT";
       position = 35;
     };
 
-    space-school_container-school_PAT-PPQs = {
+    space-school_container-school_BMAT-PPQs = {
       id = "a0000036-0000-4000-8000-000000000036";
-      url = "https://www.physicsandmathstutor.com/admissions/pat/";
+      url = "https://www.physicsandmathstutor.com/admissions/bmat/papers/";
       container = containers.School.id;
       workspace = spaces.School.id;
       folder = "space-school_container-school_ESAT";
       position = 36;
     };
 
-    space-school_container-school_MAT-PPQs = {
+    space-school_container-school_PAT-PPQs = {
       id = "a0000037-0000-4000-8000-000000000037";
-      url = "https://www.physicsandmathstutor.com/admissions/mat/";
+      url = "https://www.physicsandmathstutor.com/admissions/pat/";
       container = containers.School.id;
       workspace = spaces.School.id;
       folder = "space-school_container-school_ESAT";
       position = 37;
     };
 
-    space-school_container-school_SMC-PPQs = {
+    space-school_container-school_MAT-PPQs = {
       id = "a0000038-0000-4000-8000-000000000038";
-      url = "https://mathsaurus.com/senior-maths-challenge-grade-boundaries/";
+      url = "https://www.physicsandmathstutor.com/admissions/mat/";
       container = containers.School.id;
       workspace = spaces.School.id;
       folder = "space-school_container-school_ESAT";
       position = 38;
     };
 
-    space-school_container-school_TMUA-PPQs = {
+    space-school_container-school_SMC-PPQs = {
       id = "a0000039-0000-4000-8000-000000000039";
-      url = "https://www.tylertutoring.com/tmua";
+      url = "https://mathsaurus.com/senior-maths-challenge-grade-boundaries/";
       container = containers.School.id;
       workspace = spaces.School.id;
       folder = "space-school_container-school_ESAT";
       position = 39;
     };
 
-    space-school_container-school_Isaac-Tests = {
+    space-school_container-school_TMUA-PPQs = {
       id = "a0000040-0000-4000-8000-000000000040";
-      url = "https://isaacscience.org/practice_tests";
+      url = "https://www.tylertutoring.com/tmua";
       container = containers.School.id;
       workspace = spaces.School.id;
       folder = "space-school_container-school_ESAT";
       position = 40;
     };
 
+    space-school_container-school_Isaac-Tests = {
+      id = "a0000041-0000-4000-8000-000000000041";
+      url = "https://isaacscience.org/practice_tests";
+      container = containers.School.id;
+      workspace = spaces.School.id;
+      folder = "space-school_container-school_ESAT";
+      position = 41;
+    };
+
     # CS NEA folder (position 41) – children
     space-school_container-school_CSNEA-MS = {
-      id = "a0000041-0000-4000-8000-000000000041";
+      id = "a0000042-0000-4000-8000-000000000042";
       url = "file:///home/ami/Downloads/CS%20NEA/MS.pdf";
       container = containers.School.id;
       workspace = spaces.School.id;
@@ -459,7 +468,7 @@ let
     };
 
     space-school_container-school_CSNEA-Exemplar = {
-      id = "a0000042-0000-4000-8000-000000000042";
+      id = "a0000043-0000-4000-8000-000000000043";
       url = "file:///home/ami/Downloads/CS%20NEA/Analysis/Candidate%203%20-%20(68%20out%20of%2070)%20-%20Project%20writeup.pdf";
       container = containers.School.id;
       workspace = spaces.School.id;
@@ -468,7 +477,7 @@ let
     };
 
     space-school_container-school_CSNEA-AMNEA = {
-      id = "a0000043-0000-4000-8000-000000000043";
+      id = "a0000044-0000-4000-8000-000000000044";
       url = "https://stolavesgrammarschool-my.sharepoint.com/:w:/g/personal/abhinav_malladi_saintolaves_net/IQBTX4wdlMizQ6BDfHNdYl4BAfWsj3FsxujDWVvcrTfngGs?e=dTbjcZile:///home/ami/Downloads/CS%20NEA/Analysis/NEA%20Guide.pdf";
       container = containers.School.id;
       workspace = spaces.School.id;
@@ -477,7 +486,7 @@ let
     };
 
     space-school_container-school_CSNEA-MQNEA = {
-      id = "a0000044-0000-4000-8000-000000000044";
+      id = "a0000045-0000-4000-8000-000000000045";
       url = "https://stolavesgrammarschool-my.sharepoint.com/:w:/g/personal/michael_qu_saintolaves_net/IQDWHgmXJtnYSqyO-v_8heEwAX9R8BZscq4OtrE2GEDsRb4?e=lvEOdg";
       container = containers.School.id;
       workspace = spaces.School.id;
@@ -809,6 +818,7 @@ in {
 
   "ESAT" = folders.space-school_container-school_ESAT;
   "Prepare" = pins.space-school_container-school_ESAT_Prepare;
+  "Specification" = pins.space-school_container-school_ESAT_Specification;
   "Guide" = pins.space-school_container-school_ESAT_Guide;
   "ENGAA/NSAA PPQs" = pins.space-school_container-school_ENGAA-NSAA-PPQs;
   "ECAA PPQs" = pins.space-school_container-school_ECAA-PPQs;

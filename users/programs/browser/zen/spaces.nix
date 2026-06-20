@@ -36,10 +36,12 @@ in {
     container = containers.Personal.id;
   };
 
+  /* Not needed (for NOW <3!!!)
   Engineering = {
     id = "5f2a3b4c-7d5e-8f6a-1b2c-4d3e5f6a7b89";
     icon = "🛠️";
     position = 5;
     container = containers.Personal.id;
   };
+  */
 }
