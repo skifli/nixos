@@ -14,7 +14,7 @@ let
   folderSpecs = {
     space-personal_container-personal_AI = {
       id = "f0000001-0000-4000-8000-000000000001";
-      position = 7; # after Kimi, before Rate Limiting
+      position = 7; # after Kimi
       workspace = spaces.Personal.id;
       container = containers.Personal.id;
     };
@@ -51,7 +51,7 @@ let
 
     space-school_container-school_CSNEA = {
       id = "f0000006-0000-4000-8000-000000000006";
-      position = 41; # after Isaac Tests
+      position = 42; # after Isaac Tests
       workspace = spaces.School.id;
       container = containers.School.id;
     };
@@ -86,7 +86,7 @@ let
   # Positions are set to match the final output order (1..81, sequential)
   # --------------------------------------------------------------------------
   pinSpecs = {
-    # Personal Space – top‑level pins
+    # Personal Space – top‑level pins (positions 1-6)
     space-personal_container-personal_Spotify = {
       id = "a0000001-0000-4000-8000-000000000001";
       url = "https://open.spotify.com/playlist/0wBpBFi0ox6sKqF2B7kr9E";
@@ -141,46 +141,9 @@ let
       position = 6;
     };
 
-    # AI folder (position 7) – children
-    space-personal_container-personal_AI_Claude = {
-      id = "a0000007-0000-4000-8000-000000000007";
-      url = "https://claude.ai/new";
-      container = containers.Personal.id;
-      workspace = spaces.Personal.id;
-      folder = "space-personal_container-personal_AI";
-      position = 12; # after Rate Limiting pins
-    };
-
-    space-personal_container-personal_AI_GoogleGemini = {
-      id = "a0000008-0000-4000-8000-000000000008";
-      url = "https://gemini.google.com/app";
-      container = containers.Personal.id;
-      workspace = spaces.Personal.id;
-      folder = "space-personal_container-personal_AI";
-      position = 13;
-    };
-
-    space-personal_container-personal_AI_Perplexity = {
-      id = "a0000009-0000-4000-8000-000000000009";
-      url = "https://www.perplexity.ai/";
-      container = containers.Personal.id;
-      workspace = spaces.Personal.id;
-      folder = "space-personal_container-personal_AI";
-      position = 14;
-    };
-
-    space-personal_container-personal_AI_Maple = {
-      id = "a0000010-0000-4000-8000-000000000010";
-      url = "https://trymaple.ai/";
-      container = containers.Personal.id;
-      workspace = spaces.Personal.id;
-      folder = "space-personal_container-personal_AI";
-      position = 15;
-    };
-
-    # Rate Limiting folder (position 8) – children
+    # AI folder children (positions 9-15, since 7-8 are folders)
     space-personal_container-personal_AI_RateLimiting_CopilotUsage = {
-      id = "a0000011-0000-4000-8000-000000000011";
+      id = "a0000007-0000-4000-8000-000000000007";
       url = "https://github.com/settings/billing";
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
@@ -189,7 +152,7 @@ let
     };
 
     space-personal_container-personal_AI_RateLimiting_GeminiAPIRateLimit = {
-      id = "a0000012-0000-4000-8000-000000000012";
+      id = "a0000008-0000-4000-8000-000000000008";
       url = "https://aistudio.google.com/rate-limit?timeRange=last-90-days";
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
@@ -198,7 +161,7 @@ let
     };
 
     space-personal_container-personal_AI_RateLimiting_GeminiAPIUsage = {
-      id = "a0000013-0000-4000-8000-000000000013";
+      id = "a0000009-0000-4000-8000-000000000009";
       url = "https://aistudio.google.com/usage?timeRange=last-90-days";
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
@@ -206,37 +169,45 @@ let
       position = 11;
     };
 
-    # Arkwright folder (position 16) – children
-    space-personal_container-personal_Arkwright_sfgMentorNet = {
-      id = "a0000014-0000-4000-8000-000000000014";
-      url = "https://smallpeicetrust.sfgmentornet.com/spa/";
+    space-personal_container-personal_AI_Claude = {
+      id = "a0000010-0000-4000-8000-000000000010";
+      url = "https://claude.ai/new";
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
-      folder = "space-personal_container-personal_Arkwright";
-      position = 20; # after Photos pins
+      folder = "space-personal_container-personal_AI";
+      position = 12;
     };
 
-    space-personal_container-personal_Arkwright_SmallpieceEvents = {
-      id = "a0000015-0000-4000-8000-000000000015";
-      url = "https://www.smallpeicetrust.org.uk/events-calendar/?course_type=110";
+    space-personal_container-personal_AI_GoogleGemini = {
+      id = "a0000011-0000-4000-8000-000000000011";
+      url = "https://gemini.google.com/app";
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
-      folder = "space-personal_container-personal_Arkwright";
-      position = 21;
+      folder = "space-personal_container-personal_AI";
+      position = 13;
     };
 
-    space-personal_container-personal_Arkwright_WCSIMLogin = {
-      id = "a0000016-0000-4000-8000-000000000016";
-      url = "https://wcsim.co.uk/wp-login.php";
+    space-personal_container-personal_AI_Perplexity = {
+      id = "a0000012-0000-4000-8000-000000000012";
+      url = "https://www.perplexity.ai/";
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
-      folder = "space-personal_container-personal_Arkwright";
-      position = 22;
+      folder = "space-personal_container-personal_AI";
+      position = 14;
     };
 
-    # Photos folder (position 17) – children
+    space-personal_container-personal_AI_Maple = {
+      id = "a0000013-0000-4000-8000-000000000013";
+      url = "https://trymaple.ai/";
+      container = containers.Personal.id;
+      workspace = spaces.Personal.id;
+      folder = "space-personal_container-personal_AI";
+      position = 15;
+    };
+
+    # Arkwright folder children (positions 18-22, since 16-17 are folders)
     space-personal_container-personal_Arkwright_Photos_Gallery = {
-      id = "a0000017-0000-4000-8000-000000000017";
+      id = "a0000014-0000-4000-8000-000000000014";
       url = "https://gallery.squireandsquire.co.uk/-arkwrightengineeringscholarshipsnetworkingeventsouth/gallery";
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
@@ -245,7 +216,7 @@ let
     };
 
     space-personal_container-personal_Arkwright_Photos_GeneralPhotography = {
-      id = "a0000018-0000-4000-8000-000000000018";
+      id = "a0000015-0000-4000-8000-000000000015";
       url = "https://gallery.squireandsquire.co.uk/-arkwrightengineeringeventsouthgeneralphotography/";
       container = containers.Personal.id;
       workspace = spaces.Personal.id;
@@ -253,7 +224,34 @@ let
       position = 19;
     };
 
-    # Other personal stuff
+    space-personal_container-personal_Arkwright_sfgMentorNet = {
+      id = "a0000016-0000-4000-8000-000000000016";
+      url = "https://smallpeicetrust.sfgmentornet.com/spa/";
+      container = containers.Personal.id;
+      workspace = spaces.Personal.id;
+      folder = "space-personal_container-personal_Arkwright";
+      position = 20;
+    };
+
+    space-personal_container-personal_Arkwright_SmallpieceEvents = {
+      id = "a0000017-0000-4000-8000-000000000017";
+      url = "https://www.smallpeicetrust.org.uk/events-calendar/?course_type=110";
+      container = containers.Personal.id;
+      workspace = spaces.Personal.id;
+      folder = "space-personal_container-personal_Arkwright";
+      position = 21;
+    };
+
+    space-personal_container-personal_Arkwright_WCSIMLogin = {
+      id = "a0000018-0000-4000-8000-000000000018";
+      url = "https://wcsim.co.uk/wp-login.php";
+      container = containers.Personal.id;
+      workspace = spaces.Personal.id;
+      folder = "space-personal_container-personal_Arkwright";
+      position = 22;
+    };
+
+    # Personal misc (positions 23-25)
     space-personal_container-personal_LastFM = {
       id = "a0000019-0000-4000-8000-000000000019";
       url = "https://www.last.fm/user/skifli";
@@ -278,9 +276,7 @@ let
       position = 25;
     };
 
-    # ------------------------------------------------------------------------
-    # School Space
-    # ------------------------------------------------------------------------
+    # School Space (positions 26-51)
     space-school_container-school_UCAS = {
       id = "a0000022-0000-4000-8000-000000000022";
       url = "https://accounts.ucas.com/Account/Login";
@@ -317,7 +313,7 @@ let
       position = 29;
     };
 
-    # ESAT folder (position 30) – children
+    # ESAT folder children (positions 31-41)
     space-school_container-school_ESAT_Prepare = {
       id = "a0000026-0000-4000-8000-000000000026";
       url = "https://esat-tmua.ac.uk/prepare/";
@@ -426,7 +422,7 @@ let
       position = 42;
     };
 
-    # CS NEA folder (position 43) – children
+    # CS NEA folder children (positions 43-46)
     space-school_container-school_CSNEA-MS = {
       id = "a0000038-0000-4000-8000-000000000038";
       url = "file:///home/ami/Downloads/CS%20NEA/MS.pdf";
@@ -463,6 +459,7 @@ let
       position = 46;
     };
 
+    # School misc (positions 47-51)
     space-school_container-school_MSAccount = {
       id = "a0000042-0000-4000-8000-000000000042";
       url = "https://myaccount.microsoft.com/";
@@ -503,9 +500,7 @@ let
       position = 51;
     };
 
-    # ------------------------------------------------------------------------
-    # "Stem Racing" Space
-    # ------------------------------------------------------------------------
+    # Stem Racing Space (positions 52-76)
     space-stemracing_container-stemracing_OneDrive = {
       id = "a0000047-0000-4000-8000-000000000047";
       url = "https://stolavesgrammarschool-my.sharepoint.com/my?id=%2Fpersonal%2Faneeq_weerasinghe_saintolaves_net%2FDocuments%2FF1%20in%20Schools&viewid=8d376b40-6297-42a5-9a9e-fa5720076727";
@@ -524,7 +519,7 @@ let
       position = 53;
     };
 
-    # Tools folder (position 53) – children
+    # Tools folder children (positions 54-69)
     space-stemracing_container-stemracing_Tools_BauhausPattern = {
       id = "a0000049-0000-4000-8000-000000000049";
       url = "https://bauhaus-pattern.netlify.app/";
@@ -669,7 +664,7 @@ let
       position = 69;
     };
 
-    # Stem Racing misc pins (not in Tools folder)
+    # Stem Racing misc (positions 70-76)
     space-stemracing_container-stemracing_SustainabilityAndInnovations = {
       id = "a0000065-0000-4000-8000-000000000065";
       url = "https://stolavesgrammarschool-my.sharepoint.com/my?id=%2Fpersonal%2Faneeq%5Fweerasinghe%5Fsaintolaves%5Fnet%2FDocuments%2FF1%20in%20Schools%2FF1%20in%20Schools%202025%20%2D%202026%2FSustainability%20%26%20Innovations&viewid=8d376b40%2D6297%2D42a5%2D9a9e%2Dfa5720076727&login_hint=Aneeq%2EWeerasinghe%40saintolaves%2Enet&source=waffle";
@@ -726,9 +721,7 @@ let
       position = 76;
     };
 
-    # ------------------------------------------------------------------------
-    # Computing Space
-    # ------------------------------------------------------------------------
+    # Computing Space (positions 77-81)
     space-computing_container-personal_RPIConnect = {
       id = "a0000072-0000-4000-8000-000000000072";
       url = "https://connect.raspberrypi.com/devices";
