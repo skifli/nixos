@@ -454,7 +454,7 @@ let
       container = containers.School.id;
       workspace = spaces.School.id;
       folder = "space-school_container-school_ESAT";
-      position = 41;  
+      position = 41;
     };
 
     space-school_container-school_Isaac-Tests = {
