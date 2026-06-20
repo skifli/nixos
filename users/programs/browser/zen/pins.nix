@@ -318,43 +318,43 @@ let
     };
 
     space-school_container-school_MSAccount = {
-      id = "a0000026-0000-4000-8000-000000000026";
+      id = "a0000047-0000-4000-8000-000000000047";
       url = "https://myaccount.microsoft.com/";
-      container = containers.School.id;
-      workspace = spaces.School.id;
-      position = 46;
-    };
-
-    space-school_container-school_SIMSStudent = {
-      id = "a0000027-0000-4000-8000-000000000027";
-      url = "https://www.sims-student.co.uk/#!/schools/deb7228f-ad38-4678-8692-12ccf6422749/home";
       container = containers.School.id;
       workspace = spaces.School.id;
       position = 47;
     };
 
-    space-school_container-school_SOUN = {
-      id = "a0000028-0000-4000-8000-000000000028";
-      url = "https://olavesunofficialnews.wordpress.com/";
+    space-school_container-school_SIMSStudent = {
+      id = "a0000048-0000-4000-8000-000000000048";
+      url = "https://www.sims-student.co.uk/#!/schools/deb7228f-ad38-4678-8692-12ccf6422749/home";
       container = containers.School.id;
       workspace = spaces.School.id;
       position = 48;
     };
 
-    space-school_container-school_ExamQ = {
-      id = "a0000029-0000-4000-8000-000000000029";
-      url = "https://www.examq.co.uk/qualification/ahtaxu";
+    space-school_container-school_SOUN = {
+      id = "a0000049-0000-4000-8000-000000000049";
+      url = "https://olavesunofficialnews.wordpress.com/";
       container = containers.School.id;
       workspace = spaces.School.id;
       position = 49;
     };
 
-    space-school_container-school_XtremePapers-Mathematics = {
-      id = "a0000030-0000-4000-8000-000000000030";
-      url = "https://papers.xtremepape.rs/index.php?dirpath=./Edexcel/Advanced+Level/Mathematics/&order=0";
+    space-school_container-school_ExamQ = {
+      id = "a0000050-0000-4000-8000-000000000050";
+      url = "https://www.examq.co.uk/qualification/ahtaxu";
       container = containers.School.id;
       workspace = spaces.School.id;
       position = 50;
+    };
+
+    space-school_container-school_XtremePapers-Mathematics = {
+      id = "a0000051-0000-4000-8000-000000000051";
+      url = "https://papers.xtremepape.rs/index.php?dirpath=./Edexcel/Advanced+Level/Mathematics/&order=0";
+      container = containers.School.id;
+      workspace = spaces.School.id;
+      position = 51;
     };
 
     # ESAT folder (position 30) – children
@@ -449,79 +449,79 @@ let
     };
 
     space-school_container-school_TMUA-PPQs = {
-      id = "a0000040-0000-4000-8000-000000000041";
+      id = "a0000041-0000-4000-8000-000000000041";
       url = "https://www.tylertutoring.com/tmua";
       container = containers.School.id;
       workspace = spaces.School.id;
       folder = "space-school_container-school_ESAT";
-      position = 40;
+      position = 41;  
     };
 
     space-school_container-school_Isaac-Tests = {
-      id = "a0000041-0000-4000-8000-000000000041";
+      id = "a0000042-0000-4000-8000-000000000042";
       url = "https://isaacscience.org/practice_tests";
       container = containers.School.id;
       workspace = spaces.School.id;
       folder = "space-school_container-school_ESAT";
-      position = 41;
-    };
-
-    # CS NEA folder (position 41) – children
-    space-school_container-school_CSNEA-MS = {
-      id = "a0000042-0000-4000-8000-000000000042";
-      url = "file:///home/ami/Downloads/CS%20NEA/MS.pdf";
-      container = containers.School.id;
-      workspace = spaces.School.id;
-      folder = "space-school_container-school_CSNEA";
       position = 42;
     };
 
-    space-school_container-school_CSNEA-Exemplar = {
+    # CS NEA folder (position 43) – children
+    space-school_container-school_CSNEA-MS = {
       id = "a0000043-0000-4000-8000-000000000043";
-      url = "file:///home/ami/Downloads/CS%20NEA/Analysis/Candidate%203%20-%20(68%20out%20of%2070)%20-%20Project%20writeup.pdf";
+      url = "file:///home/ami/Downloads/CS%20NEA/MS.pdf";
       container = containers.School.id;
       workspace = spaces.School.id;
       folder = "space-school_container-school_CSNEA";
       position = 43;
     };
 
-    space-school_container-school_CSNEA-AMNEA = {
+    space-school_container-school_CSNEA-Exemplar = {
       id = "a0000044-0000-4000-8000-000000000044";
-      url = "https://stolavesgrammarschool-my.sharepoint.com/:w:/g/personal/abhinav_malladi_saintolaves_net/IQBTX4wdlMizQ6BDfHNdYl4BAfWsj3FsxujDWVvcrTfngGs?e=dTbjcZile:///home/ami/Downloads/CS%20NEA/Analysis/NEA%20Guide.pdf";
+      url = "file:///home/ami/Downloads/CS%20NEA/Analysis/Candidate%203%20-%20(68%20out%20of%2070)%20-%20Project%20writeup.pdf";
       container = containers.School.id;
       workspace = spaces.School.id;
       folder = "space-school_container-school_CSNEA";
       position = 44;
     };
 
-    space-school_container-school_CSNEA-MQNEA = {
+    space-school_container-school_CSNEA-AMNEA = {
       id = "a0000045-0000-4000-8000-000000000045";
-      url = "https://stolavesgrammarschool-my.sharepoint.com/:w:/g/personal/michael_qu_saintolaves_net/IQDWHgmXJtnYSqyO-v_8heEwAX9R8BZscq4OtrE2GEDsRb4?e=lvEOdg";
+      url = "https://stolavesgrammarschool-my.sharepoint.com/:w:/g/personal/abhinav_malladi_saintolaves_net/IQBTX4wdlMizQ6BDfHNdYl4BAfWsj3FsxujDWVvcrTfngGs?e=dTbjcZile:///home/ami/Downloads/CS%20NEA/Analysis/NEA%20Guide.pdf";
       container = containers.School.id;
       workspace = spaces.School.id;
       folder = "space-school_container-school_CSNEA";
       position = 45;
     };
 
+    space-school_container-school_CSNEA-MQNEA = {
+      id = "a0000046-0000-4000-8000-000000000046";
+      url = "https://stolavesgrammarschool-my.sharepoint.com/:w:/g/personal/michael_qu_saintolaves_net/IQDWHgmXJtnYSqyO-v_8heEwAX9R8BZscq4OtrE2GEDsRb4?e=lvEOdg";
+      container = containers.School.id;
+      workspace = spaces.School.id;
+      folder = "space-school_container-school_CSNEA";
+      position = 46;
+    };
+
     # ------------------------------------------------------------------------
     # "Stem Racing" Space
     # ------------------------------------------------------------------------
     space-stemracing_container-stemracing_OneDrive = {
-      id = "a0000045-0000-4000-8000-000000000045";
+      id = "a0000052-0000-4000-8000-000000000052";
       url = "https://stolavesgrammarschool-my.sharepoint.com/my?id=%2Fpersonal%2Faneeq_weerasinghe_saintolaves_net%2FDocuments%2FF1%20in%20Schools&viewid=8d376b40-6297-42a5-9a9e-fa5720076727";
       container = containers."Stem Racing".id;
       workspace = spaces."Stem Racing".id;
       isEssential = true;
-      position = 51;
+      position = 52;
     };
 
     space-stemracing_container-stemracing_Todo = {
-      id = "a0000046-0000-4000-8000-000000000046";
+      id = "a0000053-0000-4000-8000-000000000053";
       url = "https://stolavesgrammarschool-my.sharepoint.com/:w:/r/personal/aneeq_weerasinghe_saintolaves_net/_layouts/15/Doc.aspx?sourcedoc={2B9C1F64-460A-4570-B879-72AF0C74A5F0}&file=Todo.docx&action=default&mobileredirect=true";
       container = containers."Stem Racing".id;
       workspace = spaces."Stem Racing".id;
       isEssential = true;
-      position = 52;
+      position = 53;
     };
 
     space-stemracing_container-stemracing_SustainabilityAndInnovations = {
