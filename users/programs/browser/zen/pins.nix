@@ -835,8 +835,8 @@ in {
   "PAT PPQs" = pins.space-school_container-school_PAT-PPQs;
   "MAT PPQs" = pins.space-school_container-school_MAT-PPQs;
   "SMC PPQs" = pins.space-school_container-school_SMC-PPQs;
-  "TMUA PPQs" = pins.space-school_container-school_PMT-PPQs;
-  "TMUA Preparation" = pins.space-school_container-school_TMUA-PPQs;
+  "TMUA PPQs" = pins.space-school_container-school_TMUA-PMT;
+  "TMUA Preparation" = pins.space-school_container-school_TMUA-PMT;
   "Isaac Tests" = pins.space-school_container-school_Isaac-Tests;
 
   "CS NEA" = folders.space-school_container-school_CSNEA;
