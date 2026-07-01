@@ -423,7 +423,7 @@ let
       position = 47;
     };
 
-    # ----- School misc (48‑52) -----
+    # ----- School misc (48‑50, 51‑54) -----
     space-school_container-school_MSAccount = {
       id = "a0000048-0000-4000-8000-000000000048";
       url = "https://myaccount.microsoft.com/";
@@ -452,249 +452,261 @@ let
       workspace = spaces.School.id;
       position = 51;
     };
-    space-school_container-school_XtremePapers-Mathematics = {
+    space-school_container-school_IsaacALevel = {
       id = "a0000052-0000-4000-8000-000000000052";
-      url = "https://papers.xtremepape.rs/index.php?dirpath=./Edexcel/Advanced+Level/Mathematics/&order=0";
+      url = "https://isaacscience.org/questions?stages=a_level&subjects=maths,physics";
       container = containers.School.id;
       workspace = spaces.School.id;
       position = 52;
     };
-
-    # ----- Stem Racing Space (53‑78) -----
-    # top‑level (53‑54)
-    space-stemracing_container-stemracing_OneDrive = {
+    space-school_container-school_EduFileStorage = {
       id = "a0000053-0000-4000-8000-000000000053";
+      url = "https://www.edufilestorage.com/";
+      container = containers.School.id;
+      workspace = spaces.School.id;
+      position = 53;
+    };
+    space-school_container-school_XtremePapers-Mathematics = {
+      id = "a0000054-0000-4000-8000-000000000054";
+      url = "https://papers.xtremepape.rs/index.php?dirpath=./Edexcel/Advanced+Level/Mathematics/&order=0";
+      container = containers.School.id;
+      workspace = spaces.School.id;
+      position = 54;
+    };
+
+    # ----- Stem Racing Space (55‑80) -----    space-stemracing_container-stemracing_OneDrive = {
+      id = "a0000055-0000-4000-8000-000000000055";
       url = "https://stolavesgrammarschool-my.sharepoint.com/my?id=%2Fpersonal%2Faneeq_weerasinghe_saintolaves_net%2FDocuments%2FF1%20in%20Schools&viewid=8d376b40-6297-42a5-9a9e-fa5720076727";
       container = containers."Stem Racing".id;
       workspace = spaces."Stem Racing".id;
       isEssential = true;
-      position = 53;
+      position = 55;
     };
     space-stemracing_container-stemracing_Todo = {
-      id = "a0000054-0000-4000-8000-000000000054";
+      id = "a0000056-0000-4000-8000-000000000056";
       url = "https://stolavesgrammarschool-my.sharepoint.com/:w:/r/personal/aneeq_weerasinghe_saintolaves_net/_layouts/15/Doc.aspx?sourcedoc={2B9C1F64-460A-4570-B879-72AF0C74A5F0}&file=Todo.docx&action=default&mobileredirect=true";
       container = containers."Stem Racing".id;
       workspace = spaces."Stem Racing".id;
       isEssential = true;
-      position = 54;
-    };
-
-    # Tools folder children (56‑71)
-    space-stemracing_container-stemracing_Tools_BauhausPattern = {
-      id = "a0000056-0000-4000-8000-000000000056";
-      url = "https://bauhaus-pattern.netlify.app/";
-      container = containers."Stem Racing".id;
-      workspace = spaces."Stem Racing".id;
-      folder = "space-stemracing_container-stemracing_Tools";
       position = 56;
     };
-    space-stemracing_container-stemracing_Tools_JPGGlitch = {
-      id = "a0000057-0000-4000-8000-000000000057";
-      url = "https://snorpey.github.io/jpg-glitch/";
-      container = containers."Stem Racing".id;
-      workspace = spaces."Stem Racing".id;
-      folder = "space-stemracing_container-stemracing_Tools";
-      position = 57;
-    };
-    space-stemracing_container-stemracing_Tools_MoshPro = {
+
+    # Tools folder children (58‑73)
+    space-stemracing_container-stemracing_Tools_BauhausPattern = {
       id = "a0000058-0000-4000-8000-000000000058";
-      url = "https://moshpro.app/lite/";
+      url = "https://bauhaus-pattern.netlify.app/";
       container = containers."Stem Racing".id;
       workspace = spaces."Stem Racing".id;
       folder = "space-stemracing_container-stemracing_Tools";
       position = 58;
     };
-    space-stemracing_container-stemracing_Tools_BeFunky = {
+    space-stemracing_container-stemracing_Tools_JPGGlitch = {
       id = "a0000059-0000-4000-8000-000000000059";
-      url = "https://www.befunky.com/create/";
+      url = "https://snorpey.github.io/jpg-glitch/";
       container = containers."Stem Racing".id;
       workspace = spaces."Stem Racing".id;
       folder = "space-stemracing_container-stemracing_Tools";
       position = 59;
     };
-    space-stemracing_container-stemracing_Tools_EndlessTools = {
+    space-stemracing_container-stemracing_Tools_MoshPro = {
       id = "a0000060-0000-4000-8000-000000000060";
-      url = "https://endlesstools.io/";
+      url = "https://moshpro.app/lite/";
       container = containers."Stem Racing".id;
       workspace = spaces."Stem Racing".id;
       folder = "space-stemracing_container-stemracing_Tools";
       position = 60;
     };
-    space-stemracing_container-stemracing_Tools_Tooools = {
+    space-stemracing_container-stemracing_Tools_BeFunky = {
       id = "a0000061-0000-4000-8000-000000000061";
-      url = "https://www.tooooools.app/";
+      url = "https://www.befunky.com/create/";
       container = containers."Stem Racing".id;
       workspace = spaces."Stem Racing".id;
       folder = "space-stemracing_container-stemracing_Tools";
       position = 61;
     };
-    space-stemracing_container-stemracing_Tools_ShadersPaper = {
+    space-stemracing_container-stemracing_Tools_EndlessTools = {
       id = "a0000062-0000-4000-8000-000000000062";
-      url = "https://shaders.paper.design/";
+      url = "https://endlesstools.io/";
       container = containers."Stem Racing".id;
       workspace = spaces."Stem Racing".id;
       folder = "space-stemracing_container-stemracing_Tools";
       position = 62;
     };
-    space-stemracing_container-stemracing_Tools_EffectApp = {
+    space-stemracing_container-stemracing_Tools_Tooools = {
       id = "a0000063-0000-4000-8000-000000000063";
-      url = "https://effect.app/";
+      url = "https://www.tooooools.app/";
       container = containers."Stem Racing".id;
       workspace = spaces."Stem Racing".id;
       folder = "space-stemracing_container-stemracing_Tools";
       position = 63;
     };
-    space-stemracing_container-stemracing_Tools_PixelCrash = {
+    space-stemracing_container-stemracing_Tools_ShadersPaper = {
       id = "a0000064-0000-4000-8000-000000000064";
-      url = "https://www.pixelcrash.xyz/";
+      url = "https://shaders.paper.design/";
       container = containers."Stem Racing".id;
       workspace = spaces."Stem Racing".id;
       folder = "space-stemracing_container-stemracing_Tools";
       position = 64;
     };
-    space-stemracing_container-stemracing_Tools_CodePenGlitch = {
+    space-stemracing_container-stemracing_Tools_EffectApp = {
       id = "a0000065-0000-4000-8000-000000000065";
-      url = "https://codepen.io/sabosugi/full/bNegbmy";
+      url = "https://effect.app/";
       container = containers."Stem Racing".id;
       workspace = spaces."Stem Racing".id;
       folder = "space-stemracing_container-stemracing_Tools";
       position = 65;
     };
-    space-stemracing_container-stemracing_Tools_GrainRad = {
+    space-stemracing_container-stemracing_Tools_PixelCrash = {
       id = "a0000066-0000-4000-8000-000000000066";
-      url = "https://grainrad.com/";
+      url = "https://www.pixelcrash.xyz/";
       container = containers."Stem Racing".id;
       workspace = spaces."Stem Racing".id;
       folder = "space-stemracing_container-stemracing_Tools";
       position = 66;
     };
-    space-stemracing_container-stemracing_Tools_JitterVideo = {
+    space-stemracing_container-stemracing_Tools_CodePenGlitch = {
       id = "a0000067-0000-4000-8000-000000000067";
-      url = "https://jitter.video/templates/social-media/";
+      url = "https://codepen.io/sabosugi/full/bNegbmy";
       container = containers."Stem Racing".id;
       workspace = spaces."Stem Racing".id;
       folder = "space-stemracing_container-stemracing_Tools";
       position = 67;
     };
-    space-stemracing_container-stemracing_Tools_DitherIt = {
+    space-stemracing_container-stemracing_Tools_GrainRad = {
       id = "a0000068-0000-4000-8000-000000000068";
-      url = "https://ditheritv3.netlify.app/";
+      url = "https://grainrad.com/";
       container = containers."Stem Racing".id;
       workspace = spaces."Stem Racing".id;
       folder = "space-stemracing_container-stemracing_Tools";
       position = 68;
     };
-    space-stemracing_container-stemracing_Tools_3DGifMaker = {
+    space-stemracing_container-stemracing_Tools_JitterVideo = {
       id = "a0000069-0000-4000-8000-000000000069";
-      url = "https://www.3dgifmaker.com/";
+      url = "https://jitter.video/templates/social-media/";
       container = containers."Stem Racing".id;
       workspace = spaces."Stem Racing".id;
       folder = "space-stemracing_container-stemracing_Tools";
       position = 69;
     };
-    space-stemracing_container-stemracing_Tools_PhotoGradient = {
+    space-stemracing_container-stemracing_Tools_DitherIt = {
       id = "a0000070-0000-4000-8000-000000000070";
-      url = "https://photogradient.com/";
+      url = "https://ditheritv3.netlify.app/";
       container = containers."Stem Racing".id;
       workspace = spaces."Stem Racing".id;
       folder = "space-stemracing_container-stemracing_Tools";
       position = 70;
     };
-    space-stemracing_container-stemracing_Tools_SpaceType = {
+    space-stemracing_container-stemracing_Tools_3DGifMaker = {
       id = "a0000071-0000-4000-8000-000000000071";
-      url = "https://spacetypegenerator.com/";
+      url = "https://www.3dgifmaker.com/";
       container = containers."Stem Racing".id;
       workspace = spaces."Stem Racing".id;
       folder = "space-stemracing_container-stemracing_Tools";
       position = 71;
     };
-
-    # Stem Racing misc (72‑78)
-    space-stemracing_container-stemracing_SustainabilityAndInnovations = {
+    space-stemracing_container-stemracing_Tools_PhotoGradient = {
       id = "a0000072-0000-4000-8000-000000000072";
-      url = "https://stolavesgrammarschool-my.sharepoint.com/my?id=%2Fpersonal%2Faneeq%5Fweerasinghe%5Fsaintolaves%5Fnet%2FDocuments%2FF1%20in%20Schools%2FF1%20in%20Schools%202025%20%2D%202026%2FSustainability%20%26%20Innovations&viewid=8d376b40%2D6297%2D42a5%2D9a9e%2Dfa5720076727&login_hint=Aneeq%2EWeerasinghe%40saintolaves%2Enet&source=waffle";
+      url = "https://photogradient.com/";
       container = containers."Stem Racing".id;
       workspace = spaces."Stem Racing".id;
+      folder = "space-stemracing_container-stemracing_Tools";
       position = 72;
     };
-    space-stemracing_container-stemracing_EnterprisePortfolioFeedback = {
+    space-stemracing_container-stemracing_Tools_SpaceType = {
       id = "a0000073-0000-4000-8000-000000000073";
-      url = "https://stolavesgrammarschool-my.sharepoint.com/:w:/r/personal/aneeq_weerasinghe_saintolaves_net/_layouts/15/Doc.aspx?sourcedoc=%7B93B23519-4267-45C9-B768-BAC9C6DCF5CA%7D&file=Enterprise%20Portfolio%20Feedback.docx&action=default&mobileredirect=true";
+      url = "https://spacetypegenerator.com/";
       container = containers."Stem Racing".id;
       workspace = spaces."Stem Racing".id;
+      folder = "space-stemracing_container-stemracing_Tools";
       position = 73;
     };
-    space-stemracing_container-stemracing_WFComboMain = {
+
+    # Stem Racing misc (74‑80)
+    space-stemracing_container-stemracing_SustainabilityAndInnovations = {
       id = "a0000074-0000-4000-8000-000000000074";
-      url = "https://stolavesgrammarschool-my.sharepoint.com/:w:/r/personal/aneeq_weerasinghe_saintolaves_net/_layouts/15/Doc.aspx?sourcedoc=%7BD606DF8E-8F7A-43E1-89EB-8D7C65A37F98%7D&file=WF%20Combo%20Main.docx&action=default&mobileredirect=true";
+      url = "https://stolavesgrammarschool-my.sharepoint.com/my?id=%2Fpersonal%2Faneeq%5Fweerasinghe%5Fsaintolaves%5Fnet%2FDocuments%2FF1%20in%20Schools%2FF1%20in%20Schools%202025%20%2D%202026%2FSustainability%20%26%20Innovations&viewid=8d376b40%2D6297%2D42a5%2D9a9e%2Dfa5720076727&login_hint=Aneeq%2EWeerasinghe%40saintolaves%2Enet&source=waffle";
       container = containers."Stem Racing".id;
       workspace = spaces."Stem Racing".id;
       position = 74;
     };
-    space-stemracing_container-stemracing_WFComboDigital-SocialMedia = {
+    space-stemracing_container-stemracing_EnterprisePortfolioFeedback = {
       id = "a0000075-0000-4000-8000-000000000075";
-      url = "https://stolavesgrammarschool-my.sharepoint.com/:w:/r/personal/aneeq_weerasinghe_saintolaves_net/_layouts/15/Doc.aspx?sourcedoc=%7B549154C4-1788-44FC-AC6E-F76636901FBB%7D&file=WF%20Combo%20Digital-Social%20Media.docx&action=default&mobileredirect=true";
+      url = "https://stolavesgrammarschool-my.sharepoint.com/:w:/r/personal/aneeq_weerasinghe_saintolaves_net/_layouts/15/Doc.aspx?sourcedoc=%7B93B23519-4267-45C9-B768-BAC9C6DCF5CA%7D&file=Enterprise%20Portfolio%20Feedback.docx&action=default&mobileredirect=true";
       container = containers."Stem Racing".id;
       workspace = spaces."Stem Racing".id;
       position = 75;
     };
-    space-stemracing_container-stemracing_WFComboEnterprise = {
+    space-stemracing_container-stemracing_WFComboMain = {
       id = "a0000076-0000-4000-8000-000000000076";
-      url = "https://stolavesgrammarschool-my.sharepoint.com/:w:/r/personal/aneeq_weerasinghe_saintolaves_net/_layouts/15/Doc.aspx?sourcedoc=%7B88D31E37-9CEF-48E5-BC0F-9451C01A2F73%7D&file=WF%20Combo%20Enterprise.docx&action=default&mobileredirect=true";
+      url = "https://stolavesgrammarschool-my.sharepoint.com/:w:/r/personal/aneeq_weerasinghe_saintolaves_net/_layouts/15/Doc.aspx?sourcedoc=%7BD606DF8E-8F7A-43E1-89EB-8D7C65A37F98%7D&file=WF%20Combo%20Main.docx&action=default&mobileredirect=true";
       container = containers."Stem Racing".id;
       workspace = spaces."Stem Racing".id;
       position = 76;
     };
-    space-stemracing_container-stemracing_WFComboPitDisplay = {
+    space-stemracing_container-stemracing_WFComboDigital-SocialMedia = {
       id = "a0000077-0000-4000-8000-000000000077";
-      url = "https://stolavesgrammarschool-my.sharepoint.com/:w:/r/personal/aneeq_weerasinghe_saintolaves_net/_layouts/15/Doc.aspx?sourcedoc=%7B5655B289-D378-4A78-B8AD-E29325EFE048%7D&file=WF%20Combo%20Pit%20Display.docx&action=default&mobileredirect=true";
+      url = "https://stolavesgrammarschool-my.sharepoint.com/:w:/r/personal/aneeq_weerasinghe_saintolaves_net/_layouts/15/Doc.aspx?sourcedoc=%7B549154C4-1788-44FC-AC6E-F76636901FBB%7D&file=WF%20Combo%20Digital-Social%20Media.docx&action=default&mobileredirect=true";
       container = containers."Stem Racing".id;
       workspace = spaces."Stem Racing".id;
       position = 77;
     };
-    space-stemracing_container-stemracing_WFComboVerbalPresentation = {
+    space-stemracing_container-stemracing_WFComboEnterprise = {
       id = "a0000078-0000-4000-8000-000000000078";
-      url = "https://stolavesgrammarschool-my.sharepoint.com/:w:/r/personal/aneeq_weerasinghe_saintolaves_net/_layouts/15/Doc.aspx?sourcedoc=%7BEE02AA17-BB54-464D-BAB7-EB87B471A26C%7D&file=WF%20Combo%20Verbal%20Pres.docx&action=default&mobileredirect=true";
+      url = "https://stolavesgrammarschool-my.sharepoint.com/:w:/r/personal/aneeq_weerasinghe_saintolaves_net/_layouts/15/Doc.aspx?sourcedoc=%7B88D31E37-9CEF-48E5-BC0F-9451C01A2F73%7D&file=WF%20Combo%20Enterprise.docx&action=default&mobileredirect=true";
       container = containers."Stem Racing".id;
       workspace = spaces."Stem Racing".id;
       position = 78;
     };
-
-    # ----- Computing Space (79‑83) -----
-    space-computing_container-personal_RPIConnect = {
+    space-stemracing_container-stemracing_WFComboPitDisplay = {
       id = "a0000079-0000-4000-8000-000000000079";
-      url = "https://connect.raspberrypi.com/devices";
-      container = containers.Personal.id;
-      workspace = spaces.Computing.id;
+      url = "https://stolavesgrammarschool-my.sharepoint.com/:w:/r/personal/aneeq_weerasinghe_saintolaves_net/_layouts/15/Doc.aspx?sourcedoc=%7B5655B289-D378-4A78-B8AD-E29325EFE048%7D&file=WF%20Combo%20Pit%20Display.docx&action=default&mobileredirect=true";
+      container = containers."Stem Racing".id;
+      workspace = spaces."Stem Racing".id;
       position = 79;
     };
-    space-computing_container-personal_pifiSS = {
+    space-stemracing_container-stemracing_WFComboVerbalPresentation = {
       id = "a0000080-0000-4000-8000-000000000080";
-      url = "https://connect.raspberrypi.com/devices/0ddb991f-8e0d-4dee-853c-64693b5acde7/screen-sharing-session/";
-      container = containers.Personal.id;
-      workspace = spaces.Computing.id;
+      url = "https://stolavesgrammarschool-my.sharepoint.com/:w:/r/personal/aneeq_weerasinghe_saintolaves_net/_layouts/15/Doc.aspx?sourcedoc=%7BEE02AA17-BB54-464D-BAB7-EB87B471A26C%7D&file=WF%20Combo%20Verbal%20Pres.docx&action=default&mobileredirect=true";
+      container = containers."Stem Racing".id;
+      workspace = spaces."Stem Racing".id;
       position = 80;
     };
-    space-computing_container-personal_pistorSS = {
+
+    # ----- Computing Space (81‑85) -----
+    space-computing_container-personal_RPIConnect = {
       id = "a0000081-0000-4000-8000-000000000081";
-      url = "https://connect.raspberrypi.com/devices/7af88ae4-a215-4508-8aa1-b757e8be6b0d/screen-sharing-session";
+      url = "https://connect.raspberrypi.com/devices";
       container = containers.Personal.id;
       workspace = spaces.Computing.id;
       position = 81;
     };
-    space-computing_container-personal_Tailscale = {
+    space-computing_container-personal_pifiSS = {
       id = "a0000082-0000-4000-8000-000000000082";
-      url = "https://login.tailscale.com/admin/machines";
+      url = "https://connect.raspberrypi.com/devices/0ddb991f-8e0d-4dee-853c-64693b5acde7/screen-sharing-session/";
       container = containers.Personal.id;
       workspace = spaces.Computing.id;
       position = 82;
     };
-    space-computing_container-personal_selfhst = {
+    space-computing_container-personal_pistorSS = {
       id = "a0000083-0000-4000-8000-000000000083";
-      url = "https://selfh.st/apps/";
+      url = "https://connect.raspberrypi.com/devices/7af88ae4-a215-4508-8aa1-b757e8be6b0d/screen-sharing-session";
       container = containers.Personal.id;
       workspace = spaces.Computing.id;
       position = 83;
+    };
+    space-computing_container-personal_Tailscale = {
+      id = "a0000084-0000-4000-8000-000000000084";
+      url = "https://login.tailscale.com/admin/machines";
+      container = containers.Personal.id;
+      workspace = spaces.Computing.id;
+      position = 84;
+    };
+    space-computing_container-personal_selfhst = {
+      id = "a0000085-0000-4000-8000-000000000085";
+      url = "https://selfh.st/apps/";
+      container = containers.Personal.id;
+      workspace = spaces.Computing.id;
+      position = 85;
     };
   };
 
@@ -778,6 +790,8 @@ in {
   "SIMS Student" = pins.space-school_container-school_SIMSStudent;
   "SOUN" = pins.space-school_container-school_SOUN;
   "ExamQ" = pins.space-school_container-school_ExamQ;
+  "Isaac A-Level" = pins.space-school_container-school_IsaacALevel;
+  "EduFileStorage" = pins.space-school_container-school_EduFileStorage;
   "Xtreme Mathematics" = pins.space-school_container-school_XtremePapers-Mathematics;
 
   # "Stem Racing" Space
