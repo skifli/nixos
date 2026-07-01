@@ -25,6 +25,9 @@ let
     "{ef87d84c-2127-493f-b952-5b4e744245bc}" = {
       amoSlug = "aw-watcher-web";
     };
+    "{e60174ce-b647-41a7-acda-11afc84191af}" = {
+      amoSlug = "zen-unload-tab";
+    };
     "adnauseam@rednoise.org" = {
       amoSlug = "adnauseam";
     };
