@@ -37,6 +37,12 @@
             # Disable media content if possible (can slow down loading)
             loadMedia = false; # Only text entries
           };
+
+          favorites = [
+            "system:run"
+            "clipboard:history"
+            "power:power-off"
+          ];
         };
       };
     };

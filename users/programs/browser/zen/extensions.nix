@@ -34,6 +34,9 @@ let
     "authenticator@mymindstorm" = {
       amoSlug = "auth-helper";
     };
+    "firefox@vicinae.com" = {
+      amoSlug = "vicinae";
+    };
     "78272b6fa58f4a1abaac99321d503a20@proton.me" = {
       amoSlug = "proton-pass";
     };
