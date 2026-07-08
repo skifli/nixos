@@ -147,7 +147,7 @@
 
         # https://cashmere.rs/blog/20250612002456-how-to-fix-screensharing-for-niri-wm-under-nixos/
         niri = {
-          default = [
+          default = pkgs.lib.mkForce [
             "kde"
             "wlr"
           ];

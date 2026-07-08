@@ -25,7 +25,7 @@
     noto-fonts-color-emoji
     prismlauncher
     javaPackages.compiler.temurin-bin.jdk-25 # For Prism Launcher
-    protonvpn-gui
+    proton-vpn
     qtscrcpy
     remmina
     scrcpy
