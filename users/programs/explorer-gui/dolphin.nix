@@ -58,15 +58,6 @@
       Speedbar Width=156
       View Style=DetailTree
 
-      [PreviewSettings]
-      EnableRemoteFolderThumbnail=true
-      MaximumRemoteSize=-1
-      UseDefaultRemotePreviewSizeLimit=false
-      RemotePreviewSizeLimit=-1
-
-      Plugins=imagethumbnail,jpegthumbnail,directorythumbnail,ffmpegthumbs,exethumbnail,comicbookthumbnail,office Marcothumbnail
-      RemotePlugins=imagethumbnail,jpegthumbnail,directorythumbnail,ffmpegthumbs,exethumbnail,comicbookthumbnail,officeMarcothumbnail
-
       [General]
       TerminalApplication=${userVars.programs.terminal}
       TerminalService=${
@@ -74,6 +65,24 @@
         then "com.mitchellh.ghostty"
         else userVars.programs.terminal
       }.desktop
+    '';
+
+    xdg.configFile."dolphinrc".text = ''
+      MenuBar=Disabled
+
+      [General]
+      ShowFullPathInTitlebar=true
+
+      [MainWindow]
+      MenuBar=Disabled
+
+      [PreviewSettings]
+      EnableRemoteFolderThumbnail=true
+      MaximumRemoteSize=-1
+      UseDefaultRemotePreviewSizeLimit=false
+      RemotePreviewSizeLimit=-1
+      Plugins=imagethumbnail,jpegthumbnail,directorythumbnail,ffmpegthumbs,exethumbnail,comicbookthumbnail,officeMarcothumbnail
+      RemotePlugins=imagethumbnail,jpegthumbnail,directorythumbnail,ffmpegthumbs,exethumbnail,comicbookthumbnail,officeMarcothumbnail
     '';
   };
 }
