@@ -1,0 +1,1 @@
+If terminal exits when building - try boot not switch, and in TTY - https://discourse.nixos.org/t/upgrade-command-experience/78097/2
