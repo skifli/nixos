@@ -35,6 +35,6 @@
     mpv
   ];
 
-  programs.adb.enable = true;
-  # For DroidCam
+    # `programs.adb` is deprecated in newer NixOS (systemd 258+ handles uaccess)
+    # Install `adb` via `pkgs.android-tools` at the system level instead.
 }
