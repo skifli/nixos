@@ -121,6 +121,8 @@
             };
           };
 
+          xdg.userDirs.setSessionVariables = false;
+
           stateVersion = "25.05"; # DO NOT CHANGE!
         };
       })
