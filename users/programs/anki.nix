@@ -295,7 +295,7 @@ in {
       ];
       spacebarRatesCard = true;
       style = "anki";
-      sync = {
+      profiles."User 1".sync = {
         autoSync = true;
         autoSyncMediaMinutes = 60;
         keyFile = "/home/${userVars.username}/.config/anki-keyFile";
