@@ -59,6 +59,7 @@
           userDirs = {
             enable = true;
             createDirectories = true;
+            setSessionVariables = false;
           };
         };
 
@@ -120,8 +121,6 @@
               recursive = true;
             };
           };
-
-          xdg.userDirs.setSessionVariables = false;
 
           stateVersion = "25.05"; # DO NOT CHANGE!
         };
