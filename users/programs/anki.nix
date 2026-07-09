@@ -50,7 +50,7 @@
       owner = "Rytisgit";
       repo = "Anki-StylusDraw";
       rev = finalAttrs.version;
-      hash = "";
+      hash = "sha256-0lTYOugrDeJa9iUc8WXpF6Eez3s2KSJrDgnECbrl2lQ=";
     };
     sourceRoot = "${finalAttrs.src.name}/AnkiDraw";
   });
