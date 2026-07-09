@@ -110,6 +110,9 @@
       open-on-output = "DP-1";
     };
   };
+  niri.input = {
+    
+  };
 
   screen-lock-timeout = 5;
   screen-blank-timeout = 15;
