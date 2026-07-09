@@ -77,6 +77,7 @@
       [General]
       ShowFullPathInTitlebar=true
       Version=202
+      ViewPropsTimestamp=2026,7,9,16,52,45.737
 
       [KFileDialog Settings]
       Places Icons Auto-resize=true
