@@ -58,6 +58,10 @@
       Speedbar Width=156
       View Style=DetailTree
 
+      [PreviewSettings]
+      EnableRemoteFolderThumbnail=true
+      MaximumRemoteSize=104857600
+
       [General]
       TerminalApplication=${userVars.programs.terminal}
       TerminalService=${
@@ -72,17 +76,17 @@
 
       [General]
       ShowFullPathInTitlebar=true
+      Version=202
 
       [MainWindow]
       MenuBar=Disabled
 
       [PreviewSettings]
       EnableRemoteFolderThumbnail=true
-      MaximumRemoteSize=-1
-      UseDefaultRemotePreviewSizeLimit=false
-      RemotePreviewSizeLimit=-1
+      MaximumRemoteSize=104857600
       Plugins=imagethumbnail,jpegthumbnail,directorythumbnail,ffmpegthumbs,exethumbnail,comicbookthumbnail,officeMarcothumbnail
       RemotePlugins=imagethumbnail,jpegthumbnail,directorythumbnail,ffmpegthumbs,exethumbnail,comicbookthumbnail,officeMarcothumbnail
-    '';
+      RemotePreviewSizeLimit=104857600
+      UseDefaultRemotePreviewSizeLimit=false'';
   };
 }
