@@ -78,6 +78,10 @@
       ShowFullPathInTitlebar=true
       Version=202
 
+      [KFileDialog Settings]
+      Places Icons Auto-resize=true
+      Places Icons Static Size=0
+
       [MainWindow]
       MenuBar=Disabled
 
