@@ -43,6 +43,18 @@
     sourceRoot = "${finalAttrs.src.name}";
   });
 
+  anki-stylus-draw = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
+    pname = "anki-stylusdraw";
+    version = "dd8c82b";
+    src = pkgs.fetchFromGitHub {
+      owner = "Rytisgit";
+      repo = "Anki-StylusDraw";
+      rev = finalAttrs.version;
+      hash = "";
+    };
+    sourceRoot = "${finalAttrs.src.name}/AnkiDraw";
+  });
+
   /*
   anki-redesign-plus = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
     pname = "anki-redesign-plus";
@@ -145,6 +157,7 @@ in {
         })
         aw-watcher-anki
         anki-quizlet-importer-extended # More up to date than their version (which as of writing is 2025.03.13)
+        anki-stylus-draw
         # onigiri-anki
         (advanced-review-bottom-bar.withConfig {
           config = {
