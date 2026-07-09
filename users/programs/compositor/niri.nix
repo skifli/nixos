@@ -45,7 +45,7 @@
             keyboard = {
               repeat-delay = 300;
             };
-          };
+          } // hostVars.niri.input;
 
           gestures.hot-corners.enable = false;
 

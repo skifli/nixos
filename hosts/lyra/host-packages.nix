@@ -10,20 +10,7 @@
     gst_all_1.gst-plugins-ugly
     libpulseaudio # FIREFOX REQUIRES
 
-    opentabletdriver # Tablet input
     rkdeveloptool # For FydeTab Duo flashing
     smartmontools # https://wiki.nixos.org/wiki/Smartmontools
   ];
-
-  systemd.user.services.opentabletdriver = {
-    description = "Open source, cross-platform, user-mode tablet driver";
-    wantedBy = ["graphical-session.target"];
-    partOf = ["graphical-session.target"];
-
-    serviceConfig = {
-      Type = "simple";
-      ExecStart = "${pkgs.opentabletdriver}/bin/otd-daemon";
-      Restart = "on-failure";
-    };
-  };
 }

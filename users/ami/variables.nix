@@ -235,6 +235,7 @@ rec {
       "kde-connect"
       "lan-mouse"
       "nix-direnv"
+      "opentabletdriver"
       "safeeyes"
       "steam"
       "styles"
