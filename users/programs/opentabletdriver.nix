@@ -14,5 +14,5 @@
 
   # Required by OpenTabletDriver
   hardware.uinput.enable = true;
-  boot.kernelModules = [ "uinput" ];
+  boot.kernelModules = ["uinput"];
 }

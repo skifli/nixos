@@ -34,18 +34,20 @@
             path = lib.getExe pkgs.xwayland-satellite;
           };
 
-          input = {
-            focus-follows-mouse.enable = true;
-            warp-mouse-to-focus.enable = true; # Warp pointer to focused window
+          input =
+            {
+              focus-follows-mouse.enable = true;
+              warp-mouse-to-focus.enable = true; # Warp pointer to focused window
 
-            mouse = {
-              accel-profile = "adaptive";
-            };
+              mouse = {
+                accel-profile = "adaptive";
+              };
 
-            keyboard = {
-              repeat-delay = 300;
-            };
-          } // hostVars.niri.input;
+              keyboard = {
+                repeat-delay = 300;
+              };
+            }
+            // hostVars.niri.input;
 
           gestures.hot-corners.enable = false;
 

@@ -111,7 +111,6 @@
     };
   };
   niri.input = {
-    
   };
 
   screen-lock-timeout = 5;
