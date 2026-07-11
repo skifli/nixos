@@ -10,7 +10,7 @@
     sharedModules = [inputs.vicinae.homeManagerModules.default];
 
     users.${userVars.username} = {
-      home.packages = [
+      home.packages = with pkgs; [
         sqlite-interactive # Needed for Zed recent projects extension
       ];
 
