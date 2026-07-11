@@ -183,11 +183,11 @@
               };
 
               entrypoints = {
-                manage-saved-networks = { alias = "wn"; };
-                restart-wifi = { alias = "wre"; };
-                scan-wifi = { alias = "ws"; };
-                toggle-wifi-off = { alias = "won"; };
-                toggle-wifi-on = { alias = "wof"; };
+                manage-saved-networks = {alias = "wn";};
+                restart-wifi = {alias = "wre";};
+                scan-wifi = {alias = "ws";};
+                toggle-wifi-off = {alias = "won";};
+                toggle-wifi-on = {alias = "wof";};
               };
             };
 
@@ -201,34 +201,38 @@
 
             "@knoopx/store.vicinae.firefox" = {
               preferences = {
-                profile_dir = if builtins.elem "zen-beta" userVars.programs.browsers 
-                              then ".config/zen" 
-                              else ".mozilla/firefox";
+                profile_dir =
+                  if builtins.elem "zen-beta" userVars.programs.browsers
+                  then ".config/zen"
+                  else ".mozilla/firefox";
               };
 
               entrypoints = {
-                bookmarks = { alias = "fb"; enabled = false; };
-                history = { alias = "fh"; };
+                bookmarks = {
+                  alias = "fb";
+                  enabled = false;
+                };
+                history = {alias = "fh";};
               };
             };
 
             "@knoopx/store.vicinae.niri" = {
               entrypoints = {
-                layers = { alias = "nla"; };
-                outputs = { alias = "nou"; };
-                pick-color = { alias = "cp"; };
-                windows = { alias = "nwi"; };
-                workspaces = { alias = "nwo"; };
+                layers = {alias = "nla";};
+                outputs = {alias = "nou";};
+                pick-color = {alias = "cp";};
+                windows = {alias = "nwi";};
+                workspaces = {alias = "nwo";};
               };
             };
 
             "@knoopx/store.vicinae.nix" = {
               entrypoints = {
-                flake-packages = { alias = "nfp"; };
-                home-manager-options = { alias = "hm"; };
-                options = { alias = "no"; };
-                packages = { alias = "np"; };
-                pull-requests = { enabled = false; };
+                flake-packages = {alias = "nfp";};
+                home-manager-options = {alias = "hm";};
+                options = {alias = "no";};
+                packages = {alias = "np";};
+                pull-requests = {enabled = false;};
               };
             };
 
@@ -290,7 +294,7 @@
 
             core = {
               entrypoints = {
-                sponsor = { enabled = false; };
+                sponsor = {enabled = false;};
               };
             };
 
@@ -301,8 +305,8 @@
             files = {
               preferences = {
                 autoIndexing = true;
-                excludedIndexingPaths = [ ];
-                indexingPaths = (map (share: share.mountPoint) userVars.networkMounts.nfsShares);
+                excludedIndexingPaths = [];
+                indexingPaths = map (share: share.mountPoint) userVars.networkMounts.nfsShares;
               };
             };
 
@@ -320,13 +324,13 @@
 
             power = {
               entrypoints = {
-                hibernate = { alias = "hb"; };
-                lock = { alias = "lc"; };
-                logout = { alias = "lo"; };
-                power-off = { alias = "sd"; };
-                reboot = { alias = "rb"; };
-                soft-reboot = { alias = "sr"; };
-                suspend = { alias = "ss"; };
+                hibernate = {alias = "hb";};
+                lock = {alias = "lc";};
+                logout = {alias = "lo";};
+                power-off = {alias = "sd";};
+                reboot = {alias = "rb";};
+                soft-reboot = {alias = "sr";};
+                suspend = {alias = "ss";};
               };
             };
 
@@ -339,22 +343,22 @@
                 undo = true;
               };
               entrypoints = {
-                create = { alias = "sc"; };
-                manage = { alias = "sm"; };
+                create = {alias = "sc";};
+                manage = {alias = "sm";};
               };
             };
 
             system = {
               entrypoints = {
-                run = { alias = "cmd"; };
-                toggle-mute = { enabled = false; };
-                volume-0 = { enabled = false; };
-                volume-100 = { enabled = false; };
-                volume-25 = { enabled = false; };
-                volume-50 = { enabled = false; };
-                volume-75 = { enabled = false; };
-                volume-down = { enabled = false; };
-                volume-up = { enabled = false; };
+                run = {alias = "cmd";};
+                toggle-mute = {enabled = false;};
+                volume-0 = {enabled = false;};
+                volume-100 = {enabled = false;};
+                volume-25 = {enabled = false;};
+                volume-50 = {enabled = false;};
+                volume-75 = {enabled = false;};
+                volume-down = {enabled = false;};
+                volume-up = {enabled = false;};
               };
             };
 
