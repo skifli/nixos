@@ -3,6 +3,10 @@
   userVars,
   ...
 }: {
+  nixpkgs.overlays = [
+    inputs.dolphin-overlay.overlays.default
+  ]; # Add https://github.com/rumboon/dolphin-overlay
+
   environment.etc."xdg/menus/applications.menu".source = "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu"; # TODO: 3REMOVE AFTER https://github.com/NixOS/nixpkgs/issues/409986 IS SOLVED
 
   home-manager.users.${userVars.username} = {
@@ -80,8 +84,8 @@
       ViewPropsTimestamp=2026,7,9,16,52,45.737
 
       [KFileDialog Settings]
-      Places Icons Auto-resize=true
-      Places Icons Static Size=0
+      Places Icons Auto-resize=false
+      Places Icons Static Size=22
 
       [MainWindow]
       MenuBar=Disabled

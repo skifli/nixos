@@ -46,6 +46,7 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
+    dolphin-overlay.url = "github:rumboon/dolphin-overlay";
     vicinae.url = "github:vicinaehq/vicinae"; # Following nixpkgs makes cache miss
     anki-mcp.url = "github:ankimcp/anki-mcp-server-addon";
   };
