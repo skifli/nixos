@@ -4,9 +4,11 @@
   userVars,
   ...
 }: {
-  /* nixpkgs.overlays = [
+  /*
+     nixpkgs.overlays = [
     inputs.dolphin-overlay.overlays.default # Not working - TODO: Fix myself later!?
-  ]; # Add https://github.com/MattiDragon/dolphin-overlay */
+  ]; # Add https://github.com/MattiDragon/dolphin-overlay
+  */
 
   environment.etc."xdg/menus/applications.menu".source = "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu"; # TODO: 3REMOVE AFTER https://github.com/NixOS/nixpkgs/issues/409986 IS SOLVED
 
