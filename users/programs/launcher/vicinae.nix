@@ -110,7 +110,7 @@
 
         extensions = with inputs.vicinae-extensions.packages.${pkgs.stdenv.hostPlatform.system}; [
           clean-keyboard
-          dbus
+          # dbus # Packaging is disabled - https://github.com/vicinaehq/extensions/pull/61
           firefox
           it-tools
           niri
