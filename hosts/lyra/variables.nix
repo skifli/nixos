@@ -120,7 +120,7 @@
   consoleKeymap = "uk"; # TTY keymap
   keyboardLayout = "gb"; # Keyboard layout
 
-  kbdVariant = "extd"; # Keyboard variant (can be empty)
+  kbdVariant = ""; # Keyboard variant (can be empty)
 
   latitude = 51.5;
   longitude = -0.1;
