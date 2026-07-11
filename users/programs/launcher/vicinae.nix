@@ -126,6 +126,7 @@
         settings = {
           favorites = [
             "system:run"
+            "files:search"
             "clipboard:history"
             "power:power-off"
           ];
@@ -300,6 +301,11 @@
             };
 
             files = {
+              entrypoints = {
+                search = {
+                  alias = "fs";
+                };
+              };
               preferences = {
                 autoIndexing = true;
                 excludedIndexingPaths = [];
