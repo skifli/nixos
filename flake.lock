@@ -168,24 +168,6 @@
         "type": "github"
       }
     },
-    "dolphin-overlay": {
-      "inputs": {
-        "nixpkgs": "nixpkgs_3"
-      },
-      "locked": {
-        "lastModified": 1781450544,
-        "narHash": "sha256-2zUyvozxbMl/GLaQZGpJ/Bu0dS8JfbLuEy0zF4fg3wU=",
-        "owner": "rumboon",
-        "repo": "dolphin-overlay",
-        "rev": "65dd612c8d72d4cf5cb0eb4d9188ed7a16a042dd",
-        "type": "github"
-      },
-      "original": {
-        "owner": "rumboon",
-        "repo": "dolphin-overlay",
-        "type": "github"
-      }
-    },
     "firefox-gnome-theme": {
       "flake": false,
       "locked": {
