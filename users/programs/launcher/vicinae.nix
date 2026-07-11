@@ -106,10 +106,6 @@
         systemd = {
           autoStart = true;
           enable = true;
-
-          environment = {
-            USE_LAYER_SHELL = 1;
-          };
         };
 
         extensions = with inputs.vicinae-extensions.packages.${pkgs.stdenv.hostPlatform.system}; [
