@@ -2,6 +2,7 @@
   hostVars,
   inputs,
   lib,
+  pkgs,
   userVars,
   ...
 }: {
