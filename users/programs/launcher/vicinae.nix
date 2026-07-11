@@ -1,5 +1,5 @@
 {
-  hostVars,
+  commonHostVars,
   inputs,
   lib,
   pkgs,
@@ -140,7 +140,7 @@
             rendering = "native";
 
             normal = {
-              family = hostVars.fonts.sansSerif.name;
+              family = commonHostVars.fonts.sansSerif.name;
               size = 10;
             };
           };
@@ -148,12 +148,12 @@
           theme = {
             dark = {
               name = "stylix";
-              icon_theme = hostVars.icons.dark;
+              icon_theme = commonHostVars.icons.dark;
             };
 
             light = {
               name = "stylix";
-              icon_theme = hostVars.icons.light;
+              icon_theme = commonHostVars.icons.light;
             };
           };
 
