@@ -12,7 +12,11 @@
 
   environment.etc."xdg/menus/applications.menu".source = "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu"; # TODO: REMOVE AFTER https://github.com/NixOS/nixpkgs/issues/409986 IS SOLVED
 
-  home-manager.users.${userVars.username} = { config, lib, ... }: {
+  home-manager.users.${userVars.username} = {
+    config,
+    lib,
+    ...
+  }: {
     home = {
       packages = with pkgs; [
         kdePackages.dolphin
@@ -44,34 +48,34 @@
       ];
 
       activation.setupDolphinrc = lib.hm.dag.entryAfter ["writeBoundary"] ''
-        TARGET_FILE="${config.xdg.configHome}/dolphinrc"
-        
-        if [ ! -f "$TARGET_FILE" ]; then
-          mkdir -p "$(dirname "$TARGET_FILE")"
-          cat << 'EOF' > "$TARGET_FILE"
-MenuBar=Disabled
+                TARGET_FILE="${config.xdg.configHome}/dolphinrc"
 
-[General]
-ShowFullPathInTitlebar=true
-Version=202
-ViewPropsTimestamp=2026,7,9,16,52,45.737
+                if [ ! -f "$TARGET_FILE" ]; then
+                  mkdir -p "$(dirname "$TARGET_FILE")"
+                  cat << 'EOF' > "$TARGET_FILE"
+        MenuBar=Disabled
 
-[KFileDialog Settings]
-Places Icons Auto-resize=true
-Places Icons Static Size=0
+        [General]
+        ShowFullPathInTitlebar=true
+        Version=202
+        ViewPropsTimestamp=2026,7,9,16,52,45.737
 
-[MainWindow]
-MenuBar=Disabled
+        [KFileDialog Settings]
+        Places Icons Auto-resize=true
+        Places Icons Static Size=0
 
-[PreviewSettings]
-EnableRemoteFolderThumbnail=true
-MaximumRemoteSize=104857600
-Plugins=imagethumbnail,jpegthumbnail,directorythumbnail,ffmpegthumbs,exethumbnail,comicbookthumbnail,officeMarcothumbnail
-RemotePlugins=imagethumbnail,jpegthumbnail,directorythumbnail,ffmpegthumbs,exethumbnail,comicbookthumbnail,officeMarcothumbnail
-RemotePreviewSizeLimit=104857600
-UseDefaultRemotePreviewSizeLimit=false
-EOF
-        fi
+        [MainWindow]
+        MenuBar=Disabled
+
+        [PreviewSettings]
+        EnableRemoteFolderThumbnail=true
+        MaximumRemoteSize=104857600
+        Plugins=imagethumbnail,jpegthumbnail,directorythumbnail,ffmpegthumbs,exethumbnail,comicbookthumbnail,officeMarcothumbnail
+        RemotePlugins=imagethumbnail,jpegthumbnail,directorythumbnail,ffmpegthumbs,exethumbnail,comicbookthumbnail,officeMarcothumbnail
+        RemotePreviewSizeLimit=104857600
+        UseDefaultRemotePreviewSizeLimit=false
+        EOF
+                fi
       '';
     };
 
