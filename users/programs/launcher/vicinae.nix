@@ -118,7 +118,7 @@
           port-killer
           process-manager
           protondb-search
-          systemd
+          # systemd # Same as above...
           wifi-commander
           zed-recents
         ]; # Extension names can be found here https://github.com/vicinaehq/extensions/tree/main/extensions
