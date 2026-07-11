@@ -48,6 +48,7 @@
 
     dolphin-overlay.url = "github:rumboon/dolphin-overlay";
     vicinae.url = "github:vicinaehq/vicinae"; # Following nixpkgs makes cache miss
+    vicinae-extensions.url = "github:vicinaehq/extensions";
     anki-mcp.url = "github:ankimcp/anki-mcp-server-addon";
   };
 
