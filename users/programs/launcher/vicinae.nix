@@ -158,7 +158,7 @@
           };
 
           launcher_window = {
-            opacity = 0.95;
+            opacity = lib.mkForce 0.95;
 
             compact_mode = {
               enabled = false;
