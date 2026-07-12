@@ -309,7 +309,13 @@
               preferences = {
                 autoIndexing = true;
                 excludedIndexingPaths = [];
-                indexingPaths = map (share: share.mountPoint) userVars.networkMounts.nfsShares;
+                indexingPaths = map (share: share.mountPoint) userVars.networkMounts.nfsShares ++ [
+                  "/home/${userVars.username}/Downloads"
+                  "/home/${userVars.username}/Documents"
+                  "/home/${userVars.username}/Pictures"
+                  "/home/${userVars.username}/Videos"
+                  "/home/${userVars.username}/nixos"
+                ];
               };
             };
 
