@@ -46,9 +46,10 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
+    affinity-nix.url = "github:mrshmllow/affinity-nix";
+    anki-mcp.url = "github:ankimcp/anki-mcp-server-addon";
     vicinae.url = "github:vicinaehq/vicinae"; # Following nixpkgs makes cache miss
     vicinae-extensions.url = "github:vicinaehq/extensions";
-    anki-mcp.url = "github:ankimcp/anki-mcp-server-addon";
   };
 
   outputs = {
