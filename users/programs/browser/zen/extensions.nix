@@ -37,6 +37,9 @@ let
     "firefox@vicinae.com" = {
       amoSlug = "vicinae";
     };
+    "anti-social@conniptions.org" = {
+      amoSlug = "anti-social-blocker";
+    };
     "78272b6fa58f4a1abaac99321d503a20@proton.me" = {
       amoSlug = "proton-pass";
     };
