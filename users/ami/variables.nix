@@ -229,6 +229,7 @@ rec {
     vpn = "tailscale";
 
     other = [
+      "affinity"
       "anki"
       "aw"
       "earlyoom"

@@ -7,6 +7,7 @@
     "https://nix-community.cachix.org/"
     "https://vicinae.cachix.org/"
     "https://nixpkgs-python.cachix.org"
+    "https://cache.garnix.io"
   ];
 
   trusted-public-keys = [
@@ -17,5 +18,6 @@
     "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     "vicinae.cachix.org-1:1kDrfienkGHPYbkpNj1mWTr7Fm1+zcenzgTizIcI3oc="
     "nixpkgs-python.cachix.org-1:hxjI7pFxTyuTHn2NkvWCrAUcNZLNS3ZAvfYNuYifcEU="
+    "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
   ];
 }
