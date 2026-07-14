@@ -14,6 +14,8 @@
         "nofail"
         "auto"
         "x-systemd.automount"
+        "x-systemd.after=network-online.target"
+        "x-systemd.requires=network-online.target"
         "x-systemd.idle-timeout=600"
         "x-systemd.device-timeout=5s"
         "x-systemd.mount-timeout=5s"
