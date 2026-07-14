@@ -40,7 +40,7 @@
     xdg.mimeApps.defaultApplications = {
       "application/pdf" = "org.gnome.Evince.desktop";
     };
-  }
+  };
 
   # `programs.adb` is deprecated in newer NixOS (systemd 258+ handles uaccess)
   # Install `adb` via `pkgs.android-tools` at the system level instead.
