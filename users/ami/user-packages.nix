@@ -21,6 +21,7 @@
       # kdePackages.kate # Also installs kwrite
       kdePackages.qtwayland # Needed by typstwriter
       # kicad
+      ocrmypdf
       normcap
       noto-fonts
       noto-fonts-color-emoji
