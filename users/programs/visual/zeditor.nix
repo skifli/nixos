@@ -4,6 +4,7 @@
       enable = true;
 
       extensions = [
+        "codebook"
         "git-firefly"
         "markdownlint"
         "nix"
