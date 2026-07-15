@@ -9,7 +9,7 @@
       cameractrls
       cameractrls-gtk4
       # cherry-studio # This, kicad, and 1 below removed due to the builders not already having it and rebuilding was taking forever
-      # davinci-resolve #
+      # davinci-resolve
       droidcam
       evince # Document viewer
       ferdium
