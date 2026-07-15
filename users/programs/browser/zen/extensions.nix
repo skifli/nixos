@@ -43,6 +43,9 @@ let
     "78272b6fa58f4a1abaac99321d503a20@proton.me" = {
       amoSlug = "proton-pass";
     };
+    "{DDC359D1-844A-42a7-9AA1-88A850A938A8}" = {
+      amoSlug = "downthemall";
+    };
   };
 
   extensionSettingsFromAmo = builtins.mapAttrs (_: mkForceInstalled) amoExtensions;
