@@ -79,6 +79,12 @@
 
     xdg.mimeApps.defaultApplications = {
       "inode/directory" = ["dolphin.desktop"];
+      "application/zip" = ["org.kde.ark.desktop"];
+      "application/x-7z-compressed" = ["org.kde.ark.desktop"];
+      "application/x-bzip-compressed-tar" = ["org.kde.ark.desktop"];
+      "application/x-compressed-tar" = ["org.kde.ark.desktop"];
+      "application/x-rar" = ["org.kde.ark.desktop"];
+      "application/x-tar" = ["org.kde.ark.desktop"];
       # "application/x-gnome-saved-search" = [ "dolphin.desktop" ];
     };
 

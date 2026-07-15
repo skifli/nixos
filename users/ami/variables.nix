@@ -50,7 +50,7 @@ rec {
         {command = ["anki"];}
         {command = ["anytype"];}
         # { command = [ "cherry-studio" ]; }
-        {command = ["evince"];}
+        # {command = ["evince"];}
         {command = ["ferdium"];}
         {command = ["kdeconnect-indicator"];}
         {command = ["ktailctl"];}
@@ -94,6 +94,7 @@ rec {
         open-on-workspace = "3";
         open-maximized = true;
       }
+      /*
       {
         matches = [
           {
@@ -104,6 +105,7 @@ rec {
         open-on-workspace = "3";
         open-maximized = true;
       }
+      */
       {
         matches = [
           {
