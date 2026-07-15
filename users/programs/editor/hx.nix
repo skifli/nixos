@@ -16,6 +16,7 @@
       settings = {
         editor = {
           line-number = "absolute";
+          soft-wrap.enable = true;
         };
       };
     };
