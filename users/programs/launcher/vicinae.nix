@@ -12,6 +12,7 @@
     users.${userVars.username} = {
       home.packages = with pkgs; [
         sqlite-interactive # Needed for Zed recent projects extension
+        didyoumean
       ];
 
       xdg.dataFile."vicinae/snippets/snippets.json".text = ''

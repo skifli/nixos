@@ -46,6 +46,9 @@ let
     "{DDC359D1-844A-42a7-9AA1-88A850A938A8}" = {
       amoSlug = "downthemall";
     };
+    "{d7742d87-e61d-4b78-b8a1-b469842139fa}" = {
+      amoSlug = "vimium-ff";
+    };
   };
 
   extensionSettingsFromAmo = builtins.mapAttrs (_: mkForceInstalled) amoExtensions;
