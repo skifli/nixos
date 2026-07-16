@@ -94,7 +94,6 @@ rec {
         open-on-workspace = "3";
         open-maximized = true;
       }
-      /*
       {
         matches = [
           {
@@ -102,10 +101,9 @@ rec {
           }
         ];
 
-        open-on-workspace = "3";
+        # open-on-workspace = "3";
         open-maximized = true;
       }
-      */
       {
         matches = [
           {
