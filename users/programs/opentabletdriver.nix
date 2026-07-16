@@ -14,8 +14,8 @@
 
   systemd.user.services.opentabletdriver = {
     Unit = {
-      After = [ "graphical-session.target" ];
-      PartOf = [ "graphical-session.target" ];
+      After = ["graphical-session.target"];
+      PartOf = ["graphical-session.target"];
     };
   }; # Till https://github.com/OpenTabletDriver/OpenTabletDriver/issues/4885 is resolved
 
