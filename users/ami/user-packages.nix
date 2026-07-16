@@ -21,7 +21,7 @@
       kdePackages.gwenview # Image viewer
       # kdePackages.kate # Also installs kwrite
       kdePackages.qtwayland # Needed by typstwriter
-      # kicad
+      kicad
       ocrmypdf
       normcap
       noto-fonts
