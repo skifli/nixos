@@ -13,8 +13,8 @@
   hardware.opentabletdriver.enable = true;
 
   systemd.user.services.opentabletdriver = {
-    after = [ "graphical-session.target" ];
-    partOf = [ "graphical-session.target" ];
+    after = ["graphical-session.target"];
+    partOf = ["graphical-session.target"];
   };
   # Till https://github.com/OpenTabletDriver/OpenTabletDriver/issues/4885 is resolved
 
