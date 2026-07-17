@@ -69,6 +69,11 @@
           fi
         ''; # Source: https://gist.github.com/ctechols/ca1035271ad134841284
 
+        interactiveShellInit = ''
+          eval "$(pay-respects zsh)"
+          # Or use eval "$(pay-respects zsh --inline)" for inline mode
+        '';
+
         syntaxHighlighting = {
           enable = true;
         };
