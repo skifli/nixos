@@ -222,6 +222,7 @@ rec {
     network-mounts = "nfs";
     partition-manager = "kde";
     prompt = "starship";
+    screen-recorder = "gpu-screen-recorder";
     shell = "zsh";
     system-monitor = "missioncenter";
     terminal = "ghostty";
