@@ -7,6 +7,10 @@
 }: {
   home-manager.users.${userVars.username} = {
     home.packages = with pkgs; [
+      bat
+      fd
+      pay-respects
+
       # Packages for zsh plugins
       chroma
       eza
@@ -67,6 +71,11 @@
 
         syntaxHighlighting = {
           enable = true;
+        };
+
+        shellAliases = {
+          cat = "bat";
+          f = "pay-respects";
         };
 
         history.size = 100000;
