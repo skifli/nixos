@@ -40,7 +40,7 @@
 
               focus-follows-mouse = {
                 enable = true;
-                max-scroll-amount = "10%" # Allow focus-follows-mouse when it results in scrolling at most 10% of the screen.
+                max-scroll-amount = "10%"; # Allow focus-follows-mouse when it results in scrolling at most 10% of the screen.
               };
 
               mouse = {
