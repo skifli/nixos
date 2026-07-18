@@ -26,6 +26,7 @@
             libdisplay-info = pkgs.libdisplay-info_0_2;
           }; # Fix for https://github.com/sodiboo/niri-flake/issues/1406
         settings = {
+          animations.enable = false; # I get a tad motion sick sometimes eurgh
           prefer-no-csd = true;
           hotkey-overlay.skip-at-startup = true;
 
