@@ -30,6 +30,7 @@ rec {
     "anytype"
     "ferdium"
     "remmina"
+    "zen-beta"
   ];
 
   scroll-cooldown-ms = 150; # Cooldown for scroll events (for workspace switching and column focus switching)
@@ -99,7 +100,7 @@ rec {
           }
         ];
 
-        open-on-workspace = "6";
+        open-on-workspace = "5";
         open-maximized = true;
       }
       {
@@ -109,7 +110,7 @@ rec {
           }
         ];
 
-        open-on-workspace = "7";
+        open-on-workspace = "6";
         open-maximized = true;
       }
       ## https://www.reddit.com/r/niri/comments/1skrhet/steam_notifications_appear_in_the_center_of_the/

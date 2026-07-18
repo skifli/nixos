@@ -210,11 +210,12 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions; {
   "Mod+Shift+8" = {
     action = focus-workspace "8";
   };
-  "Mod+Shift+9" = {
-    action = focus-workspace "9";
+
+  "Alt+Tab" = {
+    action = focus-workspace-previous;
   };
-  "Mod+Shift+0" = {
-    action = focus-workspace "10";
+  "Alt+Ctrl+Tab" = {
+    action = focus-window-previous;
   };
 
   # LAYOUT

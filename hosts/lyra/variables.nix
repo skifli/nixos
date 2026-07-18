@@ -98,10 +98,10 @@
     "4" = {
       open-on-output = "HDMI-A-2";
     };
-    "5" = {
-      open-on-output = "HDMI-A-2";
-    };
 
+    "5" = {
+      open-on-output = "DP-1";
+    };
     "6" = {
       open-on-output = "DP-1";
     };
@@ -109,12 +109,6 @@
       open-on-output = "DP-1";
     };
     "8" = {
-      open-on-output = "DP-1";
-    };
-    "9" = {
-      open-on-output = "DP-1";
-    };
-    "10" = {
       open-on-output = "DP-1";
     };
   };
