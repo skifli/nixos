@@ -28,27 +28,30 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions; {
     action = spawn (
       if userVars.programs.terminal == "ghostty"
       then ["ghostty" "+new-window"]
-      else ["app2unit" "-T"]
+      else [userVars.programs.terminal]
     );
     hotkey-overlay.title = "Terminal";
   };
   "Mod+F" = {
     action = spawn [
-      "app2unit"
       userVars.programs.explorer-gui
     ];
     hotkey-overlay.title = "File manager";
   };
   "Mod+V" = {
     action = spawn [
-      "app2unit"
       userVars.programs.visual
     ];
     hotkey-overlay.title = "Visual editor";
   };
+  "Mod+E" = {
+    action = spawn [
+      userVars.programs.editor
+    ];
+    hotkey-overlay.title = "Text editor";
+  };
   "Ctrl+Shift+Escape" = {
     action = spawn [
-      "app2unit"
       userVars.programs.system-monitor
     ];
     hotkey-overlay.title = "System monitor";
@@ -85,10 +88,12 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions; {
     action = maximize-column;
     hotkey-overlay.title = "Maximize column";
   };
+  /* - I do not use
   "Mod+T" = {
     action = toggle-column-tabbed-display;
     hotkey-overlay.title = "Toggle tabbed view";
   };
+  */
   "Mod+R" = {
     action = switch-preset-column-width;
     hotkey-overlay.title = "Cycle column width preset";
@@ -146,31 +151,69 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions; {
     action = focus-column-right;
     hotkey-overlay.title = "Focus right";
   };
+  "Mod+Shift+WheelScrollDown" = {
+    action = focus-column-right;
+    cooldown-ms = userVars.scroll-cooldown-ms;
+  };
+  "Mod+Shift+WheelScrollUp" = {
+    action = focus-column-left;
+    cooldown-ms = userVars.scroll-cooldown-ms;
+  };
 
   # WORKSPACES
   "Mod+1" = {
-    action = focus-workspace "1";
+    action = focus-monitor-left;
   };
   "Mod+2" = {
+    action = focus-monitor-right;
+  };
+  "Mod+WheelScrollDown" = {
+    action = focus-workspace-down;
+    cooldown-ms = userVars.scroll-cooldown-ms;
+  };
+  "Mod+WheelScrollUp" = {
+    action = focus-workspace-up;
+    cooldown-ms = userVars.scroll-cooldown-ms;
+  };
+
+  "Mod+Ctrl+WheelScrollDown" = {
+    action = move-column-to-workspace-down;
+    cooldown-ms = userVars.scroll-cooldown-ms;
+  };
+  "Mod+Ctrl+WheelScrollUp" = {
+    action = move-column-to-workspace-up;
+    cooldown-ms = userVars.scroll-cooldown-ms;
+  };
+
+  "Mod+Shift+1" = {
+    action = focus-workspace "1";
+  };
+  "Mod+Shift+2" = {
     action = focus-workspace "2";
   };
-  "Mod+3" = {
+  "Mod+Shift+3" = {
     action = focus-workspace "3";
   };
-  "Mod+4" = {
+  "Mod+Shift+4" = {
     action = focus-workspace "4";
   };
-  "Mod+5" = {
+  "Mod+Shift+5" = {
     action = focus-workspace "5";
   };
-  "Mod+6" = {
+  "Mod+Shift+6" = {
     action = focus-workspace "6";
   };
-  "Mod+7" = {
+  "Mod+Shift+7" = {
     action = focus-workspace "7";
   };
-  "Mod+8" = {
+  "Mod+Shift+8" = {
     action = focus-workspace "8";
+  };
+  "Mod+Shift+9" = {
+    action = focus-workspace "9";
+  };
+  "Mod+Shift+0" = {
+    action = focus-workspace "10";
   };
 
   # LAYOUT

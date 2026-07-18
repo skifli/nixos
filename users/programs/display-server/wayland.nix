@@ -6,7 +6,6 @@
 }: {
   # Set Wayland-friendly environment variables
   environment.sessionVariables = {
-    APP2UNIT_SLICES = "a=app-graphical.slice b=background-graphical.slice s=session-graphical.slice"; # https://github.com/Vladimir-csp/app2unit?tab=readme-ov-file#uwsm-integration
     ELECTRON_OZONE_PLATFORM_HINT = "auto";
     NIXOS_OZONE_WL = "1";
     # QT_QPA_PLATFORM = "wayland"; # Not needed - https://discourse.nixos.org/t/davinci-resolve-only-launches-as-root/54258/6
@@ -22,9 +21,6 @@
 
     # X11 compatability for Wayland
     xwayland-satellite
-
-    # Misc
-    pkgsUnstable.app2unit
 
     slurp # https://wiki.archlinux.org/title/XDG_Desktop_Portal#Using_multiple_monitors_with_xdg-desktop-portal-wlr
   ];

@@ -57,7 +57,8 @@
       focus-at-startup = true;
     };
   };
-  outputs-nice = {
+  /*
+  outputs = {
     # Not anymore :(
     "DP-1" = {
       mode = {
@@ -83,30 +84,37 @@
       focus-at-startup = true;
     };
   };
+  */
   workspaces = {
     "1" = {
+      open-on-output = "HDMI-A-2";
+    };
+    "2" = {
       open-on-output = "HDMI-A-2";
     };
     "3" = {
       open-on-output = "HDMI-A-2";
     };
+    "4" = {
+      open-on-output = "HDMI-A-2";
+    };
     "5" = {
       open-on-output = "HDMI-A-2";
     };
-    "7" = {
-      open-on-output = "HDMI-A-2";
-    };
 
-    "2" = {
-      open-on-output = "DP-1";
-    };
-    "4" = {
-      open-on-output = "DP-1";
-    };
     "6" = {
       open-on-output = "DP-1";
     };
+    "7" = {
+      open-on-output = "DP-1";
+    };
     "8" = {
+      open-on-output = "DP-1";
+    };
+    "9" = {
+      open-on-output = "DP-1";
+    };
+    "10" = {
       open-on-output = "DP-1";
     };
   };

@@ -36,8 +36,12 @@
 
           input =
             {
-              focus-follows-mouse.enable = true;
               warp-mouse-to-focus.enable = true; # Warp pointer to focused window
+
+              focus-follows-mouse = {
+                enable = true;
+                max-scroll-amount = "10%" # Allow focus-follows-mouse when it results in scrolling at most 10% of the screen.
+              };
 
               mouse = {
                 accel-profile = "adaptive";
