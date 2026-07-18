@@ -62,6 +62,7 @@
           binds = import ./niri/binds.nix attrs;
           inherit (hostVars) outputs workspaces;
 
+          /*
           animations = {
             enable = true;
 
@@ -71,6 +72,7 @@
             window-movement.enable = true;
             window-resize.enable = true;
           };
+          */
 
           inherit (userVars.niri) spawn-at-startup;
 
