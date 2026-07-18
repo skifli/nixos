@@ -64,15 +64,15 @@
           animations = {
             enable = true;
 
-            config-notification-open-close = true;
-            exit-confirmation-open-close = true;
-            horizontal-view-movement = true;
-            overview-open-close = true;
-            window-close = true;
-            window-movement = true;
-            window-open = true;
-            window-resize = true;
-            workspace-switch = false; # I get a tad motion sick sometimes eurgh
+            config-notification-open-close.enable = true;
+            exit-confirmation-open-close.enable = true;
+            horizontal-view-movement.enable = true;
+            overview-open-close.enable = true;
+            window-close.enable = true;
+            window-movement.enable = true;
+            window-open.enable = true;
+            window-resize.enable = true;
+            workspace-switch.enable = false; # I get a tad motion sick sometimes eurgh
           };
 
           inherit (userVars.niri) spawn-at-startup;
