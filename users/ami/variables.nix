@@ -25,7 +25,6 @@ rec {
   };
 
   startupPrograms = [
-    "affinity-v3"
     "anki"
     "anytype"
     "ferdium"
