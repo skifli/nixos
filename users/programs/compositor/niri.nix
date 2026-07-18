@@ -38,6 +38,7 @@
             {
               focus-follows-mouse.enable = true;
               warp-mouse-to-focus.enable = true; # Warp pointer to focused window
+              workspace-auto-back-and-forth.enable = true; # If you are on Workspace 1 and hit your keybind for Workspace 1, nothing normally happens. Enabling this option cycles you back to the previously active workspace (similar to i3/Sway).
 
               mouse = {
                 accel-profile = "adaptive";
@@ -108,6 +109,7 @@
             center-focused-column = "on-overflow";
             always-center-single-column = true;
             empty-workspace-above-first = false;
+            default-column-width = {}; # Allows windows to decide their initial width
 
             border = {
               enable = false;
@@ -131,6 +133,12 @@
               left = 0;
               right = left;
             };
+
+            preset-column-widths = [
+              { proportion = 1.0 / 3.0; }
+              { proportion = 1.0 / 2.0; }
+              { proportion = 2.0 / 3.0; }
+            ];
 
             focus-ring.enable = false;
             tab-indicator.position = "top";

@@ -24,22 +24,6 @@
         "x-scheme-handler/unknown" = ["browseros.desktop"];
         "application/xhtml+xml" = ["browseros.desktop"];
       };
-
-      /*
-      systemd.user.services.browseros = {
-        Unit = {
-          Description = "BrowserOS";
-          After = [ "graphical-session.target" ];
-        };
-        Service = {
-          ExecStart = "${browseros}/bin/browseros";
-          Restart = "on-failure";
-        };
-        Install = {
-          WantedBy = [ "graphical-session.target" ];
-        };
-      };
-      */
     };
   };
 }

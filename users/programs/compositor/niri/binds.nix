@@ -5,14 +5,10 @@
 }:
 with config.home-manager.users.${userVars.username}.lib.niri.actions; {
   "Mod+D" = {
-    action = spawn [
-      userVars.programs.launcher
-      (
-        if userVars.programs.launcher == "vicinae"
-        then "toggle"
-        else ""
-      )
-    ];
+    action = spawn (
+      [ userVars.programs.launcher ]
+      ++ lib.optional (userVars.programs.launcher == "vicinae") "toggle"
+    );
     hotkey-overlay.title = "Application launcher";
   };
 
@@ -92,6 +88,10 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions; {
     action = toggle-column-tabbed-display;
     hotkey-overlay.title = "Toggle tabbed view";
   };
+  "Mod+R" = {
+    action = switch-preset-column-width;
+    hotkey-overlay.title = "Cycle column width preset";
+  };
 
   # WINDOW MOVEMENT
   "Mod+Shift+Home" = {
@@ -118,6 +118,14 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions; {
   "Mod+Shift+K" = {
     action = move-window-up;
     hotkey-overlay.title = "Move window up";
+  };
+  "Mod+Comma" = {
+    action = consume-window-into-column;
+    hotkey-overlay.title = "Consume window into column";
+  };
+  "Mod+Period" = {
+    action = expel-window-from-column;
+    hotkey-overlay.title = "Expel window from column";
   };
 
   # FOCUS MOVEMENT (Vim style)

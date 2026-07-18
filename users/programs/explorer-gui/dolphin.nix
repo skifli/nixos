@@ -40,6 +40,7 @@
         kdePackages.kdesdk-thumbnailers
         kdePackages.kservice # For kbuildsycoca6
         kdePackages.qtimageformats
+        kdePackages.qttools # qdbus etc
         nufraw-thumbnailer # Own choice
         resvg
         taglib_1
