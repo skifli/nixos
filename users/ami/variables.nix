@@ -32,6 +32,8 @@ rec {
     "remmina"
   ];
 
+  scroll-cooldown-ms = 150; # Cooldown for scroll events (for workspace switching and column focus switching)
+
   niri = let
     browserAppIdMatches =
       builtins.concatMap (
@@ -54,19 +56,9 @@ rec {
 
     window-rules = [
       {
-        matches = [
-          {
-            app-id = "(?i)ferdium";
-          }
-        ];
-
-        open-on-workspace = "1";
-        open-maximized = true;
-      }
-      {
         matches = browserAppIdMatches;
 
-        open-on-workspace = "2";
+        open-on-workspace = "1";
         open-maximized = true;
         clip-to-geometry = true;
       }
@@ -77,7 +69,7 @@ rec {
           }
         ];
 
-        open-on-workspace = "3";
+        open-on-workspace = "2";
         open-maximized = true;
       }
       {
@@ -87,7 +79,27 @@ rec {
           }
         ];
 
+        open-on-workspace = "3";
+        open-maximized = true;
+      }
+      {
+        matches = [
+          {
+            app-id = "(?i)affinity.exe";
+          }
+        ];
+
         open-on-workspace = "4";
+        open-maximized = true;
+      }
+      {
+        matches = [
+          {
+            app-id = "(?i)ferdium";
+          }
+        ];
+
+        open-on-workspace = "6";
         open-maximized = true;
       }
       {
@@ -95,12 +107,9 @@ rec {
           {
             app-id = "(?i)org.remmina.Remmina";
           }
-          {
-            app-id = "(?i)steam";
-          }
         ];
 
-        open-on-workspace = "5";
+        open-on-workspace = "7";
         open-maximized = true;
       }
       ## https://www.reddit.com/r/niri/comments/1skrhet/steam_notifications_appear_in_the_center_of_the/
@@ -124,7 +133,7 @@ rec {
     ];
   };
 
-  waybar = {
+  bar = {
     output = "DP-1";
   };
 
