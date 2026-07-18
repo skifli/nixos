@@ -333,7 +333,8 @@ in {
   };
 
   # 1. Make Node.js available (npx comes with it)
-  /* - I do not use anymore but in case needed
+  /*
+     - I do not use anymore but in case needed
   environment.systemPackages = with pkgs; [nodejs_22];
 
   systemd.user.services.pdf-reader-mcp = {

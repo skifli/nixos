@@ -6,7 +6,7 @@
 with config.home-manager.users.${userVars.username}.lib.niri.actions; {
   "Mod+D" = {
     action = spawn (
-      [ userVars.programs.launcher ]
+      [userVars.programs.launcher]
       ++ lib.optional (userVars.programs.launcher == "vicinae") "toggle"
     );
     hotkey-overlay.title = "Application launcher";

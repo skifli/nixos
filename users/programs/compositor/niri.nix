@@ -135,9 +135,9 @@
             };
 
             preset-column-widths = [
-              { proportion = 1.0 / 3.0; }
-              { proportion = 1.0 / 2.0; }
-              { proportion = 2.0 / 3.0; }
+              {proportion = 1.0 / 3.0;}
+              {proportion = 1.0 / 2.0;}
+              {proportion = 2.0 / 3.0;}
             ];
 
             focus-ring.enable = false;
