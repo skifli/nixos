@@ -26,7 +26,6 @@
             libdisplay-info = pkgs.libdisplay-info_0_2;
           }; # Fix for https://github.com/sodiboo/niri-flake/issues/1406
         settings = {
-          animations.enable = false; # I get a tad motion sick sometimes eurgh
           prefer-no-csd = true;
           hotkey-overlay.skip-at-startup = true;
 
@@ -41,7 +40,7 @@
 
               focus-follows-mouse = {
                 enable = true;
-                max-scroll-amount = "10%"; # Allow focus-follows-mouse when it results in scrolling at most 10% of the screen.
+                max-scroll-amount = "5%"; # Allow focus-follows-mouse when it results in scrolling at most 5% of the screen.
               };
 
               mouse = {
@@ -62,17 +61,19 @@
           binds = import ./niri/binds.nix attrs;
           inherit (hostVars) outputs workspaces;
 
-          /*
           animations = {
             enable = true;
 
-            workspace-switch.enable = true;
-            window-open.enable = true;
-            window-close.enable = true;
-            window-movement.enable = true;
-            window-resize.enable = true;
+            config-notification-open-close = true;
+            exit-confirmation-open-close = true;
+            horizontal-view-movement = true;
+            overview-open-close = true;
+            window-close = true;
+            window-movement = true;
+            window-open = true;
+            window-resize = true;
+            workspace-switch = false; # I get a tad motion sick sometimes eurgh
           };
-          */
 
           inherit (userVars.niri) spawn-at-startup;
 
