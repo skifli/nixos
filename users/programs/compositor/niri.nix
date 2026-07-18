@@ -38,7 +38,6 @@
             {
               focus-follows-mouse.enable = true;
               warp-mouse-to-focus.enable = true; # Warp pointer to focused window
-              workspace-auto-back-and-forth.enable = true; # If you are on Workspace 1 and hit your keybind for Workspace 1, nothing normally happens. Enabling this option cycles you back to the previously active workspace (similar to i3/Sway).
 
               mouse = {
                 accel-profile = "adaptive";
