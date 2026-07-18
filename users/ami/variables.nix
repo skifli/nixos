@@ -24,9 +24,15 @@ rec {
     email = "121291719+skifli@users.noreply.github.com";
   };
 
-  niri = let
-    browserStartup = map (browser: {command = [browser];}) programs.browsers;
+  startupPrograms = [
+    "affinity-v3"
+    "anki"
+    "anytype"
+    "ferdium"
+    "remmina"
+  ];
 
+  niri = let
     browserAppIdMatches =
       builtins.concatMap (
         browser:
@@ -44,27 +50,7 @@ rec {
       )
       programs.browsers;
   in {
-    spawn-at-startup =
-      browserStartup
-      ++ [
-        {command = ["anki"];}
-        {command = ["anytype"];}
-        # { command = [ "cherry-studio" ]; }
-        # {command = ["evince"];}
-        {command = ["ferdium"];}
-        {command = ["kdeconnect-indicator"];}
-        {command = ["ktailctl"];}
-        {command = ["lan-mouse"];}
-        {command = ["remmina"];}
-        {
-          command = [
-            "sh"
-            "-c"
-            "sleep 10 && safeeyes"
-          ];
-        }
-        # { command = [ "weylus" ]; }
-      ];
+    spawn-at-startup = builtins.map (program: {command = [program];}) startupPrograms;
 
     window-rules = [
       {
@@ -97,32 +83,11 @@ rec {
       {
         matches = [
           {
-            app-id = "(?i)evince";
-          }
-        ];
-
-        # open-on-workspace = "3";
-        open-maximized = true;
-      }
-      {
-        matches = [
-          {
             title = "(?i)Anytype";
           }
         ];
 
         open-on-workspace = "4";
-        open-maximized = true;
-      }
-      {
-        matches = [
-          {
-            app-id = "(?i)anki";
-            title = "(?i)Preview";
-          }
-        ];
-
-        open-on-workspace = "5";
         open-maximized = true;
       }
       {
@@ -148,7 +113,6 @@ rec {
           }
         ];
 
-        open-on-workspace = "5";
         open-maximized = false;
         open-focused = false;
         default-floating-position = {
@@ -156,41 +120,6 @@ rec {
           y = 0;
           relative-to = "bottom-right";
         };
-      }
-      /*
-      {
-        matches = [
-          {
-            app-id = "(?i)weylus";
-          }
-        ];
-
-        open-on-workspace = "6";
-        open-maximized = true;
-      }
-      */
-      {
-        matches = [
-          {
-            title = "(?i)Lan Mouse";
-          }
-          {
-            app-id = "(?i)org.fkoehler.KTailctl";
-          }
-        ];
-
-        open-on-workspace = "6";
-        open-maximized = true;
-      }
-      {
-        matches = [
-          {
-            title = "(?i)Safe Eyes";
-          }
-        ];
-
-        open-on-workspace = "6";
-        open-maximized = true;
       }
     ];
   };
@@ -205,6 +134,7 @@ rec {
     compositor = "niri";
     display-server = "wayland";
     idler = "swayidle";
+    killer = "earlyoom";
     login-manager = "greetd";
     notifications = "swaync";
     osd = "swayosd";
@@ -216,10 +146,12 @@ rec {
       "browseros"
     ];
     editor = "hx";
+    ergonomics = "stretchly";
     explorer-tui = "yazi";
     explorer-gui = "dolphin";
     launcher = "vicinae";
     network-mounts = "nfs";
+    nightlight = "wlsunset";
     partition-manager = "kde";
     prompt = "starship";
     screen-recorder = "gpu-screen-recorder";
@@ -233,18 +165,13 @@ rec {
       "affinity"
       "anki"
       "aw"
-      "earlyoom"
       "kde-connect"
       "lan-mouse"
       "nix-direnv"
       "opentabletdriver"
-      "safeeyes"
       "steam"
       "styles"
       "typst"
-      "wlsunset"
-      # "weylus"
-      # "winapps"
     ];
   };
 }
