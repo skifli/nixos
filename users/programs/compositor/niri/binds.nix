@@ -88,7 +88,8 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions; {
     action = maximize-column;
     hotkey-overlay.title = "Maximize column";
   };
-  /* - I do not use
+  /*
+     - I do not use
   "Mod+T" = {
     action = toggle-column-tabbed-display;
     hotkey-overlay.title = "Toggle tabbed view";
