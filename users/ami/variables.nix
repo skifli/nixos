@@ -29,6 +29,7 @@ rec {
     "anki"
     "anytype"
     "ferdium"
+    "kdeconnect-indicator" # Idk even though it has its own service that never seems to work... future me problem todo a fix!
     "remmina"
     "zen-beta"
   ];
