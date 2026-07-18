@@ -34,7 +34,7 @@ rec {
     "zen-beta"
   ];
 
-  scroll-cooldown-ms = 150; # Cooldown for scroll events (for workspace switching and column focus switching)
+  scroll-cooldown-ms = 50; # Cooldown for scroll events (for workspace switching and column focus switching)
 
   niri = let
     browserAppIdMatches =
