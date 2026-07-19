@@ -5,9 +5,9 @@
 }: {
   home-manager.users.${userVars.username} = {
     home = {
-      packages = with pkgsUnstable; [
+      packages = [
         # Not yet in stable
-        breaktimer
+        pkgsUnstable.breaktimer
       ];
 
       file.".config/BreakTimer/config.json".text = ''        {
