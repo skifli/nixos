@@ -80,7 +80,6 @@
 
           '';
 
-        package = inputs.ironbar;
         features = [];
       };
     };
