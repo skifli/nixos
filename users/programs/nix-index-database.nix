@@ -11,6 +11,10 @@
     sharedModules = [inputs.nix-index-database.homeModules.default];
 
     users.${userVars.username} = {
+      home.packages = with pkgs; [
+        nix-locate
+      ];
+      
       programs = {
         nix-index = {
           enable = true;
