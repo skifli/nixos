@@ -3,12 +3,14 @@
   userVars,
   ...
 }: {
-  environment.systemPackages = with pkgsUnstable; [
-    breaktimer
-  ];
-
   home-manager.users.${userVars.username} = {
     home = {
+      packages = [
+        # Not yet in stable
+				# TODO: When in stable or unstable re-add
+        # pkgsUnstable.breaktimer
+      ];
+
       file.".config/BreakTimer/config.json".text = ''        {
         	"settings": {
         		"autoLaunch": true,
