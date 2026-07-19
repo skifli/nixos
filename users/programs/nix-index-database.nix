@@ -4,9 +4,6 @@
   userVars,
   ...
 }: {
-  # 1. Disable default NixOS command-not-found handler to prevent duplication
-  programs.command-not-found.enable = false;
-
   home-manager = {
     sharedModules = [inputs.nix-index-database.homeModules.default];
 
@@ -16,6 +13,9 @@
       ];
 
       programs = {
+        # 1. Disable default NixOS command-not-found handler to prevent duplication
+        command-not-found.enable = false;
+
         nix-index = {
           enable = true;
           enableZshIntegration = true;
