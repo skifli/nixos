@@ -54,9 +54,9 @@
 
   systemd.user.services.pam-kwallet-init = {
     description = "Unlock kwallet from pam credentials";
-    wantedBy = [ "graphical-session.target" ];
-    wants = [ "graphical-session.target" ];
-    after = [ "graphical-session.target" ];
+    wantedBy = ["graphical-session.target"];
+    wants = ["graphical-session.target"];
+    after = ["graphical-session.target"];
     serviceConfig = {
       Type = "simple";
       ExecStart = "${pkgs.kdePackages.kwallet-pam}/libexec/pam_kwallet_init";
