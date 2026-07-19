@@ -30,6 +30,7 @@
     kdePackages.kwalletmanager # Provids KCMs and stuff
 
     kdePackages.polkit-kde-agent-1
+    libsecret # For testing 
   ];
 
   # Enable XWayland support system-wide

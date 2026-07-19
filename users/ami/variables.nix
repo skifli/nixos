@@ -166,6 +166,7 @@ rec {
     nightlight = "wlsunset";
     partition-manager = "kde";
     prompt = "starship";
+    remote-desktop = "remmina";
     screen-recorder = "gpu-screen-recorder";
     shell = "zsh";
     system-monitor = "missioncenter";
