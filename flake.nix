@@ -22,6 +22,10 @@
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     }; # Managing files and configs in each users' home directory
+    ironbar = {
+      url = "github:JakeStanger/ironbar";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     lan-mouse.url = "github:feschber/lan-mouse";
     niri = {
       url = "github:sodiboo/niri-flake";
