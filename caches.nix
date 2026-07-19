@@ -8,6 +8,7 @@
     "https://vicinae.cachix.org/"
     "https://nixpkgs-python.cachix.org"
     "https://cache.forall.systems"
+    "https://jakestanger.cachix.org"
   ];
 
   trusted-public-keys = [
@@ -19,5 +20,6 @@
     "vicinae.cachix.org-1:1kDrfienkGHPYbkpNj1mWTr7Fm1+zcenzgTizIcI3oc="
     "nixpkgs-python.cachix.org-1:hxjI7pFxTyuTHn2NkvWCrAUcNZLNS3ZAvfYNuYifcEU="
     "cache.forall.systems:5PmD7QO4MSF8YgyRZtkSGXRDo96H3bybIf2SsQh8ScI="
+    "jakestanger.cachix.org-1:VWJE7AWNe5/KOEvCQRxoE8UsI2Xs2nHULJ7TEjYm7mM="
   ];
 }
