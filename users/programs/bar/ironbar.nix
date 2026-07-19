@@ -1,4 +1,8 @@
-{inputs, userVars, ...}: {
+{
+  inputs,
+  userVars,
+  ...
+}: {
   home-manager = {
     sharedModules = [inputs.ironbar.homeManagerModules.default];
 
@@ -49,12 +53,12 @@
                 {
                   type = "network_manager";
                 }
-                # Native Audio Volume 
+                # Native Audio Volume
                 {
                   type = "volume";
                   max_volume = 150;
                 }
-                # Native Clock 
+                # Native Clock
                 {
                   type = "clock";
                   format = "%a %d %B %Y - %H:%M:%S";
@@ -68,9 +72,13 @@
           };
         };
 
-        style = /* css */ ''
-          
-        '';
+        style =
+          /*
+          css
+          */
+          ''
+
+          '';
 
         package = inputs.ironbar;
         features = [];
