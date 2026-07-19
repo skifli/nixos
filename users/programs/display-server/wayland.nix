@@ -33,20 +33,46 @@
   # Enable XWayland support system-wide
   programs.xwayland.enable = true;
 
-  xdg.portal.extraPortals = with pkgs; [
-    kdePackages.kwallet
-  ];
+  xdg.portal = {
+    extraPortals = with pkgs; [
+      kdePackages.kwallet
+    ];
+
+    config.${userVars.programs.compositor}."org.freedesktop.impl.portal.Secret" = "kwallet";
+  };
 
   security.pam.services = {
+    # If enabled, pam_wallet will attempt to automatically unlock the user’s default KDE wallet upon login.
+    # If the user has no wallet named “kdewallet”, or the login password does not match their wallet password,
+    # KDE will prompt separately after login.
     ${userVars.programs.login-manager}.kwallet = {
       enable = true;
+      forceRun = true;
       package = pkgs.kdePackages.kwallet-pam;
+    };
+  };
+
+  systemd.user.services.pam-kwallet-init = {
+    description = "Unlock kwallet from pam credentials";
+    wantedBy = [ "graphical-session.target" ];
+    wants = [ "graphical-session.target" ];
+    after = [ "graphical-session.target" ];
+    serviceConfig = {
+      Type = "simple";
+      ExecStart = "${pkgs.kdePackages.kwallet-pam}/libexec/pam_kwallet_init";
+      Slice = "background.slice";
+      Restart = "no";
     };
   };
 
   # Enable systemd user session support
   services = {
-    dbus.enable = true;
+    dbus = {
+      enable = true;
+      packages = with pkgs; [
+        kdePackages.kwallet
+      ];
+    };
 
     # Session management
     gnome.gnome-keyring.enable = false;
