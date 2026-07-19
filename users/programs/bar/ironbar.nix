@@ -77,93 +77,93 @@
           css
           */
           ''
-:root {
-    --color-dark-primary: #1c1c1c;
-    --color-dark-secondary: #2d2d2d;
-    --color-white: #fff;
-    --color-active: #6699cc;
-    --color-urgent: #8f0a0a;
+            :root {
+                --color-dark-primary: #1c1c1c;
+                --color-dark-secondary: #2d2d2d;
+                --color-white: #fff;
+                --color-active: #6699cc;
+                --color-urgent: #8f0a0a;
 
-    --margin-lg: 1em;
-    --margin-sm: 0.5em;
-}
+                --margin-lg: 1em;
+                --margin-sm: 0.5em;
+            }
 
-* {
-    border-radius: 0;
-    border: none;
-    box-shadow: none;
-    background-image: none;
-    font-family: monospace;
-}
+            * {
+                border-radius: 0;
+                border: none;
+                box-shadow: none;
+                background-image: none;
+                font-family: monospace;
+            }
 
-scale > trough {
-    background-color: var(--color-dark-secondary);
-}
+            scale > trough {
+                background-color: var(--color-dark-secondary);
+            }
 
-scale > trough > highlight {
-    background-color: var(--color-active);
-    border-style: solid;
-    border-color: var(--color-active);
-    border-width: 0.2em;
-}
+            scale > trough > highlight {
+                background-color: var(--color-active);
+                border-style: solid;
+                border-color: var(--color-active);
+                border-width: 0.2em;
+            }
 
-scale > trough > slider {
-    background-color: var(--color-white);
-}
+            scale > trough > slider {
+                background-color: var(--color-white);
+            }
 
-switch > slider {
-    background-color: var(--color-white);
-}
+            switch > slider {
+                background-color: var(--color-white);
+            }
 
-switch:checked {
-    background-color: var(--color-active);
-}
+            switch:checked {
+                background-color: var(--color-active);
+            }
 
-switch:not(:checked) {
-  background-color: var(--color-dark-secondary);
-}
+            switch:not(:checked) {
+              background-color: var(--color-dark-secondary);
+            }
 
-#bar, popover, popover contents, calendar, popover .view {
-    background-color: var(--color-dark-primary);
-}
+            #bar, popover, popover contents, calendar, popover .view {
+                background-color: var(--color-dark-primary);
+            }
 
-box, button, label {
-    background-color: #0000;
-    color: var(--color-white);
-}
+            box, button, label {
+                background-color: #0000;
+                color: var(--color-white);
+            }
 
-button {
-    padding-left: var(--margin-sm);
-    padding-right: var(--margin-sm);
-}
+            button {
+                padding-left: var(--margin-sm);
+                padding-right: var(--margin-sm);
+            }
 
-button:hover, button:active, *:selected {
-    background-color: var(--color-dark-secondary);
-}
+            button:hover, button:active, *:selected {
+                background-color: var(--color-dark-secondary);
+            }
 
-#end > * + * {
-    margin-left: var(--margin-lg);
-}
+            #end > * + * {
+                margin-left: var(--margin-lg);
+            }
 
-.sysinfo > * + * {
-    margin-left: var(--margin-sm);
-}
+            .sysinfo > * + * {
+                margin-left: var(--margin-sm);
+            }
 
-.clock {
-    font-weight: bold;
-}
+            .clock {
+                font-weight: bold;
+            }
 
-.popup-clock .calendar-clock {
-    font-size: 2.0em;
-}
+            .popup-clock .calendar-clock {
+                font-size: 2.0em;
+            }
 
-.popup-clock .calendar .today {
-    background-color: var(--color-active);
-}
+            .popup-clock .calendar .today {
+                background-color: var(--color-active);
+            }
 
-.workspaces .item.visible {
-    box-shadow: inset 0 -1px var(--color-white);
-}
+            .workspaces .item.visible {
+                box-shadow: inset 0 -1px var(--color-white);
+            }
           '';
 
         features = [];
