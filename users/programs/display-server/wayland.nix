@@ -101,7 +101,7 @@
     };
 
     # Session management
-    gnome.gnome-keyring.enable = lib.mkForce false;
+    gnome.gnome-keyring.enable = pkgs.lib.mkForce false;
 
     xserver = {
       enable = false;
