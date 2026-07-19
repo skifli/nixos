@@ -1,4 +1,5 @@
 {
+  lib,
   pkgs,
   userVars,
   ...
@@ -9,7 +10,7 @@
         remmina
       ];
 
-      home.activation.setRemminaKeyboard = pkgs.lib.hm.dag.entryAfter ["writeBoundary"] ''
+      activation.setRemminaKeyboard = lib.hm.dag.entryAfter ["writeBoundary"] ''
         # Make it use the client keymap
         sed -i 's/^rdp_use_client_keymap.*/rdp_use_client_keymap=1/' "$HOME/.config/remmina/remmina.pref"
 
