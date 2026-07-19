@@ -29,7 +29,6 @@
       javaPackages.compiler.temurin-bin.jdk-25 # For Prism Launcher
       proton-vpn
       qtscrcpy
-      remmina
       scrcpy
       soundwireserver
       # siyuan
