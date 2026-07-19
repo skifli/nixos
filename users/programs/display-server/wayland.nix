@@ -58,6 +58,8 @@
       forceRun = true;
       package = pkgs.kdePackages.kwallet-pam;
     };
+
+    login.kwallet.enable = true;
   };
 
   systemd.user.services.pam-kwallet-init = {
