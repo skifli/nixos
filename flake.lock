@@ -636,7 +636,7 @@
         "type": "indirect"
       }
     },
-    "nix-index-db": {
+    "nix-index-database": {
       "inputs": {
         "nixpkgs": [
           "nixpkgs"
@@ -963,7 +963,7 @@
         "home-manager": "home-manager_2",
         "lan-mouse": "lan-mouse",
         "niri": "niri",
-        "nix-index-db": "nix-index-db",
+        "nix-index-database": "nix-index-database",
         "nixpkgs": "nixpkgs_7",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "stylix": "stylix",
