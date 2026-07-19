@@ -25,6 +25,7 @@ rec {
   };
 
   startupPrograms = [
+    "dbus-update-activation-environment --systemd --all"
     "anki"
     "anytype"
     "breaktimer"
