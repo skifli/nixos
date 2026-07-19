@@ -38,7 +38,13 @@
       kdePackages.kwallet
     ];
 
-    config.${userVars.programs.compositor}."org.freedesktop.impl.portal.Secret" = "kwallet";
+    /*
+    error: The option `xdg.portal.config.niri."org.freedesktop.impl.portal.Secret"' has conflicting definition values:
+       - In `/nix/store/kwvm7rkxjxkyvcyky1jsmlihwydb637w-source/hosts/common/default.nix': "kwallet"
+       - In `/nix/store/7blcfay1hap81n2bc9j4d8b1cxrvng50-source/nixos/modules/programs/wayland/niri.nix': "gnome-keyring"
+       Use `lib.mkForce value` or `lib.mkDefault value` to change the priority on any of these definitions.
+    */
+    config.${userVars.programs.compositor}."org.freedesktop.impl.portal.Secret" = pkgs.lib.mkForce "kwallet";
   };
 
   security.pam.services = {

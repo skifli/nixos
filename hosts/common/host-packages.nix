@@ -9,7 +9,6 @@
     deadnix # Find dead nix code
     fastfetch # Neofetch C alternative
 
-    nix-index # Quickly locate the package providing a certain file
     nixfmt
     nixd # Nix language server
 
