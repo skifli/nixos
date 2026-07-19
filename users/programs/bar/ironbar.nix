@@ -160,10 +160,6 @@
             .popup-clock .calendar .today {
                 background-color: var(--color-active);
             }
-
-            .workspaces .item.visible {
-                box-shadow: inset 0 -1px var(--color-white);
-            }
           '';
 
         features = [];
