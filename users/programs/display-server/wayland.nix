@@ -2,6 +2,7 @@
   hostVars,
   pkgs,
   pkgsUnstable,
+  userVars,
   ...
 }: {
   # Set Wayland-friendly environment variables
@@ -23,17 +24,32 @@
     xwayland-satellite
 
     slurp # https://wiki.archlinux.org/title/XDG_Desktop_Portal#Using_multiple_monitors_with_xdg-desktop-portal-wlr
+
+    kwallet # Provides helper service
+    kwallet-pam # PRovides helper service
+    kwalletmanager # Provids KCMs and stuff
   ];
 
   # Enable XWayland support system-wide
   programs.xwayland.enable = true;
+
+  xdg.portals.extraPortals = with pkgs; [
+    kdePackages.kwallet
+  ];
+
+  security.pam.services = {
+    ${userVars.programs.login-manager}.kwallet = {
+      enable = true;
+      package = pkgs.kdePackages.kwallet-pam;
+    };
+  };
 
   # Enable systemd user session support
   services = {
     dbus.enable = true;
 
     # Session management
-    gnome.gnome-keyring.enable = true;
+    gnome.gnome-keyring.enable = false;
 
     xserver = {
       enable = false;

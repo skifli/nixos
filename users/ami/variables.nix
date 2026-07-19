@@ -86,22 +86,22 @@ rec {
       {
         matches = [
           {
-            app-id = "(?i)affinity.exe";
-          }
-        ];
-
-        open-on-workspace = "4";
-        open-maximized = true;
-      }
-      {
-        matches = [
-          {
             app-id = "(?i)ferdium";
           }
         ];
 
         open-on-workspace = "5";
         open-maximized = true;
+      }
+      {
+        matches = [
+          {
+            # TODO: Fix me for Kwallet!
+            app-id = "(?i)gcr-prompter";
+          }
+        ];
+
+        open-on-workspace = "5";
       }
       {
         matches = [
