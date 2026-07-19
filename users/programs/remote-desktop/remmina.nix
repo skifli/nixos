@@ -1,11 +1,11 @@
 {
-  pkgsUnstable,
+  pkgs,
   userVars,
   ...
 }: {
   home-manager.users.${userVars.username} = {
     home = {
-      packages = [
+      packages = with pkgs; [
         remmina
       ];
 
