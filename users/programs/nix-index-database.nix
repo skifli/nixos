@@ -12,7 +12,7 @@
 
     users.${userVars.username} = {
       home.packages = with pkgs; [
-        nix-locate
+        nix-index
       ];
 
       programs = {
