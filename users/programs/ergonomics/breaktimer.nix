@@ -3,9 +3,9 @@
   userVars,
   ...
 }: {
-	environment.systemPackages = with pkgsUnstable; [
-		breaktimer
-	];
+  environment.systemPackages = with pkgsUnstable; [
+    breaktimer
+  ];
 
   home-manager.users.${userVars.username} = {
     home = {
