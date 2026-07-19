@@ -4,7 +4,7 @@
   userVars,
   ...
 }: {
-  home-manager.users.${userVars.username} = { lib, ... }: {
+  home-manager.users.${userVars.username} = {lib, ...}: {
     home = {
       packages = with pkgs; [
         remmina
