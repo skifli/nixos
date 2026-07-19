@@ -181,6 +181,7 @@ rec {
       "kde-connect"
       "lan-mouse"
       "nix-direnv"
+      "nix-index-database"
       "opentabletdriver"
       "steam"
       "styles"
