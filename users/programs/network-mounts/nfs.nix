@@ -46,10 +46,10 @@ in {
   # Force lazy unmounting of all NFS mounts early during shutdown
   systemd.services.nfs-shutdown-umount = {
     description = "Force unmount NFS filesystems before network shutdown";
-    wantedBy = [ "multi-user.target" ];
+    wantedBy = ["multi-user.target"];
     # Ensure it runs before network and remote-fs targets are torn down
-    before = [ "network.target" "network-online.target" "shutdown.target" ];
-    conflicts = [ "shutdown.target" ];
+    before = ["network.target" "network-online.target" "shutdown.target"];
+    conflicts = ["shutdown.target"];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
