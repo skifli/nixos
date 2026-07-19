@@ -25,9 +25,9 @@
 
     slurp # https://wiki.archlinux.org/title/XDG_Desktop_Portal#Using_multiple_monitors_with_xdg-desktop-portal-wlr
 
-    kwallet # Provides helper service
-    kwallet-pam # PRovides helper service
-    kwalletmanager # Provids KCMs and stuff
+    kdePackages.kwallet # Provides helper service
+    kdePackages.kwallet-pam # PRovides helper service
+    kdePackages.kwalletmanager # Provids KCMs and stuff
   ];
 
   # Enable XWayland support system-wide
