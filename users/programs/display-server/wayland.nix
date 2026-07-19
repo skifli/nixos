@@ -33,7 +33,7 @@
   # Enable XWayland support system-wide
   programs.xwayland.enable = true;
 
-  xdg.portals.extraPortals = with pkgs; [
+  xdg.portal.extraPortals = with pkgs; [
     kdePackages.kwallet
   ];
 
