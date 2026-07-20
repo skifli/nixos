@@ -20,16 +20,17 @@
         "systemd"
         "systemd-logind"
         "systemd-udevd"
-        userVars.programs.bar
+        # userVars.programs.bar
         userVars.programs.compositor
         userVars.programs.display-server
+        userVars.programs.desktop-shell
         userVars.programs.idler
         userVars.programs.login-manager
-        userVars.programs.notifications
-        userVars.programs.osd
+        # userVars.programs.notifications
+        # userVars.programs.osd
         userVars.programs.prompt
-        userVars.programs.shell
         userVars.programs.terminal
+        userVars.programs.terminal-shell
       ]);
 
       mkRegex = pats: "^(" + builtins.concatStringsSep "|" pats + ")$";

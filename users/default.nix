@@ -73,7 +73,7 @@
           in {
             BROWSER = pkgs.lib.mkForce primaryBrowser;
             EDITOR = userVars.programs.editor;
-            SHELL = userVars.programs.shell;
+            SHELL = userVars.programs.terminal-shell;
             TERM = userVars.programs.terminal;
             VISUAL = userVars.programs.visual;
           };

@@ -2,7 +2,7 @@
   home-manager.users.${userVars.username} = {
     programs.ghostty = {
       enable = true;
-      enableZshIntegration = userVars.programs.shell == "zsh";
+      enableZshIntegration = userVars.programs.terminal-shell == "zsh";
       settings = {
         desktop-notifications = true;
         notify-on-command-finish = "unfocused";
