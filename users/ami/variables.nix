@@ -142,7 +142,7 @@ rec {
 
   programs = {
     # Muy core apps
-    bar = "ironbar";
+    bar = "waybar";
     compositor = "niri";
     display-server = "wayland";
     idler = "swayidle";
