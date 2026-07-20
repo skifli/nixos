@@ -142,15 +142,16 @@ rec {
 
   programs = {
     # Muy core apps
-    bar = "waybar";
+    # bar = "waybar"; # - Not used anymore in favour of wayle
     compositor = "niri";
+    desktop-shell = "wayle";
     display-server = "wayland";
     idler = "swayidle";
     killer = "earlyoom";
     login-manager = "greetd";
-    notifications = "swaync";
-    osd = "swayosd";
-    wallpaper = "swaybg";
+    # notifications = "swaync"; # - Not used anymore in favour of wayle
+    # osd = "swayosd"; # - Not used anymore in favour of wayle
+    # wallpaper = "swaybg"; # - Not used anymore in favour of wayle
 
     # Kinda core apps
     browsers = [
@@ -168,9 +169,9 @@ rec {
     prompt = "starship";
     remote-desktop = "remmina";
     screen-recorder = "gpu-screen-recorder";
-    shell = "zsh";
     system-monitor = "missioncenter";
     terminal = "ghostty";
+    terminal-shell = "zsh";
     visual = "zeditor";
     vpn = "tailscale";
 
