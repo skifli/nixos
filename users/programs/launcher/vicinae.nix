@@ -104,7 +104,7 @@
             "data": { "text": "{shell code="cat -p /home/${userVars.username}/.github-pat"}" },
             "createdAt": 1783761415,
             "expansion": { "keyword": "!pat", "apps": [], "word": true }
-          },
+          }
         ]
       '';
 
