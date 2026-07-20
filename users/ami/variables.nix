@@ -154,7 +154,7 @@ rec {
 
     # Kinda core apps
     browsers = [
-      "zen-beta" 
+      "zen-beta"
       "browseros"
     ];
     editor = "hx";
