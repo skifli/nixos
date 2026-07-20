@@ -101,7 +101,7 @@
           {
             "id": "snp-7e0f1c8d3a2b",
             "name": "GitHub PAT",
-            "data": { "text": "{shell code=\"cat -p /home/ami/.github-pat\"}" },
+            "data": { "text": "{shell code=\"cat /home/ami/.github-pat\"}" },
             "createdAt": 1783761415,
             "expansion": { "keyword": "!pat", "apps": [], "word": true }
           }
