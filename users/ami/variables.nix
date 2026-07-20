@@ -142,7 +142,7 @@ rec {
 
   programs = {
     # Muy core apps
-    bar = "waybar";
+    bar = "ironbar";
     compositor = "niri";
     display-server = "wayland";
     idler = "swayidle";
@@ -154,7 +154,7 @@ rec {
 
     # Kinda core apps
     browsers = [
-      "zen-beta"
+      "zen-beta" 
       "browseros"
     ];
     editor = "hx";
