@@ -125,7 +125,7 @@
             #bar {
                 background-color: alpha(@custom-background, 0.3);
                 padding: 3px 12px;
-                
+
                 /* Full-width Styling */
                 margin: 0px;
                 border-radius: 0px;
@@ -171,7 +171,7 @@
 
             /* Module specific overrides */
             .module-sysinfo {
-                color: @custom-primary;    
+                color: @custom-primary;
                 font-weight: normal;
             }
             .module-sysinfo:hover {
