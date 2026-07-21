@@ -15,10 +15,10 @@
       # Safely wraps wayle to include awww in its PATH before systemd runs it
       package = pkgs.symlinkJoin {
         name = "wayle-wrapped";
-        paths = [ pkgs.wayle ];
-        nativeBuildInputs = [ pkgs.makeWrapper ];
+        paths = [pkgs.wayle];
+        nativeBuildInputs = [pkgs.makeWrapper];
         postBuild = ''
-          wrapProgram $out/bin/wayle --prefix PATH : ${pkgs.lib.makeBinPath [ pkgs.awww ]}
+          wrapProgram $out/bin/wayle --prefix PATH : ${pkgs.lib.makeBinPath [pkgs.awww]}
         '';
       };
 
