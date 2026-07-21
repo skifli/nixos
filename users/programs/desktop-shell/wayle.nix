@@ -8,14 +8,19 @@
   ];
 
   home-manager.users.${userVars.username} = {
-    # Injects awww directly into the wayle systemd user service PATH
-    systemd.user.services.wayle.path = [
-      "${pkgs.awww}"
-    ];
-
     services.wayle = {
       enable = true;
       autoInstallDependencies = true;
+
+      # Safely wraps wayle to include awww in its PATH before systemd runs it
+      package = pkgs.symlinkJoin {
+        name = "wayle-wrapped";
+        paths = [ pkgs.wayle ];
+        nativeBuildInputs = [ pkgs.makeWrapper ];
+        postBuild = ''
+          wrapProgram $out/bin/wayle --prefix PATH : ${pkgs.lib.makeBinPath [ pkgs.awww ]}
+        '';
+      };
 
       # Needs wallpaper.engine-enabled = true; to work
 
