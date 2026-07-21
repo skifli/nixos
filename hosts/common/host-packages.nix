@@ -16,5 +16,7 @@
     btop # Monitoring of system resources
     iotop # Monitoring of IO
     android-tools # Provides adb/fastboot (ensure adb available system-wide)
+
+    fbcat # Allows taking screenshots of a TTY
   ];
 }

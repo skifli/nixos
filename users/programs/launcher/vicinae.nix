@@ -127,7 +127,6 @@
           process-manager
           protondb-search
           # systemd # Same as above...
-          wifi-commander
           zed-recents
         ]; # Extension names can be found here https://github.com/vicinaehq/extensions/tree/main/extensions
 
@@ -180,20 +179,6 @@
                 port-killer = {
                   alias = "kp";
                 };
-              };
-            };
-
-            "@dagimg-dot/store.vicinae.wifi-commander" = {
-              preferences = {
-                network-cli-tool = "nmcli";
-              };
-
-              entrypoints = {
-                manage-saved-networks = {alias = "wn";};
-                restart-wifi = {alias = "wre";};
-                scan-wifi = {alias = "ws";};
-                toggle-wifi-off = {alias = "won";};
-                toggle-wifi-on = {alias = "wof";};
               };
             };
 
