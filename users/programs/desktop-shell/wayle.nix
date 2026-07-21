@@ -252,7 +252,7 @@
                   hostVars.outputs;
           transition-type = "none";
         };
-      }
+      };
     };
   };
 }
