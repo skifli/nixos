@@ -8,6 +8,9 @@
   ];
 
   home-manager.users.${userVars.username} = {
+    # Injects awww directly into the wayle systemd user service PATH
+    systemd.user.services.wayle.path = [ pkgs.awww ];
+    
     services.wayle = {
       enable = true;
       autoInstallDependencies = true;
