@@ -260,7 +260,7 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions; {
     action = spawn [
       "wayle"
       "audio"
-      "input-volume"
+      "output-volume"
       "+2"
     ];
   };
@@ -268,7 +268,7 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions; {
     action = spawn [
       "wayle"
       "audio"
-      "input-volume"
+      "output-volume"
       "-2"
     ];
   };
