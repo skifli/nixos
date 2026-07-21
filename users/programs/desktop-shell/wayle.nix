@@ -8,6 +8,8 @@
       enable = true;
       autoInstallDependencies = true;
 
+      # Needs wallpaper.engine-enabled = true; to work
+
       # Tip: you can automatically translate your TOML config to Nix by running
       # nix-instantiate --eval --expr 'builtins.fromTOML (builtins.readFile ./config.toml)' | nixfmt
       settings = {
@@ -44,6 +46,8 @@
           ];
         };
         wallpaper = {
+          engine-enabled = true;
+
           monitors = [
             {
               fit-mode = "fill";
