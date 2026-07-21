@@ -15,7 +15,7 @@
           dropdown-opacity = 95;
           layout = [
             {
-              center = [ ];
+              center = [];
               left = [
                 "clock"
                 "cpu"
@@ -31,14 +31,14 @@
                 "window-title"
               ];
               monitor = userVars.bar.output;
-              right = [ ];
+              right = [];
               show = true;
             }
             {
-              center = [ ];
-              left = [ ];
+              center = [];
+              left = [];
               monitor = "*";
-              right = [ ];
+              right = [];
               show = false;
             }
           ];
