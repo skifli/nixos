@@ -64,11 +64,13 @@
         wallpaper = {
           engine-enabled = true;
 
-          monitors = pkgs.lib.mapAttrsToList (monitorName: _: {
-            fit-mode = "fill";
-            name = monitorName;
-            wallpaper = "/home/${userVars.username}/.local/share/wallpaper";
-          }) hostVars.outputs;
+          monitors =
+            pkgs.lib.mapAttrsToList (monitorName: _: {
+              fit-mode = "fill";
+              name = monitorName;
+              wallpaper = "/home/${userVars.username}/.local/share/wallpaper";
+            })
+            hostVars.outputs;
         };
       };
     };
