@@ -11,7 +11,7 @@
     "uk" = "809";
     "us" = "409";
   };
-  
+
   # Look up hostVars.keyboardLayout
   rdpCode = rdpLayoutMap.${hostVars.keyboardLayout};
 in {
