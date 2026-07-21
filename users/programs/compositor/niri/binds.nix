@@ -258,58 +258,74 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions; {
   # MEDIA KEYS
   "XF86AudioRaiseVolume" = {
     action = spawn [
-      "swayosd-client"
-      "--output-volume"
-      "2"
+      "wayle"
+      "audio"
+      "input-volume"
+      "+2"
     ];
   };
   "XF86AudioLowerVolume" = {
     action = spawn [
-      "swayosd-client"
-      "--output-volume"
+      "wayle"
+      "audio"
+      "input-volume"
       "-2"
     ];
   };
   "XF86AudioMute" = {
     action = spawn [
-      "swayosd-client"
-      "--output-volume"
-      "mute-toggle"
+      "wayle"
+      "audio"
+      "output-mute"
     ];
   };
+  "XF86AudioMicMute" = {
+    action = spawn [
+      "wayle"
+      "audio"
+      "input-mute"
+    ];
+  };
+
   "XF86AudioPlay" = {
     action = spawn [
-      "swayosd-client"
-      "--playerctl"
+      "wayle"
+      "media"
       "play-pause"
     ];
   };
+  /*
+  # - Doesn't really have a dedicated one as it should so commented out but here for future reference
+  "XF86AudioPause" = {
+    action = spawn [
+      "wayle"
+      "media"
+      "play-pause"
+    ];
+  };
+  */
+  /*
+  # - Doesn't really have a dedicated one as it should so commented out but here for future reference
+  "XF86AudioStop" = {
+    action = spawn [
+      "wayle"
+      "media"
+      "play-pause"
+    ];
+  };
+  */
   "XF86AudioNext" = {
     action = spawn [
-      "swayosd-client"
-      "--playerctl"
+      "wayle"
+      "media"
       "next"
     ];
   };
   "XF86AudioPrev" = {
     action = spawn [
-      "swayosd-client"
-      "--playerctl"
+      "wayle"
+      "media"
       "previous"
-    ];
-  };
-  "XF86MonBrightnessUp" = {
-    action = spawn [
-      "swayosd-client"
-      "--brightness"
-      "+2"
-    ];
-  };
-  "XF86MonBrightnessDown" = {
-    action = spawn [
-      "swayosd-client"
-      "--brightness"
-      "-2"
     ];
   };
 
