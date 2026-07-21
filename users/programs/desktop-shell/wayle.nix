@@ -212,7 +212,7 @@
           weather = {
             icon-color = "status-warning";
             label-color = "status-warning";
-            location = "${hostVars.latitude},${hostVars.longitude}";
+            location = "${toString hostVars.latitude},${toString hostVars.longitude}";
             time-format = "24h";
           };
           window-title = {
