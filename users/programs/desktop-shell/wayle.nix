@@ -59,7 +59,7 @@
             {
               fit-mode = "fill";
               name = "*";
-              wallpaper = "/home/ami/.local/share/wallpaper";
+              wallpaper = "/home/${userVars.username}/.local/share/wallpaper";
             }
           ];
         };
