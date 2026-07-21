@@ -6,7 +6,7 @@
 }: {
   environment.systemPackages = with pkgs; [
     awww # Was getting this error - `could not apply wallpaper from config change, error: neither awww nor swww found in PATH, monitor: *`
-    playerctl
+    
   ];
 
   home-manager.users.${userVars.username} = {
@@ -20,7 +20,7 @@
         paths = [pkgs.wayle];
         nativeBuildInputs = [pkgs.makeWrapper];
         postBuild = ''
-          wrapProgram $out/bin/wayle --prefix PATH : ${pkgs.lib.makeBinPath [pkgs.awww pkgs.playerctl]}
+          wrapProgram $out/bin/wayle --prefix PATH : ${pkgs.lib.makeBinPath [pkgs.awww]}
         '';
       };
 
