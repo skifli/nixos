@@ -133,6 +133,15 @@ rec {
           relative-to = "bottom-right";
         };
       }
+      {
+        matches = [
+          {
+            app-id = "(?i)io.missioncenter.MissionCenter";
+          }
+        ];
+
+        open-maximized = true;
+      }
     ];
   };
 
