@@ -6,7 +6,6 @@
 }: {
   environment.systemPackages = with pkgs; [
     awww # Was getting this error - `could not apply wallpaper from config change, error: neither awww nor swww found in PATH, monitor: *`
-    
   ];
 
   home-manager.users.${userVars.username} = {
