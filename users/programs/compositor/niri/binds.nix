@@ -312,4 +312,13 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions; {
       "-2"
     ];
   };
+
+  # Misc
+  "Mod+B" = {
+    action = spawn [
+      "wayle"
+      "panel"
+      "toggle"
+    ];
+  };
 }
