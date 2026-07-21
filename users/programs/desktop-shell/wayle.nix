@@ -60,10 +60,10 @@
               show = true;
             }
             {
-              center = [ ];
-              left = [ ];
+              center = [];
+              left = [];
               monitor = "*";
-              right = [ ];
+              right = [];
               show = false;
             }
           ];
@@ -244,12 +244,12 @@
           engine-enabled = true;
 
           monitors =
-                  pkgs.lib.mapAttrsToList (monitorName: _: {
-                    fit-mode = "fill";
-                    name = monitorName;
-                    wallpaper = "/home/${userVars.username}/.local/share/wallpaper";
-                  })
-                  hostVars.outputs;
+            pkgs.lib.mapAttrsToList (monitorName: _: {
+              fit-mode = "fill";
+              name = monitorName;
+              wallpaper = "/home/${userVars.username}/.local/share/wallpaper";
+            })
+            hostVars.outputs;
           transition-type = "none";
         };
       };
