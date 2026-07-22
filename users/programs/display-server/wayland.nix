@@ -28,6 +28,10 @@
   # Enable XWayland support system-wide
   programs.xwayland.enable = true;
 
+  # Try fix some gnome-keyring oddities
+  systemd.services."autovt@tty1".enable = false;
+  systemd.services."getty@tty1".enable = false;
+
   # Enable systemd user session support
   services = {
     dbus.enable = true;
