@@ -6,6 +6,8 @@
   userVars,
   ...
 }: {
+  programs.vicinae.input-server.enable = true; # Needed for snippets
+  
   home-manager = {
     sharedModules = [inputs.vicinae.homeManagerModules.default];
 
@@ -110,8 +112,6 @@
 
       programs.vicinae = {
         enable = true;
-
-        input-server.enable = true; # Needed for snippets
 
         systemd = {
           autoStart = true;
