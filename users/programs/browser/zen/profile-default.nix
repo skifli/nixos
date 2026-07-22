@@ -13,6 +13,7 @@
   joinedTabs = import ./joined-tabs.nix;
   presets = import ./presets.nix;
   spaces = import ./spaces.nix;
+  spaceRouting = import ./space-routing.nix;
   mods = import ./mods.nix;
 
   keyboardShortcutsSpec = import ./keyboard-shortcuts.nix;
@@ -41,6 +42,7 @@ in {
     joinedTabs
     presets
     spaces
+    spaceRouting
     liveFolders
     mods
     ;
