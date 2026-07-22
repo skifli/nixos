@@ -9,7 +9,7 @@
   imports = [
     inputs.vicinae.nixosModules.default
   ];
-  
+
   programs.vicinae.input-server.enable = true; # Needed for snippets
 
   home-manager = {
