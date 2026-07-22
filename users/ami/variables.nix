@@ -144,6 +144,9 @@ rec {
           {
             app-id = "(?i)(?i)io.missioncenter.MissionCenter";
           }
+          {
+            app-id = "(?i)breaktimer";
+          }
         ];
 
         open-maximized = true;
