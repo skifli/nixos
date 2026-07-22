@@ -1,0 +1,1 @@
+My personal tabs are defined in the submodule hidden - to make this configuration work for you, clone without that submodule, re-create the `hidden` directory, copy the files in the `examples` directory to the `hidden` directory, and update to your taste :).

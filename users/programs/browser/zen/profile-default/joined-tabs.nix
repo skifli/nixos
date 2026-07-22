@@ -1,7 +1,7 @@
 # Joined tabs create Zen split-view groups.
 # Use the stable tab IDs from declared pins.
 let
-  pins = import ./pins.nix;
+  pins = import ./hidden/pins.nix;
 
   mkJoinedTabs = builtins.mapAttrs (
     _: spec: {
