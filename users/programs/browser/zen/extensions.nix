@@ -25,9 +25,6 @@ let
     "{ef87d84c-2127-493f-b952-5b4e744245bc}" = {
       amoSlug = "aw-watcher-web";
     };
-    "{e60174ce-b647-41a7-acda-11afc84191af}" = {
-      amoSlug = "zen-unload-tab";
-    };
     "adnauseam@rednoise.org" = {
       amoSlug = "adnauseam";
     };
@@ -42,9 +39,6 @@ let
     };
     "78272b6fa58f4a1abaac99321d503a20@proton.me" = {
       amoSlug = "proton-pass";
-    };
-    "{DDC359D1-844A-42a7-9AA1-88A850A938A8}" = {
-      amoSlug = "downthemall";
     };
     "{d7742d87-e61d-4b78-b8a1-b469842139fa}" = {
       amoSlug = "vimium-ff";
