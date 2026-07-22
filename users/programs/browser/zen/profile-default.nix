@@ -9,6 +9,7 @@
   search = import ./search.nix {inherit pkgs;};
   containers = import ./containers.nix;
   pins = import ./pins.nix;
+  liveFolders = import ./live-folders.nix;
   joinedTabs = import ./joined-tabs.nix;
   spaces = import ./spaces.nix;
   mods = import ./mods.nix;
@@ -38,6 +39,7 @@ in {
     pins
     joinedTabs
     spaces
+    liveFolders
     mods
     ;
 

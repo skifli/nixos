@@ -260,6 +260,8 @@
   "browser.ssb.enabled" = true;
   "browser.tabs.allow_transparent_browser" = true;
 
+  "zen.window-sync.enabled" = true; # Decouple from windows and instead couple tabs to spaces
+
   # Not using https://sameerasw.com/zen#intro anymore so now set to false
   "zen.theme.acrylic-elements" = false;
   "widget.transparent-windows" = false;
