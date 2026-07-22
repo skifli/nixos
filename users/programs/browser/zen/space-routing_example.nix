@@ -26,7 +26,6 @@ in {
     };
   };
 }
-
 # Space-scoped form: same options as spaceRouting.routes.* except openIn,
 # which is set to the owning space's id automatically. Only `reference` is
 # required; `matchType` defaults to "contains" and `id` defaults to the
@@ -42,3 +41,4 @@ spaces = {
   };
 };
 */
+
