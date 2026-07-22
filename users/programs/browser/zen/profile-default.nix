@@ -4,20 +4,20 @@
   pkgs,
   ...
 }: let
-  settings = import ./settings.nix {inherit hostVars;};
-  bookmarks = import ./bookmarks.nix;
-  search = import ./search.nix {inherit pkgs;};
-  containers = import ./containers.nix;
-  pins = import ./pins.nix;
-  liveFolders = import ./live-folders.nix;
-  joinedTabs = import ./joined-tabs.nix;
-  presets = import ./presets.nix;
-  spaces = import ./spaces.nix;
-  spaceRouting = import ./space-routing.nix;
-  mods = import ./mods.nix;
+  settings = import ./profile-default/settings.nix {inherit hostVars;};
+  bookmarks = import ./profile-default/bookmarks.nix;
+  search = import ./profile-default/search.nix {inherit pkgs;};
+  containers = import ./profile-default/containers.nix;
+  pins = import ./profile-default/pins.nix;
+  liveFolders = import ./profile-default/live-folders.nix;
+  joinedTabs = import ./profile-default/joined-tabs.nix;
+  presets = import ./profile-default/presets.nix;
+  spaces = import ./profile-default/spaces.nix;
+  spaceRouting = import ./profile-default/space-routing.nix;
+  mods = import ./profile-default/mods.nix;
 
-  keyboardShortcutsSpec = import ./keyboard-shortcuts.nix;
-  extraConfig = import ./extra-config.nix {inherit inputs;};
+  keyboardShortcutsSpec = import ./profile-default/keyboard-shortcuts.nix;
+  extraConfig = import ./profile-default/extra-config.nix {inherit inputs;};
 
   profileId = 0;
   profileName = "default";
