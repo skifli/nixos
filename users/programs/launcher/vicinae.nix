@@ -7,7 +7,7 @@
   ...
 }: {
   programs.vicinae.input-server.enable = true; # Needed for snippets
-  
+
   home-manager = {
     sharedModules = [inputs.vicinae.homeManagerModules.default];
 
