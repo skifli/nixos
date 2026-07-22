@@ -1,0 +1,4 @@
+[submodule "users/programs/browser/zen/profile-default/hidden"]
+	path = users/programs/browser/zen/profile-default/hidden
+	url = https://github.com/skifli/zen-profile-default
+	branch = main
