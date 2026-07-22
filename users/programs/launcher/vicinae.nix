@@ -111,6 +111,8 @@
       programs.vicinae = {
         enable = true;
 
+        input-server.enable = true; # Needed for snippets
+
         systemd = {
           autoStart = true;
           enable = true;
