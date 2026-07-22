@@ -7,12 +7,12 @@
 }: {
   # Set Wayland-friendly environment variables
   environment.sessionVariables = {
-    ELECTRON_OZONE_PLATFORM_HINT = "auto";
+    # ELECTRON_OZONE_PLATFORM_HINT = "auto"; - Caused issues for me - https://github.com/tom-james-watson/breaktimer-app/issues/406
     NIXOS_OZONE_WL = "1";
     # QT_QPA_PLATFORM = "wayland"; # Not needed - https://discourse.nixos.org/t/davinci-resolve-only-launches-as-root/54258/6
     QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
     QT_WAYLAND_SHELL_INTEGRATION = "xdg-shell";
-    SDL_VIDEODRIVER = "wayland";
+    # SDL_VIDEODRIVER = "wayland"; - Disabled out of abundance of caution for similar blind setting of env vars causing issues
   };
 
   # Enable fundamental Wayland utilities and portals
