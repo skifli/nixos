@@ -117,7 +117,7 @@
               label-max-length = 0;
               label-show = true;
               left-click = "${userVars.programs.terminal} -e ${userVars.programs.terminal-shell} -c \"systemctl --type=service --state=failed; ${userVars.programs.terminal-shell}\"";
-              middle-click = "";
+              middle-click = "${userVars.programs.terminal} -e ${userVars.programs.terminal-shell} -c \"systemctl reset-failed; systemctl --user reset-failed; ${userVars.programs.terminal-shell}\"";
               mode = "poll";
               restart-interval-ms = 1000;
               restart-policy = "never";
