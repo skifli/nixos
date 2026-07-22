@@ -11,6 +11,7 @@
   pins = import ./pins.nix;
   liveFolders = import ./live-folders.nix;
   joinedTabs = import ./joined-tabs.nix;
+  presets = import ./presets.nix;
   spaces = import ./spaces.nix;
   mods = import ./mods.nix;
 
@@ -38,6 +39,7 @@ in {
     containers
     pins
     joinedTabs
+    presets
     spaces
     liveFolders
     mods
