@@ -22,6 +22,11 @@ in {
       programs.zen-browser = {
         enable = true;
 
+        # Set environment variables for the Zen Browser launcher (Linux only).
+        # Useful for theming/rendering workarounds, e.g. forcing a readable GTK theme
+        # under Wayland. See https://github.com/0xc000022070/zen-browser-flake/issues/290
+        env = {};
+
         # Native messaging hosts for browser-application communication
         # Reference: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging
         # Option 1: Via Home Manager
