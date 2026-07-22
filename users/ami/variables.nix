@@ -136,16 +136,13 @@ rec {
       {
         matches = [
           {
-            app-id = "(?i)io.missioncenter.MissionCenter";
-          }
-        ];
-
-        open-maximized = true;
-      }
-      {
-        matches = [
-          {
             app-id = "(?i)org.gnome.Evince";
+          }
+          {
+            app-id = "(?i)com.wayle.settings";
+          }
+          {
+            app-id = "(?i)(?i)io.missioncenter.MissionCenter";
           }
         ];
 
