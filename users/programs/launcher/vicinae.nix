@@ -143,6 +143,7 @@
           pop_on_backspace = true;
           escape_key_behavior = "";
           search_files_in_root = true;
+          encrypt_sensitive_data = true;
 
           font = {
             rendering = "native";

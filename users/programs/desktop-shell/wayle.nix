@@ -98,6 +98,7 @@
                 label-color = "status-error";
               }
             ];
+            poll-interval-ms = 5000;
           };
           custom = [
             {
@@ -185,6 +186,7 @@
                 label-color = "status-error";
               }
             ];
+            poll-interval-ms = 5000;
           };
           systray = {
             border-show = true;
