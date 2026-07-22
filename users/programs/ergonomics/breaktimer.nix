@@ -8,7 +8,7 @@
       packages = [
         # Not yet in stable
         # TODO: When in stable or unstable re-add
-        # pkgsUnstable.breaktimer
+        pkgsUnstable.breaktimer
       ];
 
       file.".config/BreakTimer/config.json".text = ''        {
