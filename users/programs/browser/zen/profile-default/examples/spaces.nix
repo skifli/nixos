@@ -9,7 +9,7 @@ let
   containers = import ./containers.nix;
 in {
   Example = {
-    id = "5e76f9c8-00c0-4443-a6ae-d239879bb1d5"; 
+    id = "5e76f9c8-00c0-4443-a6ae-d239879bb1d5";
     icon = "📚";
     position = 1;
     container = containers.Example.id;
