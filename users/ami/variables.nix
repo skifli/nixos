@@ -142,6 +142,15 @@ rec {
 
         open-maximized = true;
       }
+      {
+        matches = [
+          {
+            app-id = "(?i)org.gnome.Evince";
+          }
+        ];
+
+        open-maximized = true;
+      }
     ];
   };
 
