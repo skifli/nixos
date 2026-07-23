@@ -14,7 +14,7 @@ let
     }; # Merges hostname with the other config, to more seamlessly combine
 
   usersVarsFile = import ../../users/variables.nix {
-    inherit (hostVars) enabledUsers;
+    inherit hostVars;
     inherit lib;
   };
 
