@@ -1,17 +1,22 @@
-{ hostVars, lib, ... }:
-
-let
+{
+  hostVars,
+  lib,
+  ...
+}: let
   allOutputs = builtins.attrNames hostVars.outputs;
-  
-  focusedOutputs = builtins.filter (name: 
-    hostVars.outputs.${name}.focus-at-startup or false
-  ) allOutputs;
 
-  focusedMonitor = if focusedOutputs == [] 
-    then builtins.head allOutputs 
+  focusedOutputs =
+    builtins.filter (
+      name:
+        hostVars.outputs.${name}.focus-at-startup or false
+    )
+    allOutputs;
+
+  focusedMonitor =
+    if focusedOutputs == []
+    then builtins.head allOutputs
     else builtins.head focusedOutputs;
-in
-rec {
+in rec {
   # User configuration
   extraGroups = [];
   wallpaper = "Berries.JPG";
