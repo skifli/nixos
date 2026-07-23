@@ -55,7 +55,7 @@ rec {
       )
       programs.browsers;
   in {
-    spawn-at-startup = builtins.map (program: {command = [program];}) startupPrograms;
+    spawn-at-startup = map (program: {command = [program];}) startupPrograms;
 
     window-rules = [
       {
@@ -64,6 +64,16 @@ rec {
         open-on-workspace = "1";
         open-maximized = true;
         clip-to-geometry = true;
+      }
+      {
+        matches = [
+          {
+            # TODO: Fix me for Kwallet!
+            app-id = "(?i)gcr-prompter";
+          }
+        ];
+
+        open-on-workspace = "1";
       }
       {
         matches = [
@@ -94,16 +104,6 @@ rec {
 
         open-on-workspace = "5";
         open-maximized = true;
-      }
-      {
-        matches = [
-          {
-            # TODO: Fix me for Kwallet!
-            app-id = "(?i)gcr-prompter";
-          }
-        ];
-
-        open-on-workspace = "5";
       }
       {
         matches = [
@@ -143,9 +143,6 @@ rec {
           }
           {
             app-id = "(?i)(?i)io.missioncenter.MissionCenter";
-          }
-          {
-            app-id = "(?i)breaktimer";
           }
         ];
 
