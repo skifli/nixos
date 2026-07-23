@@ -4,7 +4,7 @@
   ...
 }: {
   home-manager.users.${userVars.username} = {
-		services.xembed-sni-proxy.enable = true; # Workrave might need this
+    services.xembed-sni-proxy.enable = true; # Workrave might need this
 
     home = {
       packages = [
