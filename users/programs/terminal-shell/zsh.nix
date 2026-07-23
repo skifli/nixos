@@ -74,8 +74,13 @@
           # Or use eval "$(pay-respects zsh --inline)" for inline mode
         '';
 
+<<<<<<< HEAD
         interactiveShellInit = ''
           # Only fall back to xterm-256color if we are in an SSH session
+=======
+        initExtra = ''
+          # Only fall back to xterm-256color if we are in an SSH session 
+>>>>>>> ee34b09 (fix(zsh): use initExtra)
           # AND the incoming terminal matches what we expect from userVars
           if [ -n "$SSH_CONNECTION" ] && [[ "$TERM" == *"${userVars.programs.terminal}"* ]]; then
             export TERM=xterm-256color
