@@ -1,3 +1,16 @@
+{ hostVars, lib, ... }:
+
+let
+  allOutputs = builtins.attrNames hostVars.outputs;
+  
+  focusedOutputs = builtins.filter (name: 
+    hostVars.outputs.${name}.focus-at-startup or false
+  ) allOutputs;
+
+  focusedMonitor = if focusedOutputs == [] 
+    then builtins.head allOutputs 
+    else builtins.head focusedOutputs;
+in
 rec {
   # User configuration
   extraGroups = [];
@@ -33,6 +46,7 @@ rec {
     "remmina"
     "workrave"
     "zen-beta"
+    "sleep 0.5 && niri msg action focus-monitor \"${focusedMonitor}\" && niri msg action focus-workspace 1"
   ];
 
   scroll-cooldown-ms = 75; # Cooldown for scroll events (for workspace switching and column focus switching)
@@ -73,6 +87,7 @@ rec {
           }
         ];
 
+        open-focused = true;
         open-on-workspace = "1";
       }
       {
@@ -83,6 +98,7 @@ rec {
         ];
 
         open-on-workspace = "2";
+        open-focused = false;
         open-maximized = true;
       }
       {
@@ -93,6 +109,7 @@ rec {
         ];
 
         open-on-workspace = "3";
+        open-focused = false;
         open-maximized = true;
       }
       {
@@ -103,7 +120,24 @@ rec {
         ];
 
         open-on-workspace = "5";
+        open-focused = false;
         open-maximized = true;
+      }
+      {
+        matches = [
+          {
+            app-id = "(?i)Workrave";
+            title = "(?i)Workrave";
+          }
+        ];
+
+        open-focused = false;
+        open-floating = true;
+        default-floating-position = {
+          x = 20;
+          y = 20;
+          relative-to = "bottom-right";
+        };
       }
       {
         matches = [
@@ -113,6 +147,7 @@ rec {
         ];
 
         open-on-workspace = "6";
+        open-focused = false;
         open-maximized = true;
       }
       ## https://www.reddit.com/r/niri/comments/1skrhet/steam_notifications_appear_in_the_center_of_the/
@@ -143,6 +178,22 @@ rec {
           }
           {
             app-id = "(?i)(?i)io.missioncenter.MissionCenter";
+          }
+          {
+            app-id = "(?i)Workrave";
+            title = "(?i)Exercises";
+          }
+          {
+            app-id = "(?i)Workrave";
+            title = "(?i)Statistics";
+          }
+          {
+            app-id = "(?i)Workrave";
+            title = "(?i)Preferences";
+          }
+          {
+            app-id = "(?i)Workrave";
+            title = "(?i)About workrave";
           }
         ];
 
