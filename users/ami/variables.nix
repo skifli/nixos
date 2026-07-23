@@ -168,6 +168,10 @@ in rec {
           {
             app-id = "(?i)(?i)io.missioncenter.MissionCenter";
           }
+          {
+            app-id = "(?i)io.github.slgobinath.SafeEyes";
+            title = "(?i)Safe Eyes";
+          }
         ];
 
         open-maximized = true;
