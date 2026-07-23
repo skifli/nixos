@@ -138,6 +138,7 @@ in rec {
 
         open-focused = false;
         open-floating = true;
+        open-on-workspace = "5";
         default-floating-position = {
           x = 20;
           y = 20;
