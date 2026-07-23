@@ -24,9 +24,9 @@
       ];
 
       dconf.settings = {
-        "org/workrave/breaks/daily-limit" = { enabled = false; };
-        "org/workrave/breaks/micro-pause" = { enabled = true; };
-        "org/workrave/breaks/rest-break" = { enabled = true; };
+        "org/workrave/breaks/daily-limit" = {enabled = false;};
+        "org/workrave/breaks/micro-pause" = {enabled = true;};
+        "org/workrave/breaks/rest-break" = {enabled = true;};
 
         "org/workrave/distribution" = {
           port = 27273;
@@ -34,7 +34,7 @@
           reconnect-interval = 15;
         };
 
-        "org/workrave/general" = { usage-mode = 0; };
+        "org/workrave/general" = {usage-mode = 0;};
 
         "org/workrave/gui" = {
           force-x11 = true;
@@ -46,9 +46,9 @@
           cycle-time = 10;
           fallback-enabled = false;
         };
-        "org/workrave/gui/applet/daily-limit" = { position = 0; };
-        "org/workrave/gui/applet/micro-pause" = { position = 0; };
-        "org/workrave/gui/applet/rest-break" = { position = 0; };
+        "org/workrave/gui/applet/daily-limit" = {position = 0;};
+        "org/workrave/gui/applet/micro-pause" = {position = 0;};
+        "org/workrave/gui/applet/rest-break" = {position = 0;};
 
         "org/workrave/gui/breaks/daily-limit" = {
           ignorable-break = true;
@@ -71,12 +71,15 @@
           x = 0;
           y = 0;
         };
-        "org/workrave/gui/main-window/daily-limit" = { position = 2; };
-        "org/workrave/gui/main-window/micro-pause" = { flags = 0; position = 0; };
-        "org/workrave/gui/main-window/rest-break" = { position = 1; };
+        "org/workrave/gui/main-window/daily-limit" = {position = 2;};
+        "org/workrave/gui/main-window/micro-pause" = {
+          flags = 0;
+          position = 0;
+        };
+        "org/workrave/gui/main-window/rest-break" = {position = 1;};
 
-        "org/workrave/sound" = { volume = 100; };
-        
+        "org/workrave/sound" = {volume = 100;};
+
         # Note: Sound events omitted here so Workrave uses its default store paths.
         # Cus hardcoding the specific /nix/store/ hash will cause breakages when Workrave updates.
 
