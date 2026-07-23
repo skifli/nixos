@@ -268,6 +268,7 @@
   "zen.theme.gradient.show-custom-colors" = false;
 
   # "zen.theme.accent-color" = "#FFFFFF"; # Doesn't work?
+  "zen.theme.accent-color" = "AccentColor"; # https://github.com/search?q=repo%3Azen-browser%2Fdesktop+%2F(%3F-i)AccentColor%2F&type=code - Does native accent color I do believe
   "zen.theme.border-radius" = 8;
   "zen.theme.content-element-separation" = 0;
   "zen.theme.dark-mode-bias" = 0.3;
@@ -299,6 +300,9 @@
   "layout.scrollbar.side" = 3;
 
   "uc.tabs.dim_unloaded" = true; # For Better Tab Indicators extension
+
+  # Misc
+  "devtools.toolbox.host" = "left"; # DevTools on left side of browser
 
   /**
    *************************************************************************
