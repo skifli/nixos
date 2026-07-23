@@ -3,11 +3,11 @@
   userVars,
   ...
 }: {
-	imports = [
-		./wine-sni-bridge/nix/module.nix
-	];
+  imports = [
+    ./wine-sni-bridge/nix/module.nix
+  ];
 
-	services.wine-sni-bridge.enable = true;
+  services.wine-sni-bridge.enable = true;
 
   home-manager.users.${userVars.username} = {
     home = {
