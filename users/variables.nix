@@ -9,8 +9,8 @@
   filteredUsers = lib.filter (name: builtins.elem name hostVars.enabledUsers) allUsers;
 in {
   usersVars = lib.genAttrs filteredUsers (
-    username: 
-      (import ./${username}/variables.nix { inherit hostVars lib; }) 
-      // { inherit username; }
+    username:
+      (import ./${username}/variables.nix {inherit hostVars lib;})
+      // {inherit username;}
   );
 }
