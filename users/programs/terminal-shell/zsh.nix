@@ -73,10 +73,10 @@
           # Initialize pay-respects
           eval $(pay-respects zsh)
 
-          # Only fall back to xterm-256color if we are in an SSH session 
+          # Only fall back to xterm-256color if we are in an SSH session
           # AND the incoming terminal matches what we expect from userVars
-          if [ -n "$SSH_CONNECTION" ] && [[ "$TERM" == *"${userVars.programs.terminal}"* ]]; then 
-            export TERM=xterm-256color 
+          if [ -n "$SSH_CONNECTION" ] && [[ "$TERM" == *"${userVars.programs.terminal}"* ]]; then
+            export TERM=xterm-256color
           fi
         '';
 
