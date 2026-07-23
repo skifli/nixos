@@ -34,7 +34,6 @@ in {
     # Enable flakes + nix-command
     settings = {
       auto-optimise-store = false; # May make rebuilds longer but a smaller size if enabled, instead we have optimise.automatic enabled
-      download-buffer-size = 1048576000; # 1GB
       # Add flake support
       experimental-features = [
         "nix-command"
