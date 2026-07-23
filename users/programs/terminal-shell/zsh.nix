@@ -70,8 +70,8 @@
         ''; # Source: https://gist.github.com/ctechols/ca1035271ad134841284
 
         initContent = ''
-          # Initialize pay-respects
-          eval $(pay-respects zsh)
+          # Initialize pay-respects (Added double quotes to preserve newlines)
+          eval "$(pay-respects zsh)"
 
           # Only fall back to xterm-256color if we are in an SSH session
           # AND the incoming terminal matches what we expect from userVars
