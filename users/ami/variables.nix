@@ -49,7 +49,7 @@ in rec {
     "ferdium"
     "kdeconnect-indicator" # Idk even though it has its own service that never seems to work... future me problem todo a fix!
     "remmina"
-    "workrave"
+    "sleep 10 && safeeyes"
     "zen-beta"
     "sleep 0.5 && niri msg action focus-monitor \"${focusedMonitor}\" && niri msg action focus-workspace 1"
   ];
@@ -131,23 +131,6 @@ in rec {
       {
         matches = [
           {
-            app-id = "(?i)Workrave";
-            title = "(?i)Workrave";
-          }
-        ];
-
-        open-focused = false;
-        open-floating = true;
-        open-on-workspace = "5";
-        default-floating-position = {
-          x = 20;
-          y = 20;
-          relative-to = "bottom-right";
-        };
-      }
-      {
-        matches = [
-          {
             app-id = "(?i)org.remmina.Remmina";
           }
         ];
@@ -185,22 +168,6 @@ in rec {
           {
             app-id = "(?i)(?i)io.missioncenter.MissionCenter";
           }
-          {
-            app-id = "(?i)Workrave";
-            title = "(?i)Exercises";
-          }
-          {
-            app-id = "(?i)Workrave";
-            title = "(?i)Statistics";
-          }
-          {
-            app-id = "(?i)Workrave";
-            title = "(?i)Preferences";
-          }
-          {
-            app-id = "(?i)Workrave";
-            title = "(?i)About workrave";
-          }
         ];
 
         open-maximized = true;
@@ -231,7 +198,7 @@ in rec {
       "browseros"
     ];
     editor = "hx";
-    ergonomics = "workrave";
+    ergonomics = "safeeyes";
     explorer-tui = "yazi";
     explorer-gui = "dolphin";
     launcher = "vicinae";
