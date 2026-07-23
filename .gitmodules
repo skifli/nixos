@@ -2,6 +2,3 @@
 	path = users/programs/browser/zen/profile-default/hidden
 	url = https://github.com/skifli/zen-profile-default
 	branch = main
-[submodule "users/programs/ergonomics/wine-sni-bridge"]
-	path = users/programs/ergonomics/wine-sni-bridge
-	url = https://github.com/waliori/wine-sni-bridge
