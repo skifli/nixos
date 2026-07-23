@@ -150,6 +150,7 @@
           escape_key_behavior = "";
           search_files_in_root = true;
           # encrypt_sensitive_data = true; - Causing issues right now https://github.com/vicinaehq/vicinae/issues/1632
+          encrypt_sensitive_data = false;
 
           font = {
             rendering = "native";
