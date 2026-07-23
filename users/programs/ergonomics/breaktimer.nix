@@ -3,13 +3,16 @@
   userVars,
   ...
 }: {
-  home-manager.users.${userVars.username} = {
-    services.xembed-sni-proxy.enable = true; # Workrave might need this
+	imports = [
+		./wine-sni-bridge/nix/module.nix
+	];
 
+	services.wine-sni-bridge.enable = true;
+
+  home-manager.users.${userVars.username} = {
     home = {
       packages = [
-        # Not yet in stable
-        # TODO: When in stable or unstable re-add
+        # TODO: When in stable move to use stable
         pkgsUnstable.breaktimer
       ];
 
