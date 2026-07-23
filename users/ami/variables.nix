@@ -28,7 +28,6 @@ rec {
     "dbus-update-activation-environment --systemd --all"
     "anki"
     "anytype"
-    "breaktimer"
     "ferdium"
     "kdeconnect-indicator" # Idk even though it has its own service that never seems to work... future me problem todo a fix!
     "remmina"
