@@ -14,7 +14,20 @@ in {
   home-manager = {
     sharedModules = [inputs.zen-browser.homeModules.beta];
 
-    users.${userVars.username} = {
+    users.${userVars.username} = {lib, ...}: {
+      # Fix for https://github.com/zen-browser/desktop/issues/7177
+      home.activation.fixBase16KvantumBlur = lib.hm.dag.entryAfter ["writeBoundary"] ''
+        TARGET_FILE="$HOME/.config/Kvantum/Base16Kvantum/Base16Kvantum.kvconfig"
+
+        if [ -f "$TARGET_FILE" ]; then
+          # Force disable blur, transparency, and background opacity layers
+          sed -i 's/^popup_blurring.*/popup_blurring=false/' "$TARGET_FILE"
+          sed -i 's/^reduce_window_opacity.*/reduce_window_opacity=0/' "$TARGET_FILE"
+          sed -i 's/^blur_konsole.*/blur_konsole=false/' "$TARGET_FILE"
+          sed -i 's/^blur_translucent.*/blur_translucent=false/' "$TARGET_FILE"
+        fi
+      '';
+
       home.packages = with pkgs; [kdePackages.kdialog speechd];
 
       stylix.targets.zen-browser.enable = false;
