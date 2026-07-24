@@ -189,10 +189,16 @@ in rec {
             }
           ];
 
+<<<<<<< HEAD
           open-maximized = true;
         }
       ]
       + safeEyesRules;
+=======
+        open-maximized = true;
+      }
+    ] ++ safeEyesRules;
+>>>>>>> 3515fc1 (fix(niri): meant ++ not + for concatenation)
   };
 
   bar = {
