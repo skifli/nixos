@@ -28,8 +28,6 @@ in {
         fi
       '';
 
-      xdg.configFile."Kvantum/Base16Kvantum/Base16Kvantum.kvconfig".force = true;
-
       home.packages = with pkgs; [kdePackages.kdialog speechd];
 
       stylix.targets.zen-browser.enable = false;
