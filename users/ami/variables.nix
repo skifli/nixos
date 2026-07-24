@@ -27,7 +27,8 @@
         }
       ];
       open-on-output = outputName;
-      open-maximized = true;
+      open-focused = true;
+      open-fullscreen = true;
     })
     allOutputs;
 in rec {
