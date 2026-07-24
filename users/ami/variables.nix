@@ -189,9 +189,10 @@ in rec {
             }
           ];
 
-        open-maximized = true;
-      }
-    ] ++ safeEyesRules;
+          open-maximized = true;
+        }
+      ]
+      ++ safeEyesRules;
   };
 
   bar = {
