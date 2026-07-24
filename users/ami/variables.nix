@@ -2,38 +2,33 @@
   hostVars,
   lib,
   ...
-}: let
+}:
+let
   allOutputs = builtins.attrNames hostVars.outputs;
 
-  focusedOutputs =
-    builtins.filter (
-      name:
-        hostVars.outputs.${name}.focus-at-startup or false
-    )
-    allOutputs;
+  focusedOutputs = builtins.filter (
+    name: hostVars.outputs.${name}.focus-at-startup or false
+  ) allOutputs;
 
   focusedMonitor =
-    if focusedOutputs == []
-    then builtins.head allOutputs
-    else builtins.head focusedOutputs;
+    if focusedOutputs == [ ] then builtins.head allOutputs else builtins.head focusedOutputs;
 
   # Dynamic SafeEyes window rules based on ze outputs
-  safeEyesRules =
-    lib.imap0 (idx: outputName: {
-      matches = [
-        {
-          app-id = "(?i)io.github.slgobinath.SafeEyes";
-          title = "SafeEyes-${builtins.toString idx}";
-        }
-      ];
-      open-on-output = outputName;
-      open-focused = true;
-      open-fullscreen = true;
-    })
-    allOutputs;
-in rec {
+  safeEyesRules = lib.imap0 (idx: outputName: {
+    matches = [
+      {
+        app-id = "(?i)io.github.slgobinath.SafeEyes";
+        title = "SafeEyes-${builtins.toString idx}";
+      }
+    ];
+    open-on-output = outputName;
+    open-focused = true;
+    open-fullscreen = true;
+  }) allOutputs;
+in
+rec {
   # User configuration
-  extraGroups = [];
+  extraGroups = [ ];
   wallpaper = "Berries.JPG";
 
   networkMounts = {
@@ -71,28 +66,23 @@ in rec {
 
   scroll-cooldown-ms = 75; # Cooldown for scroll events (for workspace switching and column focus switching)
 
-  niri = let
-    browserAppIdMatches =
-      builtins.concatMap (
+  niri =
+    let
+      browserAppIdMatches = builtins.concatMap (
         browser:
-          [
-            {
-              app-id = "(?i)${browser}";
-            }
-          ]
-          # BrowserOS is special (often shows up as chromium-browser)
-          ++ (
-            if browser == "browseros"
-            then [{app-id = "(?i)chromium-browser";}]
-            else []
-          )
-      )
-      programs.browsers;
-  in {
-    spawn-at-startup = map (program: {command = [program];}) startupPrograms;
+        [
+          {
+            app-id = "(?i)${browser}";
+          }
+        ]
+        # BrowserOS is special (often shows up as chromium-browser)
+        ++ (if browser == "browseros" then [ { app-id = "(?i)chromium-browser"; } ] else [ ])
+      ) programs.browsers;
+    in
+    {
+      spawn-at-startup = map (program: { command = [ program ]; }) startupPrograms;
 
-    window-rules =
-      [
+      window-rules = [
         {
           matches = browserAppIdMatches;
 
@@ -182,7 +172,10 @@ in rec {
               app-id = "(?i)com.wayle.settings";
             }
             {
-              app-id = "(?i)(?i)io.missioncenter.MissionCenter";
+              app-id = "(?i)io.missioncenter.MissionCenter";
+            }
+            {
+              app-id = "(?i)dev.zed.Zed";
             }
             {
               app-id = "(?i)io.github.slgobinath.SafeEyes";
@@ -194,7 +187,7 @@ in rec {
         }
       ]
       ++ safeEyesRules;
-  };
+    };
 
   bar = {
     output = "DP-1";
