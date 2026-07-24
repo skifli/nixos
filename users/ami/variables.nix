@@ -16,6 +16,18 @@
     if focusedOutputs == []
     then builtins.head allOutputs
     else builtins.head focusedOutputs;
+
+  # Dynamic SafeEyes window rules based on ze outputs
+  safeEyesRules = lib.imap0 (idx: outputName: {
+    matches = [
+      {
+        app-id = "(?i)io.github.slgobinath.SafeEyes";
+        title = "SafeEyes-${builtins.toString idx}";
+      }
+    ];
+    open-on-output = outputName;
+    open-maximized = true;
+  }) allOutputs;
 in rec {
   # User configuration
   extraGroups = [];
@@ -176,7 +188,7 @@ in rec {
 
         open-maximized = true;
       }
-    ];
+    ] + safeEyesRules;
   };
 
   bar = {
