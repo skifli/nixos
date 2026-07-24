@@ -18,16 +18,18 @@
     else builtins.head focusedOutputs;
 
   # Dynamic SafeEyes window rules based on ze outputs
-  safeEyesRules = lib.imap0 (idx: outputName: {
-    matches = [
-      {
-        app-id = "(?i)io.github.slgobinath.SafeEyes";
-        title = "SafeEyes-${builtins.toString idx}";
-      }
-    ];
-    open-on-output = outputName;
-    open-maximized = true;
-  }) allOutputs;
+  safeEyesRules =
+    lib.imap0 (idx: outputName: {
+      matches = [
+        {
+          app-id = "(?i)io.github.slgobinath.SafeEyes";
+          title = "SafeEyes-${builtins.toString idx}";
+        }
+      ];
+      open-on-output = outputName;
+      open-maximized = true;
+    })
+    allOutputs;
 in rec {
   # User configuration
   extraGroups = [];
@@ -88,107 +90,109 @@ in rec {
   in {
     spawn-at-startup = map (program: {command = [program];}) startupPrograms;
 
-    window-rules = [
-      {
-        matches = browserAppIdMatches;
+    window-rules =
+      [
+        {
+          matches = browserAppIdMatches;
 
-        open-on-workspace = "1";
-        open-maximized = true;
-        clip-to-geometry = true;
-      }
-      {
-        matches = [
-          {
-            # TODO: Fix me for Kwallet!
-            app-id = "(?i)gcr-prompter";
-          }
-        ];
+          open-on-workspace = "1";
+          open-maximized = true;
+          clip-to-geometry = true;
+        }
+        {
+          matches = [
+            {
+              # TODO: Fix me for Kwallet!
+              app-id = "(?i)gcr-prompter";
+            }
+          ];
 
-        open-focused = true;
-        open-on-workspace = "1";
-      }
-      {
-        matches = [
-          {
-            app-id = "(?i)anki";
-          }
-        ];
+          open-focused = true;
+          open-on-workspace = "1";
+        }
+        {
+          matches = [
+            {
+              app-id = "(?i)anki";
+            }
+          ];
 
-        open-on-workspace = "2";
-        open-focused = false;
-        open-maximized = true;
-      }
-      {
-        matches = [
-          {
-            title = "(?i)Anytype";
-          }
-        ];
+          open-on-workspace = "2";
+          open-focused = false;
+          open-maximized = true;
+        }
+        {
+          matches = [
+            {
+              title = "(?i)Anytype";
+            }
+          ];
 
-        open-on-workspace = "3";
-        open-focused = false;
-        open-maximized = true;
-      }
-      {
-        matches = [
-          {
-            app-id = "(?i)ferdium";
-          }
-        ];
+          open-on-workspace = "3";
+          open-focused = false;
+          open-maximized = true;
+        }
+        {
+          matches = [
+            {
+              app-id = "(?i)ferdium";
+            }
+          ];
 
-        open-on-workspace = "5";
-        open-focused = false;
-        open-maximized = true;
-      }
-      {
-        matches = [
-          {
-            app-id = "(?i)org.remmina.Remmina";
-          }
-        ];
+          open-on-workspace = "5";
+          open-focused = false;
+          open-maximized = true;
+        }
+        {
+          matches = [
+            {
+              app-id = "(?i)org.remmina.Remmina";
+            }
+          ];
 
-        open-on-workspace = "6";
-        open-focused = false;
-        open-maximized = true;
-      }
-      ## https://www.reddit.com/r/niri/comments/1skrhet/steam_notifications_appear_in_the_center_of_the/
-      {
-        # Do above
-        matches = [
-          {
-            app-id = "(?i)steam";
-            title = "(?i)notificationtoasts_\\d+_desktop";
-          }
-        ];
+          open-on-workspace = "6";
+          open-focused = false;
+          open-maximized = true;
+        }
+        ## https://www.reddit.com/r/niri/comments/1skrhet/steam_notifications_appear_in_the_center_of_the/
+        {
+          # Do above
+          matches = [
+            {
+              app-id = "(?i)steam";
+              title = "(?i)notificationtoasts_\\d+_desktop";
+            }
+          ];
 
-        open-maximized = false;
-        open-focused = false;
-        default-floating-position = {
-          x = 0;
-          y = 0;
-          relative-to = "bottom-right";
-        };
-      }
-      {
-        matches = [
-          {
-            app-id = "(?i)org.gnome.Evince";
-          }
-          {
-            app-id = "(?i)com.wayle.settings";
-          }
-          {
-            app-id = "(?i)(?i)io.missioncenter.MissionCenter";
-          }
-          {
-            app-id = "(?i)io.github.slgobinath.SafeEyes";
-            title = "(?i)Safe Eyes";
-          }
-        ];
+          open-maximized = false;
+          open-focused = false;
+          default-floating-position = {
+            x = 0;
+            y = 0;
+            relative-to = "bottom-right";
+          };
+        }
+        {
+          matches = [
+            {
+              app-id = "(?i)org.gnome.Evince";
+            }
+            {
+              app-id = "(?i)com.wayle.settings";
+            }
+            {
+              app-id = "(?i)(?i)io.missioncenter.MissionCenter";
+            }
+            {
+              app-id = "(?i)io.github.slgobinath.SafeEyes";
+              title = "(?i)Safe Eyes";
+            }
+          ];
 
-        open-maximized = true;
-      }
-    ] + safeEyesRules;
+          open-maximized = true;
+        }
+      ]
+      + safeEyesRules;
   };
 
   bar = {
