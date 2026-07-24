@@ -5,7 +5,8 @@
   pkgs,
   userVars,
   ...
-}: {
+}:
+{
   imports = [
     inputs.vicinae.nixosModules.default
   ];
@@ -13,7 +14,7 @@
   programs.vicinae.input-server.enable = true; # Needed for snippets
 
   home-manager = {
-    sharedModules = [inputs.vicinae.homeManagerModules.default];
+    sharedModules = [ inputs.vicinae.homeManagerModules.default ];
 
     users.${userVars.username} = {
       home.packages = with pkgs; [
@@ -29,14 +30,14 @@
             "data": { "text": "™" },
             "createdAt": 1783760727,
             "updatedAt": 1783760763,
-            "expansion": { "keyword": "!tm", "apps": [], "word": true }
+            "expansion": { "keyword": "!tm", "apps": [], "word": false }
           },
           {
             "id": "snp-c33eee8cfd85",
             "name": "UUID",
             "data": { "text": "{uuid}" },
             "createdAt": 1783760855,
-            "expansion": { "keyword": "!uuid", "apps": [], "word": true }
+            "expansion": { "keyword": "!uuid", "apps": [], "word": false }
           },
           {
             "id": "snp-bd5eaa6ccf2c",
@@ -44,21 +45,21 @@
             "data": { "text": "{shell code=\"date\"}" },
             "createdAt": 1783760978,
             "updatedAt": 1783761064,
-            "expansion": { "keyword": "!dt", "apps": [], "word": true }
+            "expansion": { "keyword": "!dt", "apps": [], "word": false }
           },
           {
             "id": "snp-2ea1410e2c05",
             "name": "Copyright",
             "data": { "text": "©" },
             "createdAt": 1783761258,
-            "expansion": { "keyword": "!c", "apps": [], "word": true }
+            "expansion": { "keyword": "!c", "apps": [], "word": false }
           },
           {
             "id": "snp-c26a967d3516",
             "name": "Registered trademark",
             "data": { "text": "®" },
             "createdAt": 1783761270,
-            "expansion": { "keyword": "!r", "apps": [], "word": true }
+            "expansion": { "keyword": "!r", "apps": [], "word": false }
           },
           {
             "id": "snp-e5d409811d4d",
@@ -66,28 +67,28 @@
             "data": { "text": "°" },
             "createdAt": 1783761287,
             "updatedAt": 1783761296,
-            "expansion": { "keyword": "!deg", "apps": [], "word": true }
+            "expansion": { "keyword": "!deg", "apps": [], "word": false }
           },
           {
             "id": "snp-e4ff4d2be4f7",
             "name": "Right arrow",
             "data": { "text": "→" },
             "createdAt": 1783761339,
-            "expansion": { "keyword": "!rar", "apps": [], "word": true }
+            "expansion": { "keyword": "!rar", "apps": [], "word": false }
           },
           {
             "id": "snp-f5fd1d78e7ae",
             "name": "Left arrow",
             "data": { "text": "←" },
             "createdAt": 1783761347,
-            "expansion": { "keyword": "!lar", "apps": [], "word": true }
+            "expansion": { "keyword": "!lar", "apps": [], "word": false }
           },
           {
             "id": "snp-cb300880b451",
             "name": "Plus minus",
             "data": { "text": "±" },
             "createdAt": 1783761356,
-            "expansion": { "keyword": "!pm", "apps": [], "word": true }
+            "expansion": { "keyword": "!pm", "apps": [], "word": false }
           },
           {
             "id": "snp-7ec49c47e7a6",
@@ -95,21 +96,21 @@
             "data": { "text": "∓" },
             "createdAt": 1783761379,
             "updatedAt": 1783761389,
-            "expansion": { "keyword": "!mp", "apps": [], "word": true }
+            "expansion": { "keyword": "!mp", "apps": [], "word": false }
           },
           {
             "id": "snp-384a11d556aa",
             "name": "Not equal to",
             "data": { "text": "≠" },
             "createdAt": 1783761403,
-            "expansion": { "keyword": "!neq", "apps": [], "word": true }
+            "expansion": { "keyword": "!neq", "apps": [], "word": false }
           },
           {
             "id": "snp-7e0f1c8d3a2b",
             "name": "GitHub PAT",
             "data": { "text": "{shell code=\"cat /home/ami/.github-pat\"}" },
             "createdAt": 1783761415,
-            "expansion": { "keyword": "!pat", "apps": [], "word": true }
+            "expansion": { "keyword": "!pat", "apps": [], "word": false }
           }
         ]
       '';
@@ -201,9 +202,7 @@
             "@knoopx/store.vicinae.firefox" = {
               preferences = {
                 profile_dir =
-                  if builtins.elem "zen-beta" userVars.programs.browsers
-                  then ".config/zen"
-                  else ".mozilla/firefox";
+                  if builtins.elem "zen-beta" userVars.programs.browsers then ".config/zen" else ".mozilla/firefox";
               };
 
               entrypoints = {
@@ -211,27 +210,49 @@
                   alias = "fb";
                   enabled = false;
                 };
-                history = {alias = "fh";};
+                history = {
+                  alias = "fh";
+                };
               };
             };
 
             "@knoopx/store.vicinae.niri" = {
               entrypoints = {
-                layers = {alias = "nla";};
-                outputs = {alias = "nou";};
-                pick-color = {alias = "cp";};
-                windows = {alias = "nwi";};
-                workspaces = {alias = "nwo";};
+                layers = {
+                  alias = "nla";
+                };
+                outputs = {
+                  alias = "nou";
+                };
+                pick-color = {
+                  alias = "cp";
+                };
+                windows = {
+                  alias = "nwi";
+                };
+                workspaces = {
+                  alias = "nwo";
+                };
               };
             };
 
             "@knoopx/store.vicinae.nix" = {
               entrypoints = {
-                flake-packages = {alias = "nfp";};
-                home-manager-options = {alias = "hm";};
-                options = {alias = "no";};
-                packages = {alias = "np";};
-                pull-requests = {enabled = false;};
+                flake-packages = {
+                  alias = "nfp";
+                };
+                home-manager-options = {
+                  alias = "hm";
+                };
+                options = {
+                  alias = "no";
+                };
+                packages = {
+                  alias = "np";
+                };
+                pull-requests = {
+                  enabled = false;
+                };
               };
             };
 
@@ -293,7 +314,9 @@
 
             core = {
               entrypoints = {
-                sponsor = {enabled = false;};
+                sponsor = {
+                  enabled = false;
+                };
               };
             };
 
@@ -309,16 +332,14 @@
               };
               preferences = {
                 autoIndexing = true;
-                excludedIndexingPaths = [];
-                indexingPaths =
-                  map (share: share.mountPoint) userVars.networkMounts.nfsShares
-                  ++ [
-                    "/home/${userVars.username}/Downloads"
-                    "/home/${userVars.username}/Documents"
-                    "/home/${userVars.username}/Pictures"
-                    "/home/${userVars.username}/Videos"
-                    "/home/${userVars.username}/nixos"
-                  ];
+                excludedIndexingPaths = [ ];
+                indexingPaths = map (share: share.mountPoint) userVars.networkMounts.nfsShares ++ [
+                  "/home/${userVars.username}/Downloads"
+                  "/home/${userVars.username}/Documents"
+                  "/home/${userVars.username}/Pictures"
+                  "/home/${userVars.username}/Videos"
+                  "/home/${userVars.username}/nixos"
+                ];
               };
             };
 
@@ -336,13 +357,27 @@
 
             power = {
               entrypoints = {
-                hibernate = {alias = "hb";};
-                lock = {alias = "lc";};
-                logout = {alias = "lo";};
-                power-off = {alias = "sd";};
-                reboot = {alias = "rb";};
-                soft-reboot = {alias = "sr";};
-                suspend = {alias = "ss";};
+                hibernate = {
+                  alias = "hb";
+                };
+                lock = {
+                  alias = "lc";
+                };
+                logout = {
+                  alias = "lo";
+                };
+                power-off = {
+                  alias = "sd";
+                };
+                reboot = {
+                  alias = "rb";
+                };
+                soft-reboot = {
+                  alias = "sr";
+                };
+                suspend = {
+                  alias = "ss";
+                };
               };
             };
 
@@ -355,22 +390,44 @@
                 undo = true;
               };
               entrypoints = {
-                create = {alias = "sc";};
-                manage = {alias = "sm";};
+                create = {
+                  alias = "sc";
+                };
+                manage = {
+                  alias = "sm";
+                };
               };
             };
 
             system = {
               entrypoints = {
-                run = {alias = "cmd";};
-                toggle-mute = {enabled = false;};
-                volume-0 = {enabled = false;};
-                volume-100 = {enabled = false;};
-                volume-25 = {enabled = false;};
-                volume-50 = {enabled = false;};
-                volume-75 = {enabled = false;};
-                volume-down = {enabled = false;};
-                volume-up = {enabled = false;};
+                run = {
+                  alias = "cmd";
+                };
+                toggle-mute = {
+                  enabled = false;
+                };
+                volume-0 = {
+                  enabled = false;
+                };
+                volume-100 = {
+                  enabled = false;
+                };
+                volume-25 = {
+                  enabled = false;
+                };
+                volume-50 = {
+                  enabled = false;
+                };
+                volume-75 = {
+                  enabled = false;
+                };
+                volume-down = {
+                  enabled = false;
+                };
+                volume-up = {
+                  enabled = false;
+                };
               };
             };
 
