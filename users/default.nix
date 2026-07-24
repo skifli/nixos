@@ -17,7 +17,7 @@
 
   home-manager = {
     backupFileExtension = "hm-backup";
-    # overwriteBackup = true;
+    overwriteBackup = true;
 
     useGlobalPkgs = false; # Stylix HM module sets nixpkgs overlays; avoid warnings by letting HM manage its own pkgs
     useUserPackages = true; # Make packages not available system-wide, instead in ~/.nix-profile
