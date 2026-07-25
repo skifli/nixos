@@ -4,6 +4,7 @@
       enable = true;
 
       defaultEditor = false; # Whether to set zeditor -w as the default editor using the EDITOR and VISUAL environment variables.
+      installRemoteServer = false; # Whether to symlink the Zed’s remote server binary to the expected location. This allows remotely connecting to this system from a distant Zed client.
 
       extensions = [
         "codebook"
@@ -12,6 +13,14 @@
         "nix"
       ];
 
+      # Declare and inject extra system packages directly into the environment where the Zed editor runs
+      extraPackages = [];
+
+      enableMcpIntegration = false; # Whether to integrate the MCP server config from programs.mcp.servers into programs.zed-editor.userSettings.context_servers. Note: Settings defined in programs.zed-editor.userSettings.context_servers will take precedence over the generated MCP configuration.
+
+      mutableUserKeymaps = true;
+      mutableUserTasks = true;
+      mutableUserDebug = true;
       mutableUserSettings = true; # Whether user settings (settings.json) can be updated by zed.
 
       userSettings = {
@@ -41,6 +50,8 @@
               "nixd"
               "!nil"
             ];
+
+            format_on_save = "on";
 
             formatter = {
               external = {
