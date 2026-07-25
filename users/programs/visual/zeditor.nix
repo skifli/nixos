@@ -119,13 +119,6 @@
         ui_font_family = "Inter";
         ui_font_size = 13.33;
 
-        icon_theme = {
-          mode = "system";
-        };
-        theme = {
-          mode = "system";
-        };
-
         # Panels & Layouts
         tabs = {
           file_icons = true;
