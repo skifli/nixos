@@ -65,7 +65,8 @@ in rec {
     "remmina"
     "sleep 10 && safeeyes"
     "zen-beta"
-    "sleep 0.5 && niri msg action focus-monitor \"${focusedMonitor}\" && niri msg action focus-workspace 1"
+    "sleep 1 && niri msg action focus-monitor \"${focusedMonitor}\" && niri msg action focus-workspace 1"
+    "sleep 1 && niri msg action focus-window --id $(niri msg --json windows | tr -d '\\n' | sed 's/}/\\n/g' | sed -n '/\"app_id\": *\"[^\"]*gcr-prompter/I{s/.*\"id\": *\\\\([0-9]*\\\\).*/\\\\1/p;q}')"
   ];
 
   scroll-cooldown-ms = 75; # Cooldown for scroll events (for workspace switching and column focus switching)
@@ -88,7 +89,7 @@ in rec {
       )
       programs.browsers;
   in {
-    spawn-at-startup = map (program: {command = [program];}) startupPrograms;
+    spawn-at-startup = map (program: {command = ["sh" "-c" program];}) startupPrograms;
 
     window-rules =
       [
@@ -128,7 +129,7 @@ in rec {
             }
           ];
 
-          open-on-workspace = "3";
+          open-on-workspace = "5";
           open-focused = false;
           open-maximized = true;
         }
@@ -139,8 +140,8 @@ in rec {
             }
           ];
 
-          open-on-workspace = "5";
-          open-focused = false;
+          open-on-workspace = "6";
+          open-focused = true;
           open-maximized = true;
         }
         {
@@ -150,7 +151,7 @@ in rec {
             }
           ];
 
-          open-on-workspace = "6";
+          open-on-workspace = "7";
           open-focused = false;
           open-maximized = true;
         }
