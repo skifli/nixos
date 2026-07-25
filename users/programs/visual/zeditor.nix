@@ -116,8 +116,6 @@
         ui_font_weight = 400.0;
         buffer_line_height = "standard";
         buffer_font_size = 12.0;
-        ui_font_family = "Inter";
-        ui_font_size = 13.33;
 
         # Panels & Layouts
         tabs = {
