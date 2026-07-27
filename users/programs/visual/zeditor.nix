@@ -1,9 +1,13 @@
-{pkgs, userVars, ...}: {
+{
+  pkgs,
+  userVars,
+  ...
+}: {
   home-manager.users.${userVars.username} = {
     home.packages = with pkgs; [
       prettier
     ];
-    
+
     programs.zed-editor = {
       enable = true;
 
