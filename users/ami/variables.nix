@@ -242,6 +242,7 @@ in rec {
       "affinity"
       "anki"
       "aw"
+      # "discord"
       "kde-connect"
       "lan-mouse"
       "nix-direnv"
