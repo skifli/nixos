@@ -119,7 +119,6 @@ in rec {
           ];
 
           open-on-workspace = "2";
-          open-focused = false;
           open-maximized = true;
         }
         {
@@ -130,7 +129,6 @@ in rec {
           ];
 
           open-on-workspace = "5";
-          open-focused = false;
           open-maximized = true;
         }
         {
@@ -152,7 +150,6 @@ in rec {
           ];
 
           open-on-workspace = "7";
-          open-focused = false;
           open-maximized = true;
         }
         ## https://www.reddit.com/r/niri/comments/1skrhet/steam_notifications_appear_in_the_center_of_the/
