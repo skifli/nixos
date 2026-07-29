@@ -339,15 +339,17 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions; {
   };
 
   "Mod+Ctrl+1" = {
-    action = spawn ["sh" "-c" "/home/${userVars.username}/.local/bin/1-niri.sh"];
+    action = spawn [ "${pkgs.writeShellScriptBin "1-niri" (builtins.readFile ../../../${userVars.username}/scripts/1-niri.sh)}/bin/1-niri" ];
     hotkey-overlay.title = "Run script 1";
   };
+
   "Mod+Ctrl+2" = {
-    action = spawn ["sh" "-c" "/home/${userVars.username}/.local/bin/2-niri.sh"];
+    action = spawn [ "${pkgs.writeShellScriptBin "2-niri" (builtins.readFile ../../../${userVars.username}/scripts/2-niri.sh)}/bin/2-niri" ];
     hotkey-overlay.title = "Run script 2";
   };
+
   "Mod+Ctrl+3" = {
-    action = spawn ["sh" "-c" "/home/${userVars.username}/.local/bin/3-niri.sh"];
+    action = spawn [ "${pkgs.writeShellScriptBin "3-niri" (builtins.readFile ../../../${userVars.username}/scripts/3-niri.sh)}/bin/3-niri" ];
     hotkey-overlay.title = "Run script 3";
   };
 }
