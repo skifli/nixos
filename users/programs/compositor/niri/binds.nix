@@ -338,16 +338,16 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions; {
     ];
   };
 
-  "Mod+Ctrl+1" = {
-    action = spawn ["/home/${userVars.username}/.local/bin/1-niri.sh"];
+    "Mod+Ctrl+1" = {
+    action = spawn [ "sh" "-c" "/home/${userVars.username}/.local/bin/1-niri.sh" ];
     hotkey-overlay.title = "Run script 1";
   };
   "Mod+Ctrl+2" = {
-    action = spawn ["/home/${userVars.username}/.local/bin/2-niri.sh"];
+    action = spawn [ "sh" "-c" "/home/${userVars.username}/.local/bin/2-niri.sh" ];
     hotkey-overlay.title = "Run script 2";
   };
   "Mod+Ctrl+3" = {
-    action = spawn ["/home/${userVars.username}/.local/bin/3-niri.sh"];
+    action = spawn [ "sh" "-c" "/home/${userVars.username}/.local/bin/3-niri.sh" ];
     hotkey-overlay.title = "Run script 3";
   };
 }
