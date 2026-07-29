@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+export PATH="$PATH:/run/current-system/sw/bin:$HOME/.nix-profile/bin"
+
 export MON_1="HDMI-A-1"
 export MON_2="DP-1"
 

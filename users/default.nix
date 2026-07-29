@@ -115,11 +115,34 @@
               source = asset;
             };
 
+          /*
           file = {
             ".local/bin" = {
               source = ./${userVars.username}/scripts;
               recursive = true;
               executable = true; # For scripts!
+            };
+          };
+          */
+          home.file = {
+            ".local/bin/niri_helpers.sh" = {
+              executable = true;
+              source = ./${userVars.username}/scripts/niri_helpers.sh;
+            };
+
+            ".local/bin/1-niri.sh" = {
+              executable = true;
+              source = ./${userVars.username}/scripts/1-niri.sh;
+            };
+
+            ".local/bin/2-niri.sh" = {
+              executable = true;
+              source = ./${userVars.username}/scripts/2-niri.sh;
+            };
+
+            ".local/bin/3-niri.sh" = {
+              executable = true;
+              source = ./${userVars.username}/scripts/3-niri.sh;
             };
           };
 
