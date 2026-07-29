@@ -84,7 +84,12 @@ in rec {
           # BrowserOS is special (often shows up as chromium-browser)
           ++ (
             if browser == "browseros"
-            then [{app-id = "(?i)chromium-browser"; at-startup = true;}]
+            then [
+              {
+                app-id = "(?i)chromium-browser";
+                at-startup = true;
+              }
+            ]
             else []
           )
       )
