@@ -18,6 +18,7 @@
         "codebook"
         "git-firefly"
         "latex"
+        "make"
         "markdownlint"
         "nix"
       ];
