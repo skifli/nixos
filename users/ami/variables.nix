@@ -78,12 +78,13 @@ in rec {
           [
             {
               app-id = "(?i)${browser}";
+              at-startup = true;
             }
           ]
           # BrowserOS is special (often shows up as chromium-browser)
           ++ (
             if browser == "browseros"
-            then [{app-id = "(?i)chromium-browser";}]
+            then [{app-id = "(?i)chromium-browser"; at-startup = true;}]
             else []
           )
       )
@@ -97,6 +98,7 @@ in rec {
           matches = browserAppIdMatches;
 
           open-on-workspace = "1";
+          open-focused = false;
           open-maximized = true;
           clip-to-geometry = true;
         }
@@ -105,6 +107,7 @@ in rec {
             {
               # TODO: Fix me for Kwallet!
               app-id = "(?i)gcr-prompter";
+              at-startup = true;
             }
           ];
 
@@ -115,26 +118,31 @@ in rec {
           matches = [
             {
               app-id = "(?i)anki";
+              at-startup = true;
             }
           ];
 
           open-on-workspace = "2";
+          open-focused = false;
           open-maximized = true;
         }
         {
           matches = [
             {
               title = "(?i)Anytype";
+              at-startup = true;
             }
           ];
 
           open-on-workspace = "5";
+          open-focused = false;
           open-maximized = true;
         }
         {
           matches = [
             {
               app-id = "(?i)ferdium";
+              at-startup = true;
             }
           ];
 
@@ -146,10 +154,12 @@ in rec {
           matches = [
             {
               app-id = "(?i)org.remmina.Remmina";
+              at-startup = true;
             }
           ];
 
           open-on-workspace = "7";
+          open-focused = false;
           open-maximized = true;
         }
         ## https://www.reddit.com/r/niri/comments/1skrhet/steam_notifications_appear_in_the_center_of_the/
