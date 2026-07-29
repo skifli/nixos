@@ -17,6 +17,7 @@
       extensions = [
         "codebook"
         "git-firefly"
+        "latex"
         "markdownlint"
         "nix"
       ];
