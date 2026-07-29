@@ -187,6 +187,7 @@
 
   environment.systemPackages = with pkgs; [
     niri
+    jq # Used for some scripts
   ];
 
   programs = {
