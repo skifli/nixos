@@ -188,6 +188,21 @@ in rec {
         {
           matches = [
             {
+              app-id = "(?i)anki";
+            }
+            {
+              title = "(?i)Anytype";
+            }
+            {
+              app-id = "(?i)ferdium";
+            }
+            {
+              app-id = "(?i)org.remmina.Remmina";
+            }
+            {
+              app-id = "(?i)ferdium";
+            }
+            {
               app-id = "(?i)org.gnome.Evince";
             }
             {
