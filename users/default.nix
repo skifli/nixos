@@ -124,7 +124,7 @@
             };
           };
           */
-          home.file = {
+          file = {
             ".local/bin/niri_helpers.sh" = {
               executable = true;
               source = ./${userVars.username}/scripts/niri_helpers.sh;
