@@ -5,8 +5,8 @@ source "${BASH_SOURCE%/*}/niri_helpers.sh"
 echo "Initing 'nea' window positions..."
 
 ensure_window_exists "org.gnome.Evince" "main.pdf — hmon NEA Writeup" "evince ~/Documents/hmon-nea/src/out/main.pdf" "org.gnome.Evince" "main.pdf — hmon NEA Writeup"
-ensure_window_exists "dev.zed.Zed" "hmon-nea —" "zeditor ~/Documents/hmon-nea" "dev.zed.Zed" "hmon-nea —"
-ensure_window_exists "dev.zed.Zed" "hmon —" "zeditor ~/Documents/hmon" "dev.zed.Zed" "hmon —"
+ensure_window_exists "dev.zed.Zed" "hmon-nea —" "zeditor ~/Documents/hmon-nea ~/Documents/hmon-nea/src/main.tex" "dev.zed.Zed" "hmon-nea —"
+ensure_window_exists "dev.zed.Zed" "hmon —" "zeditor ~/Documents/hmon ~/Documents/hmon/src/main.c" "dev.zed.Zed" "hmon —"
 
 # Check if the process is already running to avoid duplicates
 if ! pgrep -f "zeditor-synctex.sh listen" > /dev/null; then
