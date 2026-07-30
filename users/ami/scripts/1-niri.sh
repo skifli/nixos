@@ -2,9 +2,6 @@
 
 source "${BASH_SOURCE%/*}/niri_helpers.sh"
 
-# Check state. If it was the last state it will exit, otherwise update and continue
-check_and_update_state "default"
-
 echo "Restoring 'default' window positions..."
 
 # 1st Monitor

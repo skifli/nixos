@@ -2,14 +2,11 @@
 
 source "${BASH_SOURCE%/*}/niri_helpers.sh"
 
-# Check state. If it was the last state it will exit, otherwise update and continue
-check_and_update_state "nea"
-
 echo "Initing 'nea' window positions..."
 
-ensure_window_exists "title" "main.pdf — hmon NEA Writeup" "evince ~/Documents/hmon-nea/out/main.pdf"
-ensure_window_exists "title" "hmon-nea —" "zeditor ~/Documents/hmon-nea"
-ensure_window_exists "title" "hmon —" "zeditor ~/Documents/hmon"
+ensure_window_exists "org.gnome.Evince" "main.pdf — hmon NEA Writeup" "evince ~/Documents/hmon-nea/out/main.pdf" "org.gnome.Evince" "main.pdf — hmon NEA Writeup"
+ensure_window_exists "dev.zed.Zed" "hmon-nea —" "zeditor ~/Documents/hmon-nea" "dev.zed.Zed" "hmon-nea —"
+ensure_window_exists "dev.zed.Zed" "hmon —" "zeditor ~/Documents/hmon" "dev.zed.Zed" "hmon —"
 
 echo "Restoring 'nea' window positions..."
 
