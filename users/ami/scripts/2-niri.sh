@@ -8,6 +8,16 @@ ensure_window_exists "org.gnome.Evince" "main.pdf — hmon NEA Writeup" "evince 
 ensure_window_exists "dev.zed.Zed" "hmon-nea —" "zeditor ~/Documents/hmon-nea" "dev.zed.Zed" "hmon-nea —"
 ensure_window_exists "dev.zed.Zed" "hmon —" "zeditor ~/Documents/hmon" "dev.zed.Zed" "hmon —"
 
+# Check if the process is already running to avoid duplicates
+if ! pgrep -f "zeditor-synctex.sh listen" > /dev/null; then
+  echo "Launching Zed Synctex daemon"
+
+  # 3>&- closes File Descriptor 3, stopping direnv from blocking
+  bash ~/Documents/hmon-nea/src/zeditor-synctex.sh listen </dev/null >/dev/null 2>&1 3>&- &
+
+  disown
+fi
+
 echo "Restoring 'nea' window positions..."
 
 # 1st Monitor
@@ -28,6 +38,6 @@ move_windows "app_id" "remmina" "$MON_2" "3" "100%"
 
 # Focus windows
 focus_window "app_id" "zen-beta"
-focus_window "title" "hmon-nea —"
+focus_window "title" "main.pdf — hmon NEA Writeup"
 
 echo "Window rearrangement complete!"
