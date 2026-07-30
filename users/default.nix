@@ -118,7 +118,7 @@
           file = {
             ".local/bin" = {
               source = ./${userVars.username}/scripts;
-              recursive = true;
+              # recursive = true; - Causes problems with executableness
               executable = true; # For scripts!
             };
           };
