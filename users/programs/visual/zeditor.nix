@@ -77,7 +77,7 @@
         };
 
         # UI & Windows
-        window_decorations = "client";
+        window_decorations = "server"; # If client corners are rounded
         use_system_window_tabs = false;
         preview_tabs = {
           enable_preview_from_file_finder = true;
