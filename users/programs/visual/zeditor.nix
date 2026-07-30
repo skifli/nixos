@@ -20,6 +20,7 @@
         "latex"
         "make"
         "markdownlint"
+        "markdown-snippets"
         "nix"
       ];
 
