@@ -2,12 +2,9 @@
 
 source "${BASH_SOURCE%/*}/niri_helpers.sh"
 
-# Check state. If it was the last state it will exit, otherwise update and continue
-check_and_update_state "f1is"
-
 echo "Initing 'f1is' window positions..."
 
-ensure_window_exists "app_id" "affinity.exe" "affinity-v3"
+ensure_window_exists "affinity.exe" "" "affinity-v3" "wineboot.exe" "Wine"
 
 echo "Restoring 'f1is' window positions..."
 
@@ -29,7 +26,7 @@ move_windows "app_id" "remmina" "$MON_2" "3" "100%"
 
 # Focus windows
 focus_window "app_id" "ferdium"
-focus_window "app_id" "wineboot.exe"
+focus_window "app_id" "wineboot.exe" # Affinity booting-up
 focus_window "app_id" "affinity.exe"
 
 echo "Window rearrangement complete!"

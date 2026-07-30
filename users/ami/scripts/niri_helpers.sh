@@ -45,16 +45,21 @@ move_windows() {
 }
 
 ensure_window_exists() {
-    local match_key="$1"
-    local match_val="$2"
+    local match_app_id="$1"
+    local match_title="$2"
     local fallback_cmd="$3"
+    local watch_app_id="$4"
+    local watch_title="$5"
 
     local exists
-    exists=$(echo "$WINDOWS_JSON" | jq -e --arg val "${match_val,,}" --arg key "$match_key" \
-        '.[] | select(.[$key] != null and (.[$key] | ascii_downcase | contains($val)))' >/dev/null; echo $?)
+
+    exists=$(echo "$WINDOWS_JSON" | jq -e \
+        --arg app "${match_app_id,,}" \
+        --arg title "${match_title,,}" \
+        '.[] | select((.app_id != null and (.app_id | ascii_downcase | contains($app))) and (.title != null and (.title | ascii_downcase | contains($title))))' >/dev/null; echo $?)
 
     if [ "$exists" -ne 0 ]; then
-        echo "Window '$match_val' not found. Running: $fallback_cmd"
+        echo "Specific window not found. Launching command: $fallback_cmd"
         eval "$fallback_cmd &"
         
         local count=0
@@ -62,16 +67,18 @@ ensure_window_exists() {
             sleep 0.5
             fetch_windows
             
-            if echo "$WINDOWS_JSON" | jq -e --arg val "${match_val,,}" --arg key "$match_key" \
-                '.[] | select(.[$key] != null and (.[$key] | ascii_downcase | contains($val)))' >/dev/null; then
-                echo "Window '$match_val' has appeared."
+            if echo "$WINDOWS_JSON" | jq -e \
+                --arg w_app "${watch_app_id,,}" \
+                --arg w_title "${watch_title,,}" \
+                '.[] | select((.app_id != null and (.app_id | ascii_downcase | contains($w_app))) and (.title != null and (.title | ascii_downcase | contains($w_title))))' >/dev/null; then
+                echo "Success: Window matching App ID '$watch_app_id' and Title '$watch_title' has appeared!"
                 return 0
             fi
             ((count++))
         done
-        echo "Warning: Timeout reached waiting for '$match_val' to appear."
+        echo "Warning: Timeout reached waiting for window (App ID: '$watch_app_id', Title: '$watch_title') to appear."
     else
-        echo "Window '$match_val' already exists. Skipping command."
+        echo "Specific window configuration already exists. Skipping launch."
     fi
 }
 
@@ -88,22 +95,4 @@ focus_window() {
     else
         echo "Window '$match_val' not found to focus."
     fi
-}
-
-check_and_update_state() {
-    local requested_layout="$1"
-    
-    mkdir -p "$STATE_DIR"
-    
-    if [ -f "$STATE_FILE" ]; then
-        local last_layout
-        last_layout=$(cat "$STATE_FILE")
-        
-        if [ "$last_layout" = "$requested_layout" ]; then
-            echo "Windows are already arranged in the '$requested_layout' layout. Exiting."
-            exit 0
-        fi
-    fi
-    
-    echo "$requested_layout" > "$STATE_FILE"
 }

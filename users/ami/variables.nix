@@ -63,7 +63,7 @@ in rec {
     "ferdium"
     "kdeconnect-indicator" # Idk even though it has its own service that never seems to work... future me problem todo a fix!
     "remmina"
-    "sleep 10 && safeeyes"
+    "safeeyes"
     "zen-beta"
     "sleep 1 && niri msg action focus-monitor \"${focusedMonitor}\" && niri msg action focus-workspace 1"
     "sleep 1 && niri msg action focus-window --id $(niri msg --json windows | tr -d '\\n' | sed 's/}/\\n/g' | sed -n '/\"app_id\": *\"[^\"]*gcr-prompter/I{s/.*\"id\": *\\\\([0-9]*\\\\).*/\\\\1/p;q}')"
