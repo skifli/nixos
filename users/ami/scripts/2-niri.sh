@@ -4,7 +4,7 @@ source "${BASH_SOURCE%/*}/niri_helpers.sh"
 
 echo "Initing 'nea' window positions..."
 
-ensure_window_exists "org.gnome.Evince" "main.pdf — hmon NEA Writeup" "evince ~/Documents/hmon-nea/out/main.pdf" "org.gnome.Evince" "main.pdf — hmon NEA Writeup"
+ensure_window_exists "org.gnome.Evince" "main.pdf — hmon NEA Writeup" "evince ~/Documents/hmon-nea/src/out/main.pdf" "org.gnome.Evince" "main.pdf — hmon NEA Writeup"
 ensure_window_exists "dev.zed.Zed" "hmon-nea —" "zeditor ~/Documents/hmon-nea" "dev.zed.Zed" "hmon-nea —"
 ensure_window_exists "dev.zed.Zed" "hmon —" "zeditor ~/Documents/hmon" "dev.zed.Zed" "hmon —"
 
