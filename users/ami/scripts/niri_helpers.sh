@@ -63,7 +63,7 @@ ensure_window_exists() {
         eval "$fallback_cmd &"
         
         local count=0
-        while [ "$count" -lt 120 ]; do
+        while [ "$count" -lt 30 ]; do
             sleep 0.5
             fetch_windows
             
