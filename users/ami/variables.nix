@@ -16,6 +16,27 @@
     then builtins.head allOutputs
     else builtins.head focusedOutputs;
 
+  otherOutputs = builtins.filter (name: name != focusedMonitor) allOutputs;
+
+  secondMonitor =
+    if otherOutputs == []
+    then focusedMonitor
+    else builtins.head otherOutputs;
+
+  # Arguments:
+  #   cmd:        To run - e.g., ("anki", "anytype").
+  #   key:        Target window property JSON filter ("app_id" or "title").
+  #   val:        Value string used inside regex match tracking.
+  #   target_mon: Specific target monitor string ID (e.g., "DP-1").
+  #   target_ws:  Target workspace string indicator.
+  startAndManage = cmd: key: val: target_mon: target_ws:
+    "(${cmd} & while ! niri msg --json windows | grep -qi '\"${key}\": *\"[^\"]*${val}'; do sleep 0.5; done; " +
+    "WIN_ID=$(niri msg --json windows | tr -d '\\n' | sed 's/}/\\n/g' | sed -n '/\"${key}\": *\"[^\"]*${val}/I{s/.*\"id\": *\\\\([0-9]*\\\\).*/\\\\1/p;q}'); " +
+    "if [ -n \"$WIN_ID\" ]; then " +
+      "niri msg action move-window-to-monitor --id \"$WIN_ID\" \"${target_mon}\"; " +
+      "niri msg action move-window-to-workspace \"${target_ws}\" --window-id $WIN_ID; " +
+    "fi) &";
+
   # Dynamic SafeEyes window rules based on ze outputs
   safeEyesRules =
     lib.imap0 (idx: outputName: {
@@ -56,57 +77,37 @@ in rec {
     email = "121291719+skifli@users.noreply.github.com";
   };
 
-  startupPrograms = [
-    "dbus-update-activation-environment --systemd --all"
-    "anki"
-    "anytype"
-    "ferdium"
-    "kdeconnect-indicator" # Idk even though it has its own service that never seems to work... future me problem todo a fix!
-    "remmina"
-    "safeeyes"
-    "zen-beta"
-    "sleep 1 && niri msg action focus-monitor \"${focusedMonitor}\" && niri msg action focus-workspace 1"
-    "sleep 1 && niri msg action focus-window --id $(niri msg --json windows | tr -d '\\n' | sed 's/}/\\n/g' | sed -n '/\"app_id\": *\"[^\"]*gcr-prompter/I{s/.*\"id\": *\\\\([0-9]*\\\\).*/\\\\1/p;q}')"
-  ];
+  # Combine all startup commands into a single script block.
+  # Due to the way I've done it it's blocking, except actual app startups use & so the only blocking stuff is the waiting for windows to appear to move them. So do NOT place anything after that wait, unless you want it to be a tad delayed!!!
+  startupScript = ''
+    dbus-update-activation-environment --systemd --all
+
+    ${startAndManage "zen-beta" "app_id" "zen-beta" focusedMonitor "1"}
+    ${startAndManage "anki" "app_id" "anki" focusedMonitor "2"}
+    ${startAndManage "anytype" "title" "anytype" secondMonitor "1"}
+    ${startAndManage "ferdium" "app_id" "ferdium" secondMonitor "2"}
+    ${startAndManage "remmina" "app_id" "org.remmina.Remmina" secondMonitor "3"}
+
+    kdeconnect-indicator & disown
+    safeeyes & disown
+
+    # Now wait for windows to get moved
+    wait
+
+    niri msg action focus-monitor "${focusedMonitor}"
+    niri msg action focus-workspace 1
+  '';
 
   scroll-cooldown-ms = 75; # Cooldown for scroll events (for workspace switching and column focus switching)
 
-  niri = let
-    browserAppIdMatches =
-      builtins.concatMap (
-        browser:
-          [
-            {
-              app-id = "(?i)${browser}";
-              at-startup = true;
-            }
-          ]
-          # BrowserOS is special (often shows up as chromium-browser)
-          ++ (
-            if browser == "browseros"
-            then [
-              {
-                app-id = "(?i)chromium-browser";
-                at-startup = true;
-              }
-            ]
-            else []
-          )
-      )
-      programs.browsers;
-  in {
-    spawn-at-startup = map (program: {command = ["sh" "-c" program];}) startupPrograms;
+  niri = {
+    # Note the format!
+    spawn-sh-at-startup = [
+      { command = startupScript; }
+    ];
 
     window-rules =
       [
-        {
-          matches = browserAppIdMatches;
-
-          open-on-workspace = "1";
-          open-focused = false;
-          open-maximized = true;
-          clip-to-geometry = true;
-        }
         {
           matches = [
             {
@@ -118,54 +119,6 @@ in rec {
 
           open-focused = true;
           open-on-workspace = "1";
-        }
-        {
-          matches = [
-            {
-              app-id = "(?i)anki";
-              at-startup = true;
-            }
-          ];
-
-          open-on-workspace = "2";
-          open-focused = false;
-          open-maximized = true;
-        }
-        {
-          matches = [
-            {
-              title = "(?i)Anytype";
-              at-startup = true;
-            }
-          ];
-
-          open-on-workspace = "5";
-          open-focused = false;
-          open-maximized = true;
-        }
-        {
-          matches = [
-            {
-              app-id = "(?i)ferdium";
-              at-startup = true;
-            }
-          ];
-
-          open-on-workspace = "6";
-          open-focused = true;
-          open-maximized = true;
-        }
-        {
-          matches = [
-            {
-              app-id = "(?i)org.remmina.Remmina";
-              at-startup = true;
-            }
-          ];
-
-          open-on-workspace = "7";
-          open-focused = false;
-          open-maximized = true;
         }
         ## https://www.reddit.com/r/niri/comments/1skrhet/steam_notifications_appear_in_the_center_of_the/
         {

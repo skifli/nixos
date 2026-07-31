@@ -32,6 +32,7 @@
 
   # Hardware configuration
   videoDriver = "intel"; # Empty to import none.
+  # TODO - FIX: A lot of assumptions are made based on there only being 2 monitors right now...
   outputs = {
     "DP-1" = {
       mode = {
