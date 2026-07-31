@@ -31,7 +31,7 @@
   #   target_ws:  Target workspace string indicator.
   startAndManage = cmd: key: val: target_mon: target_ws:
     "(${cmd} & while ! niri msg --json windows | grep -qi '\"${key}\": *\"[^\"]*${val}'; do sleep 0.5; done; "
-    + "WIN_ID=$(niri msg --json windows | tr -d '\\n' | sed 's/}/\\n/g' | sed -n '/\"${key}\": *\"[^\"]*${val}/I{s/.*\"id\": *\\\\([0-9]*\\\\).*/\\\\1/p;q}'); "
+    + "WIN_ID=$(niri msg --json windows | tr -d '\\n' | sed 's/}/\\n/g' | sed -n '/\"${key}\": *\"[^\"]*${val}/I{s/.*\"id\": *\\([0-9]*\\).*/\\1/p;q}'); "
     + "if [ -n \"$WIN_ID\" ]; then "
     + "niri msg action move-window-to-monitor --id \"$WIN_ID\" \"${target_mon}\"; "
     + "niri msg action move-window-to-workspace \"${target_ws}\" --window-id $WIN_ID; "
