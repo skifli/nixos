@@ -75,7 +75,7 @@
             workspace-switch.enable = false; # I get a tad motion sick sometimes eurgh
           };
 
-          inherit (userVars.niri) spawn-at-startup;
+          inherit (userVars.niri) spawn-sh-at-startup;
 
           window-rules =
             [
