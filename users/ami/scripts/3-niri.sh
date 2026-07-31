@@ -12,6 +12,7 @@ echo "Restoring 'f1is' window positions..."
 move_windows "app_id" "zen-beta" "$MON_1" "1" "100%"
 move_windows "app_id" "wineboot.exe " "$MON_1" "2" # Affinity booting-up
 move_windows "app_id" "affinity.exe" "$MON_1" "2" "100%"
+move_windows "app_id" "gcr-prompter" "$MON_1" "2"
 move_windows "app_id" "anki" "$MON_1" "3" "100%"
 
 # Not really wanted in this configuration but in case they are open, move them to the 1st monitor as well
@@ -28,5 +29,6 @@ move_windows "app_id" "remmina" "$MON_2" "3" "100%"
 focus_window "app_id" "ferdium"
 focus_window "app_id" "wineboot.exe" # Affinity booting-up
 focus_window "app_id" "affinity.exe"
+focus_window "app_id" "gcr-prompter"
 
 echo "Window rearrangement complete!"

@@ -112,7 +112,7 @@ in rec {
             {
               # TODO: Fix me for Kwallet!
               app-id = "(?i)gcr-prompter";
-              at-startup = true;
+              at-startup = false; # Cus sometimes it doesn't open in 60 seconds or summat idk
             }
           ];
 
