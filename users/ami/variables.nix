@@ -102,8 +102,8 @@ in rec {
 
   niri = {
     # Note the format!
-    spawn-sh-at-startup = [
-      {command = startupScript;}
+    spawn-at-startup = [
+      {sh = startupScript;}
     ];
 
     window-rules =
