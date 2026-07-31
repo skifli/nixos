@@ -22,6 +22,7 @@ fi
 echo "Restoring 'nea' window positions..."
 
 # 1st Monitor
+move_windows "app_id" "gcr-prompter" "$MON_1" "1"
 move_windows "title" "main.pdf — hmon NEA Writeup" "$MON_1" "1" "33%" # Evince - put on the left of Zeditor to make moving between Zeditors easier
 move_windows "title" "hmon-nea —" "$MON_1" "1" "67%" # Zeditor
 move_windows "title" "hmon —" "$MON_1" "1" "100%" # Zeditor
@@ -40,5 +41,6 @@ move_windows "app_id" "remmina" "$MON_2" "3" "100%"
 # Focus windows
 focus_window "app_id" "zen-beta"
 focus_window "title" "main.pdf — hmon NEA Writeup"
+focus_window "app_id" "gcr-prompter"
 
 echo "Window rearrangement complete!"
