@@ -2,6 +2,7 @@
   home-manager.users.${userVars.username} = {
     programs.ghostty = {
       enable = true;
+      # TODO: Future, https://ghostty.org/docs/features/ssh - alias ssh to "ghostty +ssh --".
       enableZshIntegration = userVars.programs.terminal-shell == "zsh";
       settings = {
         desktop-notifications = true;
