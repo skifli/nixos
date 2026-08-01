@@ -73,8 +73,8 @@
           in {
             BROWSER = pkgs.lib.mkForce primaryBrowser;
             EDITOR = userVars.programs.editor;
-            SHELL = userVars.programs.terminal-shell;
-            TERM = userVars.programs.terminal;
+            # SHELL = userVars.programs.terminal-shell; # - This and below commented out because can cause problems in SSH
+            # TERM = userVars.programs.terminal;
             VISUAL = userVars.programs.visual;
           };
 

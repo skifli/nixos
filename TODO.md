@@ -3,3 +3,4 @@
 - [ ] Ghostty bg blur?
 - [ ] Workflow for auto formatting?
 - [ ] Vscode `settings.json`, extensions, etc for da repo?
+- [ ] When Ghostty updates to 1.4.0, alias ssh to ghostty ssh - https://ghostty.org/docs/features/ssh
