@@ -80,7 +80,7 @@
   "browser.bookmarks.restore_default_bookmarks" = false;
 
   "browser.urlbar.suggest.history" = false;
-  "browser.urlbar.suggest.openpage" = false;
+  "browser.urlbar.suggest.openpage" = true; # Will then suggest Pins, Essentials, etc!
   "browser.urlbar.suggest.recentsearches" = false;
   "browser.urlbar.suggest.topsites" = false;
 
