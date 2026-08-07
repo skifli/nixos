@@ -11,8 +11,8 @@
     ];
 
     home.activation.setSunsetrCoordinates = lib.hm.dag.entryAfter ["writeBoundary"] ''
-      sed -i 's/^latitude.*/latitude=${hostVars.latitude}/' "$HOME/.config/sunsetr/sunsetr.toml"
-      sed -i 's/^longitude.*/longitude=${hostVars.longitude}/' "$HOME/.config/sunsetr/sunsetr.toml"
+      sed -i 's/^latitude.*/latitude=${toString hostVars.latitude}/' "$HOME/.config/sunsetr/sunsetr.toml"
+      sed -i 's/^longitude.*/longitude=${toString hostVars.longitude}/' "$HOME/.config/sunsetr/sunsetr.toml"
     '';
   };
 }
