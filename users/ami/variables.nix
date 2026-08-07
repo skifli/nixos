@@ -82,11 +82,12 @@ in rec {
   startupScript = ''
     dbus-update-activation-environment --systemd --all
 
-    # Sys tray apps
+    # Sys-tray apps
     kdeconnect-indicator & disown
     ktailctl & disown
     niriusd & disown
     safeeyes & disown
+    sunsetr & disown
 
     # Apps that don't need keyring unlock
     ${startAndManage "zen-beta" "app_id" "zen-beta" focusedMonitor "1"}
@@ -225,7 +226,7 @@ in rec {
     explorer-gui = "dolphin";
     launcher = "vicinae";
     network-mounts = "nfs";
-    nightlight = "wlsunset";
+    nightlight = "sunsetr";
     partition-manager = "kde";
     prompt = "starship";
     remote-desktop = "remmina";

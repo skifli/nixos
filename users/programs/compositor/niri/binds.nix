@@ -337,6 +337,17 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions; {
       "toggle"
     ];
   };
+  "Mod+S" = {
+    action = spawn [
+      "sunsetr"
+    ];
+  };
+  "Mod+Shift+S" = {
+    action = spawn [
+      "sunsetr"
+      "stop"
+    ];
+  };
 
   "Mod+Ctrl+1" = {
     action = spawn-sh "/home/${userVars.username}/.local/bin/1-niri.sh";
