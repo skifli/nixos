@@ -82,16 +82,32 @@ in rec {
   startupScript = ''
     dbus-update-activation-environment --systemd --all
 
-    ${startAndManage "zen-beta" "app_id" "zen-beta" focusedMonitor "1"}
-    ${startAndManage "anki" "app_id" "anki" focusedMonitor "2"}
-    ${startAndManage "anytype" "title" "anytype" secondMonitor "1"}
-    ${startAndManage "ferdium" "app_id" "ferdium" secondMonitor "2"}
-    ${startAndManage "remmina" "app_id" "org.remmina.Remmina" secondMonitor "3"}
-
+    # Sys tray apps
     kdeconnect-indicator & disown
     safeeyes & disown
 
-    # Now wait for windows to get moved
+    # Apps that don't need keyring unlock
+    ${startAndManage "zen-beta" "app_id" "zen-beta" focusedMonitor "1"}
+    ${startAndManage "anki" "app_id" "anki" focusedMonitor "2"}
+    ${startAndManage "ferdium" "app_id" "ferdium" secondMonitor "2"}
+
+    niri msg action focus-monitor "${focusedMonitor}"
+    niri msg action focus-workspace 1
+    niri msg action focus-window --id $(niri msg --json windows | jq -r '.[] | select(.app_id == "gcr-prompter") | .id' | head -n 1)
+
+    # Bg process: wait for keyring to be unlocked, then launch apps that depend on the keyring
+    (
+      echo "Waiting for keyring to unlock..."
+      while [ "$(busctl --user get-property org.freedesktop.secrets /org/freedesktop/secrets/aliases/default org.freedesktop.Secret.Collection Locked 2>/dev/null | awk '{print $2}')" != "false" ]; do
+        sleep 0.5
+      done
+      echo "Keyring unlocked - launching keyring-dependent apps..."
+
+      ${startAndManage "anytype" "title" "anytype" secondMonitor "1"}
+      ${startAndManage "remmina" "app_id" "org.remmina.Remmina" secondMonitor "3"}
+    ) &
+
+    # Now wait for all background startAndManage jobs to finish
     wait
 
     niri msg action focus-monitor "${focusedMonitor}"
