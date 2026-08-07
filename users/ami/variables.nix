@@ -84,6 +84,7 @@ in rec {
 
     # Sys tray apps
     kdeconnect-indicator & disown
+    ktailctl & disown
     safeeyes & disown
 
     # Apps that don't need keyring unlock
