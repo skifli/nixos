@@ -187,6 +187,7 @@
 
   environment.systemPackages = with pkgs; [
     niri
+    nirius # niri utilities
     jq # Used for some scripts
   ];
 
