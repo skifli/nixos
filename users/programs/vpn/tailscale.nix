@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  userVars,
   ...
 }: {
   environment.systemPackages = with pkgs; [ktailctl];
@@ -36,4 +37,12 @@
   # (Optional but recommended for faster boot with VPNs)
   systemd.network.wait-online.enable = false;
   boot.initrd.systemd.network.wait-online.enable = false;
+
+  home-manager.users.${userVars.username} = {
+    xdg.configFile."KTailctlrc".text = ''
+      [Interface]
+      peerFilter=
+      startMinimized=true
+    '';
+  };
 }
