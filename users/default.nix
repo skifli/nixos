@@ -15,6 +15,8 @@
     "/share/applications"
   ];
 
+  environment.localBinInPath = true; # Add ~/.local/bin to PATH - used for user scripts dir below
+
   home-manager = {
     backupFileExtension = "hm-backup";
     overwriteBackup = true;
