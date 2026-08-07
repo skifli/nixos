@@ -348,6 +348,15 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions; {
       "stop"
     ];
   };
+  "Mod+Z" = {
+    action = spawn [
+      userVars.programs.terminal
+      "-e"
+      userVars.programs.terminal-shell
+      "-c"
+      "\"zen-keyboard-shortcuts; ${userVars.programs.terminal-shell}\""
+    ];
+  };
 
   "Mod+Ctrl+1" = {
     action = spawn-sh "/home/${userVars.username}/.local/bin/1-niri.sh";
