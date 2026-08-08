@@ -115,7 +115,8 @@
               znguns = "z nixos; git pull && git submodule update --init --recursive && sudo nixos-rebuild switch --flake"; # Needs path:.#
 
               nfug = "nix flake update && git add . && git commit -m 'feat(flake.lock): update' && git push";
-            } // commonHostVars.shellAliases;
+            }
+            // commonHostVars.shellAliases;
 
           inherit username;
           homeDirectory = "/home/${username}";
