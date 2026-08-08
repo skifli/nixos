@@ -354,7 +354,7 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions; {
       "-e"
       userVars.programs.terminal-shell
       "-c"
-      "\"zen-keyboard-shortcuts.sh; ${userVars.programs.terminal-shell}\""
+      "\"/home/${userVars.username}/.local/bin/zen-keyboard-shortcuts.sh; ${userVars.programs.terminal-shell}\""
     ];
   };
 
