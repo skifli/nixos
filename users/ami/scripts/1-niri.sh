@@ -2,7 +2,7 @@
 
 source "${BASH_SOURCE%/*}/niri_helpers.sh"
 
-notify-send -e -a niri -i "/home/${USER}/.local/share/misc/niri-icon.svg" "Default configuration" "Restoring window positions"
+notify-send -e -a niri -i "/home/${USER}/.local/share/misc/niri-icon.svg" -u low -t 1000 "Default configuration" "Restoring window positions"
 
 # 1st Monitor
 move_windows "app_id" "zen-beta" "$MON_1" "1" "100%"
@@ -25,4 +25,4 @@ focus_window "app_id" "ferdium"
 focus_window "app_id" "anki"
 focus_window "app_id" "gcr-prompter"
 
-notify-send -e -a niri -i "/home/${USER}/.local/share/misc/niri-icon.svg" "Default configuration" "Window positions restored"
+notify-send -e -a niri -i "/home/${USER}/.local/share/misc/niri-icon.svg" -u low -t 1000 "Default configuration" "Window positions restored"
