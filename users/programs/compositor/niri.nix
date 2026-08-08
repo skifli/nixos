@@ -3,6 +3,7 @@
   inputs,
   lib,
   pkgs,
+  pkgsUnstable,
   userVars,
   ...
 } @ attrs: {
@@ -193,9 +194,12 @@
 
   environment.systemPackages = with pkgs; [
     niri
-    nirius # niri utilities
     jq # Used for some scripts
     libnotify # Used for sending notifications to the notif daemon
+  ];
+
+  environment.systemPackages = with pkgsUnstable; [
+    nirius # niri utilities - currently on unstable 0.8.0 but normal packages only 0.7.1 as of 08/08/2026
   ];
 
   programs = {
