@@ -350,7 +350,7 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions; {
     action = spawn ["nirius" "scratchpad-show-all"];
     hotkey-overlay.title = "Show/hide all scratchpad windows";
   };
-  "Mod+Alt+P" = {
+  "Mod+Space+P" = {
     action = spawn "sh" "-c" "list=\$(nirius list-scratchpad | awk -F', ' '/app-id:/{delete m; for(i=1;i<=NF;i++){split(\$i,a,\": \"); gsub(/Some\\(\"|\"\\)|Some\\(|\\)|None/,\"\",a[2]); m[a[1]]=a[2]} print m[\"on workspace\"] \"\\t• \" m[\"app-id\"] \" — \" m[\"title\"] \" (WS \" m[\"on workspace\"] \")\"}' | sort -n | cut -f2-) && if [ -z \"\$list\" ]; then list='No scratchpad windows'; fi && notify-send -e -a nirius -i /home/${userVars.username}/.local/share/misc/niri-icon.svg -u low -t 2500 'Scratchpad Windows' \"\$list\"";
     hotkey-overlay.title = "List scratchpad windows";
   };
@@ -359,7 +359,7 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions; {
   "Mod+Ctrl+F" = {
     action = spawn ["nirius" "toggle-follow-mode"]; # "--policy" "if-invisible"]; - TODO: Add when nixpkgs updates nirius to 0.9.0
     hotkey-overlay.title = "Toggle follow-mode";
-  };
+  };  
 
   # NIRIUS - MARKS (T = Tag)
   "Mod+T" = {
@@ -367,7 +367,7 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions; {
     # -e transient, -a app name, -i icon, -u urgency, -t expire time
     hotkey-overlay.title = "Tag/untag window";
   };
-  "Mod+Alt+T" = {
+  "Mod+Space+T" = {
     action = spawn "sh" "-c" "list=\$(nirius list-marked --all | awk -F', ' '/app-id:/{delete m; for(i=1;i<=NF;i++){split(\$i,a,\": \"); gsub(/Some\\(\"|\"\\)|Some\\(|\\)|None/,\"\",a[2]); m[a[1]]=a[2]} print m[\"on workspace\"] \"\\t• \" m[\"app-id\"] \" — \" m[\"title\"] \" (WS \" m[\"on workspace\"] \")\"}' | sort -n | cut -f2-) && if [ -z \"\$list\" ]; then list='No windows marked'; fi && notify-send -e -a nirius -i /home/${userVars.username}/.local/share/misc/niri-icon.svg -u low -t 2500 'All Marked Windows' \"\$list\"";
     hotkey-overlay.title = "List tagged windows";
   };
