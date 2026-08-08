@@ -5,7 +5,7 @@
   ...
 }: {
   # TODO: Maybe use the lan-mouse_git in Chaotic Nyx?
-  
+
   home-manager = {
     sharedModules = [inputs.lan-mouse.homeManagerModules.default];
 
