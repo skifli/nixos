@@ -9,6 +9,9 @@
     ];
   };
 
+  # CachyOS - Enable Bleeding-edge Mesa Drivers (ANV/Iris driver updates e.g., for Intel UHD 630)
+  chaotic.mesa-git.enable = true; # Useful for Intel and AMD, but apparently not Nvidia
+
   boot.kernelParams = [
     "intel_pstate=active"
     "i915.enable_psr=0" # Disables PSR completely. This is the most common workaround for fixing screen flickering, random system freezes, or graphical corruption.

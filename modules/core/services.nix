@@ -20,6 +20,9 @@
       openFirewall = false;
     };
 
+    # CachyOS - Enable sched-ext support for CPU scheduling
+    scx.enable = true; # Uses scx_rustland by default
+
     /*
        CAN CAUSE A BUNCH O' PROBLEMS
     # Userspace CPU Scheduler for Improved Latency for Gaming (Hardware Specific)

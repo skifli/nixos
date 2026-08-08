@@ -9,7 +9,8 @@
       "aarch64-linux"
     ];
 
-    kernelPackages = pkgs.linuxPackages_latest; # Use latest kernel version available
+    # Previous: kernelPackages = pkgs.linuxPackages_latest; # Use latest kernel version available
+    kernelPackages = pkgs.linuxPackages_cachyos; # Use high-performance CachyOS Kernel (BORE Scheduler + Thin LTO)
     kernelParams = [
       "preempt=full" # Lower latency but less throughput
       # "quiet" # Non verbose boot mode
