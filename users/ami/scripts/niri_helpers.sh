@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# TODO - Integrate https://sr.ht/~tsdh/nirius for better technical debt
+
 export PATH="$PATH:/run/current-system/sw/bin:$HOME/.nix-profile/bin"
 
 export MON_1="HDMI-A-1"
