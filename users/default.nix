@@ -86,25 +86,25 @@
               # --- OGs ---
               sup = "sudo -E";
               nfu = "nix flake update";
-              nhsw = "nh os switch . --accept-flake-config -H";
-              nisw = "sudo nixos-rebuild switch --flake"; # Needs .#
-              nunh = "nix flake update && nh os switch . --accept-flake-config -H";
-              nuni = "nix flake update && sudo nixos-rebuild switch --flake"; # Needs .#
+              nhsw = "nh os switch path:. --accept-flake-config -H";
+              nisw = "sudo nixos-rebuild switch --flake"; # Needs path:.#
+              nunh = "nix flake update && nh os switch path:. --accept-flake-config -H";
+              nuni = "nix flake update && sudo nixos-rebuild switch --flake"; # Needs path:.#
 
               # --- Testing & Dry Runs ---
-              nhtest = "nh os test . --accept-flake-config -H"; # Apply immediately, revert on reboot
-              nhdry = "nh os switch . --dry --accept-flake-config -H"; # See what WOULD happen
-              nhask = "nh os switch . --ask --accept-flake-config -H"; # Ask for confirmation after diff
+              nhtest = "nh os test path:. --accept-flake-config -H"; # Apply immediately, revert on reboot
+              nhdry = "nh os switch path:. --dry --accept-flake-config -H"; # See what WOULD happen
+              nhask = "nh os switch path:. --ask --accept-flake-config -H"; # Ask for confirmation after diff
 
               # --- VM Prototyping (Sandbox) ---
               # Standard rebuild VM command
-              nivm = "nixos-rebuild build-vm --flake .#";
+              nivm = "nixos-rebuild build-vm --flake"; # Needs path:.#
               # nh equivalent (available in newer versions)
-              nhvm = "nh os build-vm . --accept-flake-config -H";
+              nhvm = "nh os build-vm path:. --accept-flake-config -H";
 
               # --- Comparison & Cleanup ---
               # Quick diff between current system and a potential build
-              nhdiff = "nix build .#nixosConfigurations.$(hostname).config.system.build.toplevel --dry-run && nvd diff /run/current-system ./result";
+              nhdiff = "nix build path:.#nixosConfigurations.\${hostname}.config.system.build.toplevel --dry-run && nvd diff /run/current-system ./result";
 
               # --- Actual useful ones ---
               # If already in the dir zoxide errors so use ; not && to continue even if zoxide fails
@@ -115,8 +115,7 @@
               znguns = "z nixos; git pull && git submodule update --init --recursive && sudo nixos-rebuild switch --flake"; # Needs path:.#
 
               nfug = "nix flake update && git add . && git commit -m 'feat(flake.lock): update' && git push";
-            }
-            // commonHostVars.shellAliases;
+            } // commonHostVars.shellAliases;
 
           inherit username;
           homeDirectory = "/home/${username}";
