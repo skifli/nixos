@@ -234,7 +234,7 @@ in rec {
     prompt = "starship";
     remote-desktop = "remmina";
     screen-recorder = "gpu-screen-recorder";
-    system-monitor = "missioncenter";
+    system-monitor = "missioncenter"; # Future me - look into http://github.com/Kyza/gpuitop
     terminal = "ghostty";
     terminal-shell = "zsh";
     visual = "zeditor";
