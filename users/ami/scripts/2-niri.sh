@@ -2,7 +2,7 @@
 
 source "${BASH_SOURCE%/*}/niri_helpers.sh"
 
-notify-send -e -a niri -i "/home/${USER}/.local/share/misc/niri-icon.svg" -u low -t 1000 "NEA configuration" "Initing window positions"
+notify-send -e -a niri -i "/home/${USER}/.local/share/misc/niri-icon.svg" -u low -t 2500 "NEA configuration" "Initing window positions"
 
 # Future me: For zed you can do e.g., :45:10 to put ze cursor on line 45, column 10
 ensure_window_exists "org.gnome.Evince" "main.pdf — hmon NEA Writeup" "evince ~/Documents/hmon-nea/src/out/main.pdf" "org.gnome.Evince" "main.pdf — hmon NEA Writeup"
@@ -19,7 +19,7 @@ if ! pgrep -f "zeditor-synctex.sh" > /dev/null; then
   disown
 fi
 
-notify-send -e -a niri -i "/home/${USER}/.local/share/misc/niri-icon.svg" -u low -t 1000 "NEA configuration" "Restoring window positions"
+notify-send -e -a niri -i "/home/${USER}/.local/share/misc/niri-icon.svg" -u low -t 2500 "NEA configuration" "Restoring window positions"
 
 # 1st Monitor
 move_windows "app_id" "gcr-prompter" "$MON_1" "1"
@@ -43,4 +43,4 @@ focus_window "app_id" "zen-beta"
 focus_window "title" "main.pdf — hmon NEA Writeup"
 focus_window "app_id" "gcr-prompter"
 
-notify-send -e -a niri -i "/home/${USER}/.local/share/misc/niri-icon.svg" -u low -t 1000 "NEA configuration" "Window positions restored"
+notify-send -e -a niri -i "/home/${USER}/.local/share/misc/niri-icon.svg" -u low -t 2500 "NEA configuration" "Window positions restored"
