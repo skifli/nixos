@@ -61,7 +61,21 @@ ensure_window_exists() {
         '.[] | select((.app_id != null and (.app_id | ascii_downcase | contains($app))) and (.title != null and (.title | ascii_downcase | contains($title))))' >/dev/null; echo $?)
 
     if [ "$exists" -ne 0 ]; then
-        echo "Specific window not found. Launching command: $fallback_cmd"
+        local app_name=""
+        if [ -n "$match_title" ]; then
+            app_name="$match_title"
+        elif [ -n "$match_app_id" ]; then
+            app_name="$match_app_id"
+        else
+            app_name="application"
+        fi
+
+        # -t 0 tells the notification server never to auto-expire it
+        local notif_id
+        notif_id=$(notify-send -p -e -a niri -i "/home/${USER}/.local/share/misc/niri-icon.svg" -u low -t 0 \
+            "Starting $app_name" \
+            "Window not found - launching...")
+        
         eval "$fallback_cmd &"
         
         local count=0
@@ -73,12 +87,23 @@ ensure_window_exists() {
                 --arg w_app "${watch_app_id,,}" \
                 --arg w_title "${watch_title,,}" \
                 '.[] | select((.app_id != null and (.app_id | ascii_downcase | contains($w_app))) and (.title != null and (.title | ascii_downcase | contains($w_title))))' >/dev/null; then
-                echo "Success: Window matching App ID '$watch_app_id' and Title '$watch_title' has appeared!"
+                
+                if [ -n "$notif_id" ]; then
+                    # -r means replace, so replace old notification with id notif_id
+                    notify-send -r "$notif_id" -e -a niri -i "/home/${USER}/.local/share/misc/niri-icon.svg" -u low -t 2500 \
+                        "$app_name ready" \
+                        "Window detected successfully."
+                fi
                 return 0
             fi
             ((count++))
         done
-        echo "Warning: Timeout reached waiting for window (App ID: '$watch_app_id', Title: '$watch_title') to appear."
+                
+        if [ -n "$notif_id" ]; then
+            notify-send -r "$notif_id" -e -a niri -i "/home/${USER}/.local/share/misc/niri-icon.svg" -u normal -t 5000 \
+                "$app_name Launch timeout" \
+                "The window was not detected successfully."
+        fi
     else
         echo "Specific window configuration already exists. Skipping launch."
     fi
