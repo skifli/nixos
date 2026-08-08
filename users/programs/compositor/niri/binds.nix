@@ -56,6 +56,14 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions; {
     ];
     hotkey-overlay.title = "System monitor";
   };
+  "Shift+Escape" = {
+    action = spawn [
+      userVars.programs.terminal
+      "-e"
+      "btop"
+    ];
+    hotkey-overlay.title = "System monitor (terminal)";
+  };
 
   # WINDOW MANAGEMENT
   "Mod+Q" = {
