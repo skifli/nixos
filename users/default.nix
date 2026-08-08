@@ -67,7 +67,8 @@
 
         home = {
           sessionPath = [
-            "/home/${userVars.username}/.cargo/bin"
+            "/home/${userVars.username}/.cargo/bin" # Unfortunately this was from the init commit https://github.com/skifli/nixos/blame/e9317baa1ca7e8abd4e68b59e82ed215199f3dfa/users/default.nix#L68 so I have no idea what this is needed for... well, if it works, don't touch it :p!
+            "/home/${userVars.username}/.local/bin" # Idk... I've enabled environment.localBinInPath above, but that didn't really seem to work?
           ];
 
           sessionVariables = let
