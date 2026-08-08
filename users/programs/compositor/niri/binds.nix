@@ -351,7 +351,8 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions; {
 
   # NIRIUS - MARKS (T = Tag)
   "Mod+T" = {
-    action = spawn "sh" "-c" "nirius toggle-mark && list=\$(nirius list-marked | awk -F', ' 'NF{for(i=1;i<=NF;i++){split(\$i,a,\": \"); gsub(/Some\\(\"|\"\\)|Some\\(|\\)/,\"\",a[2]); m[a[1]]=a[2]} print m[\"on workspace\"] \"\\t• \" m[\"app-id\"] \" — \" m[\"title\"] \" (WS \" m[\"on workspace\"] \")\"}' | sort -n | cut -f2-) && if [ -z \"\$list\" ]; then list='No windows marked'; fi && printf '%s\\n' \"\$list\" && notify-send 'Marked Windows' \"\$list\"";
+    action = spawn "sh" "-c" "nirius toggle-mark && list=\$(nirius list-marked | awk -F', ' 'NF{for(i=1;i<=NF;i++){split(\$i,a,\": \"); gsub(/Some\\(\"|\"\\)|Some\\(|\\)/,\"\",a[2]); m[a[1]]=a[2]} print m[\"on workspace\"] \"\\t• \" m[\"app-id\"] \" — \" m[\"title\"] \" (WS \" m[\"on workspace\"] \")\"}' | sort -n | cut -f2-) && if [ -z \"\$list\" ]; then list='No windows marked'; fi && printf '%s\\n' \"\$list\" && notify-send -e -a nirius -i /home/${userVars.username}/.local/share/misc/niri-icon.svg 'Marked Windows' \"\$list\"";
+    # -e transient, -a app name, -i icon
     hotkey-overlay.title = "Tag/untag window";
   };
   "Mod+Shift+T" = {

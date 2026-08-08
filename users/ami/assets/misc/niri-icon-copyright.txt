@@ -1,0 +1,6 @@
+NOT mine.
+
+Source: https://github.com/niri-wm/niri/wiki/Name-and-Logo
+Specifically: https://github.com/niri-wm/niri/wiki/logo/niri-icon.svg
+
+"All versions of the logo are licensed under CC BY-SA. The full-sized logo is based on the Cherry Bomb One font, licensed under the SIL Open Font License 1.1."
