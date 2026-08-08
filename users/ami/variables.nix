@@ -99,7 +99,7 @@ in rec {
 
     niri msg action focus-monitor "${focusedMonitor}"
     niri msg action focus-workspace 1
-    niri msg action focus-window --id $(niri msg --json windows | jq -r '.[] | select(.app_id == "gcr-prompter") | .id' | head -n 1)
+    nirius focus --app-id gcr-prompter # Thanks to nirius - before it was this behemoth - niri msg action focus-window --id $(niri msg --json windows | jq -r '.[] | select(.app_id == "gcr-prompter") | .id' | head -n 1)
 
     # Bg process: wait for keyring to be unlocked, then launch apps that depend on the keyring
     (
