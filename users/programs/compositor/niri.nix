@@ -189,6 +189,7 @@
     niri
     nirius # niri utilities
     jq # Used for some scripts
+    libnotify # Used for sending notifications to the notif daemon
   ];
 
   programs = {
