@@ -329,6 +329,36 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions; {
     ];
   };
 
+  # NIRIUS - SCRATCHPAD (P = Park)
+  "Mod+P" = {
+    action = spawn [ "nirius" "scratchpad-toggle" ];
+    hotkey-overlay.title = "Park/unpark window (scratchpad toggle)";
+  };
+  "Mod+Shift+P" = {
+    action = spawn [ "nirius" "scratchpad-show" ];
+    hotkey-overlay.title = "Show/cycle scratchpad window";
+  };
+  "Mod+Ctrl+P" = {
+    action = spawn [ "nirius" "scratchpad-show-all" ];
+    hotkey-overlay.title = "Show/hide all scratchpad windows";
+  };
+
+  # NIRIUS - FOLLOW MODE (F = Follow)
+  "Mod+Ctrl+F" = {
+    action = spawn [ "nirius" "toggle-follow-mode" ];
+    hotkey-overlay.title = "Toggle follow-mode";
+  };
+
+  # NIRIUS - MARKS (T = Tag)
+  "Mod+T" = {
+    action = spawn [ "nirius" "toggle-mark" ];
+    hotkey-overlay.title = "Tag/untag window";
+  };
+  "Mod+Shift+T" = {
+    action = spawn [ "nirius" "focus-marked" ];
+    hotkey-overlay.title = "Focus tagged window";
+  };
+
   # Misc
   "Mod+B" = {
     action = spawn [
