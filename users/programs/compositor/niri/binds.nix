@@ -359,7 +359,7 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions; {
   "Mod+Ctrl+F" = {
     action = spawn ["nirius" "toggle-follow-mode"]; # "--policy" "if-invisible"]; - TODO: Add when nixpkgs updates nirius to 0.9.0
     hotkey-overlay.title = "Toggle follow-mode";
-  };  
+  };
 
   # NIRIUS - MARKS (T = Tag)
   "Mod+T" = {
