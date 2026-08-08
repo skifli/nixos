@@ -105,6 +105,13 @@
               # --- Comparison & Cleanup ---
               # Quick diff between current system and a potential build
               nhdiff = "nix build .#nixosConfigurations.$(hostname).config.system.build.toplevel --dry-run && nvd diff /run/current-system ./result";
+
+              # --- Actual useful ones ---
+              zngp = "z nixos && git pull";
+              zngs = "z nixos && git submodule update --init --recursive";
+              zngu = "z nixos && git pull && git submodule update --init --recursive";
+              znnisw = "z nixos && sudo nixos-rebuild switch --flake path:.#lyra";
+              znguns = "z nixos && git pull && git submodule update --init --recursive && sudo nixos-rebuild switch --flake path:.#lyra";
             }
             // commonHostVars.shellAliases;
 
