@@ -87,9 +87,9 @@
               sup = "sudo -E";
               nfu = "nix flake update";
               nhsw = "nh os switch . --accept-flake-config -H";
-              nisw = "sudo nixos-rebuild switch --flake .#";
+              nisw = "sudo nixos-rebuild switch --flake"; # Needs .#
               nunh = "nix flake update && nh os switch . --accept-flake-config -H";
-              nuni = "nix flake update && sudo nixos-rebuild switch --flake .#";
+              nuni = "nix flake update && sudo nixos-rebuild switch --flake"; # Needs .#
 
               # --- Testing & Dry Runs ---
               nhtest = "nh os test . --accept-flake-config -H"; # Apply immediately, revert on reboot
@@ -107,11 +107,12 @@
               nhdiff = "nix build .#nixosConfigurations.$(hostname).config.system.build.toplevel --dry-run && nvd diff /run/current-system ./result";
 
               # --- Actual useful ones ---
-              zngp = "z nixos && git pull";
-              zngs = "z nixos && git submodule update --init --recursive";
-              zngu = "z nixos && git pull && git submodule update --init --recursive";
-              znnisw = "z nixos && sudo nixos-rebuild switch --flake path:.#lyra";
-              znguns = "z nixos && git pull && git submodule update --init --recursive && sudo nixos-rebuild switch --flake path:.#lyra";
+              # If already in the dir zoxide errors so use & not && to continue even if zoxide fails
+              zngp = "z nixos & git pull";
+              zngs = "z nixos & git submodule update --init --recursive";
+              zngu = "z nixos & git pull && git submodule update --init --recursive";
+              znnisw = "z nixos & sudo nixos-rebuild switch --flake"; # Needs path:.#
+              znguns = "z nixos & git pull && git submodule update --init --recursive && sudo nixos-rebuild switch --flake"; # Needs path:.#
             }
             // commonHostVars.shellAliases;
 
