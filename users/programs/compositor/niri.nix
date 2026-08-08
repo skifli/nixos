@@ -154,9 +154,15 @@
       };
 
       # Environment variables for Niri
-      home.sessionVariables = {
-        XDG_CURRENT_DESKTOP = "niri";
-        XDG_SESSION_DESKTOP = "niri";
+      home = {
+        sessionVariables = {
+          XDG_CURRENT_DESKTOP = "niri";
+          XDG_SESSION_DESKTOP = "niri";
+        };
+
+        file.".local/share/misc" = {
+          source = ./${userVars.username}/assets/misc;
+        };
       };
 
       /*

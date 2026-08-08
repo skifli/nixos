@@ -131,7 +131,6 @@
           file = {
             ".local/bin" = {
               source = ./${userVars.username}/scripts;
-              # recursive = true;
               executable = true; # For scripts!
             };
           };
