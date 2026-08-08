@@ -76,7 +76,10 @@
           modules = [
             ./hosts/${hostname}/configuration.nix
             ./lix.nix
-            inputs.chaotic.nixosModules.default # Enables Chaotic binary cache & overlay automatically
+            # Below is specifically with stable nixOS - inputs.chaotic.nixosModules.default is IMPORTANT for UNstable - but irrelevant to me
+            inputs.chaotic.nixosModules.nyx-cache
+            inputs.chaotic.nixosModules.nyx-overlay
+            inputs.chaotic.nixosModules.nyx-registry
           ];
           # Attribute set of extra arguments passed to Nix module functions
           specialArgs = {

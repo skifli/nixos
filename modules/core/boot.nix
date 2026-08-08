@@ -22,6 +22,9 @@
       "vm.dirty_writeback_centisecs=500" # Reduce frequency of writeback
     ];
 
+    # CachyOS-specific pkg
+    zfs.package = pkgs.zfs_cachyos;
+
     loader = {
       efi = {
         canTouchEfiVariables = true; # E.g., can set as default boot entry
