@@ -11,7 +11,7 @@ ensure_window_exists "dev.zed.Zed" "hmon —" "zeditor ~/Documents/hmon ~/Docume
 
 # Check if the process is already running to avoid duplicates
 if ! pgrep -f "zeditor-synctex.sh" > /dev/null; then
-  echo "Launching Zed Synctex daemon"
+  notify-send -e -a niri -i "/home/${USER}/.local/share/misc/niri-icon.svg" -u low -t 2500 "NEA configuration" "Launching Zed SyncTeX daemon"
 
   # 3>&- closes File Descriptor 3, stopping direnv from blocking
   bash ~/Documents/hmon-nea/src/zeditor-synctex.sh </dev/null >/dev/null 2>&1 3>&- &
