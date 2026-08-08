@@ -82,6 +82,9 @@ in rec {
   startupScript = ''
     dbus-update-activation-environment --systemd --all
 
+    # As all keyring dependent applications are not open yet, the gcr prompt will not show / automatically hide. So, this prompts it with dummy values to cause it to prompt the user via the GUI first. Done this early just to give it as much time to spawn the GUI.
+    secret-tool lookup dummy-key dummy-value
+
     # Sys-tray apps
     kdeconnect-indicator & disown
     ktailctl & disown

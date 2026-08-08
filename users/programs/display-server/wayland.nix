@@ -24,6 +24,7 @@
 
     slurp # https://wiki.archlinux.org/title/XDG_Desktop_Portal#Using_multiple_monitors_with_xdg-desktop-portal-wlr
     seahorse # Managing gnome keyring secrets
+    libsecret # For testing & needed for polling gcr-prompter in startupScript
   ];
 
   # Enable XWayland support system-wide
