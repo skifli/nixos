@@ -107,12 +107,12 @@
               nhdiff = "nix build .#nixosConfigurations.$(hostname).config.system.build.toplevel --dry-run && nvd diff /run/current-system ./result";
 
               # --- Actual useful ones ---
-              # If already in the dir zoxide errors so use & not && to continue even if zoxide fails
-              zngp = "z nixos & git pull";
-              zngs = "z nixos & git submodule update --init --recursive";
-              zngu = "z nixos & git pull && git submodule update --init --recursive";
-              znnisw = "z nixos & sudo nixos-rebuild switch --flake"; # Needs path:.#
-              znguns = "z nixos & git pull && git submodule update --init --recursive && sudo nixos-rebuild switch --flake"; # Needs path:.#
+              # If already in the dir zoxide errors so use ; not && to continue even if zoxide fails
+              zngp = "z nixos; git pull";
+              zngs = "z nixos; git submodule update --init --recursive";
+              zngu = "z nixos; git pull && git submodule update --init --recursive";
+              znnisw = "z nixos; sudo nixos-rebuild switch --flake"; # Needs path:.#
+              znguns = "z nixos; git pull && git submodule update --init --recursive && sudo nixos-rebuild switch --flake"; # Needs path:.#
             }
             // commonHostVars.shellAliases;
 
