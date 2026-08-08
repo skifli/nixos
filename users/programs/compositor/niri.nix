@@ -161,7 +161,7 @@
         };
 
         file.".local/share/misc" = {
-          source = ./${userVars.username}/assets/misc;
+          source = ../../${userVars.username}/assets/misc;
         };
       };
 
