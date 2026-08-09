@@ -15,6 +15,7 @@
       _args = [name];
       inherit (hostVars.outputs.${name}) mode scale;
       position._props = hostVars.outputs.${name}.position;
+      variable-refresh-rate._props = { on-demand = "true"; };
     }
     // (pkgs.lib.optionalAttrs (hostVars.outputs.${name}.focus-at-startup or false) {
       focus-at-startup = [];
