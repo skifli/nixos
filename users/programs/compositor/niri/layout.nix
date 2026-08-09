@@ -1,11 +1,8 @@
 {...}: {
   gaps = 0;
-  background-color = "transparent";
   center-focused-column = "on-overflow";
-  always-center-single-column = {};
+  always-center-single-column = [];
   empty-workspace-above-first = false;
-
-  default-column-width = {};
 
   preset-column-widths._children = [
     {proportion = 0.25;}
@@ -16,21 +13,17 @@
   ];
 
   # Disables window border
-  border = {
-    off = {};
-  };
+  border.off = [];
 
   # Disables focus ring
-  focus-ring = {
-    off = {};
-  };
+  focus-ring.off = [];
 
   # Enables window shadow
   shadow = {
     draw-behind-window = true;
     softness = 20;
     spread = 5;
-    offset = {
+    offset._props = {
       x = 5;
       y = 5;
     };
