@@ -96,16 +96,19 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions; {
     action = maximize-column;
     hotkey-overlay.title = "Maximize column";
   };
-  /*
-     - I do not use
-  "Mod+T" = {
+  "Mod+W" = {
     action = toggle-column-tabbed-display;
     hotkey-overlay.title = "Toggle tabbed view";
   };
-  */
   "Mod+R" = {
     action = switch-preset-column-width;
     hotkey-overlay.title = "Cycle column width preset";
+  };
+
+  # NEW FEATURES (v25.11+)
+  "Mod+Ctrl+M" = {
+    action = maximize-window-to-edges;
+    hotkey-overlay.title = "True maximize (fill screen edges)";
   };
 
   # WINDOW MOVEMENT
@@ -219,13 +222,6 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions; {
     action = focus-workspace "8";
   };
 
-  "Alt+Tab" = {
-    action = focus-workspace-previous;
-  };
-  "Alt+Ctrl+Tab" = {
-    action = focus-window-previous;
-  };
-
   # LAYOUT
   "Mod+Space" = {
     action = switch-layout "next";
@@ -235,13 +231,6 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions; {
     action = switch-layout "prev";
     hotkey-overlay.title = "Previous layout";
   };
-  /*
-  TODO: Uncomment when flake gets update
-  "Alt+Tab".action = next-window;
-  "Alt+Shift+Tab".action = previous-window;
-  "Alt+grave".action = next-window;
-  "Alt+Shift+grave".action = next-window;
-  */
 
   # SYSTEM
   "Mod+Shift+E" = {
@@ -412,3 +401,4 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions; {
     hotkey-overlay.title = "Run script 3";
   };
 }
+

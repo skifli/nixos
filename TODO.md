@@ -1,7 +1,4 @@
-- [ ] Wait for blur options to land in Niri - https://github.com/sodiboo/niri-flake/issues/1721. Now wait for sodiboo to update the flake (hope you're doing good <3) - or look into https://codeberg.org/BANanaD3V/niri-nix.
 - [ ] Relook at Zen blurring.
 - [ ] Ghostty bg blur?
-- [ ] Workflow for auto formatting?
-- [ ] Vscode `settings.json`, extensions, etc for da repo?
 - [ ] When Ghostty updates to 1.4.0, alias ssh to ghostty ssh - https://ghostty.org/docs/features/ssh
 - [ ] Add more kool nirius related notification stuff when the nixpkgs stable one updates

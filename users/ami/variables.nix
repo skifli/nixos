@@ -40,12 +40,10 @@
   # Dynamic SafeEyes window rules based on ze outputs
   safeEyesRules =
     lib.imap0 (idx: outputName: {
-      matches = [
-        {
-          app-id = "(?i)io.github.slgobinath.SafeEyes";
-          title = "SafeEyes-${builtins.toString idx}";
-        }
-      ];
+      match._props = {
+        app-id._raw = ''r#"(?i)io\.github\.slgobinath\.SafeEyes"#'';
+        title._raw = ''r#"(?i)SafeEyes-${builtins.toString idx}"#'';
+      };
       open-on-output = outputName;
       open-focused = true;
       open-fullscreen = true;
@@ -128,76 +126,86 @@ in rec {
       {sh = startupScript;}
     ];
 
-    window-rules =
-      [
-        {
-          matches = [
-            {
-              # TODO: Fix me for Kwallet!
-              app-id = "(?i)gcr-prompter";
-              at-startup = false; # Cus sometimes it doesn't open in 60 seconds or summat idk
-            }
-          ];
+    window-rules = [
+      {
+        # Cus sometimes it doesn't open in 60 seconds or summat idk don't do at-startup
+        match._props.app-id._raw = ''r#"(?i)gcr-prompter"#'';
+        open-focused = true;
+        open-on-workspace = "1";
+      }
 
-          open-focused = true;
-          open-on-workspace = "1";
-        }
-        ## https://www.reddit.com/r/niri/comments/1skrhet/steam_notifications_appear_in_the_center_of_the/
-        {
-          # Do above
-          matches = [
-            {
-              app-id = "(?i)steam";
-              title = "(?i)notificationtoasts_\\d+_desktop";
-            }
-          ];
+      ## https://www.reddit.com/r/niri/comments/1skrhet/steam_notifications_appear_in_the_center_of_the/
+      {
+        match._props = {
+          app-id._raw = ''r#"(?i)steam"#'';
+          title._raw = ''r#"(?i)notificationtoasts_\d+_desktop"#'';
+        };
+        open-maximized = false;
+        open-focused = false;
+        default-floating-position._props = {
+          x = 0;
+          y = 0;
+          relative-to = "bottom-right";
+        };
+      }
 
-          open-maximized = false;
-          open-focused = false;
-          default-floating-position = {
-            x = 0;
-            y = 0;
-            relative-to = "bottom-right";
-          };
-        }
-        {
-          matches = [
-            {
-              app-id = "(?i)anki";
-            }
-            {
-              title = "(?i)Anytype";
-            }
-            {
-              app-id = "(?i)ferdium";
-            }
-            {
-              app-id = "(?i)org.remmina.Remmina";
-            }
-            {
-              app-id = "(?i)ferdium";
-            }
-            {
-              app-id = "(?i)org.gnome.Evince";
-            }
-            {
-              app-id = "(?i)com.wayle.settings";
-            }
-            {
-              app-id = "(?i)io.missioncenter.MissionCenter";
-            }
-            {
-              app-id = "(?i)dev.zed.Zed";
-            }
-            {
-              app-id = "(?i)io.github.slgobinath.SafeEyes";
-              title = "(?i)Safe Eyes";
-            }
-          ];
+      # Anki - maximize
+      {
+        match._props.app-id._raw = ''r#"(?i)anki"#'';
+        open-maximized = true;
+      }
 
-          open-maximized = true;
-        }
-      ]
+      # Anytype - maximize
+      {
+        match._props.title._raw = ''r#"(?i)anytype"#'';
+        open-maximized = true;
+      }
+
+      # Ferdium - maximize
+      {
+        match._props.app-id._raw = ''r#"(?i)ferdium"#'';
+        open-maximized = true;
+      }
+
+      # Remmina (remote desktop) - maximize
+      {
+        match._props.app-id._raw = ''r#"(?i)org\.remmina\.Remmina"#'';
+        open-maximized = true;
+      }
+
+      # Evince (PDF viewer) - maximize
+      {
+        match._props.app-id._raw = ''r#"(?i)org\.gnome\.Evince"#'';
+        open-maximized = true;
+      }
+
+      # Wayle settings - maximize
+      {
+        match._props.app-id._raw = ''r#"(?i)com\.wayle\.settings"#'';
+        open-maximized = true;
+      }
+
+      # Mission Center (system monitor) - maximize
+      {
+        match._props.app-id._raw = ''r#"(?i)io\.missioncenter\.MissionCenter"#'';
+        open-maximized = true;
+      }
+
+      # Zed editor - maximize
+      {
+        match._props.app-id._raw = ''r#"(?i)dev\.zed\.Zed"#'';
+        open-maximized = true;
+      }
+
+      # SafeEyes - maximize
+      {
+        match._props = {
+          app-id._raw = ''r#"(?i)io\.github\.slgobinath\.SafeEyes"#'';
+          title._raw = ''r#"(?i)Safe Eyes"#'';
+        };
+        open-maximized = true;
+      }
+    ]
       ++ safeEyesRules;
   };
 
@@ -256,3 +264,4 @@ in rec {
     ];
   };
 }
+

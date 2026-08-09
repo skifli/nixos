@@ -24,8 +24,11 @@
     }; # Managing files and configs in each users' home directory
     ironbar.url = "github:JakeStanger/ironbar";
     lan-mouse.url = "github:feschber/lan-mouse";
-    niri = {
-      url = "github:sodiboo/niri-flake";
+    # Switched from sodiboo/niri-flake to BANanaD3V/niri-nix
+    # See: https://github.com/niri-wm/niri/pull/4404
+    # TODO: Switch back to sodiboo/niri-flake when it gets updated again <3
+    niri-nix = {
+      url = "git+https://codeberg.org/BANanaD3V/niri-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-index-database = {
@@ -150,3 +153,4 @@
     formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt;
   };
 }
+
