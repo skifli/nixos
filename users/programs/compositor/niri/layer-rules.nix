@@ -12,7 +12,8 @@
   # Blur behind top/overlay layers (launchers, desktop shell)
   {
     match._props = {
-      namespace = "^(${userVars.programs.launcher}|${userVars.programs.desktop-shell}.*)$";
+      namespace = "^(${userVars.programs.launcher}|${userVars.programs.desktop-shell})$";
+      # TODO: Re-add .* if needed... ^(${userVars.programs.launcher}|${userVars.programs.desktop-shell}.*)$
       layer = "top";
     };
     background-effect.blur = true;
