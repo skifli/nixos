@@ -12,10 +12,10 @@
   windowRules = import ./niri/window-rules.nix attrs;
   layerRules = import ./niri/layer-rules.nix attrs;
 
-  outputNodes = map (out: {output = out;}) (builtins.attrValues hostVars.outputs);
-  workspaceNodes = map (ws: {workspace = ws;}) (builtins.attrValues hostVars.workspaces);
-  windowRuleNodes = map (rule: {window-rule = rule;}) windowRules;
-  layerRuleNodes = map (rule: {layer-rule = rule;}) layerRules;
+  outputNodes = map (name: { output."${name}" = hostVars.outputs.${name}; }) (builtins.attrNames hostVars.outputs);
+  workspaceNodes = map (name: { workspace."${name}" = hostVars.workspaces.${name}; }) (builtins.attrNames hostVars.workspaces);
+  windowRuleNodes = map (rule: { window-rule = rule; }) windowRules;
+  layerRuleNodes = map (rule: { layer-rule = rule; }) layerRules;
 in {
   imports = [
     inputs.niri-nix.nixosModules.default
@@ -31,8 +31,6 @@ in {
       wayland.windowManager.niri = {
         enable = true;
 
-        package = null; # Set this to null if you use the NixOS module to install Niri. https://codeberg.org/bananad3v/niri-nix/src/branch/main/home-options.md#wayland-windowmanager-niri-package
-
         systemd.variables = [
           "--all"
         ];
@@ -41,14 +39,14 @@ in {
           prefer-no-csd = {};
           hotkey-overlay.skip-at-startup = {};
 
-          xwayland-satellite.enable = {};
+          xwayland-satellite = {};
 
           gestures.hot-corners.off = {};
           clipboard.disable-primary = {};
 
           inherit input layout binds;
 
-          # Animation settings (flag nodes for enabled features, off node for disabled)
+          # Animation settings (empty set = enabled feature, .off = disabled)
           animations = {
             config-notification-open-close = {};
             exit-confirmation-open-close = {};
@@ -65,19 +63,19 @@ in {
           recent-windows = {
             open-delay-ms = 0;
             debounce-delay-ms = 100;
-            preview-size._props = {natural = 256;};
-            gap._props = {natural = 16;};
+            preview-size = { natural = 256; };
+            gap = { natural = 16; };
           };
 
           spawn-sh-at-startup = userVars.niri.spawn-sh-at-startup;
 
-          # Overview configuration (axlefublr style zoom scale)
+          # Overview configuration
           overview = {
             zoom = 0.5;
             prefer-centered-preview = {};
           };
 
-          # Top-level repeated nodes
+          # Top-level repeated nodes via _children
           _children =
             outputNodes
             ++ workspaceNodes
