@@ -17,4 +17,11 @@
     };
     background-effect.blur = true;
   }
+  # Blur first browser
+  {
+    match._props = {
+      namespace = "^(${builtins.elemAt userVars.programs.browsers 0})$";
+    };
+    background-effect.blur = true;
+  }
 ]
