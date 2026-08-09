@@ -2,7 +2,8 @@
   hostVars,
   lib,
   ...
-}: {
+}:
+{
   keyboard = {
     repeat-delay = 300;
     repeat-rate = 50;
@@ -28,4 +29,3 @@
   };
 }
 // (hostVars.niri.input or {})
-

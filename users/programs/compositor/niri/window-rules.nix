@@ -1,4 +1,5 @@
-{userVars, ...}: [
+{userVars, ...}:
+[
   # Terminal background blur
   {
     match._props.app-id = "(?i)${userVars.programs.terminal}";
@@ -20,4 +21,3 @@
   }
 ]
 ++ (userVars.niri.window-rules or [])
-
