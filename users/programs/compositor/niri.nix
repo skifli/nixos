@@ -17,6 +17,10 @@
       wayland.windowManager.niri = {
         enable = true;
 
+        systemd.variables = [
+          "--all"
+        ];
+
         settings = let
           bindImport = import ./niri/binds.nix attrs;
         in {
