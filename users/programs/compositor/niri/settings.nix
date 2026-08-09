@@ -1,5 +1,6 @@
 {
   commonHostVars,
+  config,
   hostVars,
   pkgs,
   userVars,
