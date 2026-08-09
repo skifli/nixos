@@ -164,12 +164,12 @@
     switch-preset-column-width-back = [];
   };
   "Mod+Ctrl+R" = {
-    _props.hotkey-overlay-title = "Cycle column height preset";
-    switch-preset-column-height = [];
+    _props.hotkey-overlay-title = "Cycle window height preset";
+    switch-preset-window-height = [];
   };
   "Mod+Ctrl+Shift+R" = {
-    _props.hotkey-overlay-title = "Cycle column height preset (reverse)";
-    switch-preset-column-height-back = [];
+    _props.hotkey-overlay-title = "Cycle window height preset (reverse)";
+    switch-preset-window-height-back = [];
   };
 
   # NEW FEATURES (v25.11+)
