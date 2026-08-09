@@ -11,7 +11,7 @@
     # E.g., wayle-notification-popup
     block-out-from = "screen-capture";
   }
-  
+
   # Blur behind top/overlay layers (launchers, desktop shell)
   {
     match._props = {
