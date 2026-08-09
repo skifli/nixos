@@ -7,61 +7,52 @@
   userVars,
   ...
 } @ attrs: {
-  nixpkgs.overlays = [
-    inputs.niri.overlays.niri
-  ]; # Add Niri overlay
-
   home-manager = {
     users.${userVars.username} = {
       imports = [
-        inputs.niri.homeModules.niri
+        inputs.niri-nix.homeModules.default
       ];
 
-      # Niri automagically sets up a lot of needed stuff
-      programs.niri = {
+      # Niri configuration via niri-nix home manager module
+      wayland.windowManager.niri = {
         enable = true;
-        package = let
-          inherit (pkgs.stdenv.hostPlatform) system;
-        in
-          inputs.niri.packages.${system}.niri-stable.override {
-            libdisplay-info = pkgs.libdisplay-info_0_2;
-          }; # Fix for https://github.com/sodiboo/niri-flake/issues/1406
-        settings = {
+
+        settings = let
+          bindImport = import ./niri/binds.nix attrs;
+        in {
           prefer-no-csd = true;
           hotkey-overlay.skip-at-startup = true;
 
+          # Xwayland configuration
           xwayland-satellite = {
             enable = true;
-            path = lib.getExe pkgs.xwayland-satellite;
           };
 
-          input =
-            {
-              warp-mouse-to-focus.enable = true; # Warp pointer to focused window
+          # Input settings
+          input = {
+            keyboard.repeat-delay = 300;
+            mouse.accel-profile = "adaptive";
+            warp-mouse-to-focus.enable = true;
 
-              focus-follows-mouse = {
-                enable = true;
-                max-scroll-amount = "5%"; # Allow focus-follows-mouse when it results in scrolling at most 5% of the screen.
-              };
+            focus-follows-mouse = {
+              enable = true;
+              max-scroll-amount = "5%";
+            };
+          } // (hostVars.niri.input or {});
 
-              mouse = {
-                accel-profile = "adaptive";
-              };
-
-              keyboard = {
-                repeat-delay = 300;
-              };
-            }
-            // hostVars.niri.input;
-
+          # Gestures configuration
           gestures.hot-corners.enable = false;
 
-          # https://github.com/YaLTeR/niri/issues/2430
+          # Clipboard settings
           clipboard.disable-primary = true;
 
-          binds = import ./niri/binds.nix attrs;
-          inherit (hostVars) outputs workspaces;
+          # Monitor outputs directly from hostVars
+          output = builtins.attrValues hostVars.outputs;
 
+          # Workspaces directly from hostVars
+          workspace = builtins.attrValues hostVars.workspaces;
+
+          # Animation settings
           animations = {
             enable = true;
 
@@ -73,125 +64,132 @@
             window-movement.enable = true;
             window-open.enable = true;
             window-resize.enable = true;
-            workspace-switch.enable = false; # I get a tad motion sick sometimes eurgh
+            workspace-switch.enable = false;
           };
 
-          inherit (userVars.niri) spawn-at-startup;
+          # Spawn at startup
+          spawn-at-startup = userVars.niri.spawn-at-startup;
 
-          window-rules =
-            [
-              {
-                matches = [{is-focused = false;}];
+          # Alt-Tab recent windows customization (v25.11+)
+          recent-windows = {
+            open-delay-ms = 0;
+            debounce-delay-ms = 100;
+            preview-size._props = { natural = 256; };
+            gap._props = { natural = 16; };
+          };
 
-                opacity = 0.90;
-              }
-              {
-                matches = [{app-id = "(?i)${userVars.programs.terminal}";}];
+          # Overview configuration (reduced zoom to fit more workspaces)
+          overview = {
+            zoom = 0.5;
+            prefer-centered-preview = true;
+          };
 
-                open-maximized = true;
-              }
-              /*
-              {
-                matches = [
-                  {
-                    title = "^(Unlock Login Keyring)(.*)$";
-                  } # GNOME Keyring
-                ];
-
-                geometry-corner-radius = rec {
-                  bottom-left = 12.0;
-                  bottom-right = bottom-left;
-                  top-left = bottom-left;
-                  top-right = bottom-left;
-                };
-
-                clip-to-geometry = true;
-              }
-              */
-            ]
-            ++ userVars.niri.window-rules;
-
+          # Layout configuration
           layout = {
             gaps = 0;
             background-color = "transparent";
             center-focused-column = "on-overflow";
             always-center-single-column = true;
             empty-workspace-above-first = false;
-            default-column-width = {}; # Allows windows to decide their initial width
 
-            border = {
-              enable = false;
-              width = 2;
-            };
+            default-column-width = {};
+
+            preset-column-widths._children = [
+              { proportion = 0.25; }
+              { proportion = 1.0 / 3.0; }
+              { proportion = 0.5; }
+              { proportion = 2.0 / 3.0; }
+              { proportion = 0.75; }
+            ];
+
+            border.on = false;
+            border.width = 2;
 
             shadow = {
-              enable = true;
+              on = true;
               draw-behind-window = true;
               softness = 20;
               spread = 5;
-              offset = {
+              offset._props = {
                 x = 5;
                 y = 5;
               };
               color = "#000000aa";
             };
 
-            struts = rec {
+            struts._props = {
               top = 0;
               left = 0;
-              right = left;
+              right = 0;
+              bottom = 0;
             };
 
-            preset-column-widths = [
-              {proportion = 1.0 / 3.0;}
-              {proportion = 1.0 / 2.0;}
-              {proportion = 2.0 / 3.0;}
-            ];
-
-            focus-ring.enable = false;
+            focus-ring.on = false;
             tab-indicator.position = "top";
           };
+
+          # Keyboard bindings
+          binds = bindImport;
+
+          # Window-specific rules
+          window-rule = [
+            # Terminal background blur
+            {
+              match._props.app-id._raw = ''r#"(?i)${userVars.programs.terminal}"#'';
+              background-effect = {
+                blur = true;
+              };
+            }
+            # Terminal open maximized
+            {
+              match._props.app-id._raw = ''r#"(?i)${userVars.programs.terminal}"#'';
+              open-maximized = true;
+            }
+          ] ++ userVars.niri.window-rules;
+
+          # Layer-shell rules (v25.01+)
+          layer-rule = [
+            {
+              match._props = {
+                namespace = "^notifications$";
+              };
+              block-out-from = "screen-capture";
+            }
+            {
+              match._props = {
+                namespace._raw = ''r#"^(gcr-prompter)"#'';
+              };
+              block-out-from = "screen-capture";
+            }
+            {
+              match._props = {
+                namespace._raw = ''r#"^(notifications|launcher|menu|${userVars.programs.launcher}|${userVars.programs.desktop-shell}.*)"#'';
+                layer = "top";
+              };
+              background-effect = {
+                blur = true;
+                brightness = 0.9;
+                saturation = 1.1;
+              };
+            }
+          ];
         };
       };
 
-      # Environment variables for Niri
-      home = {
-        sessionVariables = {
-          XDG_CURRENT_DESKTOP = "niri";
-          XDG_SESSION_DESKTOP = "niri";
-        };
-
-        file.".local/share/misc" = {
-          source = ../../${userVars.username}/assets/misc;
-        };
+      # Environment variables
+      home.sessionVariables = {
+        XDG_CURRENT_DESKTOP = "niri";
+        XDG_SESSION_DESKTOP = "niri";
       };
 
-      /*
-      # NOT NEEDED ANYMORE: NIRI JUST REQUIRES IT TO BE INSTALLED, IT DOES THE REST
-      # Switch from `Install.WantedBy = [ "graphical-session.target" ]` as defined
-      # in the service file provided by the xwayland-satellite package. This links
-      # xwayland-satellite to niri specifically, and schedules it so that there is
-      # a wayland session available when it starts.
-      systemd.user.services.xwayland-satellite = {
-        Unit = {
-          Description = "Xwayland outside your Wayland";
-          BindsTo = "graphical-session.target";
-          PartOf = "graphical-session.target";
-          After = "graphical-session.target";
-          Requisite = "graphical-session.target";
-        };
-        Service = {
-          Type = "notify";
-          NotifyAccess = "all";
-          ExecStart = "${pkgs.xwayland-satellite}/bin/xwayland-satellite";
-          StandardOutput = "journal";
-        };
-        Install.WantedBy = [ "graphical-session.target" ];
+      # Misc files
+      home.file.".local/share/misc" = {
+        source = ../../${userVars.username}/assets/misc;
       };
-      */
     };
   };
 
+  # NixOS-level configuration
   environment.systemPackages = [
     pkgs.niri
     pkgs.jq # Used for some scripts
@@ -202,6 +200,8 @@
 
   programs = {
     dconf.enable = true;
+
+    # Niri NixOS module
     niri.enable = true;
 
     uwsm = {
@@ -216,8 +216,6 @@
       };
     };
   };
-
-  # services.polkit-gnome.enable = true;
 
   xdg.portal.configPackages = [pkgs.niri];
 }

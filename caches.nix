@@ -10,6 +10,7 @@
     "https://cache.forall.systems"
     "https://jakestanger.cachix.org"
     "https://nyx-cache.chaotic.cx/"
+    "https://niri-nix.cachix.org"
   ];
 
   trusted-public-keys = [
@@ -23,5 +24,6 @@
     "cache.forall.systems:5PmD7QO4MSF8YgyRZtkSGXRDo96H3bybIf2SsQh8ScI="
     "jakestanger.cachix.org-1:VWJE7AWNe5/KOEvCQRxoE8UsI2Xs2nHULJ7TEjYm7mM="
     "nyx-cache.chaotic.cx:dJxTrgMC3V3cFfyIiBQDQorG6k1LsqurH/srpMSq7qk="
+    "niri-nix.cachix.org-1:SvFtqpDcf7Sm1SMJdby1/+Y+6f3Yt3/3PMcSTKPJNJ0="
   ];
 }
