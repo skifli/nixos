@@ -83,6 +83,8 @@ in {
   animations = {
     config-notification-open-close = [];
     exit-confirmation-open-close = [];
+    screenshot-ui-open = [];
+    recent-windows-close = [];
     horizontal-view-movement = [];
     overview-open-close = [];
     window-close = [];
