@@ -97,10 +97,17 @@ in {
   # Alt-Tab recent-windows configuration
   recent-windows = {
     open-delay-ms = 0;
-    debounce-ms = 100;
+    debounce-ms = 750;
+
     previews = {
-      max-height = 480;
       max-scale = 0.5;
+    };
+
+    binds = {
+      "Alt+Tab"         = { action.next-window = []; };
+      "Alt+Shift+Tab"   = { action.previous-window = []; };
+      "Alt+grave"       = { action.next-window.filter = "app-id"; };
+      "Alt+Shift+grave" = { action.previous-window.filter = "app-id"; };
     };
   };
 }
