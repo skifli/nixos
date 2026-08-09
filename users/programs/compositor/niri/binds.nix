@@ -14,11 +14,11 @@
   # HELP & OVERVIEW
   "Mod+Slash" = {
     hotkey-overlay-title = "Show keybindings";
-    show-hotkey-overlay = {};
+    show-hotkey-overlay = [];
   };
   "Mod+Tab" = {
     hotkey-overlay-title = "Toggle overview";
-    toggle-overview = {};
+    toggle-overview = [];
   };
 
   # APPLICATIONS
@@ -57,15 +57,15 @@
   # WINDOW MANAGEMENT
   "Mod+Q" = {
     hotkey-overlay-title = "Close window";
-    close-window = {};
+    close-window = [];
   };
   "Mod+F11" = {
     hotkey-overlay-title = "Toggle fullscreen";
-    fullscreen-window = {};
+    fullscreen-window = [];
   };
   "Mod+O" = {
     hotkey-overlay-title = "Toggle floating";
-    toggle-window-floating = {};
+    toggle-window-floating = [];
   };
 
   # COLUMN MANAGEMENT
@@ -79,111 +79,111 @@
   };
   "Mod+C" = {
     hotkey-overlay-title = "Center column";
-    center-column = {};
+    center-column = [];
   };
   "Mod+M" = {
     hotkey-overlay-title = "Maximize column";
-    maximize-column = {};
+    maximize-column = [];
   };
   "Mod+W" = {
     hotkey-overlay-title = "Toggle tabbed view";
-    toggle-column-tabbed-display = {};
+    toggle-column-tabbed-display = [];
   };
   "Mod+R" = {
     hotkey-overlay-title = "Cycle column width preset";
-    switch-preset-column-width = {};
+    switch-preset-column-width = [];
   };
 
   # NEW FEATURES (v25.11+)
   "Mod+Ctrl+M" = {
     hotkey-overlay-title = "True maximize (fill screen edges)";
-    maximize-window-to-edges = {};
+    maximize-window-to-edges = [];
   };
 
   # WINDOW MOVEMENT
   "Mod+Shift+Home" = {
     hotkey-overlay-title = "Move column to first";
-    move-column-to-first = {};
+    move-column-to-first = [];
   };
   "Mod+Shift+End" = {
     hotkey-overlay-title = "Move column to last";
-    move-column-to-last = {};
+    move-column-to-last = [];
   };
 
   "Mod+Shift+H" = {
     hotkey-overlay-title = "Move column left";
-    move-column-left = {};
+    move-column-left = [];
   };
   "Mod+Shift+L" = {
     hotkey-overlay-title = "Move column right";
-    move-column-right = {};
+    move-column-right = [];
   };
   "Mod+Shift+J" = {
     hotkey-overlay-title = "Move window down";
-    move-window-down = {};
+    move-window-down = [];
   };
   "Mod+Shift+K" = {
     hotkey-overlay-title = "Move window up";
-    move-window-up = {};
+    move-window-up = [];
   };
   "Mod+Comma" = {
     hotkey-overlay-title = "Consume window into column";
-    consume-window-into-column = {};
+    consume-window-into-column = [];
   };
   "Mod+Period" = {
     hotkey-overlay-title = "Expel window from column";
-    expel-window-from-column = {};
+    expel-window-from-column = [];
   };
 
   # FOCUS MOVEMENT (Vim style)
   "Mod+H" = {
     hotkey-overlay-title = "Focus left";
-    focus-column-left = {};
+    focus-column-left = [];
   };
   "Mod+J" = {
     hotkey-overlay-title = "Focus down";
-    focus-window-down = {};
+    focus-window-down = [];
   };
   "Mod+K" = {
     hotkey-overlay-title = "Focus up";
-    focus-window-up = {};
+    focus-window-up = [];
   };
   "Mod+L" = {
     hotkey-overlay-title = "Focus right";
-    focus-column-right = {};
+    focus-column-right = [];
   };
   "Mod+Shift+WheelScrollDown" = {
-    cooldown-ms = userVars.scroll-cooldown-ms;
-    focus-column-right = {};
+    _props.cooldown-ms = userVars.scroll-cooldown-ms;
+    focus-column-right = [];
   };
   "Mod+Shift+WheelScrollUp" = {
-    cooldown-ms = userVars.scroll-cooldown-ms;
-    focus-column-left = {};
+    _props.cooldown-ms = userVars.scroll-cooldown-ms;
+    focus-column-left = [];
   };
 
   # WORKSPACES
   "Mod+1" = {
-    focus-monitor-left = {};
+    focus-monitor-left = [];
   };
   "Mod+2" = {
-    focus-monitor-right = {};
+    focus-monitor-right = [];
   };
   "Mod+WheelScrollDown" = {
-    cooldown-ms = userVars.scroll-cooldown-ms;
-    focus-workspace-down = {};
+    _props.cooldown-ms = userVars.scroll-cooldown-ms;
+    focus-workspace-down = [];
   };
   "Mod+WheelScrollUp" = {
-    cooldown-ms = userVars.scroll-cooldown-ms;
-    focus-workspace-up = {};
+    _props.cooldown-ms = userVars.scroll-cooldown-ms;
+    focus-workspace-up = [];
   };
 
   "Mod+Ctrl+WheelScrollDown" = {
-    cooldown-ms = userVars.scroll-cooldown-ms;
-    move-column-to-workspace-down = {};
+    _props.cooldown-ms = userVars.scroll-cooldown-ms;
+    move-column-to-workspace-down = [];
   };
   "Mod+Ctrl+WheelScrollUp" = {
-    cooldown-ms = userVars.scroll-cooldown-ms;
-    move-column-to-workspace-up = {};
+    _props.cooldown-ms = userVars.scroll-cooldown-ms;
+    move-column-to-workspace-up = [];
   };
 
   "Mod+Shift+1" = {
@@ -224,17 +224,17 @@
   # SYSTEM
   "Mod+Shift+E" = {
     hotkey-overlay-title = "Exit Niri";
-    quit = {};
+    quit = [];
   };
 
   # SCREENSHOTS
   "Print" = {
     hotkey-overlay-title = "Screenshot";
-    screenshot = {};
+    screenshot = [];
   };
   "Shift+Print" = {
     hotkey-overlay-title = "Screenshot window";
-    screenshot-window = {};
+    screenshot-window = [];
   };
   "Ctrl+Print" = {
     hotkey-overlay-title = "OCR screenshot";
