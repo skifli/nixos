@@ -1,7 +1,7 @@
 {
   # Feature toggles
   # disableX = true;
-
+  
   optimiseBoot = true;
   optimiseBuilds = true;
 
@@ -36,66 +36,32 @@
   # TODO - FIX: A lot of assumptions are made based on there only being 2 monitors right now...
   outputs = {
     "DP-1" = {
-      _args = ["DP-1"];
-      mode._props = {
-        width = 1440;
-        height = 900;
-        refresh = 59.89;
-      };
-      position._props = {
-        x = 1920; # Right of the other monitor
+      mode = "1440x900@59.89";
+      position = {
+        x = 1920;
         y = 0;
       };
     };
     "HDMI-A-2" = {
-      _args = ["HDMI-A-2"];
-      mode._props = {
-        width = 1920;
-        height = 1080;
-        refresh = 74.99;
-      };
-      position._props = {
+      mode = "1920x1080@74.99";
+      position = {
         x = 0;
         y = 0;
       };
-      focus-at-startup = true;
+      focus-at-startup = {};
     };
   };
 
   workspaces = {
-    "1" = {
-      _args = ["1"];
-      open-on-output = "HDMI-A-2";
-    };
-    "2" = {
-      _args = ["2"];
-      open-on-output = "HDMI-A-2";
-    };
-    "3" = {
-      _args = ["3"];
-      open-on-output = "HDMI-A-2";
-    };
-    "4" = {
-      _args = ["4"];
-      open-on-output = "HDMI-A-2";
-    };
+    "1" = { open-on-output = "HDMI-A-2"; };
+    "2" = { open-on-output = "HDMI-A-2"; };
+    "3" = { open-on-output = "HDMI-A-2"; };
+    "4" = { open-on-output = "HDMI-A-2"; };
 
-    "5" = {
-      _args = ["5"];
-      open-on-output = "DP-1";
-    };
-    "6" = {
-      _args = ["6"];
-      open-on-output = "DP-1";
-    };
-    "7" = {
-      _args = ["7"];
-      open-on-output = "DP-1";
-    };
-    "8" = {
-      _args = ["8"];
-      open-on-output = "DP-1";
-    };
+    "5" = { open-on-output = "DP-1"; };
+    "6" = { open-on-output = "DP-1"; };
+    "7" = { open-on-output = "DP-1"; };
+    "8" = { open-on-output = "DP-1"; };
   };
 
   niri.input = {

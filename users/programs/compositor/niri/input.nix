@@ -20,11 +20,17 @@
     accel-profile = "adaptive";
   };
 
+  touchpad = {
+    tap = {};
+    dwt = {};
+    natural-scroll = true;
+  };
+
   # Enables mouse warping to center of newly focused window
   warp-mouse-to-focus = {};
 
   # Focus follows mouse with max scroll threshold
-  focus-follows-mouse._props = {
+  focus-follows-mouse = {
     max-scroll-amount = "5%";
   };
 }
