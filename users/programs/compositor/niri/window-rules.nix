@@ -1,4 +1,5 @@
-{userVars, ...}: [
+{userVars, ...}:
+[
   {
     match._props.app-id._raw = ''r#"(?i)${userVars.programs.terminal}"#'';
     background-effect = {
@@ -17,4 +18,3 @@
   }
 ]
 ++ (userVars.niri.window-rules or [])
-
