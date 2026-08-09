@@ -35,8 +35,10 @@
 
   # TODO - FIX: A lot of assumptions are made based on there only being 2 monitors right now...
   outputs = {
+    # WARNING: Must manually update new attrs in users/programs/compositor/niri/settings.nix
     "DP-1" = {
       mode = "1440x900@59.89";
+      scale = 1.0;
       position = {
         x = 1920;
         y = 0;
@@ -44,6 +46,7 @@
     };
     "HDMI-A-2" = {
       mode = "1920x1080@74.99";
+      scale = 1.0;
       position = {
         x = 0;
         y = 0;
