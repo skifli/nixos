@@ -1,4 +1,5 @@
 {
+  commonHostVars,
   hostVars,
   pkgs,
   userVars,
@@ -36,12 +37,47 @@ in {
   spawn-sh-at-startup = userVars.niri.spawn-sh-at-startup;
 
   prefer-no-csd = [];
-  hotkey-overlay.skip-at-startup = [];
+
+  cursor = {
+    xcursor-theme = config.home-manager.users.${userVars.username}.stylix.cursor.name;
+    xcursor-size = commonHostVars.cursor.size;
+  };
+
+  # Overview configuration
+  overview = {
+    zoom = 0.25;
+
+    # Workspace shadows are configured for a workspace size normalized to 1080 pixels tall, then zoomed out together with the workspace. Practically, this means that you'll want bigger spread, offset, and softness compared to window shadows.
+    workspace-shadow = {
+      on = [];
+      softness = 40;
+      spread = 10;
+      offset._props = {
+        x = 0;
+        y = 10;
+      };
+      color = "#00000050";
+    };
+  };
 
   xwayland-satellite = [];
 
-  gestures.hot-corners.off = [];
   clipboard.disable-primary = [];
+
+  hotkey-overlay = {
+    skip-at-startup = [];
+    hide-not-bound = [];
+  };
+
+  blur = {
+    on = [];
+    passes = 5;
+    offset = 1;
+    noise = 0.02;
+    saturation = 1.0;
+  };
+
+  gestures.hot-corners.off = [];
 
   # Animation settings (empty list [] = parameterless KDL flag/node)
   animations = {
@@ -64,10 +100,5 @@ in {
       max-height = 480;
       max-scale = 0.5;
     };
-  };
-
-  # Overview configuration
-  overview = {
-    zoom = 0.5;
   };
 }
