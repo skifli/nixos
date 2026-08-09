@@ -5,7 +5,7 @@
 }: {
   # APPLICATION LAUNCHER
   "Mod+D" = {
-    hotkey-overlay-title = "Application launcher";
+    _props.hotkey-overlay-title = "Application launcher";
     spawn =
       [userVars.programs.launcher]
       ++ pkgs.lib.optional (userVars.programs.launcher == "vicinae") "toggle";
@@ -13,40 +13,40 @@
 
   # HELP & OVERVIEW
   "Mod+Slash" = {
-    hotkey-overlay-title = "Show keybindings";
+    _props.hotkey-overlay-title = "Show keybindings";
     show-hotkey-overlay = [];
   };
   "Mod+Tab" = {
-    hotkey-overlay-title = "Toggle overview";
+    _props.hotkey-overlay-title = "Toggle overview";
     toggle-overview = [];
   };
 
   # APPLICATIONS
   "Mod+Return" = {
-    hotkey-overlay-title = "Terminal";
+    _props.hotkey-overlay-title = "Terminal";
     spawn =
       if userVars.programs.terminal == "ghostty"
       then ["ghostty" "+new-window"]
       else [userVars.programs.terminal];
   };
   "Mod+F" = {
-    hotkey-overlay-title = "File manager";
+    _props.hotkey-overlay-title = "File manager";
     spawn = [userVars.programs.explorer-gui];
   };
   "Mod+V" = {
-    hotkey-overlay-title = "Visual editor";
+    _props.hotkey-overlay-title = "Visual editor";
     spawn = [userVars.programs.visual];
   };
   "Mod+E" = {
-    hotkey-overlay-title = "Text editor";
+    _props.hotkey-overlay-title = "Text editor";
     spawn = [userVars.programs.editor];
   };
   "Ctrl+Shift+Escape" = {
-    hotkey-overlay-title = "System monitor";
+    _props.hotkey-overlay-title = "System monitor";
     spawn = [userVars.programs.system-monitor];
   };
   "Shift+Escape" = {
-    hotkey-overlay-title = "System monitor (terminal)";
+    _props.hotkey-overlay-title = "System monitor (terminal)";
     spawn = [
       userVars.programs.terminal
       "-e"
@@ -56,100 +56,100 @@
 
   # WINDOW MANAGEMENT
   "Mod+Q" = {
-    hotkey-overlay-title = "Close window";
+    _props.hotkey-overlay-title = "Close window";
     close-window = [];
   };
   "Mod+F11" = {
-    hotkey-overlay-title = "Toggle fullscreen";
+    _props.hotkey-overlay-title = "Toggle fullscreen";
     fullscreen-window = [];
   };
   "Mod+O" = {
-    hotkey-overlay-title = "Toggle floating";
+    _props.hotkey-overlay-title = "Toggle floating";
     toggle-window-floating = [];
   };
 
   # COLUMN MANAGEMENT
   "Mod+Equal" = {
-    hotkey-overlay-title = "Increase column width";
+    _props.hotkey-overlay-title = "Increase column width";
     set-column-width = "+10%";
   };
   "Mod+Minus" = {
-    hotkey-overlay-title = "Decrease column width";
+    _props.hotkey-overlay-title = "Decrease column width";
     set-column-width = "-10%";
   };
   "Mod+C" = {
-    hotkey-overlay-title = "Center column";
+    _props.hotkey-overlay-title = "Center column";
     center-column = [];
   };
   "Mod+M" = {
-    hotkey-overlay-title = "Maximize column";
+    _props.hotkey-overlay-title = "Maximize column";
     maximize-column = [];
   };
   "Mod+W" = {
-    hotkey-overlay-title = "Toggle tabbed view";
+    _props.hotkey-overlay-title = "Toggle tabbed view";
     toggle-column-tabbed-display = [];
   };
   "Mod+R" = {
-    hotkey-overlay-title = "Cycle column width preset";
+    _props.hotkey-overlay-title = "Cycle column width preset";
     switch-preset-column-width = [];
   };
 
   # NEW FEATURES (v25.11+)
   "Mod+Ctrl+M" = {
-    hotkey-overlay-title = "True maximize (fill screen edges)";
+    _props.hotkey-overlay-title = "True maximize (fill screen edges)";
     maximize-window-to-edges = [];
   };
 
   # WINDOW MOVEMENT
   "Mod+Shift+Home" = {
-    hotkey-overlay-title = "Move column to first";
+    _props.hotkey-overlay-title = "Move column to first";
     move-column-to-first = [];
   };
   "Mod+Shift+End" = {
-    hotkey-overlay-title = "Move column to last";
+    _props.hotkey-overlay-title = "Move column to last";
     move-column-to-last = [];
   };
 
   "Mod+Shift+H" = {
-    hotkey-overlay-title = "Move column left";
+    _props.hotkey-overlay-title = "Move column left";
     move-column-left = [];
   };
   "Mod+Shift+L" = {
-    hotkey-overlay-title = "Move column right";
+    _props.hotkey-overlay-title = "Move column right";
     move-column-right = [];
   };
   "Mod+Shift+J" = {
-    hotkey-overlay-title = "Move window down";
+    _props.hotkey-overlay-title = "Move window down";
     move-window-down = [];
   };
   "Mod+Shift+K" = {
-    hotkey-overlay-title = "Move window up";
+    _props.hotkey-overlay-title = "Move window up";
     move-window-up = [];
   };
   "Mod+Comma" = {
-    hotkey-overlay-title = "Consume window into column";
+    _props.hotkey-overlay-title = "Consume window into column";
     consume-window-into-column = [];
   };
   "Mod+Period" = {
-    hotkey-overlay-title = "Expel window from column";
+    _props.hotkey-overlay-title = "Expel window from column";
     expel-window-from-column = [];
   };
 
   # FOCUS MOVEMENT (Vim style)
   "Mod+H" = {
-    hotkey-overlay-title = "Focus left";
+    _props.hotkey-overlay-title = "Focus left";
     focus-column-left = [];
   };
   "Mod+J" = {
-    hotkey-overlay-title = "Focus down";
+    _props.hotkey-overlay-title = "Focus down";
     focus-window-down = [];
   };
   "Mod+K" = {
-    hotkey-overlay-title = "Focus up";
+    _props.hotkey-overlay-title = "Focus up";
     focus-window-up = [];
   };
   "Mod+L" = {
-    hotkey-overlay-title = "Focus right";
+    _props.hotkey-overlay-title = "Focus right";
     focus-column-right = [];
   };
   "Mod+Shift+WheelScrollDown" = {
@@ -213,31 +213,31 @@
 
   # LAYOUT
   "Mod+Space" = {
-    hotkey-overlay-title = "Next layout";
+    _props.hotkey-overlay-title = "Next layout";
     switch-layout = "next";
   };
   "Mod+Shift+Space" = {
-    hotkey-overlay-title = "Previous layout";
+    _props.hotkey-overlay-title = "Previous layout";
     switch-layout = "prev";
   };
 
   # SYSTEM
   "Mod+Shift+E" = {
-    hotkey-overlay-title = "Exit Niri";
+    _props.hotkey-overlay-title = "Exit Niri";
     quit = [];
   };
 
   # SCREENSHOTS
   "Print" = {
-    hotkey-overlay-title = "Screenshot";
+    _props.hotkey-overlay-title = "Screenshot";
     screenshot = [];
   };
   "Shift+Print" = {
-    hotkey-overlay-title = "Screenshot window";
+    _props.hotkey-overlay-title = "Screenshot window";
     screenshot-window = [];
   };
   "Ctrl+Print" = {
-    hotkey-overlay-title = "OCR screenshot";
+    _props.hotkey-overlay-title = "OCR screenshot";
     spawn = ["normcap"];
   };
 
@@ -297,7 +297,7 @@
 
   # NIRIUS - SCRATCHPAD
   "Mod+P" = {
-    hotkey-overlay-title = "Park/unpark window (scratchpad toggle)";
+    _props.hotkey-overlay-title = "Park/unpark window (scratchpad toggle)";
     spawn = [
       "sh"
       "-c"
@@ -305,15 +305,15 @@
     ];
   };
   "Mod+Shift+P" = {
-    hotkey-overlay-title = "Show/cycle scratchpad window";
+    _props.hotkey-overlay-title = "Show/cycle scratchpad window";
     spawn = ["nirius" "scratchpad-show"];
   };
   "Mod+Ctrl+P" = {
-    hotkey-overlay-title = "Show/hide all scratchpad windows";
+    _props.hotkey-overlay-title = "Show/hide all scratchpad windows";
     spawn = ["nirius" "scratchpad-show-all"];
   };
   "Mod+Alt+P" = {
-    hotkey-overlay-title = "List scratchpad windows";
+    _props.hotkey-overlay-title = "List scratchpad windows";
     spawn = [
       "sh"
       "-c"
@@ -323,13 +323,13 @@
 
   # NIRIUS - FOLLOW MODE
   "Mod+Ctrl+F" = {
-    hotkey-overlay-title = "Toggle follow-mode";
+    _props.hotkey-overlay-title = "Toggle follow-mode";
     spawn = ["nirius" "toggle-follow-mode"];
   };
 
   # NIRIUS - MARKS
   "Mod+T" = {
-    hotkey-overlay-title = "Tag/untag window";
+    _props.hotkey-overlay-title = "Tag/untag window";
     spawn = [
       "sh"
       "-c"
@@ -337,7 +337,7 @@
     ];
   };
   "Mod+Alt+T" = {
-    hotkey-overlay-title = "List tagged windows";
+    _props.hotkey-overlay-title = "List tagged windows";
     spawn = [
       "sh"
       "-c"
@@ -345,7 +345,7 @@
     ];
   };
   "Mod+Shift+T" = {
-    hotkey-overlay-title = "Focus tagged window";
+    _props.hotkey-overlay-title = "Focus tagged window";
     spawn = ["nirius" "focus-marked"];
   };
 
@@ -377,15 +377,15 @@
   };
 
   "Mod+Ctrl+1" = {
-    hotkey-overlay-title = "Run script 1";
+    _props.hotkey-overlay-title = "Run script 1";
     spawn = ["/home/${userVars.username}/.local/bin/1-niri.sh"];
   };
   "Mod+Ctrl+2" = {
-    hotkey-overlay-title = "Run script 2";
+    _props.hotkey-overlay-title = "Run script 2";
     spawn = ["/home/${userVars.username}/.local/bin/2-niri.sh"];
   };
   "Mod+Ctrl+3" = {
-    hotkey-overlay-title = "Run script 3";
+    _props.hotkey-overlay-title = "Run script 3";
     spawn = ["/home/${userVars.username}/.local/bin/3-niri.sh"];
   };
 }
