@@ -64,25 +64,25 @@
 
   # WINDOW MANAGEMENT
   "Mod+Q" = {
-    _props.hotkey-overlay-title = "Close window";
+    _props = {
+      hotkey-overlay-title = "Close window";
+      repeat = false;
+    };
     close-window = [];
   };
-  # This and the below one proudly stolen from https://github.com/MangoCubes/nix/blob/e7fdb3fe51a8dce3c6ce6bc2a9fe8423f276f187/desktop/packages/home/niri.nix#L11 ;p (on a serious note if you ever see this MangoCubes these are really smart 'n useful binds! Thanks sm <3.)
   "Mod+Ctrl+Q" = {
-    _props.hotkey-overlay-title = "Kill click window";
-    spawn = [
-      "sh"
-      "-c"
-      "kill -9 $(niri msg pick-window | grep PID | tail -n 1 | awk '{print $NF}')"
-    ];
+    _props = {
+      hotkey-overlay-title = "Kill click window";
+      repeat = false;
+    };
+    spawn = "killclick";
   };
   "Mod+Shift+Q" = {
-    _props.hotkey-overlay-title = "Kill current window";
-    spawn = [
-      "sh"
-      "-c"
-      "kill -9 $(niri msg focused-window | grep PID | tail -n 1 | awk '{print $NF}')"
-    ];
+    _props = {
+      hotkey-overlay-title = "Kill current window";
+      repeat = false;
+    };
+    spawn = "killcurrent";
   };
   "Mod+F11" = {
     _props.hotkey-overlay-title = "Toggle fullscreen";
@@ -399,6 +399,13 @@
       "-c"
       "${userVars.programs.terminal} -e ${userVars.programs.terminal-shell} -c \"/home/${userVars.username}/.local/bin/zen-keyboard-shortcuts.sh; ${userVars.programs.terminal-shell}\""
     ];
+  };
+  "Mod+Shift+Z" = {
+    _props = {
+      hotkey-overlay-title = "Scan QR with Zbar";
+      repeat = false;
+    };
+    spawn = "qrscan";
   };
 
   "Mod+Ctrl+1" = {

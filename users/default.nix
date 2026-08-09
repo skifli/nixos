@@ -71,6 +71,9 @@
             "/home/${userVars.username}/.local/bin" # Idk... I've enabled environment.localBinInPath above, but that didn't really seem to work?
           ];
 
+          # Use pkgs.writeShellScriptBin on each of userVars.shellScripts
+          packages = builtins.mapAttrs (name: script: pkgs.writeShellScriptBin name script) userVars.shellScripts; # Idea stolen from https://github.com/MangoCubes/nix/blob/e7fdb3fe51a8dce3c6ce6bc2a9fe8423f276f187/desktop/packages/home/niri.nix#L11
+
           sessionVariables = let
             primaryBrowser = builtins.elemAt userVars.programs.browsers 0;
           in {
