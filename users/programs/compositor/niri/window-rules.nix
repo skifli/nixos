@@ -4,7 +4,7 @@
   {
     match._props.is-floating = true;
     shadow = {
-      on = {};
+      on = [];
       softness = 20;
       spread = 4;
 

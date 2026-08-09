@@ -155,6 +155,18 @@
     _props.hotkey-overlay-title = "Cycle column width preset";
     switch-preset-column-width = [];
   };
+  "Mod+Shift+R" = {
+    _props.hotkey-overlay-title = "Cycle column width preset (reverse)";
+    switch-preset-column-width-back = [];
+  };
+  "Mod+Ctrl+R" = {
+    _props.hotkey-overlay-title = "Cycle column height preset";
+    switch-preset-column-height = [];
+  };
+  "Mod+Ctrl+Shift+R" = {
+    _props.hotkey-overlay-title = "Cycle column height preset (reverse)";
+    switch-preset-column-height-back = [];
+  };
 
   # NEW FEATURES (v25.11+)
   "Mod+Ctrl+M" = {
