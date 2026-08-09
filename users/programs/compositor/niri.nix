@@ -9,8 +9,13 @@
   binds = import ./niri/binds.nix attrs;
   input = import ./niri/input.nix attrs;
   layout = import ./niri/layout.nix attrs;
-  window-rule = import ./niri/window-rules.nix attrs;
-  layer-rule = import ./niri/layer-rules.nix attrs;
+  windowRules = import ./niri/window-rules.nix attrs;
+  layerRules = import ./niri/layer-rules.nix attrs;
+
+  outputNodes = map (out: {output = out;}) (builtins.attrValues hostVars.outputs);
+  workspaceNodes = map (ws: {workspace = ws;}) (builtins.attrValues hostVars.workspaces);
+  windowRuleNodes = map (rule: {window-rule = rule;}) windowRules;
+  layerRuleNodes = map (rule: {layer-rule = rule;}) layerRules;
 in {
   imports = [
     inputs.niri-nix.nixosModules.default
@@ -33,36 +38,27 @@ in {
         ];
 
         settings = {
-          prefer-no-csd = true;
-          hotkey-overlay.skip-at-startup = true;
+          prefer-no-csd = {};
+          hotkey-overlay.skip-at-startup = {};
 
-          xwayland-satellite.enable = true;
+          xwayland-satellite.enable = {};
 
-          inherit input layout binds window-rule layer-rule;
+          gestures.hot-corners.off = {};
+          clipboard.disable-primary = {};
 
-          gestures.hot-corners.enable = false;
-          clipboard.disable-primary = true;
+          inherit input layout binds;
 
-          # Monitor outputs and workspaces directly from hostVars
-          output = builtins.attrValues hostVars.outputs;
-          workspace = builtins.attrValues hostVars.workspaces;
-
-          # Spawn startup commands from userVars
-          spawn-at-startup = userVars.niri.spawn-at-startup;
-
-          # Animation settings
+          # Animation settings (flag nodes for enabled features, off node for disabled)
           animations = {
-            enable = true;
-
-            config-notification-open-close.enable = true;
-            exit-confirmation-open-close.enable = true;
-            horizontal-view-movement.enable = true;
-            overview-open-close.enable = true;
-            window-close.enable = true;
-            window-movement.enable = true;
-            window-open.enable = true;
-            window-resize.enable = true;
-            workspace-switch.enable = false;
+            config-notification-open-close = {};
+            exit-confirmation-open-close = {};
+            horizontal-view-movement = {};
+            overview-open-close = {};
+            window-close = {};
+            window-movement = {};
+            window-open = {};
+            window-resize = {};
+            workspace-switch.off = {};
           };
 
           # Alt-Tab recent-windows configuration (v25.11+)
@@ -73,11 +69,19 @@ in {
             gap._props = {natural = 16;};
           };
 
+          spawn-sh-at-startup = userVars.niri.spawn-sh-at-startup;
+
           # Overview configuration (axlefublr style zoom scale)
           overview = {
             zoom = 0.5;
-            prefer-centered-preview = true;
+            prefer-centered-preview = {};
           };
+
+          # Top-level repeated nodes
+          _children = outputNodes
+            ++ workspaceNodes
+            ++ windowRuleNodes
+            ++ layerRuleNodes;
         };
       };
 

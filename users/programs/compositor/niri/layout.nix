@@ -2,7 +2,7 @@
   gaps = 0;
   background-color = "transparent";
   center-focused-column = "on-overflow";
-  always-center-single-column = true;
+  always-center-single-column = {};
   empty-workspace-above-first = false;
 
   default-column-width = {};
@@ -15,10 +15,17 @@
     {proportion = 0.75;}
   ];
 
+  # Disables window border (KDL: border { off; })
   border = {
-    off = [];
+    off = {};
   };
 
+  # Disables focus ring (KDL: focus-ring { off; })
+  focus-ring = {
+    off = {};
+  };
+
+  # Enables window shadow (KDL: shadow { draw-behind-window true; softness 20; ... })
   shadow = {
     draw-behind-window = true;
     softness = 20;
@@ -30,6 +37,7 @@
     color = "#000000aa";
   };
 
+  # Screen edge struts (KDL: struts { top 0; left 0; right 0; bottom 0; })
   struts = {
     top = 0;
     left = 0;
@@ -37,11 +45,8 @@
     bottom = 0;
   };
 
-  focus-ring = {
-    off = [];
-  };
-
   tab-indicator = {
     position = "top";
   };
 }
+
