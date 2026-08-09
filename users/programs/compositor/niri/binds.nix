@@ -7,7 +7,7 @@
     _props.hotkey-overlay-title = "Toggle keyboard shortcuts inhibit";
     toggle-keyboard-shortcuts-inhibit = [];
   };
-  
+
   # APPLICATION LAUNCHER
   "Mod+D" = {
     _props = {
