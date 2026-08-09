@@ -24,5 +24,6 @@
       namespace = "^(${builtins.elemAt userVars.programs.browsers 0})$";
     };
     background-effect.blur = true;
+    opacity = 0.90;
   }
 ]
