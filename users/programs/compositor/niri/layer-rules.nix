@@ -1,4 +1,10 @@
 {userVars, ...}: [
+  # Place background within backdrop
+  {
+    match._props.namespace = "^awww-daemon$";
+    background-effect.blur = true;
+    place-within-backdrop = true;
+  }
   # Block notifications from screen recordings
   {
     match._props.namespace = "^notifications$";
@@ -13,6 +19,7 @@
   {
     match._props = {
       namespace = "^(${userVars.programs.launcher}|${userVars.programs.desktop-shell}.*)$";
+      # Needs .* because e.g., wayle-bar-DP-1
       layer = "top";
     };
     background-effect.blur = true;
