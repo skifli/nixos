@@ -68,6 +68,5 @@ in {
   # Overview configuration
   overview = {
     zoom = 0.5;
-    prefer-centered-preview = [];
   };
 }
