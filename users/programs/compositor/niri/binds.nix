@@ -581,6 +581,17 @@
       "${userVars.programs.terminal} -e ${userVars.programs.terminal-shell} -c \"/home/${userVars.username}/.local/bin/zen-keyboard-shortcuts.sh; ${userVars.programs.terminal-shell}\""
     ];
   };
+  "Mod+I" = {
+    _props = {
+      hotkey-overlay-title = "Copy window info to clipboard";
+      allow-inhibiting = false;
+    };
+    spawn = [
+      "sh"
+      "-c"
+      ''out=$(niri msg pick-window | grep -v '^[[:space:]]*~' | sed -E 's/^[[:space:]]+//') && [ ! -z "$out" ] && echo "$out" | wl-copy && notify-send -e -a niri -u low -t 3500 "Window Captured" "$(echo "$out" | grep -E '^(Window ID|Title|App ID|PID|Window size)')"''
+    ];
+  };
   "Mod+Shift+Z" = {
     _props = {
       hotkey-overlay-title = "Scan QR with Zbar";
