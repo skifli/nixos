@@ -16,6 +16,7 @@ let
   usersVarsFile = import ../../users/variables.nix {
     inherit hostVars;
     inherit lib;
+    inherit pkgs;
   };
 
   inherit (usersVarsFile) usersVars; # Get variables for all users enabled for this host
