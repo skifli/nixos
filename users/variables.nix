@@ -1,6 +1,7 @@
 {
   hostVars,
   lib,
+  pkgs,
   ...
 }: let
   allUsers = ["ami"];
