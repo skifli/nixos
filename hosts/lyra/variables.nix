@@ -48,7 +48,7 @@
         x = 0;
         y = 0;
       };
-      focus-at-startup = {};
+      focus-at-startup = true;
     };
   };
 

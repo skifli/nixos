@@ -7,7 +7,7 @@
 
   focusedOutputs =
     builtins.filter (
-      name: hostVars.outputs.${name}.focus-at-startup or false
+      name: (hostVars.outputs.${name}.focus-at-startup or false) == true
     )
     allOutputs;
 
