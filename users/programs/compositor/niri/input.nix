@@ -23,7 +23,7 @@
   touchpad = {
     tap = [];
     dwt = [];
-    natural-scroll = true;
+    natural-scroll = [];
   };
 
   # Enables mouse warping to center of newly focused window

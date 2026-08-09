@@ -15,6 +15,6 @@
       namespace = "^(${userVars.programs.launcher}|${userVars.programs.desktop-shell}.*)$";
       layer = "top";
     };
-    background-effect.blur = [];
+    background-effect.blur = true;
   }
 ]
