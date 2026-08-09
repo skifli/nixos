@@ -29,16 +29,18 @@
           };
 
           # Input settings
-          input = {
-            keyboard.repeat-delay = 300;
-            mouse.accel-profile = "adaptive";
-            warp-mouse-to-focus.enable = true;
+          input =
+            {
+              keyboard.repeat-delay = 300;
+              mouse.accel-profile = "adaptive";
+              warp-mouse-to-focus.enable = true;
 
-            focus-follows-mouse = {
-              enable = true;
-              max-scroll-amount = "5%";
-            };
-          } // (hostVars.niri.input or {});
+              focus-follows-mouse = {
+                enable = true;
+                max-scroll-amount = "5%";
+              };
+            }
+            // (hostVars.niri.input or {});
 
           # Gestures configuration
           gestures.hot-corners.enable = false;
@@ -74,8 +76,8 @@
           recent-windows = {
             open-delay-ms = 0;
             debounce-delay-ms = 100;
-            preview-size._props = { natural = 256; };
-            gap._props = { natural = 16; };
+            preview-size._props = {natural = 256;};
+            gap._props = {natural = 16;};
           };
 
           # Overview configuration (reduced zoom to fit more workspaces)
@@ -95,11 +97,11 @@
             default-column-width = {};
 
             preset-column-widths._children = [
-              { proportion = 0.25; }
-              { proportion = 1.0 / 3.0; }
-              { proportion = 0.5; }
-              { proportion = 2.0 / 3.0; }
-              { proportion = 0.75; }
+              {proportion = 0.25;}
+              {proportion = 1.0 / 3.0;}
+              {proportion = 0.5;}
+              {proportion = 2.0 / 3.0;}
+              {proportion = 0.75;}
             ];
 
             border.on = false;
@@ -132,20 +134,22 @@
           binds = bindImport;
 
           # Window-specific rules
-          window-rule = [
-            # Terminal background blur
-            {
-              match._props.app-id._raw = ''r#"(?i)${userVars.programs.terminal}"#'';
-              background-effect = {
-                blur = true;
-              };
-            }
-            # Terminal open maximized
-            {
-              match._props.app-id._raw = ''r#"(?i)${userVars.programs.terminal}"#'';
-              open-maximized = true;
-            }
-          ] ++ userVars.niri.window-rules;
+          window-rule =
+            [
+              # Terminal background blur
+              {
+                match._props.app-id._raw = ''r#"(?i)${userVars.programs.terminal}"#'';
+                background-effect = {
+                  blur = true;
+                };
+              }
+              # Terminal open maximized
+              {
+                match._props.app-id._raw = ''r#"(?i)${userVars.programs.terminal}"#'';
+                open-maximized = true;
+              }
+            ]
+            ++ userVars.niri.window-rules;
 
           # Layer-shell rules (v25.01+)
           layer-rule = [

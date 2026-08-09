@@ -401,4 +401,3 @@ with config.home-manager.users.${userVars.username}.lib.niri.actions; {
     hotkey-overlay.title = "Run script 3";
   };
 }
-
