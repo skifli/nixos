@@ -122,7 +122,7 @@ in rec {
 
   niri = {
     # Note the format!
-    spawn-at-startup-sh = startupScript;
+    spawn-sh-at-startup = startupScript;
 
     window-rules =
       [
