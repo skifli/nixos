@@ -4,11 +4,14 @@
   {
     match._props.is-floating = true;
     shadow = {
-      on = {}; 
+      on = {};
       softness = 20;
       spread = 4;
 
-      offset._props = { x = 0; y = 4; };
+      offset._props = {
+        x = 0;
+        y = 4;
+      };
       color = "rgba(0, 0, 0, 0.5)";
     };
   }
