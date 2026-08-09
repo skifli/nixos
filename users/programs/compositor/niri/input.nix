@@ -6,7 +6,7 @@
 {
   keyboard = {
     repeat-delay = 300;
-    repeat-rate = 10;
+    repeat-rate = 20;
     xkb =
       {
         layout = hostVars.keyboardLayout;
