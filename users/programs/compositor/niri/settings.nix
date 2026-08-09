@@ -104,10 +104,10 @@ in {
     };
 
     binds = {
-      "Alt+Tab"         = { action.next-window = []; };
-      "Alt+Shift+Tab"   = { action.previous-window = []; };
-      "Alt+grave"       = { action.next-window.filter = "app-id"; };
-      "Alt+Shift+grave" = { action.previous-window.filter = "app-id"; };
+      "Alt+Tab" = {action.next-window = [];};
+      "Alt+Shift+Tab" = {action.previous-window = [];};
+      "Alt+grave" = {action.next-window.filter = "app-id";};
+      "Alt+Shift+grave" = {action.previous-window.filter = "app-id";};
     };
   };
 }
