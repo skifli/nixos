@@ -11,6 +11,7 @@
 
   # CachyOS - Enable Bleeding-edge Mesa Drivers (ANV/Iris driver updates e.g., for Intel UHD 630)
   chaotic.mesa-git.enable = true; # Useful for Intel and AMD, but apparently not Nvidia
+  # TODO - Fix: Isn't this only in Chaotic Nyx unstable???
 
   boot.kernelParams = [
     "intel_pstate=active"

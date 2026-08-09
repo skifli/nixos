@@ -94,7 +94,7 @@ in rec {
 
     # Apps that don't need keyring unlock
     ${startAndManage "zen-beta" "app_id" "zen-beta" focusedMonitor "1"}
-    ${startAndManage "anki" "app_id" "anki" focusedMonitor "2"}
+    ${startAndManage "User 1 - Anki" "title" "anki" focusedMonitor "2"} # Otherwise it would sometimes just move the syncing window not the actual window which was annoying... tad of a workaround... but it works!
     ${startAndManage "ferdium" "app_id" "ferdium" secondMonitor "2"}
 
     niri msg action focus-monitor "${focusedMonitor}"
