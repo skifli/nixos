@@ -16,7 +16,9 @@
     _args = [name];
     inherit (hostVars.outputs.${name}) mode;
     position._props = hostVars.outputs.${name}.position;
-  }) (builtins.attrNames hostVars.outputs);
+  } // (pkgs.lib.optionalAttrs (hostVars.outputs.${name}.focus-at-startup or false) {
+    focus-at-startup = [];
+  })) (builtins.attrNames hostVars.outputs);
 
   workspaces = map (name: {
     _args = [name];
