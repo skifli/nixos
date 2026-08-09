@@ -258,7 +258,7 @@
   "layout.css.devPixelsPerPx" = -1;
 
   "browser.ssb.enabled" = true;
-  "browser.tabs.allow_transparent_browser" = true;
+  "browser.tabs.allow_transparent_browser" = false; # So WEB PAGES (not the sidebar) cannot be transparent!
 
   "zen.window-sync.enabled" = true; # Decouple from windows and instead couple tabs to spaces
 

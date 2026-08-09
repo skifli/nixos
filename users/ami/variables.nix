@@ -257,6 +257,6 @@ in rec {
     # These 3 proudly stolen from https://github.com/MangoCubes/nix/blob/e7fdb3fe51a8dce3c6ce6bc2a9fe8423f276f187/desktop/packages/home/niri.nix#L11 ;p (on a serious note if you ever see this MangoCubes these are really smart 'n useful binds! Thanks sm <3.)
     "killclick" = "kill -9 $(niri msg pick-window | grep PID | tail -n 1 | awk '{print $NF}')";
     "killcurrent" = "kill -9 $(niri msg focused-window | grep PID | tail -n 1 | awk '{print $NF}')";
-    "qrscan" = ''selected_area=$(${pkgs.slurp}/bin/slurp) && ${pkgs.grim}/bin/grim -g "$selected_area" - | ${pkgs.zbar}/bin/zbarimg - | tee >(${pkgs.notify-desktop}/bin/notify-desktop "QR Code Captured" "$(cat)") | wl-copy;'';
+    "qrscan" = ''selected_area=$(${pkgs.slurp}/bin/slurp) && ${pkgs.grim}/bin/grim -g "$selected_area" - | ${pkgs.zbar}/bin/zbarimg --raw - | wl-copy && ${pkgs.libnotify}/bin/notify-send -e -a niri -u low -t 2500 -e "QR Code Captured" "$(wl-paste)"'';
   };
 }
