@@ -12,10 +12,10 @@
   windowRules = import ./niri/window-rules.nix attrs;
   layerRules = import ./niri/layer-rules.nix attrs;
 
-  outputNodes = map (name: { output."${name}" = hostVars.outputs.${name}; }) (builtins.attrNames hostVars.outputs);
-  workspaceNodes = map (name: { workspace."${name}" = hostVars.workspaces.${name}; }) (builtins.attrNames hostVars.workspaces);
-  windowRuleNodes = map (rule: { window-rule = rule; }) windowRules;
-  layerRuleNodes = map (rule: { layer-rule = rule; }) layerRules;
+  outputNodes = map (name: {output."${name}" = hostVars.outputs.${name};}) (builtins.attrNames hostVars.outputs);
+  workspaceNodes = map (name: {workspace."${name}" = hostVars.workspaces.${name};}) (builtins.attrNames hostVars.workspaces);
+  windowRuleNodes = map (rule: {window-rule = rule;}) windowRules;
+  layerRuleNodes = map (rule: {layer-rule = rule;}) layerRules;
 in {
   imports = [
     inputs.niri-nix.nixosModules.default
@@ -63,8 +63,8 @@ in {
           recent-windows = {
             open-delay-ms = 0;
             debounce-delay-ms = 100;
-            preview-size = { natural = 256; };
-            gap = { natural = 16; };
+            preview-size = {natural = 256;};
+            gap = {natural = 16;};
           };
 
           spawn-sh-at-startup = userVars.niri.spawn-sh-at-startup;
