@@ -1,36 +1,17 @@
 {
-  hostVars,
   inputs,
   pkgs,
   pkgsUnstable,
   userVars,
   ...
 } @ attrs: let
-  binds = import ./niri/binds.nix attrs;
-  input = import ./niri/input.nix attrs;
-  layout = import ./niri/layout.nix attrs;
-  windowRules = import ./niri/window-rules.nix attrs;
-  layerRules = import ./niri/layer-rules.nix attrs;
-
-  outputs = map (name:
-    {
-      _args = [name];
-      inherit (hostVars.outputs.${name}) mode;
-      position._props = hostVars.outputs.${name}.position;
-    }
-    // (pkgs.lib.optionalAttrs (hostVars.outputs.${name}.focus-at-startup or false) {
-      focus-at-startup = [];
-    })) (builtins.attrNames hostVars.outputs);
-
-  workspaces = map (name: {
-    _args = [name];
-    inherit (hostVars.workspaces.${name}) open-on-output;
-  }) (builtins.attrNames hostVars.workspaces);
+  default = import ./niri/default.nix attrs;
 in {
   imports = [
     inputs.niri-nix.nixosModules.default
   ];
 
+  # Home-manager level configuration
   home-manager = {
     users.${userVars.username} = {
       imports = [
@@ -38,70 +19,13 @@ in {
         inputs.niri-nix.homeModules.stylix
       ];
 
-      wayland.windowManager.niri = {
-        enable = true;
-
-        systemd.variables = [
-          "--all"
-        ];
-
-        settings = {
-          prefer-no-csd = [];
-          hotkey-overlay.skip-at-startup = [];
-
-          xwayland-satellite = [];
-
-          gestures.hot-corners.off = [];
-          clipboard.disable-primary = [];
-
-          inherit input layout binds;
-
-          # Top-level node lists
-          output = outputs;
-          workspace = workspaces;
-          window-rule = windowRules;
-          layer-rule = layerRules;
-
-          # Animation settings (empty list [] = parameterless KDL flag/node)
-          animations = {
-            config-notification-open-close = [];
-            exit-confirmation-open-close = [];
-            horizontal-view-movement = [];
-            overview-open-close = [];
-            window-close = [];
-            window-movement = [];
-            window-open = [];
-            window-resize = [];
-            workspace-switch.off = [];
-          };
-
-          # Alt-Tab recent-windows configuration
-          recent-windows = {
-            open-delay-ms = 0;
-            debounce-delay-ms = 100;
-            preview-size._props.natural = 256;
-            gap._props.natural = 16;
-          };
-
-          spawn-sh-at-startup = userVars.niri.spawn-sh-at-startup;
-
-          # Overview configuration
-          overview = {
-            zoom = 0.5;
-            prefer-centered-preview = [];
-          };
-        };
-      };
+      # Import the default configuration from the sub-folder
+      wayland.windowManager.niri = default;
 
       # Environment variables
       home.sessionVariables = {
         XDG_CURRENT_DESKTOP = "niri";
         XDG_SESSION_DESKTOP = "niri";
-      };
-
-      # Misc files
-      home.file.".local/share/misc" = {
-        source = ../../${userVars.username}/assets/misc;
       };
     };
   };
@@ -116,7 +40,7 @@ in {
   ];
 
   programs = {
-    dconf.enable = true;
+    dconf.enable = true; # Niri nixOS module enables this by default but anyway
 
     # Niri NixOS module
     niri = {
