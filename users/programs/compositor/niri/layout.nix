@@ -8,11 +8,11 @@
   default-column-width = {};
 
   preset-column-widths._children = [
-    { proportion = 0.25; }
-    { proportion = 1.0 / 3.0; }
-    { proportion = 0.5; }
-    { proportion = 2.0 / 3.0; }
-    { proportion = 0.75; }
+    {proportion = 0.25;}
+    {proportion = 1.0 / 3.0;}
+    {proportion = 0.5;}
+    {proportion = 2.0 / 3.0;}
+    {proportion = 0.75;}
   ];
 
   # Disables window border
