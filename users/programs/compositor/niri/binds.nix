@@ -59,6 +59,23 @@
     _props.hotkey-overlay-title = "Close window";
     close-window = [];
   };
+  # This and the below one proudly stolen from https://github.com/MangoCubes/nix/blob/e7fdb3fe51a8dce3c6ce6bc2a9fe8423f276f187/desktop/packages/home/niri.nix#L11 ;p (on a serious note if you ever see this MangoCubes these are really smart 'n useful binds! Thanks sm <3.)
+  "Mod+Ctrl+Q" = {
+    _props.hotkey-overlay-title = "Kill click window";
+    spawn = [
+      "sh"
+      "-c"
+      "kill -9 $(niri msg pick-window | grep PID | tail -n 1 | awk '{print $NF}')"
+    ];
+  };
+  "Mod+Shift+Q" = {
+    _props.hotkey-overlay-title = "Kill current window";
+    spawn = [
+      "sh"
+      "-c"
+      "kill -9 $(niri msg focused-window | grep PID | tail -n 1 | awk '{print $NF}')"
+    ];
+  };
   "Mod+F11" = {
     _props.hotkey-overlay-title = "Toggle fullscreen";
     fullscreen-window = [];
