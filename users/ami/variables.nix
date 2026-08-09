@@ -1,6 +1,7 @@
 {
   hostVars,
   lib,
+  pkgs,
   ...
 }: let
   allOutputs = builtins.attrNames hostVars.outputs;
