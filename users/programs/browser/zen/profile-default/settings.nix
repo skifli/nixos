@@ -263,9 +263,9 @@
   "zen.window-sync.enabled" = true; # Decouple from windows and instead couple tabs to spaces
 
   # Not using https://sameerasw.com/zen#intro anymore so now set to false
-  "zen.theme.acrylic-elements" = false;
-  "widget.transparent-windows" = false;
-  "zen.theme.gradient.show-custom-colors" = false;
+  "zen.theme.acrylic-elements" = true;
+  "widget.transparent-windows" = true;
+  "zen.theme.gradient.show-custom-colors" = true;
 
   # "zen.theme.accent-color" = "#FFFFFF"; # Doesn't work?
   "zen.theme.accent-color" = "AccentColor"; # https://github.com/search?q=repo%3Azen-browser%2Fdesktop+%2F(%3F-i)AccentColor%2F&type=code - Does native accent color I do believe
@@ -293,7 +293,7 @@
 
   "zen.watermark.enabled" = false;
   "zen.welcome-screen.seen" = true;
-  "zen.widget.linux.transparency" = false; # Disable transparent sidebar
+  "zen.widget.linux.transparency" = true; # ENABLE transparent sidebar
   "zen.workspaces.continue-where-left-off" = true;
 
   # I actually prefer this a lot for a few reasons, 1 being my browser is on my right monitor and so I can just yeet my cursor to the edge of the screen and it'll bring up the tabs sidebar, but if it's on the left there's a risk I do that and the cursor just moves onto my monitor on the left. And also it doesn't cover up a lot of navigation things on pages which tend to be on the left, at least in my experience.
