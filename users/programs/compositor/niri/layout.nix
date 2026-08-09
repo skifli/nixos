@@ -40,4 +40,3 @@
   focus-ring.on = false;
   tab-indicator.position = "top";
 }
-
