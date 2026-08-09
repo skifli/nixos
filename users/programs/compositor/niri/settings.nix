@@ -13,7 +13,7 @@
   outputs = map (name:
     {
       _args = [name];
-      inherit (hostVars.outputs.${name}) mode;
+      inherit (hostVars.outputs.${name}) mode scale;
       position._props = hostVars.outputs.${name}.position;
     }
     // (pkgs.lib.optionalAttrs (hostVars.outputs.${name}.focus-at-startup or false) {
@@ -58,9 +58,11 @@ in {
   # Alt-Tab recent-windows configuration
   recent-windows = {
     open-delay-ms = 0;
-    debounce-delay-ms = 100;
-    preview-size._props.natural = 256;
-    gap._props.natural = 16;
+    debounce-ms = 100;
+    previews = {
+      max-height = 480;
+      max-scale = 0.5;
+    };
   };
 
   # Overview configuration
