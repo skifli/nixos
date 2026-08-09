@@ -15,12 +15,14 @@
     {proportion = 0.75;}
   ];
 
-  border.on = false;
-  border.width = 2;
+  # Disables window border (KDL: border { off; })
+  border = {
+    off = [];
+  };
 
+  # Enables window shadow (KDL: shadow { draw-behind-window; softness 20; ... })
   shadow = {
-    on = true;
-    draw-behind-window = true;
+    draw-behind-window = [];
     softness = 20;
     spread = 5;
     offset._props = {
@@ -30,13 +32,20 @@
     color = "#000000aa";
   };
 
-  struts._props = {
+  # Screen edge struts (KDL: struts { top 0; left 0; right 0; bottom 0; })
+  struts = {
     top = 0;
     left = 0;
     right = 0;
     bottom = 0;
   };
 
-  focus-ring.on = false;
-  tab-indicator.position = "top";
+  # Disables focus ring (KDL: focus-ring { off; })
+  focus-ring = {
+    off = [];
+  };
+
+  tab-indicator = {
+    position = "top";
+  };
 }
