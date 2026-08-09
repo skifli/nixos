@@ -133,6 +133,10 @@
               source = ./${userVars.username}/scripts;
               executable = true; # For scripts!
             };
+
+            ".local/share/misc" = {
+              source = ./${userVars.username}/assets/misc;
+            };
           };
 
           stateVersion = "25.05"; # DO NOT CHANGE!

@@ -78,6 +78,7 @@ in rec {
   # Combine all startup commands into a single script block.
   # Due to the way I've done it it's blocking, except actual app startups use & so the only blocking stuff is the waiting for windows to appear to move them. So do NOT place anything after that wait, unless you want it to be a tad delayed!!!
   startupScript = ''
+    # Niri has its own option for this but keep just in case
     dbus-update-activation-environment --systemd --all
 
     # As all keyring dependent applications are not open yet, the gcr prompt will not show / automatically hide. So, this prompts it with dummy values to cause it to prompt the user via the GUI first. Done this early just to give it as much time to spawn the GUI.

@@ -29,7 +29,6 @@
   # Enables mouse warping to center of newly focused window
   warp-mouse-to-focus = [];
 
-  # Focus follows mouse with max scroll threshold property
   focus-follows-mouse._props = {
     max-scroll-amount = "5%";
   };
