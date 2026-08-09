@@ -15,6 +15,17 @@
       color = "rgba(0, 0, 0, 0.5)";
     };
   }
+  # Block gcr-prompter from screen recordings
+  {
+    match._props.app-id._raw = ''r#"(?i)gcr-prompter"#'';
+    block-out-from = "screen-capture";
+  }
+  # Blur first browser
+  {
+    match._props.app-id._raw = ''r#"(?i)${builtins.elemAt userVars.programs.browsers 0}"#'';
+    background-effect.blur = true;
+    opacity = 0.90;
+  }
   # Terminal background blur & open maximized
   {
     match._props.app-id._raw = ''r#"(?i)${userVars.programs.terminal}"#'';
@@ -45,6 +56,31 @@
   {
     match._props.app-id._raw = ''r#"(?i)${userVars.programs.system-monitor}"#'';
     open-maximized = true;
+  }
+  # Give specifically screencasted windows a custom look
+  {
+    match._props.is-window-cast-target = true;
+
+    # Stolen from https://github.com/niri-wm/niri/wiki/Configuration:-Window-Rules#is-window-cast-target!
+    focus-ring = {
+      active-color = "#f38ba8";
+      inactive-color = "#7d0d2d";
+    };
+    border = {
+      inactive-color = "#7d0d2d";
+    };
+    shadow = {
+      color = "#7d0d2d70";
+    };
+    tab-indicator = {
+      active-color = "#f38ba8";
+      inactive-color = "#7d0d2d";
+    };
+  }
+  # Open urgent windows focused
+  {
+    match._props.is-urgent = true;
+    open-focused = true;
   }
 ]
 ++ (userVars.niri.window-rules or [])
