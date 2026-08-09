@@ -389,4 +389,3 @@
     spawn = ["/home/${userVars.username}/.local/bin/3-niri.sh"];
   };
 }
-

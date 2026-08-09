@@ -78,7 +78,8 @@ in {
           };
 
           # Top-level repeated nodes
-          _children = outputNodes
+          _children =
+            outputNodes
             ++ workspaceNodes
             ++ windowRuleNodes
             ++ layerRuleNodes;
