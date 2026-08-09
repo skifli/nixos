@@ -1,19 +1,23 @@
 {
   hostVars,
   inputs,
-  lib,
   pkgs,
   pkgsUnstable,
   userVars,
   ...
-} @ attrs: {
+} @ attrs: let
+  binds = import ./niri/binds.nix attrs;
+  input = import ./niri/input.nix attrs;
+  layout = import ./niri/layout.nix attrs;
+  window-rule = import ./niri/window-rules.nix attrs;
+  layer-rule = import ./niri/layer-rules.nix attrs;
+in {
   home-manager = {
     users.${userVars.username} = {
       imports = [
         inputs.niri-nix.homeModules.default
       ];
 
-      # Niri configuration via niri-nix home manager module
       wayland.windowManager.niri = {
         enable = true;
 
@@ -21,42 +25,23 @@
           "--all"
         ];
 
-        settings = let
-          bindImport = import ./niri/binds.nix attrs;
-        in {
+        settings = {
           prefer-no-csd = true;
           hotkey-overlay.skip-at-startup = true;
 
-          # Xwayland configuration
-          xwayland-satellite = {
-            enable = true;
-          };
+          xwayland-satellite.enable = true;
 
-          # Input settings
-          input =
-            {
-              keyboard.repeat-delay = 300;
-              mouse.accel-profile = "adaptive";
-              warp-mouse-to-focus.enable = true;
+          inherit input layout binds window-rule layer-rule;
 
-              focus-follows-mouse = {
-                enable = true;
-                max-scroll-amount = "5%";
-              };
-            }
-            // (hostVars.niri.input or {});
-
-          # Gestures configuration
           gestures.hot-corners.enable = false;
-
-          # Clipboard settings
           clipboard.disable-primary = true;
 
-          # Monitor outputs directly from hostVars
+          # Monitor outputs and workspaces directly from hostVars
           output = builtins.attrValues hostVars.outputs;
-
-          # Workspaces directly from hostVars
           workspace = builtins.attrValues hostVars.workspaces;
+
+          # Spawn startup commands from userVars
+          spawn-at-startup = userVars.niri.spawn-at-startup;
 
           # Animation settings
           animations = {
@@ -73,10 +58,7 @@
             workspace-switch.enable = false;
           };
 
-          # Spawn at startup
-          spawn-at-startup = userVars.niri.spawn-at-startup;
-
-          # Alt-Tab recent windows customization (v25.11+)
+          # Alt-Tab recent-windows configuration (v25.11+)
           recent-windows = {
             open-delay-ms = 0;
             debounce-delay-ms = 100;
@@ -84,103 +66,11 @@
             gap._props = {natural = 16;};
           };
 
-          # Overview configuration (reduced zoom to fit more workspaces)
+          # Overview configuration (axlefublr style zoom scale)
           overview = {
             zoom = 0.5;
             prefer-centered-preview = true;
           };
-
-          # Layout configuration
-          layout = {
-            gaps = 0;
-            background-color = "transparent";
-            center-focused-column = "on-overflow";
-            always-center-single-column = true;
-            empty-workspace-above-first = false;
-
-            default-column-width = {};
-
-            preset-column-widths._children = [
-              {proportion = 0.25;}
-              {proportion = 1.0 / 3.0;}
-              {proportion = 0.5;}
-              {proportion = 2.0 / 3.0;}
-              {proportion = 0.75;}
-            ];
-
-            border.on = false;
-            border.width = 2;
-
-            shadow = {
-              on = true;
-              draw-behind-window = true;
-              softness = 20;
-              spread = 5;
-              offset._props = {
-                x = 5;
-                y = 5;
-              };
-              color = "#000000aa";
-            };
-
-            struts._props = {
-              top = 0;
-              left = 0;
-              right = 0;
-              bottom = 0;
-            };
-
-            focus-ring.on = false;
-            tab-indicator.position = "top";
-          };
-
-          # Keyboard bindings
-          binds = bindImport;
-
-          # Window-specific rules
-          window-rule =
-            [
-              # Terminal background blur
-              {
-                match._props.app-id._raw = ''r#"(?i)${userVars.programs.terminal}"#'';
-                background-effect = {
-                  blur = true;
-                };
-              }
-              # Terminal open maximized
-              {
-                match._props.app-id._raw = ''r#"(?i)${userVars.programs.terminal}"#'';
-                open-maximized = true;
-              }
-            ]
-            ++ userVars.niri.window-rules;
-
-          # Layer-shell rules (v25.01+)
-          layer-rule = [
-            {
-              match._props = {
-                namespace = "^notifications$";
-              };
-              block-out-from = "screen-capture";
-            }
-            {
-              match._props = {
-                namespace._raw = ''r#"^(gcr-prompter)"#'';
-              };
-              block-out-from = "screen-capture";
-            }
-            {
-              match._props = {
-                namespace._raw = ''r#"^(notifications|launcher|menu|${userVars.programs.launcher}|${userVars.programs.desktop-shell}.*)"#'';
-                layer = "top";
-              };
-              background-effect = {
-                blur = true;
-                brightness = 0.9;
-                saturation = 1.1;
-              };
-            }
-          ];
         };
       };
 
