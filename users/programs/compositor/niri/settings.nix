@@ -105,13 +105,13 @@ in {
     };
 
     binds = {
-      "Alt+Tab" = { next-window = []; };
-      "Alt+Shift+Tab" = { previous-window = []; };
-      "Alt+grave" = { 
-        next-window._props = { filter = "app-id"; }; 
+      "Alt+Tab" = {next-window = [];};
+      "Alt+Shift+Tab" = {previous-window = [];};
+      "Alt+grave" = {
+        next-window._props = {filter = "app-id";};
       };
-      "Alt+Shift+grave" = { 
-        previous-window._props = { filter = "app-id"; }; 
+      "Alt+Shift+grave" = {
+        previous-window._props = {filter = "app-id";};
       };
     };
   };
