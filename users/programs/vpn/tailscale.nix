@@ -38,7 +38,7 @@
   systemd.network.wait-online.enable = false;
   boot.initrd.systemd.network.wait-online.enable = false;
 
-  home-manager.users.${userVars.username} = {
+  home-manager.users.${userVars.username} = {lib, ...}: {
     home.activation.setKTailctlConfig = lib.hm.dag.entryAfter ["writeBoundary"] ''
           # Make sure that the target dir exists
           mkdir -p "$HOME/.config"
