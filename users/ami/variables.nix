@@ -149,6 +149,12 @@ in rec {
           };
         }
 
+        # Zen browser - maximize
+        {
+          match._props.app-id._raw = ''r#"(?i)zen-beta"#'';
+          open-maximized = true;
+        }
+
         # Anki - maximize
         {
           match._props.app-id._raw = ''r#"(?i)anki"#'';

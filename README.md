@@ -8,6 +8,9 @@
 
 ![Example image of my configuration in use!](assets/cover.png)
 
+> [!WARNING]
+> The image above is _very_ out of date. I'll update it when I can, but a lot of changes have occurred since that picture was taken, and also since the dedicated documentation files were updated (whoops!)
+
 A modular NixOS + Home Manager configuration. It is easily extensible but comes with the following opinionated default setup:
 
 - A Wayland display server running the niri compositor, with auto-login via greetd.

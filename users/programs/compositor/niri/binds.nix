@@ -33,6 +33,14 @@
     _props.hotkey-overlay-title = "File manager";
     spawn = [userVars.programs.explorer-gui];
   };
+  "Mod+Shift+F" = {
+    _props.hotkey-overlay-title = "File manager (terminal)";
+    spawn = [
+      userVars.programs.terminal
+      "-e"
+      userVars.programs.explorer-tui
+    ];
+  };
   "Mod+V" = {
     _props.hotkey-overlay-title = "Visual editor";
     spawn = [userVars.programs.visual];
