@@ -150,12 +150,6 @@ in rec {
           };
         }
 
-        # Zen browser - maximize
-        {
-          match._props.app-id._raw = ''r#"(?i)zen-beta"#'';
-          open-maximized = true;
-        }
-
         # Anki - maximize
         {
           match._props.app-id._raw = ''r#"(?i)anki"#'';
@@ -174,12 +168,6 @@ in rec {
           open-maximized = true;
         }
 
-        # Remmina (remote desktop) - maximize
-        {
-          match._props.app-id._raw = ''r#"(?i)org\.remmina\.Remmina"#'';
-          open-maximized = true;
-        }
-
         # Evince (PDF viewer) - maximize
         {
           match._props.app-id._raw = ''r#"(?i)org\.gnome\.Evince"#'';
@@ -192,13 +180,7 @@ in rec {
           open-maximized = true;
         }
 
-        # Mission Center (system monitor) - maximize
-        {
-          match._props.app-id._raw = ''r#"(?i)io\.missioncenter\.MissionCenter"#'';
-          open-maximized = true;
-        }
-
-        # Zed editor - maximize
+        # Zed editor - maximize (in here and not users/programs/compositor/niri/window-rules.nix due to it being zeditor in the file path but that not matching the app-id)
         {
           match._props.app-id._raw = ''r#"(?i)dev\.zed\.Zed"#'';
           open-maximized = true;

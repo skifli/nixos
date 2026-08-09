@@ -1,6 +1,6 @@
 {userVars, ...}:
 [
-  # Give floating a shadow
+  # Give floating windows a shadow
   {
     match._props.is-floating = true;
     shadow = {
@@ -24,6 +24,26 @@
   {
     match._props.app-id._raw = ''r#"(?i)${userVars.programs.launcher}"#'';
     background-effect.blur = true;
+  }
+  # Browser open 1st maximized
+  {
+    match._props.app-id._raw = ''r#"(?i)${builtins.elemAt userVars.programs.browsers 0}"#'';
+    open-maximized = true;
+  }
+  # Explorer GUI open maximized
+  {
+    match._props.app-id._raw = ''r#"(?i)${userVars.programs.explorer-gui}"#'';
+    open-maximized = true;
+  }
+  # Remote desktop open maximized
+  {
+    match._props.app-id._raw = ''r#"(?i)${userVars.programs.remote-desktop}"#'';
+    open-maximized = true;
+  }
+  # System monitor open maximized
+  {
+    match._props.app-id._raw = ''r#"(?i)${userVars.programs.system-monitor}"#'';
+    open-maximized = true;
   }
 ]
 ++ (userVars.niri.window-rules or [])
