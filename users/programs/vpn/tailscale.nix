@@ -39,10 +39,16 @@
   boot.initrd.systemd.network.wait-online.enable = false;
 
   home-manager.users.${userVars.username} = {
-    xdg.configFile."KTailctlrc".text = ''
-      [Interface]
-      peerFilter=
-      startMinimized=true
+    home.activation.setKTailctlConfig = lib.hm.dag.entryAfter ["writeBoundary"] ''
+      # Make sure that the target dir exists
+      mkdir -p "$HOME/.config"
+
+      # Create or overwrite the writeable configuration file
+      cat << 'EOF' > "$HOME/.config/KTailctlrc"
+  [Interface]
+  peerFilter=
+  startMinimized=true
+  EOF
     '';
   };
 }
