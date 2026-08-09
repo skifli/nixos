@@ -15,14 +15,12 @@
     {proportion = 0.75;}
   ];
 
-  # Disables window border (KDL: border { off; })
   border = {
     off = [];
   };
 
-  # Enables window shadow (KDL: shadow { draw-behind-window; softness 20; ... })
   shadow = {
-    draw-behind-window = [];
+    draw-behind-window = true;
     softness = 20;
     spread = 5;
     offset._props = {
@@ -32,7 +30,6 @@
     color = "#000000aa";
   };
 
-  # Screen edge struts (KDL: struts { top 0; left 0; right 0; bottom 0; })
   struts = {
     top = 0;
     left = 0;
@@ -40,7 +37,6 @@
     bottom = 0;
   };
 
-  # Disables focus ring (KDL: focus-ring { off; })
   focus-ring = {
     off = [];
   };
@@ -49,3 +45,4 @@
     position = "top";
   };
 }
+

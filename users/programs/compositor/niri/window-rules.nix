@@ -1,9 +1,8 @@
-{userVars, ...}:
-[
+{userVars, ...}: [
   {
     match._props.app-id._raw = ''r#"(?i)${userVars.programs.terminal}"#'';
     background-effect = {
-      blur = true;
+      blur = [];
     };
   }
   {
@@ -13,8 +12,9 @@
   {
     match._props.app-id._raw = ''r#"(?i)${userVars.programs.launcher}"#'';
     background-effect = {
-      blur = true;
+      blur = [];
     };
   }
 ]
 ++ (userVars.niri.window-rules or [])
+

@@ -2,8 +2,7 @@
   hostVars,
   lib,
   ...
-}:
-{
+}: {
   keyboard = {
     repeat-delay = 300;
     repeat-rate = 50;
@@ -17,11 +16,14 @@
   };
 
   mouse.accel-profile = "adaptive";
-  warp-mouse-to-focus.enable = true;
 
-  focus-follows-mouse = {
-    enable = true;
+  # Enables mouse warping to focused window/column
+  warp-mouse-to-focus = [];
+
+  # Focus follows mouse with max scroll threshold
+  focus-follows-mouse._props = {
     max-scroll-amount = "5%";
   };
 }
 // (hostVars.niri.input or {})
+
