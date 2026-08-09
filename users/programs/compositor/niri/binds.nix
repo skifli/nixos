@@ -120,13 +120,17 @@
     spawn = "killcurrent";
   };
   "Mod+F11" = {
-    _props.hotkey-overlay-title = "Toggle fullscreen";
-    allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = "Toggle fullscreen";
+      allow-inhibiting = false;
+    };
     fullscreen-window = [];
   };
   "Mod+O" = {
-    _props.hotkey-overlay-title = "Toggle floating";
-    allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = "Toggle floating";
+      allow-inhibiting = false;
+    };
     toggle-window-floating = [];
   };
 

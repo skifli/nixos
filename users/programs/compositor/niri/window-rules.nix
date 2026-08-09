@@ -1,4 +1,13 @@
-{userVars, ...}:
+{ userVars, ... }:
+let
+  # Map over all browsers to generate for each blur and layout rules
+  browserRules = builtins.map (browser: {
+    match._props.app-id._raw = ''r#"(?i)${browser}"#'';
+    background-effect.blur = true;
+    opacity = 0.90;
+    open-maximized = true;
+  }) userVars.programs.browsers;
+in
 [
   # Give floating windows a shadow
   {
@@ -20,12 +29,7 @@
     match._props.app-id._raw = ''r#"(?i)gcr-prompter"#'';
     block-out-from = "screen-capture";
   }
-  # Blur first browser
-  {
-    match._props.app-id._raw = ''r#"(?i)${builtins.elemAt userVars.programs.browsers 0}"#'';
-    background-effect.blur = true;
-    opacity = 0.90;
-  }
+  
   # Terminal background blur & open maximized
   {
     match._props.app-id._raw = ''r#"(?i)${userVars.programs.terminal}"#'';
@@ -36,11 +40,6 @@
   {
     match._props.app-id._raw = ''r#"(?i)${userVars.programs.launcher}"#'';
     background-effect.blur = true;
-  }
-  # Browser open 1st maximized
-  {
-    match._props.app-id._raw = ''r#"(?i)${builtins.elemAt userVars.programs.browsers 0}"#'';
-    open-maximized = true;
   }
   # Explorer GUI open maximized
   {
@@ -60,8 +59,6 @@
   # Give specifically screencasted windows a custom look
   {
     match._props.is-window-cast-target = true;
-
-    # Stolen from https://github.com/niri-wm/niri/wiki/Configuration:-Window-Rules#is-window-cast-target!
     focus-ring = {
       active-color = "#f38ba8";
       inactive-color = "#7d0d2d";
@@ -83,4 +80,5 @@
     open-focused = true;
   }
 ]
+++ browserRules
 ++ (userVars.niri.window-rules or [])
