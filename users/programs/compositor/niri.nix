@@ -12,14 +12,21 @@
   window-rule = import ./niri/window-rules.nix attrs;
   layer-rule = import ./niri/layer-rules.nix attrs;
 in {
+  imports = [
+    inputs.niri-nix.nixosModules.default
+  ];
+
   home-manager = {
     users.${userVars.username} = {
       imports = [
         inputs.niri-nix.homeModules.default
+        inputs.niri-nix.homeModules.stylix
       ];
 
       wayland.windowManager.niri = {
         enable = true;
+
+        package = null; # Set this to null if you use the NixOS module to install Niri. https://codeberg.org/bananad3v/niri-nix/src/branch/main/home-options.md#wayland-windowmanager-niri-package
 
         systemd.variables = [
           "--all"
@@ -100,7 +107,13 @@ in {
     dconf.enable = true;
 
     # Niri NixOS module
-    niri.enable = true;
+    niri = {
+      enable = true;
+
+      useNautilus = false; # https://codeberg.org/bananad3v/niri-nix/src/branch/main/nixos-options.md#programs-niri-usenautilus
+      withUWSM = true; # https://codeberg.org/bananad3v/niri-nix/src/branch/main/nixos-options.md#programs-niri-withuwsm
+      withXDG = true; # https://codeberg.org/bananad3v/niri-nix/src/branch/main/nixos-options.md#programs-niri-withxdg
+    };
 
     uwsm = {
       enable = true;

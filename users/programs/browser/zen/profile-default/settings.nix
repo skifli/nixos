@@ -242,7 +242,7 @@
   **************************************************************************
   */
   "gfx.webrender.all" = true; # Force enable GPU acceleration
-  "widget.dmabuf.force-enabled" = true; # Required in recent Firefoxes
+  "widget.dmabuf.force-enabled" = true; # Required in recent Firefoxes - https://github.com/niri-wm/niri/blob/59a10015610bb7d068a82ce1c386fcd8b44f6c52/docs/wiki/Application-Issues.md#zen-browser
   "media.ffmpeg.vaapi.enabled" = true;
   "media.videocontrols.picture-in-picture.video-toggle.enabled" = true;
   "privacy.webrtc.legacyGlobalIndicator" = false;
