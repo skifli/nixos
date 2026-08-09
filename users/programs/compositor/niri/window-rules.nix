@@ -7,7 +7,10 @@
       on = true;
       softness = 20;
       spread = 4;
-      offset = { x = 0; y = 4; };
+      offset = {
+        x = 0;
+        y = 4;
+      };
       color = "rgba(0, 0, 0, 0.5)";
     };
   }
