@@ -19,7 +19,7 @@
   };
 
   environment.sessionVariables = {
-    QT_QPA_PLATFORMTHEME="qt5ct"; # Why do I have to manually set this...
+    QT_QPA_PLATFORMTHEME = "qt5ct"; # Why do I have to manually set this...
   };
 
   home-manager.users.${userVars.username} = {
