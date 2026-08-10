@@ -10,10 +10,7 @@
 
   # APPLICATION LAUNCHER
   "Mod+D" = {
-    _props = {
-      hotkey-overlay-title = "Application launcher";
-      allow-inhibiting = false;
-    };
+    _props.allow-inhibiting = false;
     spawn =
       [userVars.programs.launcher]
       ++ pkgs.lib.optional (userVars.programs.launcher == "vicinae") "toggle";
@@ -21,49 +18,32 @@
 
   # HELP & OVERVIEW
   "Mod+Slash" = {
-    _props = {
-      hotkey-overlay-title = "Show keybindings overlay";
-      allow-inhibiting = false;
-    };
+    _props.allow-inhibiting = false;
     show-hotkey-overlay = [];
   };
   "Mod+Tab" = {
-    _props = {
-      hotkey-overlay-title = "Toggle smart overview";
-      allow-inhibiting = false;
-    };
+    _props.allow-inhibiting = false;
     spawn = ["/home/${userVars.username}/.local/bin/smart-overview.sh"];
   };
   "Mod+Shift+Tab" = {
-    _props = {
-      allow-inhibiting = false;
-    };
+    _props.allow-inhibiting = false;
     toggle-overview = [];
   };
 
   # APPLICATIONS
   "Mod+Return" = {
-    _props = {
-      hotkey-overlay-title = "Terminal";
-      allow-inhibiting = false;
-    };
+    _props.allow-inhibiting = false;
     spawn =
       if userVars.programs.terminal == "ghostty"
       then ["ghostty" "+new-window"]
       else [userVars.programs.terminal];
   };
   "Mod+F" = {
-    _props = {
-      hotkey-overlay-title = "File manager (GUI)";
-      allow-inhibiting = false;
-    };
+    _props.allow-inhibiting = false;
     spawn = [userVars.programs.explorer-gui];
   };
   "Mod+Shift+F" = {
-    _props = {
-      hotkey-overlay-title = "File manager (TUI)";
-      allow-inhibiting = false;
-    };
+    _props.allow-inhibiting = false;
     spawn = [
       userVars.programs.terminal
       "-e"
@@ -71,17 +51,11 @@
     ];
   };
   "Mod+V" = {
-    _props = {
-      hotkey-overlay-title = "Visual editor";
-      allow-inhibiting = false;
-    };
+    _props.allow-inhibiting = false;
     spawn = [userVars.programs.visual];
   };
   "Mod+E" = {
-    _props = {
-      hotkey-overlay-title = "Text editor";
-      allow-inhibiting = false;
-    };
+    _props.allow-inhibiting = false;
     spawn = [userVars.programs.editor];
   };
   "Ctrl+Shift+Escape" = {
