@@ -239,7 +239,7 @@ in rec {
       ++ safeEyesRules;
   };
 
-   kanata.keyboards = {
+  kanata.keyboards = {
     calliope-uk = {
       devices = []; # Grabs all connected desktop keyboards
       extraDefCfg = "process-unmapped-keys yes";
@@ -248,7 +248,7 @@ in rec {
         ;; Physical - Lenovo USB Calliope UK ISO Map
         (defsrc
           grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
-          tab  q    w    e    r    t    y    u    i    o    p    [    ]    
+          tab  q    w    e    r    t    y    u    i    o    p    [    ]
           caps a    s    d    f    g    h    j    k    l    ;    '    nuhs ret
           lsft 102d z    x    c    v    b    n    m    ,    .    /    rsft
           lctl lmet lalt           spc            ralt rmet rctl
