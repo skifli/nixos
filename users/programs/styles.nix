@@ -54,33 +54,51 @@
           sunwaitBin = "${pkgs.sunwait}/bin/sunwait";
           switcherBin = "/home/${userVars.username}/.local/bin/theme-switcher.sh";
 
-          autoCheckScript = pkgs.writeShellScript "auto-theme-check" ''
-            set -euo pipefail
+                  autoCheckScript = pkgs.writeShellScript "auto-theme-check" ''
+          set -euo pipefail
+          
+          # 1. Poll sunwait for solar position
+          set +e
+          ${sunwaitBin} poll ${lat}N ${lonVal}${lonDir} >/dev/null 2>&1
+          STATUS=$?
+          set -e
+          
+          # 2: It is DAY or twilight. 3: It is NIGHT. 1: It is an Error.
+          if [ $STATUS -eq 2 ]; then
+            WANTED="day"
+          elif [ $STATUS -eq 3 ]; then
+            WANTED="night"
+          else
+            echo "Sunwait error code: $STATUS" >&2
+            exit 1
+          fi
 
-            set +e # Temporarily allow non-zero exit codes to prevent sunwait from tripping set -e
-            ${sunwaitBin} poll ${lat}N ${lonVal}${lonDir} >/dev/null 2>&1
-            STATUS=$?
-            set -e # Turn strict errors back on
-
-            # 2: It is DAY or twilight. 3: It is NIGHT. 1: It is an Error.
-            if [ "$STATUS" -eq 2 ]; then
-              WANTED="day"
-            elif [ "$STATUS" -eq 3 ]; then
-              WANTED="night"
+          # 2. Query desktop state instead of using a state file
+          # Returns 'prefer-light', 'prefer-dark', or 'default'
+          CURRENT_SCHEME=$(${pkgs.glib}/bin/gsettings get org.gnome.desktop.interface color-scheme)
+          
+          if [ "$WANTED" = "day" ]; then
+            # If we want day but the system is currently dark, we need to switch
+            if [ "$CURRENT_SCHEME" = "'prefer-dark'" ]; then
+              NEED_SWITCH=true
             else
-              echo "Sunwait error code: $STATUS" >&2
-              exit 1
+              NEED_SWITCH=false
             fi
-
-            # Using a mutable path
-            STATE_FILE="/home/${userVars.username}/.local/state/current-theme"
-            CURRENT=$(cat "$STATE_FILE" 2>/dev/null || echo "day")
-
-            if [ "$WANTED" != "$CURRENT" ]; then
-                notify-send -e -a "nixos" -i "/home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 5000 "Auto-theme switcher" "Switching to $WANTED mode"
-                ${switcherBin} "$WANTED"
+          else
+            # If we want night but the system is currently light/default, we need to switch
+            if [ "$CURRENT_SCHEME" != "'prefer-dark'" ]; then
+              NEED_SWITCH=true
+            else
+              NEED_SWITCH=false
             fi
-          '';
+          fi
+
+          # 3. Trigger switch if states mismatch
+          if [ "$NEED_SWITCH" = true ]; then
+            notify-send -e -a "nixos" -i "/home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 5000 "Auto-theme switcher" "Switching to $WANTED mode"
+            ${switcherBin} "$WANTED"
+          fi
+        '';
         in "${autoCheckScript}";
       };
     };

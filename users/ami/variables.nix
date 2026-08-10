@@ -87,7 +87,7 @@ in rec {
 
     # As all keyring dependent applications are not open yet, the gcr prompt will not show / automatically hide. So, this prompts it with dummy values to cause it to prompt the user via the GUI first. Done this early just to give it as much time to spawn the GUI.
     # Do as early as possible though to give time for the GUI to exist
-    secret-tool lookup xdg:schema org.freedesktop.Secret.Generic & disown
+    secret-tool lookup xdg:schema org.freedesktop.Secret.Generic </dev/null >/dev/null 2>&1 & disown
 
     # Sys-tray apps that don't need keyring unlock
     kdeconnect-indicator & disown
@@ -256,7 +256,9 @@ in rec {
         )
 
         (defalias
-          spc (tap-hold-release 200 200 spc (layer-toggle mouse))
+          ;; First var - hold term - time in ms you must hold the key to trigger the layer switch.
+          ;; Second var - timeout - time in ms allow to register double-tap as holding down the base key
+          spc (tap-hold-release 500 250 spc (layer-toggle mouse))
           zmin (multi lctl eql)  ;; Fixed: Macro for zoom in (Ctrl + Equal)
           zmout (multi lctl min) ;; Fixed: Macro for zoom out (Ctrl + Minus)
         )
