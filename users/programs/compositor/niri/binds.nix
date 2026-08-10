@@ -159,7 +159,8 @@
     _props.allow-inhibiting = false;
     maximize-column = [];
   };
-  /* Clashes with another Mod+Ctrl+M
+  /*
+     Clashes with another Mod+Ctrl+M
   "Mod+Ctrl+M" = {
     _props.allow-inhibiting = false;
     maximize-window-to-edges = [];
