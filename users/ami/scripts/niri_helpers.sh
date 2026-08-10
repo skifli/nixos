@@ -49,15 +49,22 @@ send_to_scratchpad() {
 
     # Only toggle if the window EXISTS AND is NOT already in the scratchpad
     if window_exists "$match_key" "$match_val" && ! is_in_scratchpad "$match_key" "$match_val"; then
-        local status=0
-        if [ "$match_key" = "app_id" ]; then
-            nirius scratchpad-toggle -a "$match_val" || status=$?
-        elif [ "$match_key" = "title" ]; then
-            nirius scratchpad-toggle -t "$match_val" || status=$?
-        fi
+        local attempts=0
+        local max_attempts=5
 
-        # Send notification only if nirius succeeded
-        if [ "$status" -eq 0 ]; then
+        while ! is_in_scratchpad "$match_key" "$match_val" && [ "$attempts" -lt "$max_attempts" ]; do
+            if [ "$match_key" = "app_id" ]; then
+                nirius scratchpad-toggle -a "$match_val" || true
+            elif [ "$match_key" = "title" ]; then
+                nirius scratchpad-toggle -t "$match_val" || true
+            fi
+
+            ((attempts++))
+            sleep 0.15  # Gives niriusd time to process so it doesn't accidentally toggle it back out
+        done
+
+        # Send notification if it successfully landed in the scratchpad
+        if is_in_scratchpad "$match_key" "$match_val"; then
             notify-send -e -a niri -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 \
                 "Scratchpad stash" "Sent window with $match_key: $match_val to scratchpad"
         fi
