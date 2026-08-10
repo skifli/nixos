@@ -37,8 +37,14 @@
   # Enables the tab indicator
   tab-indicator = {
     on = [];
-    position = "top";
+    position = "left";
     hide-when-single-tab = [];
+    place-within-column = []; # Otherwise with my config it doesn't show (I think due to struts or smth idk gaps)
+    length._props.total-proportion = 1.0; # I do prefer
+
+    urgent-color = "#BF616A";
+		active-color = "#F5F5DC";
+		inactive-color = "#A3BE8C";
   };
 
   # Enables the insert hint
