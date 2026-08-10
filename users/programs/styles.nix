@@ -36,8 +36,15 @@
         Type = "oneshot";
         ExecStart = let
           lat = toString hostVars.latitude;
-          lonVal = toString (if hostVars.longitude >= 0 then hostVars.longitude else (0 - hostVars.longitude));
-          lonDir = if hostVars.longitude >= 0 then "E" else "W";
+          lonVal = toString (
+            if hostVars.longitude >= 0
+            then hostVars.longitude
+            else (0 - hostVars.longitude)
+          );
+          lonDir =
+            if hostVars.longitude >= 0
+            then "E"
+            else "W";
           sunwaitBin = "${pkgs.sunwait}/bin/sunwait";
           switcherBin = "/home/${userVars.username}/.local/bin/theme-switcher.sh";
 
