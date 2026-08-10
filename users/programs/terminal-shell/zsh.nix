@@ -80,7 +80,7 @@
               local abs_path
               abs_path=$(realpath "$1")
               echo -n "file://$abs_path" | ${pkgs.wl-clipboard}/bin/wl-copy -t text/uri-list
-              notify-send -e -a "nixos" -i "/home/${USER}/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 2500 "Clipboard" "Copied URI to clipboard: file://$abs_path"
+              notify-send -e -a "nixos" -i "/home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 2500 "Clipboard" "Copied URI to clipboard: file://$abs_path"
             else
               echo "Usage: copyl <file>"
             fi
