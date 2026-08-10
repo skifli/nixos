@@ -1,5 +1,8 @@
-{ pkgs, userVars, ... }: {
-
+{
+  pkgs,
+  userVars,
+  ...
+}: {
   # Enable Kanata system service
   services.kanata = {
     enable = true;
@@ -7,6 +10,6 @@
   };
 
   hardware.uinput.enable = true;
-  users.groups.uinput.members = [ userVars.username ];
-  users.groups.input.members = [ userVars.username ];
+  users.groups.uinput.members = [userVars.username];
+  users.groups.input.members = [userVars.username];
 }
