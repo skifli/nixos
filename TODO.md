@@ -1,4 +1,4 @@
-- [ ] Relook at Zen blurring.
 - [ ] Ghostty bg blur?
 - [ ] When Ghostty updates to 1.4.0, alias ssh to ghostty ssh - https://ghostty.org/docs/features/ssh
 - [ ] Add more kool nirius related notification stuff when the nixpkgs stable one updates
+- [ ] When niri gets accessibility / zoom - add options for it to kanata
