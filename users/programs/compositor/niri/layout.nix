@@ -4,6 +4,7 @@
   # always-center-single-column = [];
   empty-workspace-above-first = false;
   default-column-display = "normal";
+  background-color = "transparent"; # CRITICAL as the wallpaper daemon is placed within the backdrop as well so the background colour for workspaces must be transparent to also show the wallpaper
 
   preset-column-widths._children = [
     {proportion = 0.25;}
