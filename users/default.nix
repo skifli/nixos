@@ -171,17 +171,19 @@
         niri = {
           default = pkgs.lib.mkForce [
             "kde"
-            "wlr"
           ];
 
-          "org.freedesktop.impl.portal.ScreenCast" = ["wlr"];
-          "org.freedesktop.impl.portal.Screenshot" = ["wlr"];
+          # Niri requires the gnome portal engine specifically for ScreenCast hooks.
+          # This will NOT install the GNOME desktop, only a tiny backend daemon.
+          # Niri requires xdg-desktop-portal-gnome to be installed for this to work, which is done below in extraPortals.
+          # https://github.com/niri-wm/niri/wiki/Screencasting#overview
+          "org.freedesktop.impl.portal.ScreenCast" = [ "gnome" ];
         };
       };
 
       extraPortals = with pkgs; [
         kdePackages.xdg-desktop-portal-kde
-        xdg-desktop-portal-wlr
+        xdg-desktop-portal-gnome
       ];
     };
 
@@ -195,7 +197,7 @@
     xdg-utils
 
     xdg-desktop-portal
-    xdg-desktop-portal-wlr
+    xdg-desktop-portal-gnome
     kdePackages.xdg-desktop-portal-kde
   ];
 }
