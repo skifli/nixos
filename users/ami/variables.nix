@@ -146,7 +146,7 @@ in rec {
 
       notify-send -e -a "gcr-prompter" -i "$HOME/.local/share/misc/Seahorse_icon_hicolor.svg" -u low -t 2500 "Keyring Unlocked" "Launching keyring-dependent apps..."
 
-      ${startAndManage "anytype" "title" "anytype" secondMonitor "1"}
+      ${startAndManage "anytype" "app_id" "anytype" secondMonitor "1"}
       ${startAndManage "remmina" "app_id" "org.remmina.Remmina" secondMonitor "3"}
     ) &
 

@@ -21,7 +21,7 @@ move_windows "app_id" "dev.zed.Zed" "$MON_1" "4"
 move_windows "app_id" "org.kde.dolphin" "$MON_1" "4"
 
 # 2nd monitor
-move_windows "title" "anytype" "$MON_2" "1" "100%"
+move_windows "app_id" "anytype" "$MON_2" "1" "100%"
 move_windows "app_id" "ferdium" "$MON_2" "2" "100%"
 move_windows "app_id" "remmina" "$MON_2" "3" "100%"
 

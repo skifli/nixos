@@ -17,12 +17,83 @@ fetch_windows() {
 # Initial fetch
 fetch_windows
 
+window_exists() {
+    local match_key="$1"
+    local match_val="${2,,}"
+
+    fetch_windows
+    echo "$WINDOWS_JSON" | jq -e \
+        --arg k "$match_key" \
+        --arg v "$match_val" \
+        '.[] | select(.[$k] != null and (.[$k] | ascii_downcase | contains($v)))' >/dev/null
+}
+
+is_in_scratchpad() {
+    local match_key="$1"
+    local match_val="${2,,}"
+
+    local scratch_list
+    scratch_list=$(nirius list-scratchpad 2>/dev/null || true)
+    [ -z "$scratch_list" ] && return 1
+
+    if [ "$match_key" = "app_id" ]; then
+        echo "$scratch_list" | grep -i -E "app-id: Some\(\"[^\"]*${match_val}[^\"]*\"\)" >/dev/null
+    elif [ "$match_key" = "title" ]; then
+        echo "$scratch_list" | grep -i -E "title: Some\(\"[^\"]*${match_val}[^\"]*\"\)" >/dev/null
+    fi
+}
+
+send_to_scratchpad() {
+    local match_key="$1"
+    local match_val="$2"
+
+    # Only toggle if the window EXISTS AND is NOT already in the scratchpad
+    if window_exists "$match_key" "$match_val" && ! is_in_scratchpad "$match_key" "$match_val"; then
+        local status=0
+        if [ "$match_key" = "app_id" ]; then
+            nirius scratchpad-toggle -a "$match_val" || status=$?
+        elif [ "$match_key" = "title" ]; then
+            nirius scratchpad-toggle -t "$match_val" || status=$?
+        fi
+
+        # Send notification only if nirius succeeded
+        if [ "$status" -eq 0 ]; then
+            notify-send -e -a niri -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 \
+                "Scratchpad stash" "Sent window with $match_key: $match_val to scratchpad"
+        fi
+    fi
+}
+
+restore_from_scratchpad() {
+    local match_key="$1"
+    local match_val="$2"
+
+    # is_in_scratchpad already checks list-scratchpad, which therefore verifies existence in scratchpad
+    if is_in_scratchpad "$match_key" "$match_val"; then
+        local status=0
+        if [ "$match_key" = "app_id" ]; then
+            nirius scratchpad-toggle -a "$match_val" || status=$?
+        elif [ "$match_key" = "title" ]; then
+            nirius scratchpad-toggle -t "$match_val" || status=$?
+        fi
+
+        # Send notification only if nirius succeeded
+        if [ "$status" -eq 0 ]; then
+            notify-send -e -a niri -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 \
+                "Scratchpad restore" "Restored window with $match_key: $match_val from scratchpad"
+        fi
+    fi
+}
+
 move_windows() {
     local match_key="$1"
     local match_val="$2"
     local target_mon="$3"
     local target_ws="$4"
     local target_width="$5"
+
+    # Automatically un-scratchpad the window if it's hidden in the scratchpad
+    restore_from_scratchpad "$match_key" "$match_val"
 
     fetch_windows
 
