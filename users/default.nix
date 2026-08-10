@@ -212,6 +212,13 @@
     mime.enable = true;
   };
 
+  # Required to prevent the GNOME portal backend from timing out on startup
+  services.dbus.packages = [ pkgs.gsettings-desktop-schemas ];
+  systemd.user.services."xdg-desktop-portal" = {
+    after = [ "xdg-desktop-portal-gnome.service" ];
+    wants = [ "xdg-desktop-portal-gnome.service" ];
+  };
+
   environment.systemPackages = with pkgs; [
     nix-output-monitor
     nvd
