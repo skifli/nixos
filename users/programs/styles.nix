@@ -1,129 +1,11 @@
-# Partially based on code from https://github.com/Weathercold/nixfiles/blob/master/home/modules/services/scheduling/darkman.nix
 {
   commonHostVars,
-  config,
-  hostVars,
   lib,
   inputs,
   pkgs,
   userVars,
   ...
-}: let
-  call-screen-transition = ''
-    NIRI_SOCKET="$(${pkgs.findutils}/bin/find "$runtime_dir" -name 'niri*.sock' 2>/dev/null | head -n 1)"
-    if [ -n "$NIRI_SOCKET" ]; then
-      echo "Using socket found at $NIRI_SOCKET"
-      set +e
-      ${lib.getExe pkgs.niri} msg action do-screen-transition || echo "niri msg failed with $?" >&2
-      set -e
-    else
-      echo "Cannot find NIRI_SOCKET; skipping screen transition"
-    fi
-  '';
-
-  enableDarkmanModule = _: {
-    services.darkman = {
-      enable = true;
-
-      settings = {
-        lat = hostVars.latitude;
-        lng = hostVars.longitude;
-        usegeoclue = false;
-
-        dbusserver = true;
-        portal = true;
-        # darkman config only; switching is handled by the root service below.
-      };
-    };
-  };
-
-  darkman-switcher = pkgs.writeShellScript "darkman-theme-switcher" ''
-    set -euo pipefail
-
-    user_uid="$(${pkgs.coreutils}/bin/id -u ${userVars.username})"
-    user_name="${userVars.username}"
-    runtime_dir="/run/user/$user_uid"
-    current_mode="$(${pkgs.util-linux}/bin/runuser -u "$user_name" -- ${pkgs.darkman}/bin/darkman get 2>/dev/null || echo light)"
-    echo "Initial mode: $current_mode"
-
-    while true; do
-      if [ ! -S "$runtime_dir/bus" ]; then
-        sleep 2
-        continue
-      fi
-
-      new_mode="$(${pkgs.util-linux}/bin/runuser -u "$user_name" -- ${pkgs.darkman}/bin/darkman get 2>/dev/null || echo light)"
-
-      if [ "$new_mode" != "$current_mode" ]; then
-        echo "Switching from $current_mode to $new_mode"
-
-        if [ "$new_mode" = "dark" ]; then
-          activate_script="/run/booted-system/specialisation/night/bin/switch-to-configuration"
-        else
-          activate_script="/run/booted-system/specialisation/day/bin/switch-to-configuration"
-        fi
-
-        if [ -x "$activate_script" ]; then
-          echo "Starting switch in background to survive system activation..."
-          # Run switch asynchronously in background so service survives system reconfiguration
-          (
-            retries=0
-            max_retries=5
-            backoff=5
-            ok=0
-            while [ $retries -lt $max_retries ]; do
-              echo "Attempting switch (try $((retries+1))/$max_retries)..."
-              set +e
-              output="$($activate_script switch 2>&1)"
-              status=$?
-              set -e
-              if [ "$status" -eq 0 ]; then
-                echo "Switch succeeded: $output"
-                ok=1
-                break
-              fi
-              echo "Switch failed (status=$status): $output" >&2
-              if echo "$output" | grep -qi "Could not acquire lock"; then
-                echo "Lock detected; backing off $backoff seconds and retrying..."
-                sleep $backoff
-                backoff=$((backoff*2))
-                retries=$((retries+1))
-                continue
-              else
-                echo "Non-retryable error during switch; aborting." >&2
-                break
-              fi
-            done
-            if [ $ok -ne 1 ]; then
-              echo "All switch attempts failed; will retry on next mode change." >&2
-            fi
-          ) &
-        else
-          echo "Missing system specialisation switch script: $activate_script" >&2
-        fi
-
-        current_mode="$new_mode"
-        echo "$new_mode" > /run/darkman-mode.current
-        echo "Triggering screen transition in background..."
-        (${call-screen-transition}) &
-      fi
-
-      sleep 2
-    done
-  '';
-in {
-  systemd.services.darkman-theme-switcher = {
-    description = "Monitor darkman mode changes and switch system specialisations";
-    wantedBy = ["graphical-session.target"];
-    after = ["graphical-session.target"];
-    serviceConfig = {
-      Type = "simple";
-      ExecStart = "${darkman-switcher}";
-      Restart = "always";
-      RestartSec = 5;
-    };
-  };
-
+}: {
   home-manager.users.${userVars.username} = {
     stylix = {
       enable = true;
@@ -134,8 +16,6 @@ in {
         name = lib.mkDefault commonHostVars.cursor.day.name;
       };
       inherit (commonHostVars) icons fonts;
-
-      # targets."${builtins.elemAt userVars.programs.browsers 0}-browser".enable = false;
     };
 
     gtk = {
@@ -147,6 +27,7 @@ in {
       };
     };
   };
+
   specialisation = {
     day.configuration = {pkgs, ...}: let
       name = "day";
@@ -181,8 +62,31 @@ in {
     };
   };
 
+  security.sudo.extraRules = [
+    {
+      users = [ userVars.username ];
+      commands = [
+        {
+          command = "/run/booted-system/specialisation/night/bin/switch-to-configuration";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "/run/booted-system/specialisation/day/bin/switch-to-configuration";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "/run/current-system/specialisation/night/bin/switch-to-configuration";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "/run/current-system/specialisation/day/bin/switch-to-configuration";
+          options = [ "NOPASSWD" ];
+        }
+      ];
+    }
+  ];
+
   home-manager.sharedModules = [
-    enableDarkmanModule
     inputs.stylix.homeModules.stylix
   ];
 }
