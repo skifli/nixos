@@ -1,0 +1,6 @@
+NOT mine.
+
+Source: https://github.com/NixOS/nixos-artwork
+Specifically: https://github.com/NixOS/nixos-artwork/blob/master/logo/nix-snowflake-rainbow.svg
+
+"“NixOS Logo” by Simon Frankau, Tim Cuthbertson, and Daniel Baker (maintained by the NixOS Marketing Team), from nixos/branding, licensed under CC BY 4.0."
