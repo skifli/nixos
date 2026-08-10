@@ -43,8 +43,8 @@
     length._props.total-proportion = 1.0; # I do prefer
 
     urgent-color = "#BF616A";
-		active-color = "#F5F5DC";
-		inactive-color = "#A3BE8C";
+    active-color = "#F5F5DC";
+    inactive-color = "#A3BE8C";
   };
 
   # Enables the insert hint
