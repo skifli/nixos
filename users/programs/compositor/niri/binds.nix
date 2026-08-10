@@ -606,7 +606,7 @@
       hotkey-overlay-title = "Pick color from screen";
       allow-inhibiting = false;
     };
-    spawn = ["/home/${userVars.username}/.local/bin/color-picker.sh"];
+    spawn = ["/home/${userVars.username}/.local/bin/colour-picker.sh"];
   };
   "Mod+Alt+I" = {
     _props = {

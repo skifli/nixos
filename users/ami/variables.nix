@@ -158,7 +158,7 @@ in rec {
     niri msg action focus-monitor "${focusedMonitor}"
     niri msg action focus-workspace 1
 
-    notify-send -e -a "niri" -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 "Startup complete" "All startup tasks completed"
+    notify-send -e -a "niri" -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 5000 "Startup complete" "All startup tasks completed"
   '';
 
   scroll-cooldown-ms = 80; # Cooldown for scroll events (for workspace switching and column focus switching)
