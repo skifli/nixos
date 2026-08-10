@@ -69,7 +69,8 @@
           fi
         ''; # Source: https://gist.github.com/ctechols/ca1035271ad134841284
 
-        initContent = ''
+        # Force the functions to the bottom of .zshrc
+        initContent = lib.mkOrder 1500 ''
           eval "$(pay-respects zsh)"
 
           # Source for the three below - https://github.com/Axlefublr/dotfiles
@@ -85,7 +86,7 @@
               echo "Usage: copyl <file>"
             fi
           }
-
+          
           # Axlefublr da goat: Read file selection buffer
           blammo() {
             if [ -f /tmp/blammo ]; then
@@ -100,9 +101,9 @@
           # Zsh prompt hook: Populate $in with Yazi selection
           precmd() {
             if [ -f /tmp/blammo ]; then
-              in=$(cat /tmp/blammo 2>/dev/null)
+              blammo_in=$(cat /tmp/blammo 2>/dev/null)
             elif [ -f "$HOME/.cache/mine/blammo" ]; then
-              in=$(cat "$HOME/.cache/mine/blammo" 2>/dev/null)
+              blammo_in=$(cat "$HOME/.cache/mine/blammo" 2>/dev/null)
             fi
           }
         '';
