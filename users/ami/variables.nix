@@ -244,6 +244,7 @@ in rec {
       devices = []; # Grabs all connected desktop keyboards
       extraDefCfg = "process-unmapped-keys yes";
 
+      # Use https://jtroo.github.io/ to verify
       config = ''
         ;; Physical - Lenovo USB Calliope UK ISO Map
         (defsrc
