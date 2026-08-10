@@ -174,7 +174,8 @@
           };
 
           launcher_window = {
-            opacity = lib.mkForce 0.95;
+            opacity = lib.mkForce 0.9;
+            material = "blur"; # Otherwise breaks blur
 
             compact_mode = {
               enabled = false;
