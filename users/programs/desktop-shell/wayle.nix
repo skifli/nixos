@@ -45,6 +45,7 @@
               ];
               left = [
                 "dashboard"
+                "niri-workspaces"
                 "custom-system_errors"
                 "window-title"
               ];
@@ -73,6 +74,9 @@
           font-sans = "Monospace";
         };
         modules = {
+          niri-workspaces = {
+            monitor-specific = false;
+          };
           clock = {
             dropdown-show-seconds = true;
             format = "%a %d %B %Y - %T";
