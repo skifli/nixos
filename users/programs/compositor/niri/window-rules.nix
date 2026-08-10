@@ -78,11 +78,25 @@ in
         inactive-color = "#7d0d2d";
       };
     }
-    # Open urgent windows focused
+    # Open urgent windows focused and give them a prominent glow
     {
       match._props.is-urgent = true;
       open-focused = true;
+      focus-ring = {
+        active-color = "#f38ba8";
+        inactive-color = "#f38ba8";
+      };
+      border = {
+        active-color = "#f38ba8";
+        inactive-color = "#f38ba8";
+      };
+      tab-indicator = {
+        active-color = "#f38ba8";
+        inactive-color = "#f38ba8";
+        urgent-color = "#f38ba8";
+      };
     }
   ]
   ++ browserRules
   ++ (userVars.niri.window-rules or [])
+  
