@@ -105,11 +105,11 @@ in rec {
 
     notify-send -e -a "niri" -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 "Pre-keyring apps" "Apps spawned"
 
-    # - START AWWW STUFF - 
+    # - START AWWW STUFF -
 
     # Start ze primary background daemon (Default namespace: awww-daemon)
     awww-daemon & disown
-    
+
     # Start ze special overview background daemon (Custom namespace: awww-daemonoverview)
     awww-daemon --namespace overview & disown
 
@@ -128,7 +128,7 @@ in rec {
 
     notify-send -e -a "niri" -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 "AWWW wallpaper" "Wallpapers loaded"
 
-    # - END AWWW STUFF - 
+    # - END AWWW STUFF -
 
     niri msg action focus-monitor "${focusedMonitor}"
     niri msg action focus-workspace 1
