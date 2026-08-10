@@ -256,8 +256,8 @@ in rec {
 
         (defalias
           spc (tap-hold-release 200 200 spc (layer-toggle mouse))
-          zmin (C-=)  ;; Macro for zoom in (Ctrl + Plus/Equal)
-          zmout (C--) ;; Macro for zoom out (Ctrl + Minus)
+          zmin (multi lctl eql)  ;; Fixed: Macro for zoom in (Ctrl + Equal)
+          zmout (multi lctl min) ;; Fixed: Macro for zoom out (Ctrl + Minus)
         )
 
         ;; Required virtual keys for modifier stacking and auto release
@@ -291,7 +291,7 @@ in rec {
         (deflayer mouse-slow
           _    _    _    _    _    _    _    _    _    _    _    _    _    _
           _    _    _    (movemouse-up 20 1) _ _ _ _ _ _ _ _ _
-          _    _    (movemouse-left 20 1) (movemouse-down 20 1) (movemouse-right 20 1) _ _ _ _ _ _ _ _ _ _
+          _    _    (movemouse-left 20 1) (movemouse-down 20 1) (movemouse-right 20 1) _ _ _ _ _ _ _ _ _
           _    _    _    _    _    _    _    _    _    _    _    _    _
           _    _    _              _              _    _    _
         )
