@@ -30,7 +30,7 @@
 
     dconf.settings = {
       "org/gnome/desktop/interface" = {
-        color-scheme = "prefer-light";
+        color-scheme = lib.mkForce "prefer-light";
       };
     };
 
@@ -112,7 +112,7 @@
 
         dconf.settings = {
           "org/gnome/desktop/interface" = {
-            color-scheme = "prefer-light";
+            color-scheme = lib.mkForce "prefer-light";
           };
         };
 
@@ -134,7 +134,7 @@
 
         dconf.settings = {
           "org/gnome/desktop/interface" = {
-            color-scheme = "prefer-dark";
+            color-scheme = lib.mkForce "prefer-dark";
           };
         };
 
