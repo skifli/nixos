@@ -94,7 +94,7 @@ in rec {
 
     # Apps that don't need keyring unlock
     ${startAndManage "zen-beta" "app_id" "zen-beta" focusedMonitor "1"}
-    ${startAndManage "User 1 - Anki" "title" "anki" focusedMonitor "2"} # Otherwise it would sometimes just move the syncing window not the actual window which was annoying... tad of a workaround... but it works!
+    ${startAndManage "anki" "title" "User 1 - Anki" focusedMonitor "2"} # Otherwise it would sometimes just move the syncing window not the actual window which was annoying... tad of a workaround... but it works!
     ${startAndManage "ferdium" "app_id" "ferdium" secondMonitor "2"}
 
     niri msg action focus-monitor "${focusedMonitor}"
@@ -107,6 +107,9 @@ in rec {
       while [ "$(busctl --user get-property org.freedesktop.secrets /org/freedesktop/secrets/aliases/default org.freedesktop.Secret.Collection Locked 2>/dev/null | awk '{print $2}')" != "false" ]; do
         sleep 0.5
       done
+
+      sleep 1 # Just a tad of a delay to ensure the keyring is fully ready for use
+
       echo "Keyring unlocked - launching keyring-dependent apps..."
 
       ${startAndManage "anytype" "title" "anytype" secondMonitor "1"}
