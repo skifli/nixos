@@ -45,6 +45,7 @@
               ];
               left = [
                 "dashboard"
+                "custom-screencast"
                 "niri-workspaces"
                 "custom-system_errors"
                 "window-title"
@@ -127,6 +128,29 @@
               restart-interval-ms = 1000;
               restart-policy = "never";
               right-click = "${userVars.programs.terminal} -e ${userVars.programs.terminal-shell} -c \"systemctl --user --type=service --state=failed; ${userVars.programs.terminal-shell}\"";
+              scroll-down = "";
+              scroll-up = "";
+            }
+            {
+              border-color = "auto";
+              border-show = true;
+              button-bg-color = "bg-surface-elevated";
+              command = "casts=$(niri msg casts 2>/dev/null) && if echo \"$casts\" | grep -q \"Target:\"; then echo \"CAST: Active\"; fi";
+              format = "{{ output }}";
+              hide-if-empty = true;
+              icon-bg-color = "auto";
+              icon-color = "status-error";
+              icon-name = "media-record-symbolic";
+              icon-show = true;
+              id = "screencast";
+              interval-ms = 3000;
+              label-color = "status-error";
+              label-max-length = 0;
+              label-show = true;
+              left-click = "${userVars.programs.terminal} -e ${userVars.programs.terminal-shell} -c \"niri msg casts; ${userVars.programs.terminal-shell}\"";
+              mode = "poll";
+              restart-interval-ms = 1000;
+              restart-policy = "never";
               scroll-down = "";
               scroll-up = "";
             }
