@@ -1,9 +1,10 @@
 {
   commonHostVars,
+  hostVars,
   lib,
-  inputs,
   pkgs,
   userVars,
+  inputs,
   ...
 }: {
   home-manager.users.${userVars.username} = {
@@ -26,8 +27,69 @@
         name = lib.mkDefault commonHostVars.icons.light;
       };
     };
+
+    systemd.user.services.auto-theme-check = {
+      Unit = {
+        Description = "Check solar position and switch NixOS theme specialisation";
+      };
+      Service = {
+        Type = "oneshot";
+        ExecStart = let
+          lat = toString hostVars.latitude;
+          lonVal = toString (if hostVars.longitude >= 0 then hostVars.longitude else (0 - hostVars.longitude));
+          lonDir = if hostVars.longitude >= 0 then "E" else "W";
+          sunwaitBin = "${pkgs.sunwait}/bin/sunwait";
+          switcherBin = "/home/${userVars.username}/.local/bin/theme-switcher.sh";
+
+          autoCheckScript = pkgs.writeShellScript "auto-theme-check" ''
+            set -euo pipefail
+
+            # Capture ze exit code from sunwait without breaking set -e
+            STATUS=0
+            if ${sunwaitBin} poll ${lat}N ${lonVal}${lonDir} >/dev/null 2>&1; then
+              STATUS=$?
+            else
+              STATUS=$?
+            fi
+
+            # 2: It is DAY or twilight. 3: It is NIGHT. 1: It is an Error.
+            if [ "$STATUS" -eq 2 ]; then
+              WANTED="day"
+            elif [ "$STATUS" -eq 3 ]; then
+              WANTED="night"
+            else
+              echo "Sunwait error code: $STATUS" >&2
+              exit 1
+            fi
+
+            # Using a mutable path
+            STATE_FILE="/home/${userVars.username}/.local/state/current-theme"
+            CURRENT=$(cat "$STATE_FILE" 2>/dev/null || echo "day")
+
+            if [ "$WANTED" != "$CURRENT" ]; then
+                notify-send -e -a "nixos" -i "/home/${USER}/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 2500 "Auto-theme switcher" "Switching to $WANTED mode"
+                ${switcherBin} "$WANTED"
+            fi
+          '';
+        in "${autoCheckScript}";
+      };
+    };
+
+    systemd.user.timers.auto-theme-check = {
+      Unit = {
+        Description = "Automagic solar time checker";
+      };
+      Timer = {
+        OnCalendar = "*:0/10"; # Runs every 10 minutes to verify solar state
+        Persistent = true;
+      };
+      Install = {
+        WantedBy = ["timers.target"];
+      };
+    };
   };
 
+  # Specialisations generate nested configurations under /run/current-system/specialisation/
   specialisation = {
     day.configuration = {pkgs, ...}: let
       name = "day";
@@ -62,6 +124,7 @@
     };
   };
 
+  # Grant NOPASSWD access for the user to trigger the compiled specialisation switchers
   security.sudo.extraRules = [
     {
       users = [userVars.username];
