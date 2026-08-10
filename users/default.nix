@@ -177,7 +177,7 @@
           # This will NOT install the GNOME desktop, only a tiny backend daemon.
           # Niri requires xdg-desktop-portal-gnome to be installed for this to work, which is done below in extraPortals.
           # https://github.com/niri-wm/niri/wiki/Screencasting#overview
-          "org.freedesktop.impl.portal.ScreenCast" = [ "gnome" ];
+          "org.freedesktop.impl.portal.ScreenCast" = ["gnome"];
         };
       };
 
