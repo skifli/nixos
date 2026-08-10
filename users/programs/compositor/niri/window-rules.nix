@@ -3,8 +3,11 @@
   browserRules =
     builtins.map (browser: {
       match._props.app-id._raw = ''r#"(?i)${browser}"#'';
-      background-effect.blur = true;
-      opacity = 0.90;
+      background-effect = {
+        blur = true;
+        noise = 0.01;
+        saturation = 1.1;
+      };
       open-maximized = true;
     })
     userVars.programs.browsers;
