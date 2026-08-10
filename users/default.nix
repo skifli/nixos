@@ -199,6 +199,9 @@
 
           # Juust in case - https://github.com/niri-wm/niri/wiki/Important-Software#:~:text=If%20you%20do%20not%20want%20to%20install%20nautilus%20%28say%20you%20use%20nemo%20instead%29%2C%20you%20can%20set%20org%2Efreedesktop%2Eimpl%2Eportal%2EFileChooser%3Dgtk%3B%20in%20niri%2Dportals%2Econf%20to%20use%20the%20GTK%20portal%20for%20file%20chooser%20dialogues
           "org.freedesktop.impl.portal.FileChooser" = ["kde"];
+
+          # Forces Electron/Anytype to read dark/light preferences via GNOME/GTK instead of failing via KDE
+          "org.freedesktop.impl.portal.Settings" = ["gnome" "gtk"];
         };
       };
 

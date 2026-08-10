@@ -28,6 +28,12 @@
       };
     };
 
+    dconf.settings = {
+      "org/gnome/desktop/interface" = {
+        color-scheme = "prefer-light";
+      };
+    };
+
     systemd.user.services.auto-theme-check = {
       Unit = {
         Description = "Check solar position and switch NixOS theme specialisation";
@@ -104,6 +110,12 @@
       home-manager.users.${userVars.username} = {
         gtk.iconTheme.name = commonHostVars.icons.light;
 
+        dconf.settings = {
+          "org/gnome/desktop/interface" = {
+            color-scheme = "prefer-light";
+          };
+        };
+
         stylix = {
           base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.day}.yaml";
           cursor.name = commonHostVars.cursor.day.name;
@@ -119,6 +131,12 @@
 
       home-manager.users.${userVars.username} = {
         gtk.iconTheme.name = commonHostVars.icons.dark;
+
+        dconf.settings = {
+          "org/gnome/desktop/interface" = {
+            color-scheme = "prefer-dark";
+          };
+        };
 
         stylix = {
           base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.night}.yaml";
