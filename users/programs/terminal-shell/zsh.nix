@@ -56,7 +56,7 @@
       zsh = {
         enable = true;
         dotDir = "/home/${userVars.username}"; # Lock in legacy behavior for stateVersion 25.05
-
+        
         autosuggestion.enable = true;
         enableCompletion = true;
         completionInit = ''
@@ -70,8 +70,41 @@
         ''; # Source: https://gist.github.com/ctechols/ca1035271ad134841284
 
         initContent = ''
-          # Initialize pay-respects (Added double quotes to preserve newlines)
           eval "$(pay-respects zsh)"
+
+          # Source for the three below - https://github.com/Axlefublr/dotfiles
+
+          # Axlefublr da goat: Copy file path as Wayland URI list
+          copyl() {
+            if [ -n "$1" ]; then
+              local abs_path
+              abs_path=$(realpath "$1")
+              echo -n "file://$abs_path" | ${pkgs.wl-clipboard}/bin/wl-copy -t text/uri-list
+              notify-send -e -a "nixos" -i "/home/${USER}/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 2500 "Clipboard" "Copied URI to clipboard: file://$abs_path"
+            else
+              echo "Usage: copyl <file>"
+            fi
+          }
+
+          # Axlefublr da goat: Read file selection buffer
+          blammo() {
+            if [ -f /tmp/blammo ]; then
+              cat /tmp/blammo
+            elif [ -f "$HOME/.cache/mine/blammo" ]; then
+              cat "$HOME/.cache/mine/blammo"
+            else
+              echo "No blammo selection found"
+            fi
+          }
+
+          # Zsh prompt hook: Populate $in with Yazi selection
+          precmd() {
+            if [ -f /tmp/blammo ]; then
+              in=$(cat /tmp/blammo 2>/dev/null)
+            elif [ -f "$HOME/.cache/mine/blammo" ]; then
+              in=$(cat "$HOME/.cache/mine/blammo" 2>/dev/null)
+            fi
+          }
         '';
 
         syntaxHighlighting = {

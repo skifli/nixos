@@ -185,7 +185,7 @@
     switch-preset-window-height-back = [];
   };
 
-  # WINDOW MOVEMENT
+  # WINDOW MOVEMENT (Vim H/J/K/L & Arrows)
   "Mod+Shift+Home" = {
     _props.allow-inhibiting = false;
     move-column-to-first = [];
@@ -199,7 +199,15 @@
     _props.allow-inhibiting = false;
     move-column-left = [];
   };
+  "Mod+Shift+Left" = {
+    _props.allow-inhibiting = false;
+    move-column-left = [];
+  };
   "Mod+Shift+L" = {
+    _props.allow-inhibiting = false;
+    move-column-right = [];
+  };
+  "Mod+Shift+Right" = {
     _props.allow-inhibiting = false;
     move-column-right = [];
   };
@@ -207,7 +215,15 @@
     _props.allow-inhibiting = false;
     move-window-down = [];
   };
+  "Mod+Shift+Down" = {
+    _props.allow-inhibiting = false;
+    move-window-down = [];
+  };
   "Mod+Shift+K" = {
+    _props.allow-inhibiting = false;
+    move-window-up = [];
+  };
+  "Mod+Shift+Up" = {
     _props.allow-inhibiting = false;
     move-window-up = [];
   };
@@ -220,30 +236,38 @@
     expel-window-from-column = [];
   };
 
-  # FOCUS MOVEMENT
+  # FOCUS MOVEMENT (Columns & Stacked Windows)
   "Mod+H" = {
-    _props = {
-      allow-inhibiting = false;
-    };
+    _props.allow-inhibiting = false;
     focus-column-left = [];
   };
+  "Mod+Left" = {
+    _props.allow-inhibiting = false;
+    focus-column-left = [];
+  };
+  "Mod+L" = {
+    _props.allow-inhibiting = false;
+    focus-column-right = [];
+  };
+  "Mod+Right" = {
+    _props.allow-inhibiting = false;
+    focus-column-right = [];
+  };
   "Mod+J" = {
-    _props = {
-      allow-inhibiting = false;
-    };
+    _props.allow-inhibiting = false;
+    focus-window-down = [];
+  };
+  "Mod+Down" = {
+    _props.allow-inhibiting = false;
     focus-window-down = [];
   };
   "Mod+K" = {
-    _props = {
-      allow-inhibiting = false;
-    };
+    _props.allow-inhibiting = false;
     focus-window-up = [];
   };
-  "Mod+L" = {
-    _props = {
-      allow-inhibiting = false;
-    };
-    focus-column-right = [];
+  "Mod+Up" = {
+    _props.allow-inhibiting = false;
+    focus-window-up = [];
   };
   "Mod+Shift+WheelScrollDown" = {
     _props = {
@@ -260,18 +284,22 @@
     focus-column-left = [];
   };
 
-  # WORKSPACES
-  "Mod+1" = {
-    _props = {
-      allow-inhibiting = false;
-    };
-    focus-monitor-left = [];
+  # WORKSPACE NAVIGATION (Keyboard + Scroll + Arrows)
+  "Mod+Ctrl+J" = {
+    _props.allow-inhibiting = false;
+    focus-workspace-down = [];
   };
-  "Mod+2" = {
-    _props = {
-      allow-inhibiting = false;
-    };
-    focus-monitor-right = [];
+  "Mod+Ctrl+Down" = {
+    _props.allow-inhibiting = false;
+    focus-workspace-down = [];
+  };
+  "Mod+Ctrl+K" = {
+    _props.allow-inhibiting = false;
+    focus-workspace-up = [];
+  };
+  "Mod+Ctrl+Up" = {
+    _props.allow-inhibiting = false;
+    focus-workspace-up = [];
   };
   "Mod+WheelScrollDown" = {
     _props = {
@@ -288,6 +316,22 @@
     focus-workspace-up = [];
   };
 
+  "Mod+Ctrl+Shift+J" = {
+    _props.allow-inhibiting = false;
+    move-column-to-workspace-down = [];
+  };
+  "Mod+Ctrl+Shift+Down" = {
+    _props.allow-inhibiting = false;
+    move-column-to-workspace-down = [];
+  };
+  "Mod+Ctrl+Shift+K" = {
+    _props.allow-inhibiting = false;
+    move-column-to-workspace-up = [];
+  };
+  "Mod+Ctrl+Shift+Up" = {
+    _props.allow-inhibiting = false;
+    move-column-to-workspace-up = [];
+  };
   "Mod+Ctrl+WheelScrollDown" = {
     _props = {
       cooldown-ms = userVars.scroll-cooldown-ms;
@@ -303,7 +347,37 @@
     move-column-to-workspace-up = [];
   };
 
-  # Workspace 1..8 switching
+  # Monitor Navigation
+  "Mod+1" = {
+    _props = {
+      allow-inhibiting = false;
+    };
+    focus-monitor-left = [];
+  };
+  "Mod+2" = {
+    _props = {
+      allow-inhibiting = false;
+    };
+    focus-monitor-right = [];
+  };
+  "Mod+Alt+H" = {
+    _props.allow-inhibiting = false;
+    focus-monitor-left = [];
+  };
+  "Mod+Alt+Left" = {
+    _props.allow-inhibiting = false;
+    focus-monitor-left = [];
+  };
+  "Mod+Alt+L" = {
+    _props.allow-inhibiting = false;
+    focus-monitor-right = [];
+  };
+  "Mod+Alt+Right" = {
+    _props.allow-inhibiting = false;
+    focus-monitor-right = [];
+  };
+
+  # DIRECT WORKSPACE JUMPING 1..8
   "Mod+Shift+1" = {
     _props = {
       hotkey-overlay-title = "Focus workspace 1(-8)";

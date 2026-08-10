@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-
-niri msg action do-screen-transition -d 250 2>/dev/null || true
+set -euo pipefail
 
 CURRENT_TAG=$(cat /etc/specialisation 2>/dev/null || echo "day")
 if [ "$CURRENT_TAG" = "day" ]; then
@@ -9,11 +8,17 @@ else
     TARGET="day"
 fi
 
-notify-send -e -a "nixos" -i "/home/${USER}/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 2500 "Theme Switcher" "Switching to $TARGET mode"
+notify-send -e -a "nixos" -i "/home/${USER}/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 2500 "Theme Switcher" "Switching to $TARGET mode..."
 
-if [ -x "/run/booted-system/specialisation/$TARGET/bin/switch-to-configuration" ]; then
-    sudo /run/booted-system/specialisation/$TARGET/bin/switch-to-configuration switch
+SWITCH_BIN="/run/booted-system/specialisation/$TARGET/bin/switch-to-configuration"
+if [ ! -x "$SWITCH_BIN" ]; then
+    SWITCH_BIN="/run/current-system/specialisation/$TARGET/bin/switch-to-configuration"
+fi
+
+if [ -x "$SWITCH_BIN" ]; then
+    sudo "$SWITCH_BIN" switch
+    niri msg action do-screen-transition -d 300 2>/dev/null || true
     notify-send -e -a "nixos" -i "/home/${USER}/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 2500 "Theme Switcher" "Switched to $TARGET mode"
 else
-    notify-send -a "nixos" -i "/home/${USER}/.local/share/misc/nix-snowflake-rainbow.svg" -u normal "Theme Switcher" "Specialisation $TARGET not found"
+    notify-send -a "nixos" -i "/home/${USER}/.local/share/misc/nix-snowflake-rainbow.svg" -u normal -t 3000 "Theme Switcher" "Specialisation $TARGET not found"
 fi
