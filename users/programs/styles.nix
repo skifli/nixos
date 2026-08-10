@@ -51,13 +51,10 @@
           autoCheckScript = pkgs.writeShellScript "auto-theme-check" ''
             set -euo pipefail
 
-            # Capture ze exit code from sunwait without breaking set -e
-            STATUS=0
-            if ${sunwaitBin} poll ${lat}N ${lonVal}${lonDir} >/dev/null 2>&1; then
-              STATUS=$?
-            else
-              STATUS=$?
-            fi
+            set +e # Temporarily allow non-zero exit codes to prevent sunwait from tripping set -e
+            ${sunwaitBin} poll ${lat}N ${lonVal}${lonDir} >/dev/null 2>&1
+            STATUS=$?
+            set -e # Turn strict errors back on
 
             # 2: It is DAY or twilight. 3: It is NIGHT. 1: It is an Error.
             if [ "$STATUS" -eq 2 ]; then
