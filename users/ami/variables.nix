@@ -241,14 +241,14 @@ in rec {
 
   kanata.keyboards = {
     calliope-uk = {
-      devices = [ ]; # Grabs all connected desktop keyboards
+      devices = []; # Grabs all connected desktop keyboards
       extraDefCfg = "process-unmapped-keys yes";
 
       config = ''
         ;; Physical - Lenovo USB Calliope UK ISO Map
         (defsrc
           grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
-          tab  q    w    e    r    t    y    u    i    o    p    [    ]    
+          tab  q    w    e    r    t    y    u    i    o    p    [    ]
           caps a    s    d    f    g    h    j    k    l    ;    '    bksl ret
           lsft 102d z    x    c    v    b    n    m    ,    .    /    rsft
           lctl lmet lalt           spc            ralt rmet rctl
@@ -272,7 +272,7 @@ in rec {
         ;; Default typing layer
         (deflayer default
           _    _    _    _    _    _    _    _    _    _    _    _    _    _
-          _    _    _    _    _    _    _    _    _    _    _    _    _    
+          _    _    _    _    _    _    _    _    _    _    _    _    _
           _    _    _    _    _    _    _    _    _    _    _    _    _    _
           _    _    _    _    _    _    _    _    _    _    _    _    _
           _    _    _           @spc           _    _    _
@@ -281,7 +281,7 @@ in rec {
         ;; Mouse mode layer (hold space)
         (deflayer mouse
           _    _    _    _    _    _    _    _    _    _    _    _    _    _
-          _    (on-press press-vkey meta) (mwheel-left 20 60) (movemouse-accel-up 5 210 1 9) (mwheel-right 20 60) (on-press press-vkey alt) _ @zmin (mwheel-down 30 60) (mwheel-up 30 60) @zmout _ _ 
+          _    (on-press press-vkey meta) (mwheel-left 20 60) (movemouse-accel-up 5 210 1 9) (mwheel-right 20 60) (on-press press-vkey alt) _ @zmin (mwheel-down 30 60) (mwheel-up 30 60) @zmout _ _
           _    (on-press press-vkey shift) (movemouse-accel-left 5 210 1 9) (movemouse-accel-down 5 210 1 9) (movemouse-accel-right 5 210 1 9) (on-press press-vkey ctrl) _ (multi mlft (on-release tap-vkey modifier)) (multi mrgt (on-release tap-vkey modifier)) (layer-toggle mouse-slow) _ _ _ _
           _    _    _    _    _    _    _    (multi mmid (on-release tap-vkey modifier)) pgup pgdn _    _
           _    _    _              _              _    _    _
@@ -290,7 +290,7 @@ in rec {
         ;; Slow precision mode layer (hold l in mouse mode)
         (deflayer mouse-slow
           _    _    _    _    _    _    _    _    _    _    _    _    _    _
-          _    _    _    (movemouse-up 20 1) _ _ _ _ _ _ _ _ _ 
+          _    _    _    (movemouse-up 20 1) _ _ _ _ _ _ _ _ _
           _    _    (movemouse-left 20 1) (movemouse-down 20 1) (movemouse-right 20 1) _ _ _ _ _ _ _ _ _ _
           _    _    _    _    _    _    _    _    _    _    _    _
           _    _    _              _              _    _    _
