@@ -87,7 +87,7 @@ in rec {
 
     # As all keyring dependent applications are not open yet, the gcr prompt will not show / automatically hide. So, this prompts it with dummy values to cause it to prompt the user via the GUI first. Done this early just to give it as much time to spawn the GUI.
     # Do as early as possible though to give time for the GUI to exist
-    secret-tool lookup xdg:schema org.freedesktop.Secret.Generic
+    secret-tool lookup xdg:schema org.freedesktop.Secret.Generic & disown
 
     # Sys-tray apps that don't need keyring unlock
     kdeconnect-indicator & disown
