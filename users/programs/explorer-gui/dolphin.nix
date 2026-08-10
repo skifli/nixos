@@ -29,7 +29,15 @@
   }: {
     home = {
       packages = with pkgs; [
-        kdePackages.dolphin
+        (symlinkJoin {
+          name = "dolphin-wrapped";
+          paths = [ kdePackages.dolphin ];
+          nativeBuildInputs = [ pkgs.makeWrapper ];
+          postBuild = ''
+            wrapProgram $out/bin/dolphin \
+              --set QT_QPA_PLATFORMTHEME "qt5ct"
+          '';
+        })
         kdePackages.dolphin-plugins
 
         kdePackages.breeze-icons # For sidebar icons iirc
