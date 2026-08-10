@@ -64,23 +64,23 @@
 
   security.sudo.extraRules = [
     {
-      users = [ userVars.username ];
+      users = [userVars.username];
       commands = [
         {
           command = "/run/booted-system/specialisation/night/bin/switch-to-configuration";
-          options = [ "NOPASSWD" ];
+          options = ["NOPASSWD"];
         }
         {
           command = "/run/booted-system/specialisation/day/bin/switch-to-configuration";
-          options = [ "NOPASSWD" ];
+          options = ["NOPASSWD"];
         }
         {
           command = "/run/current-system/specialisation/night/bin/switch-to-configuration";
-          options = [ "NOPASSWD" ];
+          options = ["NOPASSWD"];
         }
         {
           command = "/run/current-system/specialisation/day/bin/switch-to-configuration";
-          options = [ "NOPASSWD" ];
+          options = ["NOPASSWD"];
         }
       ];
     }
