@@ -243,7 +243,8 @@
           scale = 0.75;
         };
         wallpaper = {
-          engine-enabled = true;
+          engine-enabled = false;
+          # Disabled because I need to do some custom awww stuff
 
           monitors =
             pkgs.lib.mapAttrsToList (monitorName: _: {

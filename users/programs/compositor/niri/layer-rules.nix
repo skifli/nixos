@@ -1,8 +1,7 @@
 {userVars, ...}: [
-  # Place background within backdrop
+  # Place overview (blurred) background within backdrop
   {
-    match._props.namespace = "^awww-daemon$"; # wayle uses awww
-    background-effect.blur = true;
+    match._props.namespace = "^awww-daemonoverview$";
     place-within-backdrop = true;
   }
   # Block notifications from screen recordings
