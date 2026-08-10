@@ -99,4 +99,3 @@ in
   ]
   ++ browserRules
   ++ (userVars.niri.window-rules or [])
-  
