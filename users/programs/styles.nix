@@ -6,7 +6,39 @@
   userVars,
   inputs,
   ...
-}: {
+}: let 
+  # Centralized light configuration reading from host vars
+  lightGtkConfig = { 
+    iconTheme.name = commonHostVars.icons.light; 
+    theme = { 
+      name = commonHostVars.theme.gtk.dayName; 
+      package = commonHostVars.theme.gtk.package; 
+    }; 
+    gtk3.extraConfig = { gtk-application-prefer-dark-theme = 0; }; 
+    gtk4.extraConfig = { gtk-application-prefer-dark-theme = 0; gtk-theme-name = commonHostVars.theme.gtk.dayName; }; 
+  };
+
+  lightDconfInterface = { 
+    color-scheme = "default"; 
+    gtk-theme = commonHostVars.theme.gtk.dayName; 
+  };
+
+  # Centralized dark configuration reading from host vars
+  darkGtkConfig = { 
+    iconTheme.name = commonHostVars.icons.dark; 
+    theme = { 
+      name = commonHostVars.theme.gtk.nightName; 
+      package = commonHostVars.theme.gtk.package; 
+    }; 
+    gtk3.extraConfig = { gtk-application-prefer-dark-theme = 1; }; 
+    gtk4.extraConfig = { gtk-application-prefer-dark-theme = 1; gtk-theme-name = commonHostVars.theme.gtk.nightName; }; 
+  };
+
+  darkDconfInterface = { 
+    color-scheme = "prefer-dark"; 
+    gtk-theme = commonHostVars.theme.gtk.nightName; 
+  };
+in {
   home-manager.users.${userVars.username} = {
     stylix = {
       enable = true;
@@ -19,19 +51,11 @@
       inherit (commonHostVars) icons fonts;
     };
 
-    gtk = {
-      enable = true;
-
-      iconTheme = {
-        inherit (commonHostVars.icons) package;
-        name = lib.mkDefault commonHostVars.icons.light;
-      };
-    };
+    # Inherits ze baseline light settings globally on build
+    gtk = { enable = true; } // lightGtkConfig;
 
     dconf.settings = {
-      "org/gnome/desktop/interface" = {
-        color-scheme = lib.mkDefault "prefer-light";
-      };
+      "org/gnome/desktop/interface" = lib.mapAttrs (_: lib.mkDefault) lightDconfInterface;
     };
 
     systemd.user.services.auto-theme-check = {
@@ -117,23 +141,17 @@
     };
   };
 
-  # Specialisations generate nested configurations under /run/current-system/specialisation/
+  # Specialisations generate nested configurations under /run/current-system/specialisation
   specialisation = {
-    day.configuration = {pkgs, ...}: let
-      name = "day";
-    in {
-      system.nixos.tags = [name];
-      environment.etc."specialisation".text = name;
+    day.configuration = {pkgs, ...}: {
+      system.nixos.tags = ["day"];
+      environment.etc."specialisation".text = "day";
 
       home-manager.users.${userVars.username} = {
-        gtk.iconTheme.name = commonHostVars.icons.light;
-
+        gtk = lightGtkConfig;
         dconf.settings = {
-          "org/gnome/desktop/interface" = {
-            color-scheme = lib.mkForce "prefer-light";
-          };
+          "org/gnome/desktop/interface" = lib.mapAttrs (_: lib.mkForce) lightDconfInterface;
         };
-
         stylix = {
           base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.day}.yaml";
           cursor.name = commonHostVars.cursor.day.name;
@@ -141,21 +159,15 @@
       };
     };
 
-    night.configuration = {pkgs, ...}: let
-      name = "night";
-    in {
-      system.nixos.tags = [name];
-      environment.etc."specialisation".text = name;
+    night.configuration = {pkgs, ...}: {
+      system.nixos.tags = ["night"];
+      environment.etc."specialisation".text = "night";
 
       home-manager.users.${userVars.username} = {
-        gtk.iconTheme.name = commonHostVars.icons.dark;
-
+        gtk = darkGtkConfig;
         dconf.settings = {
-          "org/gnome/desktop/interface" = {
-            color-scheme = lib.mkForce "prefer-dark";
-          };
+          "org/gnome/desktop/interface" = lib.mapAttrs (_: lib.mkForce) darkDconfInterface;
         };
-
         stylix = {
           base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.night}.yaml";
           cursor.name = commonHostVars.cursor.night.name;

@@ -16,7 +16,10 @@ if [ ! -x "$SWITCH_BIN" ]; then
 fi
 
 if [ -x "$SWITCH_BIN" ]; then
-    sudo "$SWITCH_BIN" switch
+    # Note: Changed from 'switch' to 'test' to not add to history to save a buncha clutter
+    sudo "$SWITCH_BIN" test
+    
+    # Niri workspace layout refresh transitions
     niri msg action do-screen-transition -d 1000 2>/dev/null || true
     notify-send -e -a "nixos" -i "/home/${USER}/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 5000 "Theme Switcher" "Switched to $TARGET mode"
 else
