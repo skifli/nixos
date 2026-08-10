@@ -55,6 +55,7 @@
     };
 
     affinity-nix.url = "github:mrshmllow/affinity-nix";
+    anki-seara.url = "github:rodrada/seara";
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     # anki-mcp.url = "github:ankimcp/anki-mcp-server-addon";
     # concord.url = "github:chojs23/concord";

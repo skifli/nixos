@@ -125,6 +125,7 @@ in {
     programs.anki = {
       enable = true;
       addons = with pkgs; [
+        inputs.anki-seara.packages."x86_64-linux".default # I :3 you https://github.com/rodrada/seara
         /*
         (ankiAddons.anki-mcp-server.withConfig {
           config = {
