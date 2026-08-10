@@ -56,7 +56,7 @@
       zsh = {
         enable = true;
         dotDir = "/home/${userVars.username}"; # Lock in legacy behavior for stateVersion 25.05
-        
+
         autosuggestion.enable = true;
         enableCompletion = true;
         completionInit = ''
