@@ -31,8 +31,8 @@
       packages = with pkgs; [
         (symlinkJoin {
           name = "dolphin-wrapped";
-          paths = [ kdePackages.dolphin ];
-          nativeBuildInputs = [ pkgs.makeWrapper ];
+          paths = [kdePackages.dolphin];
+          nativeBuildInputs = [pkgs.makeWrapper];
           postBuild = ''
             wrapProgram $out/bin/dolphin \
               --set QT_QPA_PLATFORMTHEME "qt5ct"
