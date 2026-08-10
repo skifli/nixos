@@ -1,0 +1,6 @@
+NOT mine. 
+
+Source: https://zbar.sourceforge.net/
+Specifically: https://zbar.sourceforge.net/img/zbar.200.png
+
+"ZBar is licensed under the GNU LGPL 2.1 to enable development of both open source and commercial projects." <- Maybe applies to logo?

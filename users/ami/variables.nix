@@ -80,22 +80,55 @@ in rec {
   # Due to the way I've done it it's blocking, except actual app startups use & so the only blocking stuff is the waiting for windows to appear to move them. So do NOT place anything after that wait, unless you want it to be a tad delayed!!!
   startupScript = ''
     # Niri has its own option for this but keep just in case
+    # Or tbh just remove...
     dbus-update-activation-environment --systemd --all
 
+    notify-send -e -a "gcr-prompter" -i "$HOME/.local/share/misc/Seahorse_icon_hicolor.svg" -u low -t 2500 "Keyring Locked" "Polling for keyring unlock..."
+
     # As all keyring dependent applications are not open yet, the gcr prompt will not show / automatically hide. So, this prompts it with dummy values to cause it to prompt the user via the GUI first. Done this early just to give it as much time to spawn the GUI.
+    # Do as early as possible though to give time for the GUI to exist
     secret-tool lookup dummy-key dummy-value
 
-    # Sys-tray apps
+    # Sys-tray apps that don't need keyring unlock
     kdeconnect-indicator & disown
     ktailctl & disown
     niriusd & disown
     safeeyes & disown
     sunsetr & disown
 
+    notify-send -e -a "niri" -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 "Pre-keyring sys-tray" "Apps spawned"
+
     # Apps that don't need keyring unlock
     ${startAndManage "zen-beta" "app_id" "zen-beta" focusedMonitor "1"}
     ${startAndManage "anki" "title" "User 1 - Anki" focusedMonitor "2"} # Otherwise it would sometimes just move the syncing window not the actual window which was annoying... tad of a workaround... but it works!
     ${startAndManage "ferdium" "app_id" "ferdium" secondMonitor "2"}
+
+    notify-send -e -a "niri" -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 "Pre-keyring apps" "Apps spawned"
+
+    # - START AWWW STUFF - 
+
+    # Start ze primary background daemon (Default namespace: awww-daemon)
+    awww-daemon & disown
+    
+    # Start ze special overview background daemon (Custom namespace: awww-daemonoverview)
+    awww-daemon --namespace overview & disown
+
+    # Wait till sock is populated
+    while [ ! -S "$XDG_RUNTIME_DIR/''${WAYLAND_DISPLAY:-wayland-1}-awww-daemon.sock" ] || [ ! -S "$XDG_RUNTIME_DIR/''${WAYLAND_DISPLAY:-wayland-1}-awww-daemon.overview.sock" ]; do
+      sleep 0.01 # Loop efficiently until the sockets are created
+    done
+
+    notify-send -e -a "niri" -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 "AWWW daemons" "Daemons spawned"
+
+    # Load ze sharp wallpaper into the default daemon surface
+    awww img ~/.local/share/wallpaper
+
+    # Load ze pre-blurred wallpaper into the overview daemon surface
+    awww img --namespace overview ~/.local/share/wallpaper-blurred
+
+    notify-send -e -a "niri" -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 "AWWW wallpaper" "Wallpapers loaded"
+
+    # - END AWWW STUFF - 
 
     niri msg action focus-monitor "${focusedMonitor}"
     niri msg action focus-workspace 1
@@ -103,24 +136,29 @@ in rec {
 
     # Bg process: wait for keyring to be unlocked, then launch apps that depend on the keyring
     (
-      echo "Waiting for keyring to unlock..."
+      notify-send -e -a "gcr-prompter" -i "$HOME/.local/share/misc/Seahorse_icon_hicolor.svg" -u low -t 2500 "Keyring Locked" "Waiting for keyring to be unlocked..."
+
       while [ "$(busctl --user get-property org.freedesktop.secrets /org/freedesktop/secrets/aliases/default org.freedesktop.Secret.Collection Locked 2>/dev/null | awk '{print $2}')" != "false" ]; do
         sleep 0.5
       done
 
       sleep 1 # Just a tad of a delay to ensure the keyring is fully ready for use
 
-      echo "Keyring unlocked - launching keyring-dependent apps..."
+      notify-send -e -a "gcr-prompter" -i "$HOME/.local/share/misc/Seahorse_icon_hicolor.svg" -u low -t 2500 "Keyring Unlocked" "Launching keyring-dependent apps..."
 
       ${startAndManage "anytype" "title" "anytype" secondMonitor "1"}
       ${startAndManage "remmina" "app_id" "org.remmina.Remmina" secondMonitor "3"}
     ) &
+
+    notify-send -e -a "niri" -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 "Post-keyring apps" "Apps spawned"
 
     # Now wait for all background startAndManage jobs to finish
     wait
 
     niri msg action focus-monitor "${focusedMonitor}"
     niri msg action focus-workspace 1
+
+    notify-send -e -a "niri" -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 "Startup complete" "All startup tasks completed"
   '';
 
   scroll-cooldown-ms = 75; # Cooldown for scroll events (for workspace switching and column focus switching)
@@ -260,6 +298,6 @@ in rec {
     # These 3 proudly stolen from https://github.com/MangoCubes/nix/blob/e7fdb3fe51a8dce3c6ce6bc2a9fe8423f276f187/desktop/packages/home/niri.nix#L11 ;p (on a serious note if you ever see this MangoCubes these are really smart 'n useful binds! Thanks sm <3.)
     "killclick" = "kill -9 $(niri msg pick-window | grep PID | tail -n 1 | awk '{print $NF}')";
     "killcurrent" = "kill -9 $(niri msg focused-window | grep PID | tail -n 1 | awk '{print $NF}')";
-    "qrscan" = ''selected_area=$(${pkgs.slurp}/bin/slurp) && ${pkgs.grim}/bin/grim -g "$selected_area" - | ${pkgs.zbar}/bin/zbarimg --raw - | wl-copy && ${pkgs.libnotify}/bin/notify-send -e -a niri -u low -t 2500 -e "QR Code Captured" "$(wl-paste)"'';
+    "qrscan" = ''selected_area=$(${pkgs.slurp}/bin/slurp) && ${pkgs.grim}/bin/grim -g "$selected_area" - | ${pkgs.zbar}/bin/zbarimg --raw - | wl-copy && ${pkgs.libnotify}/bin/notify-send -e -a ZBar -i "$HOME/.local/share/misc/zbar.200.png" -u low -t 2500 -e "QR Code Captured" "$(wl-paste)"'';
   };
 }
