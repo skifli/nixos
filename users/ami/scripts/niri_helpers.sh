@@ -113,6 +113,16 @@ move_windows() {
             if [ -n "$target_width" ] && [ "$target_width" != "1/1" ]; then
                 niri msg action set-column-width "$target_width"
             fi
+
+            # Check if 100% width is requested and the window is currently floating
+            if [ "$target_width" = "100%" ]; then
+                local is_floating
+                is_floating=$(echo "$WINDOWS_JSON" | jq -r ".[] | select(.id == $win_id) | .is_floating")
+                
+                if [ "$is_floating" = "true" ]; then
+                    niri msg action toggle-window-floating
+                fi
+            fi
         fi
     done < <(niri msg --json windows | jq -r ".[] | select(.$match_key != null) | select(.$match_key | ascii_downcase | contains(\"${match_val,,}\")) | .id")
 }
