@@ -6,37 +6,43 @@
   userVars,
   inputs,
   ...
-}: let 
+}: let
   # Centralized light configuration reading from host vars
-  lightGtkConfig = { 
-    iconTheme.name = commonHostVars.icons.light; 
-    theme = { 
-      name = commonHostVars.theme.gtk.dayName; 
-      package = commonHostVars.theme.gtk.package; 
-    }; 
-    gtk3.extraConfig = { gtk-application-prefer-dark-theme = 0; }; 
-    gtk4.extraConfig = { gtk-application-prefer-dark-theme = 0; gtk-theme-name = commonHostVars.theme.gtk.dayName; }; 
+  lightGtkConfig = {
+    iconTheme.name = commonHostVars.icons.light;
+    theme = {
+      name = commonHostVars.theme.gtk.dayName;
+      package = commonHostVars.theme.gtk.package;
+    };
+    gtk3.extraConfig = {gtk-application-prefer-dark-theme = 0;};
+    gtk4.extraConfig = {
+      gtk-application-prefer-dark-theme = 0;
+      gtk-theme-name = commonHostVars.theme.gtk.dayName;
+    };
   };
 
-  lightDconfInterface = { 
-    color-scheme = "default"; 
-    gtk-theme = commonHostVars.theme.gtk.dayName; 
+  lightDconfInterface = {
+    color-scheme = "default";
+    gtk-theme = commonHostVars.theme.gtk.dayName;
   };
 
   # Centralized dark configuration reading from host vars
-  darkGtkConfig = { 
-    iconTheme.name = commonHostVars.icons.dark; 
-    theme = { 
-      name = commonHostVars.theme.gtk.nightName; 
-      package = commonHostVars.theme.gtk.package; 
-    }; 
-    gtk3.extraConfig = { gtk-application-prefer-dark-theme = 1; }; 
-    gtk4.extraConfig = { gtk-application-prefer-dark-theme = 1; gtk-theme-name = commonHostVars.theme.gtk.nightName; }; 
+  darkGtkConfig = {
+    iconTheme.name = commonHostVars.icons.dark;
+    theme = {
+      name = commonHostVars.theme.gtk.nightName;
+      package = commonHostVars.theme.gtk.package;
+    };
+    gtk3.extraConfig = {gtk-application-prefer-dark-theme = 1;};
+    gtk4.extraConfig = {
+      gtk-application-prefer-dark-theme = 1;
+      gtk-theme-name = commonHostVars.theme.gtk.nightName;
+    };
   };
 
-  darkDconfInterface = { 
-    color-scheme = "prefer-dark"; 
-    gtk-theme = commonHostVars.theme.gtk.nightName; 
+  darkDconfInterface = {
+    color-scheme = "prefer-dark";
+    gtk-theme = commonHostVars.theme.gtk.nightName;
   };
 in {
   home-manager.users.${userVars.username} = {
@@ -52,7 +58,7 @@ in {
     };
 
     # Inherits ze baseline light settings globally on build
-    gtk = { enable = true; } // lightGtkConfig;
+    gtk = {enable = true;} // lightGtkConfig;
 
     dconf.settings = {
       "org/gnome/desktop/interface" = lib.mapAttrs (_: lib.mkDefault) lightDconfInterface;
