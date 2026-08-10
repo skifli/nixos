@@ -135,12 +135,13 @@
 
           file.".local/share/wallpaper-blurred" = let
             asset = ./${username}/assets/wallpapers/${userVars.wallpaper};
-            
-            blurredAsset = pkgs.runCommand "wallpaper-blurred" {
-              nativeBuildInputs = [ pkgs.imagemagick ];
-            } ''
-              magick "${asset}" -blur 0x20 $out
-            '';
+
+            blurredAsset =
+              pkgs.runCommand "wallpaper-blurred" {
+                nativeBuildInputs = [pkgs.imagemagick];
+              } ''
+                magick "${asset}" -blur 0x20 $out
+              '';
           in
             pkgs.lib.mkIf (builtins.pathExists asset) {
               source = blurredAsset;
