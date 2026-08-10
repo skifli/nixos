@@ -86,7 +86,7 @@
               echo "Usage: copyl <file>"
             fi
           }
-          
+
           # Axlefublr da goat: Read file selection buffer
           blammo() {
             if [ -f /tmp/blammo ]; then
