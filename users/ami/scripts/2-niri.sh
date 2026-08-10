@@ -22,10 +22,10 @@ fi
 notify-send -e -a niri -i "/home/${USER}/.local/share/misc/niri-icon.svg" -u low -t 2500 "NEA configuration" "Restoring window positions"
 
 # 1st Monitor
-move_windows "app_id" "gcr-prompter" "$MON_1" "1"
 move_windows "title" "main.pdf — hmon NEA Writeup" "$MON_1" "1" "33%" # Evince - put on the left of Zeditor to make moving between Zeditors easier
 move_windows "title" "hmon-nea —" "$MON_1" "1" "67%" # Zeditor
 move_windows "title" "hmon —" "$MON_1" "1" "100%" # Zeditor
+move_windows "app_id" "gcr-prompter" "$MON_1" "1"
 move_windows "app_id" "ferdium" "$MON_1" "2" "100%"
 move_windows "app_id" "anki" "$MON_1" "3" "100%"
 
