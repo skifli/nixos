@@ -38,7 +38,14 @@
   };
   theme = {
     day = "tomorrow";
-    night = "vesper";
+    night = "tomorrow-night";
+
+    # GTK stuff
+    gtk = {
+      package = pkgs.adw-gtk3;
+      dayName = "adw-gtk3";
+      nightName = "adw-gtk3-dark";
+    };
   };
   shellAliases = {
     nup = "nh os switch . -H";
