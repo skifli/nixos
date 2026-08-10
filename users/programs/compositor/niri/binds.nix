@@ -167,8 +167,10 @@
   };
   */
   "Mod+W" = {
-    _props.hotkey-overlay-title = "Toggle tabbed column view";
-    allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = "Toggle tabbed column view";
+      allow-inhibiting = false;
+    };
     toggle-column-tabbed-display = [];
   };
   "Mod+R" = {

@@ -161,7 +161,7 @@ in rec {
     notify-send -e -a "niri" -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 "Startup complete" "All startup tasks completed"
   '';
 
-  scroll-cooldown-ms = 75; # Cooldown for scroll events (for workspace switching and column focus switching)
+  scroll-cooldown-ms = 80; # Cooldown for scroll events (for workspace switching and column focus switching)
 
   niri = {
     # Note the format!
