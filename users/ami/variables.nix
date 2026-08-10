@@ -259,7 +259,7 @@ in rec {
         (defalias
           ;; First var - hold term - time in ms you must hold the key to trigger the layer switch.
           ;; Second var - timeout - time in ms allow to register double-tap as holding down the base key
-          spc (tap-hold-release 500 250 spc (layer-toggle mouse))
+          spc (tap-hold-release 750 500 spc (layer-toggle mouse))
           zmin (multi lctl eql)  ;; Fixed: Macro for zoom in (Ctrl + Equal)
           zmout (multi lctl min) ;; Fixed: Macro for zoom out (Ctrl + Minus)
         )
