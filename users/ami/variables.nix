@@ -281,9 +281,9 @@ in rec {
         ;; Mouse mode layer (hold space)
         (deflayer mouse
           _    _    _    _    _    _    _    _    _    _    _    _    _    _
-          _    (on-press press-vkey meta) (mwheel-left 20 60) (movemouse-accel-up 5 210 1 9) (mwheel-right 20 60) (on-press press-vkey alt) _ @zmin (mwheel-down 30 60) (mwheel-up 30 60) @zmout _
-          _    (on-press press-vkey shift) (movemouse-accel-left 5 210 1 9) (movemouse-accel-down 5 210 1 9) (movemouse-accel-right 5 210 1 9) (on-press press-vkey ctrl) _ (multi mlft (on-release tap-vkey modifier)) (multi mrgt (on-release tap-vkey modifier)) (layer-toggle mouse-slow) _ _ _
-          _    _    _    _    _    _    _    (multi mmid (on-release tap-vkey modifier)) pgup pgdn _    _
+          _    (on-press press-vkey meta) (mwheel-left 20 60) (movemouse-accel-up 5 210 1 9) (mwheel-right 20 60) (on-press press-vkey alt) _ @zmin (mwheel-down 30 60) (mwheel-up 30 60) @zmout _ _
+          _    (on-press press-vkey shift) (movemouse-accel-left 5 210 1 9) (movemouse-accel-down 5 210 1 9) (movemouse-accel-right 5 210 1 9) (on-press press-vkey ctrl) _ (multi mlft (on-release tap-vkey modifier)) (multi mrgt (on-release tap-vkey modifier)) (layer-toggle mouse-slow) _ _ _ _
+          _    _    _    _    _    _    _    (multi mmid (on-release tap-vkey modifier)) pgup pgdn _    _    _
           _    _    _              _              _    _    _
         )
 
@@ -291,8 +291,8 @@ in rec {
         (deflayer mouse-slow
           _    _    _    _    _    _    _    _    _    _    _    _    _    _
           _    _    _    (movemouse-up 20 1) _ _ _ _ _ _ _ _ _
-          _    _    (movemouse-left 20 1) (movemouse-down 20 1) (movemouse-right 20 1) _ _ _ _ _ _ _ _
-          _    _    _    _    _    _    _    _    _    _    _    _
+          _    _    (movemouse-left 20 1) (movemouse-down 20 1) (movemouse-right 20 1) _ _ _ _ _ _ _ _ _ _
+          _    _    _    _    _    _    _    _    _    _    _    _    _
           _    _    _              _              _    _    _
         )
       '';
