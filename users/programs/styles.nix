@@ -9,15 +9,17 @@
 }: let
   # Centralized light configuration reading from host vars
   lightGtkConfig = {
-    iconTheme.name = commonHostVars.icons.light;
+    iconTheme.name = lib.mkForce commonHostVars.icons.light;
     theme = {
-      name = commonHostVars.theme.gtk.dayName;
-      package = commonHostVars.theme.gtk.package;
+      name = lib.mkForce commonHostVars.theme.gtk.dayName;
+      package = lib.mkForce commonHostVars.theme.gtk.package;
     };
-    gtk3.extraConfig = {gtk-application-prefer-dark-theme = 0;};
+    gtk3.extraConfig = {
+      gtk-application-prefer-dark-theme = lib.mkForce 0;
+    };
     gtk4.extraConfig = {
-      gtk-application-prefer-dark-theme = 0;
-      gtk-theme-name = commonHostVars.theme.gtk.dayName;
+      gtk-application-prefer-dark-theme = lib.mkForce 0;
+      gtk-theme-name = lib.mkForce commonHostVars.theme.gtk.dayName;
     };
   };
 
@@ -28,15 +30,17 @@
 
   # Centralized dark configuration reading from host vars
   darkGtkConfig = {
-    iconTheme.name = commonHostVars.icons.dark;
+    iconTheme.name = lib.mkForce commonHostVars.icons.dark;
     theme = {
-      name = commonHostVars.theme.gtk.nightName;
-      package = commonHostVars.theme.gtk.package;
+      name = lib.mkForce commonHostVars.theme.gtk.nightName;
+      package = lib.mkForce commonHostVars.theme.gtk.package;
     };
-    gtk3.extraConfig = {gtk-application-prefer-dark-theme = 1;};
+    gtk3.extraConfig = {
+      gtk-application-prefer-dark-theme = lib.mkForce 1;
+    };
     gtk4.extraConfig = {
-      gtk-application-prefer-dark-theme = 1;
-      gtk-theme-name = commonHostVars.theme.gtk.nightName;
+      gtk-application-prefer-dark-theme = lib.mkForce 1;
+      gtk-theme-name = lib.mkForce commonHostVars.theme.gtk.nightName;
     };
   };
 
