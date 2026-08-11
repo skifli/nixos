@@ -8,43 +8,43 @@
   ...
 }: let
   # Centralized light configuration reading from host vars
-  lightGtkConfig = {
-    iconTheme.name = lib.mkForce commonHostVars.icons.light;
+  lightGtkConfigRaw = {
+    iconTheme.name = commonHostVars.icons.light;
     theme = {
-      name = lib.mkForce commonHostVars.theme.gtk.dayName;
-      package = lib.mkForce commonHostVars.theme.gtk.package;
+      name = commonHostVars.theme.gtk.dayName;
+      package = commonHostVars.theme.gtk.package;
     };
     gtk3.extraConfig = {
-      gtk-application-prefer-dark-theme = lib.mkForce 0;
+      gtk-application-prefer-dark-theme = 0;
     };
     gtk4.extraConfig = {
-      gtk-application-prefer-dark-theme = lib.mkForce 0;
-      gtk-theme-name = lib.mkForce commonHostVars.theme.gtk.dayName;
+      gtk-application-prefer-dark-theme = 0;
+      gtk-theme-name = commonHostVars.theme.gtk.dayName;
     };
   };
 
-  lightDconfInterface = {
+  lightDconfInterfaceRaw = {
     color-scheme = "default";
     gtk-theme = commonHostVars.theme.gtk.dayName;
   };
 
   # Centralized dark configuration reading from host vars
-  darkGtkConfig = {
-    iconTheme.name = lib.mkForce commonHostVars.icons.dark;
+  darkGtkConfigRaw = {
+    iconTheme.name = commonHostVars.icons.dark;
     theme = {
-      name = lib.mkForce commonHostVars.theme.gtk.nightName;
-      package = lib.mkForce commonHostVars.theme.gtk.package;
+      name = commonHostVars.theme.gtk.nightName;
+      package = commonHostVars.theme.gtk.package;
     };
     gtk3.extraConfig = {
-      gtk-application-prefer-dark-theme = lib.mkForce 1;
+      gtk-application-prefer-dark-theme = 1;
     };
     gtk4.extraConfig = {
-      gtk-application-prefer-dark-theme = lib.mkForce 1;
-      gtk-theme-name = lib.mkForce commonHostVars.theme.gtk.nightName;
+      gtk-application-prefer-dark-theme = 1;
+      gtk-theme-name = commonHostVars.theme.gtk.nightName;
     };
   };
 
-  darkDconfInterface = {
+  darkDconfInterfaceRaw = {
     color-scheme = "prefer-dark";
     gtk-theme = commonHostVars.theme.gtk.nightName;
   };
@@ -61,11 +61,11 @@ in {
       inherit (commonHostVars) icons fonts;
     };
 
-    # Inherits ze baseline light settings globally on build
-    gtk = {enable = true;} // lightGtkConfig;
+    # Apply mkDefault for baseline so it layers nicely under Stylix
+    gtk = { enable = true; } // (lib.modules.mapAttrsRecursive (_: lib.mkDefault) lightGtkConfigRaw);
 
     dconf.settings = {
-      "org/gnome/desktop/interface" = lib.mapAttrs (_: lib.mkDefault) lightDconfInterface;
+      "org/gnome/desktop/interface" = lib.mapAttrs (_: lib.mkDefault) lightDconfInterfaceRaw;
     };
 
     systemd.user.services.auto-theme-check = {
@@ -153,14 +153,16 @@ in {
 
   # Specialisations generate nested configurations under /run/current-system/specialisation
   specialisation = {
-    day.configuration = {pkgs, ...}: {
+    day.configuration = { pkgs, ... }: {
       system.nixos.tags = ["day"];
       environment.etc."specialisation".text = "day";
 
       home-manager.users.${userVars.username} = {
-        gtk = lightGtkConfig;
+        # Explicitly apply mkForce
+        gtk = lib.modules.mapAttrsRecursive (_: lib.mkForce) lightGtkConfigRaw;
+        
         dconf.settings = {
-          "org/gnome/desktop/interface" = lib.mapAttrs (_: lib.mkForce) lightDconfInterface;
+          "org/gnome/desktop/interface" = lib.mapAttrs (_: lib.mkForce) lightDconfInterfaceRaw;
         };
         stylix = {
           base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.day}.yaml";
@@ -169,14 +171,16 @@ in {
       };
     };
 
-    night.configuration = {pkgs, ...}: {
+    night.configuration = { pkgs, ... }: {
       system.nixos.tags = ["night"];
       environment.etc."specialisation".text = "night";
 
       home-manager.users.${userVars.username} = {
-        gtk = darkGtkConfig;
+        # Explicitly apply mkForce
+        gtk = lib.modules.mapAttrsRecursive (_: lib.mkForce) darkGtkConfigRaw;
+        
         dconf.settings = {
-          "org/gnome/desktop/interface" = lib.mapAttrs (_: lib.mkForce) darkDconfInterface;
+          "org/gnome/desktop/interface" = lib.mapAttrs (_: lib.mkForce) darkDconfInterfaceRaw;
         };
         stylix = {
           base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.night}.yaml";
@@ -185,7 +189,7 @@ in {
       };
     };
   };
-
+  
   # Grant NOPASSWD access for the user to trigger the compiled specialisation switchers
   security.sudo.extraRules = [
     {
