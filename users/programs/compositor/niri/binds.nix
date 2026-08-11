@@ -41,9 +41,14 @@
   "Mod+Shift+Return" = {
     _props.allow-inhibiting = false;
     spawn = [
-      "sh" "-c"
+      "sh"
+      "-c"
       ''
-        ${if userVars.programs.terminal == "ghostty" then "ghostty +new-window" else userVars.programs.terminal} &
+        ${
+          if userVars.programs.terminal == "ghostty"
+          then "ghostty +new-window"
+          else userVars.programs.terminal
+        } &
         sleep 0.05
         niri msg action toggle-window-floating
         niri msg action set-window-height 40%

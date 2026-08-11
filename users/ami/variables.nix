@@ -262,8 +262,8 @@ in rec {
           ;; Tap Timeout: 200ms (Double-tap to repeat spaces)
           ;; Hold Timeout: 300ms (Hold to trigger mouse layer)
           spc (tap-hold 200 300 spc (layer-toggle mouse))
-          zmin (multi lctl eql)  
-          zmout (multi lctl min) 
+          zmin (multi lctl eql)
+          zmout (multi lctl min)
         )
 
         ;; Required virtual keys for modifier stacking and auto release
