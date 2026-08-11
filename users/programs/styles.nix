@@ -127,11 +127,18 @@ in {
         Environment = [
           "PATH=${lib.makeBinPath [pkgs.libnotify pkgs.coreutils pkgs.bash pkgs.niri pkgs.sudo]}"
           "USER=${userVars.username}"
-          "WAYLAND_DISPLAY=wayland-0"
         ];
 
         ExecStart = let
-          lat = toString hostVars.latitude;
+          latVal = toString (
+            if hostVars.latitude >= 0
+            then hostVars.latitude
+            else (0 - hostVars.latitude)
+          );
+          latDir =
+            if hostVars.latitude >= 0
+            then "N"
+            else "S";
           lonVal = toString (
             if hostVars.longitude >= 0
             then hostVars.longitude
@@ -151,10 +158,11 @@ in {
             RUN_UID=$(id -u)
             export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$RUN_UID/bus"
             export XDG_RUNTIME_DIR="/run/user/$RUN_UID"
+            export WAYLAND_DISPLAY="''${WAYLAND_DISPLAY:-wayland-1}"
 
             # 1. Poll sunwait for solar position
             set +e
-            ${sunwaitBin} poll ${lat}N ${lonVal}${lonDir} >/dev/null 2>&1
+            ${sunwaitBin} poll ${latVal}${latDir} ${lonVal}${lonDir} >/dev/null 2>&1
             STATUS=$?
             set -e
 
@@ -180,7 +188,7 @@ in {
 
             # 3. Trigger switch if states mismatch
             if [ "$NEED_SWITCH" = true ]; then
-              notify-send -e -a "nixos" -i "/home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 5000 "Auto-theme switcher" "Triggering theme switch"
+              notify-send -e -a "nixos" -i "/home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 5000 "Auto-theme switcher" "Triggering theme switch" || true
               ${switcherBin}
             fi
           '';
@@ -254,6 +262,11 @@ in {
       };
     };
   };
+
+  # Preserve session variables across sudo
+  security.sudo.extraConfig = ''
+    Defaults env_keep += "XDG_RUNTIME_DIR DBUS_SESSION_BUS_ADDRESS WAYLAND_DISPLAY"
+  '';
 
   # Grant NOPASSWD access for the user to trigger the compiled specialisation switchers
   security.sudo.extraRules = [

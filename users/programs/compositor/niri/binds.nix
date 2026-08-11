@@ -55,7 +55,7 @@
         } &
 
         # 3. Continuously poll Niri until the window with our ID appears
-        TIMEOUT=60
+        TIMEOUT=100 # Roughly idk some amount of seconds... like 5s I guess? (100 * 0.05 = 5s)
         COUNT=0
         while ! niri msg windows | grep -F "$ID" >/dev/null; do
           sleep 0.05
