@@ -171,15 +171,17 @@ in rec {
         sleep 0.5
       done
 
-      sleep 1 # Just a tad of a delay to ensure the keyring is fully ready for use
-
       notify-send -e -a "gcr-prompter" -i "$HOME/.local/share/misc/Seahorse_icon_hicolor.svg" -u low -t 2500 "Keyring Unlocked" "Launching keyring-dependent apps..."
+
+      sleep 1 # Just a tad of a delay to ensure the keyring is fully ready for use
 
       ${startAndManage "anytype" "app_id" "anytype" secondMonitor "1"}
       ${startAndManage "remmina" "app_id" "org.remmina.Remmina" secondMonitor "3"}
-    ) &
 
-    notify-send -e -a "niri" -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 "Post-keyring apps" "Apps spawned"
+      wait # As we are in a subshell, this wait is for the background jobs in this subshell only
+
+      notify-send -e -a "niri" -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 "Post-keyring apps" "Apps spawned"
+    ) &
 
     # Now wait for all background startAndManage jobs to finish
     wait
