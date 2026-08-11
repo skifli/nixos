@@ -125,7 +125,7 @@ in {
         Type = "oneshot";
 
         Environment = [
-          "PATH=${lib.makeBinPath [pkgs.libnotify pkgs.coreutils pkgs.bash pkgs.niri pkgs.sudo]}"
+          "PATH=/run/wrappers/bin:${lib.makeBinPath [pkgs.libnotify pkgs.coreutils pkgs.bash pkgs.niri]}"
           "USER=${userVars.username}"
         ];
 
