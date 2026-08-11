@@ -111,7 +111,7 @@ in {
         Type = "oneshot";
 
         Environment = [
-          "PATH=${lib.makeBinPath [ pkgs.libnotify pkgs.coreutils pkgs.bash pkgs.niri pkgs.sudo ]}"
+          "PATH=${lib.makeBinPath [pkgs.libnotify pkgs.coreutils pkgs.bash pkgs.niri pkgs.sudo]}"
           "USER=${userVars.username}"
           "WAYLAND_DISPLAY=wayland-0"
         ];
