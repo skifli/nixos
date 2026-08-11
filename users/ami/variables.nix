@@ -89,8 +89,7 @@ in rec {
     # Do as early as possible though to give time for the GUI to exist
     # And redirect stdin to /dev/null to avoid it blocking the script if it prompts for input (which is probably why something still hung all my startup stuff...)
 
-    # Loop the secret-tool dummy lookup safely without overlapping windows
-    (
+    # Loop the secret-tool dummy lookup safely without overlapping windows because I think it sometimes times out awaiting user input which is annoying    (
         while true; do
             # 1. Always check lock status FIRST before spawning
             IS_LOCKED=$(busctl --user get-property org.freedesktop.secrets /org/freedesktop/secrets/aliases/default org.freedesktop.Secret.Collection Locked 2>/dev/null | awk '{print $2}')
@@ -102,7 +101,10 @@ in rec {
             secret-tool lookup xdg:schema org.freedesktop.Secret.Generic </dev/null >/dev/null 2>&1 &
             SECRET_PID=$!
 
+            nirius focus --app-id gcr-prompter # Thanks to nirius - before it was this behemoth - niri msg action focus-window --id $(niri msg --json windows | jq -r '.[] | select(.app_id == "gcr-prompter") | .id' | head -n 1)
+
             # 3. Poll lock status every second for up to 25 seconds
+            # I THINK 25 is the standard d-bus method call timeout? Idk!
             for i in $(seq 1 25); do
                 sleep 1
                 IS_LOCKED=$(busctl --user get-property org.freedesktop.secrets /org/freedesktop/secrets/aliases/default org.freedesktop.Secret.Collection Locked 2>/dev/null | awk '{print $2}')
@@ -164,10 +166,6 @@ in rec {
 
     # - END AWWW STUFF -
 
-    niri msg action focus-monitor "${focusedMonitor}"
-    niri msg action focus-workspace 1
-    nirius focus --app-id gcr-prompter # Thanks to nirius - before it was this behemoth - niri msg action focus-window --id $(niri msg --json windows | jq -r '.[] | select(.app_id == "gcr-prompter") | .id' | head -n 1)
-
     # Bg process: wait for keyring to be unlocked, then launch apps that depend on the keyring
     (
       notify-send -e -a "gcr-prompter" -i "$HOME/.local/share/misc/Seahorse_icon_hicolor.svg" -u low -t 2500 "Keyring Locked" "Waiting for keyring to be unlocked..."
@@ -208,6 +206,7 @@ in rec {
         {
           # Cus sometimes it doesn't open in 60 seconds or summat idk don't do at-startup
           match._props.app-id._raw = ''r#"(?i)gcr-prompter"#'';
+          block-out-from = "screen-capture";
           open-focused = true;
           open-on-workspace = "1";
         }
