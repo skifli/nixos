@@ -76,6 +76,10 @@
         RemotePlugins=imagethumbnail,jpegthumbnail,directorythumbnail,ffmpegthumbs,exethumbnail,comicbookthumbnail,officeMarcothumbnail
         RemotePreviewSizeLimit=104857600
         UseDefaultRemotePreviewSizeLimit=false
+
+        [UiSettings]
+        ColorScheme=default
+
         EOF
                 fi
       '';
