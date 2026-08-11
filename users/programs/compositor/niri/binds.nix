@@ -44,15 +44,35 @@
       "sh"
       "-c"
       ''
+        # 1. Create a unique identifier for this specific window instance
+        ID="floating-term-$(date +%s%N)"
+
+        # 2. Spawn the terminal with the unique title
         ${
           if userVars.programs.terminal == "ghostty"
-          then "ghostty +new-window"
-          else userVars.programs.terminal
+          then "ghostty +new-window --title=\"$ID\""
+          else "${userVars.programs.terminal} --title=\"$ID\""
         } &
-        sleep 0.05
+
+        # 3. Continuously poll Niri until the window with our ID appears
+        TIMEOUT=60
+        COUNT=0
+        while ! niri msg windows | grep -F "$ID" >/dev/null; do
+          sleep 0.05
+          COUNT=$((COUNT + 1))
+          if [ "$COUNT" -ge "$TIMEOUT" ]; then
+            notify-send -e -a nirius -i /home/${userVars.username}/.local/share/misc/niri-icon.svg -u critical -t 5000 "Error" "Timed out waiting for window $ID"
+            exit 1
+          fi
+        done
+
+        # 4. Target the unique window via Niri IPC now that it exists
+        nirius focus --title "$ID"
         niri msg action toggle-window-floating
         niri msg action set-window-height 40%
         niri msg action set-column-width 40%
+
+        notify-send -e -a nirius -i /home/${userVars.username}/.local/share/misc/niri-icon.svg -u low -t 3500 "Floating term" "Spawned with title: $ID"
       ''
     ];
   };

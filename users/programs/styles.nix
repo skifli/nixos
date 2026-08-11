@@ -92,6 +92,8 @@ in {
         name = lib.mkDefault commonHostVars.cursor.day.name;
       };
       inherit (commonHostVars) icons fonts;
+
+      # Setting gtk/gnome/qt targets broke stuff so do NOT do that!
     };
 
     # Apply mkDefault for baseline so it layers nicely under Stylix
