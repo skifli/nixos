@@ -92,29 +92,32 @@ in rec {
     # Loop the secret-tool dummy lookup safely without overlapping windows because I think it sometimes times out awaiting user input which is annoying
     (
         # Loop infinitely until explicitly broken
-
         while true; do
+            # 1. Save the previous PID before starting a new one
+            OLD_SECRET_PID=$SECRET_PID
 
-            # Fire off secret-tool in the bg
+            # 2. Fire off the new secret-tool prompt in the background
             secret-tool lookup xdg:schema org.freedesktop.Secret.Generic </dev/null >/dev/null 2>&1 &
             SECRET_PID=$!
 
-            # Give the prompt window 30 seconds of screen time
+            # 3. IMMEDIATELY kill the old prompt if it exists
+            if [ -n "$OLD_SECRET_PID" ]; then
+                kill $OLD_SECRET_PID 2>/dev/null
+            fi
+
+            # 4. Give the new prompt window 30 seconds of screen time
             sleep 30
 
-            # Check if the process died on its own (meaning it successfully unlocked)
+            # 5. Check if the current process died on its own (successful unlock)
             if ! kill -0 $SECRET_PID 2>/dev/null; then
-                break # Exit the loop immediately, the keyring is unlocked :)
+                break # Exit the loop immediately, keyring is unlocked
             fi
 
-            # Double check: Did the user unlock it right as sleep ended?
-            # If busctl says false, do NOT kill it, just break out.
-            if [ "$(busctl --user get-property org.freedesktop.secrets /org/freedesktop/secrets/aliases/default org.freedesktop.Secret.Collection Locked 2>/dev/null | awk '{print $2}')" = "false" ]; then
-                break
+            # 6. Double check DBus lock status before killing
+            IS_LOCKED=$(busctl --user get-property org.freedesktop.secrets /org/freedesktop/secrets/aliases/default org.freedesktop.Secret.Collection Locked 2>/dev/null | awk '{print $2}')
+            if [ "$IS_LOCKED" = "false" ]; then
+                break # Keyring is unlocked, exit loop
             fi
-
-            # If it's still alive, the keyring is still locked. Kill it to refresh the prompt.
-            kill $SECRET_PID 2>/dev/null
         done
     ) & disown
 
