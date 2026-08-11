@@ -295,7 +295,7 @@ in rec {
           ;; 2 - hold timeout (unit: ms)
           ;; Tap Timeout: 200ms (Double-tap to repeat spaces)
           ;; Hold Timeout: 300ms (Hold to trigger mouse layer)
-          spc (tap-hold-press 200 300 spc (layer-toggle mouse))
+          spc (tap-hold-release 200 300 spc (layer-toggle mouse))
           zmin (multi lctl eql)
           zmout (multi lctl min)
         )
