@@ -51,12 +51,11 @@
         unzip
       ];
 
-      activation.setupDolphinrc = lib.hm.dag.entryAfter ["writeBoundary"] ''
-                TARGET_FILE="${config.xdg.configHome}/dolphinrc"
-
-                if [ ! -f "$TARGET_FILE" ]; then
-                  mkdir -p "$(dirname "$TARGET_FILE")"
-                  cat << 'EOF' > "$TARGET_FILE"
+      activation.setupDolphinrc = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        TARGET_FILE="${config.xdg.configHome}/dolphinrc"
+        mkdir -p "$(dirname "$TARGET_FILE")"
+        cat << 'EOF' > "$TARGET_FILE"
+        [MainWindow]
         MenuBar=Disabled
 
         [General]
@@ -65,9 +64,6 @@
         [KFileDialog Settings]
         Places Icons Auto-resize=true
         Places Icons Static Size=0
-
-        [MainWindow]
-        MenuBar=Disabled
 
         [PreviewSettings]
         EnableRemoteFolderThumbnail=true
@@ -79,9 +75,7 @@
 
         [UiSettings]
         ColorScheme=default
-
         EOF
-                fi
       '';
     };
 
