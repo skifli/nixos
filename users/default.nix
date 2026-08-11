@@ -4,7 +4,20 @@
   pkgs,
   usersVars,
   ...
-}: {
+}: let
+  /*
+  Aug 11 14:48:41 lyra systemd[2123]: Starting Xdg Desktop Portal For KDE...
+  Aug 11 14:48:41 lyra systemd[2123]: Started Xdg Desktop Portal For KDE.
+  Aug 11 14:48:41 lyra xdg-desktop-portal-kde[18916]: QQmlApplicationEngine failed to load component
+  Aug 11 14:48:41 lyra xdg-desktop-portal-kde[18916]: qrc:/qt/qml/org/kde/xdgdesktopportal/AppChooserDialog.qml: module "kvantum" is not installed
+  Aug 11 14:48:43 lyra systemd-coredump[18922]: [🡕] Process 18916 (.xdg-desktop-po) of user 1000 dumped core.
+  */
+  xdg-desktop-portal-kde = pkgs.kdePackages.xdg-desktop-portal-kde.overrideAttrs (oldAttrs: {
+    qtWrapperArgs = (oldAttrs.qtWrapperArgs or []) ++ [
+      "--prefix" "QML2_IMPORT_PATH" ":" "${pkgs.kdePackages.qtstyleplugin-kvantum}/lib/qt-6/qml"
+    ];
+  });
+in {
   imports = [
     inputs.home-manager.nixosModules.home-manager
   ];
@@ -205,10 +218,10 @@
         };
       };
 
-      extraPortals = with pkgs; [
-        kdePackages.xdg-desktop-portal-kde
-        xdg-desktop-portal-gnome
-        xdg-desktop-portal-gtk # Default fallback portal for Niri
+      extraPortals = [
+        (xdg-desktop-portal-kde)
+        pkgs.xdg-desktop-portal-gnome
+        pkgs.xdg-desktop-portal-gtk # Default fallback portal for Niri
       ];
     };
 
@@ -231,6 +244,11 @@
     xdg-desktop-portal
     xdg-desktop-portal-gnome
     xdg-desktop-portal-gtk
-    kdePackages.xdg-desktop-portal-kde
+
+    # The core Kvantum manager and themes
+    libsForQt5.qtstyleplugin-kvantum
+    qt6Packages.qtstyleplugin-kvantum 
+  ] ++ [
+    (xdg-desktop-portal-kde)
   ];
 }
