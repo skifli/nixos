@@ -88,7 +88,35 @@ in rec {
     # As all keyring dependent applications are not open yet, the gcr prompt will not show / automatically hide. So, this prompts it with dummy values to cause it to prompt the user via the GUI first. Done this early just to give it as much time to spawn the GUI.
     # Do as early as possible though to give time for the GUI to exist
     # And redirect stdin to /dev/null to avoid it blocking the script if it prompts for input (which is probably why something still hung all my startup stuff...)
-    ( secret-tool lookup xdg:schema org.freedesktop.Secret.Generic </dev/null >/dev/null 2>&1 & )
+
+    # Loop the secret-tool dummy lookup safely without overlapping windows because I think it sometimes times out awaiting user input which is annoying
+    (
+        # Loop infinitely until explicitly broken
+
+        while true; do
+
+            # Fire off secret-tool in the bg
+            secret-tool lookup xdg:schema org.freedesktop.Secret.Generic </dev/null >/dev/null 2>&1 &
+            SECRET_PID=$!
+            
+            # Give the prompt window 30 seconds of screen time
+            sleep 30
+            
+            # Check if the process died on its own (meaning it successfully unlocked)
+            if ! kill -0 $SECRET_PID 2>/dev/null; then
+                break # Exit the loop immediately, the keyring is unlocked :)
+            fi
+
+            # Double check: Did the user unlock it right as sleep ended? 
+            # If busctl says false, do NOT kill it, just break out.
+            if [ "$(busctl --user get-property org.freedesktop.secrets /org/freedesktop/secrets/aliases/default org.freedesktop.Secret.Collection Locked 2>/dev/null | awk '{print $2}')" = "false" ]; then
+                break
+            fi
+            
+            # If it's still alive, the keyring is still locked. Kill it to refresh the prompt.
+            kill $SECRET_PID 2>/dev/null
+        done
+    ) & disown
 
     # Sys-tray apps that don't need keyring unlock
     kdeconnect-indicator & disown
