@@ -28,12 +28,6 @@ in
         color = "rgba(0, 0, 0, 0.5)";
       };
     }
-    # Block gcr-prompter from screen recordings
-    {
-      match._props.app-id._raw = ''r#"(?i)gcr-prompter"#'';
-      block-out-from = "screen-capture";
-    }
-
     # Terminal background blur & open maximized
     {
       match._props.app-id._raw = ''r#"(?i)${userVars.programs.terminal}"#'';
