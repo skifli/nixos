@@ -30,6 +30,12 @@ in {
     };
   };
 
+  # Used to be in home above only, here as well just in case
+  environment.sessionVariables = {
+    XDG_CURRENT_DESKTOP = "niri";
+    XDG_SESSION_DESKTOP = "niri";
+  };
+
   # NixOS-level configuration
   environment.systemPackages = [
     pkgs.niri
@@ -62,7 +68,7 @@ in {
         niri = {
           prettyName = "Niri";
           comment = "Niri compositor managed by UWSM";
-          binPath = "/run/current-system/sw/bin/niri-session";
+          binPath = "${pkgs.niri}/bin/niri-session";
         };
       };
     };
