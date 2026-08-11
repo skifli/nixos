@@ -62,7 +62,7 @@ in {
     };
 
     # Apply mkDefault for baseline so it layers nicely under Stylix
-    gtk = {enable = true;} // (lib.modules.mapAttrsRecursive (_: lib.mkDefault) lightGtkConfigRaw);
+    gtk = {enable = true;} // (lib.mapAttrsRecursive (_: lib.mkDefault) lightGtkConfigRaw);
 
     dconf.settings = {
       "org/gnome/desktop/interface" = lib.mapAttrs (_: lib.mkDefault) lightDconfInterfaceRaw;
@@ -159,7 +159,7 @@ in {
 
       home-manager.users.${userVars.username} = {
         # Explicitly apply mkForce
-        gtk = lib.modules.mapAttrsRecursive (_: lib.mkForce) lightGtkConfigRaw;
+        gtk = lib.mapAttrsRecursive (_: lib.mkForce) lightGtkConfigRaw;
 
         dconf.settings = {
           "org/gnome/desktop/interface" = lib.mapAttrs (_: lib.mkForce) lightDconfInterfaceRaw;
@@ -177,7 +177,7 @@ in {
 
       home-manager.users.${userVars.username} = {
         # Explicitly apply mkForce
-        gtk = lib.modules.mapAttrsRecursive (_: lib.mkForce) darkGtkConfigRaw;
+        gtk = lib.mapAttrsRecursive (_: lib.mkForce) darkGtkConfigRaw;
 
         dconf.settings = {
           "org/gnome/desktop/interface" = lib.mapAttrs (_: lib.mkForce) darkDconfInterfaceRaw;
