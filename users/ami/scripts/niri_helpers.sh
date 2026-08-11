@@ -9,6 +9,7 @@ export MON_2="DP-1"
 
 STATE_DIR="$HOME/.cache/niri-layouts"
 STATE_FILE="$STATE_DIR/last_layout"
+FLOAT_STATE_DIR="$HOME/.local/state/nirius-floating"
 
 fetch_windows() {
     WINDOWS_JSON=$(niri msg --json windows)
@@ -49,6 +50,18 @@ send_to_scratchpad() {
 
     # Only toggle if the window EXISTS AND is NOT already in the scratchpad
     if window_exists "$match_key" "$match_val" && ! is_in_scratchpad "$match_key" "$match_val"; then
+        # Save floating/tiled state before parking
+        fetch_windows
+        local win_id
+        win_id=$(echo "$WINDOWS_JSON" | jq -r ".[] | select(.$match_key != null) | select(.$match_key | ascii_downcase | contains(\"${match_val,,}\")) | .id" | head -n 1)
+
+        if [ -n "$win_id" ]; then
+            local is_floating
+            is_floating=$(echo "$WINDOWS_JSON" | jq -r ".[] | select(.id == $win_id) | .is_floating")
+            mkdir -p "$FLOAT_STATE_DIR"
+            echo "$is_floating" > "$FLOAT_STATE_DIR/$win_id"
+        fi
+
         local attempts=0
         local max_attempts=5
 
@@ -84,10 +97,29 @@ restore_from_scratchpad() {
             nirius scratchpad-toggle -t "$match_val" || status=$?
         fi
 
-        # Send notification only if nirius succeeded
+        # Send notification & restore tiled state if nirius succeeded
         if [ "$status" -eq 0 ]; then
             notify-send -e -a niri -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 \
                 "Scratchpad restore" "Restored window with $match_key: $match_val from scratchpad"
+
+            sleep 0.05 # Just in case
+
+            fetch_windows
+            local win_id
+            win_id=$(echo "$WINDOWS_JSON" | jq -r ".[] | select(.$match_key != null) | select(.$match_key | ascii_downcase | contains(\"${match_val,,}\")) | .id" | head -n 1)
+
+            if [ -n "$win_id" ] && [ -f "$FLOAT_STATE_DIR/$win_id" ]; then
+                local was_float
+                was_float=$(cat "$FLOAT_STATE_DIR/$win_id")
+                local is_now_float
+                is_now_float=$(echo "$WINDOWS_JSON" | jq -r ".[] | select(.id == $win_id) | .is_floating")
+
+                if [ "$was_float" = "false" ] && [ "$is_now_float" = "true" ]; then
+                    niri msg action focus-window --id "$win_id"
+                    niri msg action toggle-window-floating
+                fi
+                rm -f "$FLOAT_STATE_DIR/$win_id"
+            fi
         fi
     fi
 }
