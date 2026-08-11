@@ -72,7 +72,14 @@ in {
   environment.sessionVariables = {
     # Forces applications to bypass the portal lookup, instead reading raw gsettings.
     ADW_DISABLE_PORTAL = "1"; # Without this Anytype would not work...
+
     GTK_THEME = lib.mkDefault commonHostVars.theme.gtk.dayName;
+  };
+
+  # Enable Qt styling and set the platform theme platform
+  qt = {
+    enable = true;
+    platformTheme = commonHostVars.theme.qt.platform; # Automatically sets QT_QPA_PLATFORMTHEME which without means Dolphin in dark mode is funky with black text on a black bg...
   };
 
   home-manager.users.${userVars.username} = {
@@ -85,6 +92,16 @@ in {
         name = lib.mkDefault commonHostVars.cursor.day.name;
       };
       inherit (commonHostVars) icons fonts;
+
+      targets = {
+        gnome.enable = true;
+        gtk.enable = true;
+
+        qt = {
+          enable = true;
+          platform = commonHostVars.theme.qt.platform;
+        };
+      };
     };
 
     # Apply mkDefault for baseline so it layers nicely under Stylix
