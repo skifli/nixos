@@ -113,9 +113,9 @@ in {
         # Injects the desktop schemas and links sys binaries for notifications
         Environment = [
           "XDG_DATA_DIRS=${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}"
-          "PATH=${lib.makeBinPath [ pkgs.libnotify pkgs.coreutils pkgs.bash pkgs.niri pkgs.sudo ]}"
-          "USER=${userVars.username}" 
-          
+          "PATH=${lib.makeBinPath [pkgs.libnotify pkgs.coreutils pkgs.bash pkgs.niri pkgs.sudo]}"
+          "USER=${userVars.username}"
+
           "DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/%U/bus"
           "WAYLAND_DISPLAY=wayland-0"
           "XDG_RUNTIME_DIR=/run/user/%U"
