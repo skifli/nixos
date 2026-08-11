@@ -51,7 +51,7 @@
         unzip
       ];
 
-      activation.setupDolphinrc = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      activation.setupDolphinrc = lib.hm.dag.entryAfter ["writeBoundary"] ''
         TARGET_FILE="${config.xdg.configHome}/dolphinrc"
         mkdir -p "$(dirname "$TARGET_FILE")"
         cat << 'EOF' > "$TARGET_FILE"
