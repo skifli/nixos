@@ -49,7 +49,7 @@
 
     qt = {
       platform = "qt5ct";
-    }
+    };
   };
   shellAliases = {
     nup = "nh os switch . -H";
