@@ -457,7 +457,7 @@
     spawn = ["wayle" "media" "previous"];
   };
 
-# NIRIUS - SCRATCHPAD
+  # NIRIUS - SCRATCHPAD
   "Mod+P" = {
     _props = {
       hotkey-overlay-title = "Park/unpark window (scratchpad toggle)";
