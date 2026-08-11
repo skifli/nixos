@@ -38,6 +38,19 @@
       then ["ghostty" "+new-window"]
       else [userVars.programs.terminal];
   };
+  "Mod+Shift+Return" = {
+    _props.allow-inhibiting = false;
+    spawn = [
+      "sh" "-c"
+      ''
+        ${if userVars.programs.terminal == "ghostty" then "ghostty +new-window" else userVars.programs.terminal} &
+        sleep 0.05
+        niri msg action toggle-window-floating
+        niri msg action set-window-height 40%
+        niri msg action set-column-width 40%
+      ''
+    ];
+  };
   "Mod+F" = {
     _props.allow-inhibiting = false;
     spawn = [userVars.programs.explorer-gui];
