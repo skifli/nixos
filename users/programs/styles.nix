@@ -69,6 +69,12 @@
     gtk4.extraConfig = lib.mapAttrs (_: lib.mkForce) cfg.gtk4.extraConfig;
   };
 in {
+  environment.sessionVariables = {
+    # Forces applications to bypass the portal lookup, instead reading raw gsettings.
+    ADW_DISABLE_PORTAL = "1"; # Without this Anytype would not work...
+    GTK_THEME = lib.mkDefault commonHostVars.theme.gtk.dayName;
+  };
+
   home-manager.users.${userVars.username} = {
     stylix = {
       enable = true;
@@ -171,11 +177,23 @@ in {
     };
   };
 
+  /*
+  The specialisations change the following important things:
+  * GTK_THEME environment variable
+  * Home-manager Stylix base16 scheme and cursor name
+  * Home-manager GTK configuration
+  * Home-manager dconf configuration
+  */
+
   # Specialisations generate nested configurations under /run/current-system/specialisation
   specialisation = {
     day.configuration = {pkgs, ...}: {
       system.nixos.tags = ["day"];
       environment.etc."specialisation".text = "day";
+
+      environment.sessionVariables = {
+        GTK_THEME = lib.mkForce commonHostVars.theme.gtk.dayName;
+      };
 
       home-manager.users.${userVars.username} = {
         # Explicitly apply mkForce
@@ -194,6 +212,10 @@ in {
     night.configuration = {pkgs, ...}: {
       system.nixos.tags = ["night"];
       environment.etc."specialisation".text = "night";
+
+      environment.sessionVariables = {
+        GTK_THEME = lib.mkForce commonHostVars.theme.gtk.nightName;
+      };
 
       home-manager.users.${userVars.username} = {
         # Explicitly apply mkForce
