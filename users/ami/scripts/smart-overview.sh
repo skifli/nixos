@@ -17,16 +17,20 @@ if [ "$WORKSPACES" = "[]" ] || [ -z "$WORKSPACES" ]; then
     exit 1
 fi
 
-# 3. Get ze middle active workspace per monitor w/ JQ
+# 3. Get target workspaces, making sure the active/focused one is sorted last
 TARGETS=$(echo "$WORKSPACES" | jq -r '
-  group_by(.output) | .[] | 
-  sort_by(.idx) | 
-  map(select(.active_window_id != null)) | 
-  select(length > 0) | 
-  .[length / 2 | floor].id
+  [
+    group_by(.output) | .[] | 
+    sort_by(.idx) | 
+    map(select(.active_window_id != null)) | 
+    select(length > 0) | 
+    .[length / 2 | floor]
+  ] 
+  | sort_by(.is_focused // false) 
+  | .[].id
 ')
 
-# 4. Using nirius, move to the target workspaces (requires there to be a window on said workspace, which I guess is a bit annoying, but whatever, as if you have unused workspaces between used workspaces what are you even doing :p)
+# 4. Focus workspaces (inactive monitors first, active monitor last)
 if [ -n "$TARGETS" ]; then
     for WS_ID in $TARGETS; do
         nirius focus --workspace-id "$WS_ID" 2>/dev/null || true
