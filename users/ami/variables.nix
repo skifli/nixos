@@ -89,35 +89,37 @@ in rec {
     # Do as early as possible though to give time for the GUI to exist
     # And redirect stdin to /dev/null to avoid it blocking the script if it prompts for input (which is probably why something still hung all my startup stuff...)
 
-    # Loop the secret-tool dummy lookup safely without overlapping windows because I think it sometimes times out awaiting user input which is annoying
+    # Loop the secret-tool dummy lookup safely without overlapping windows
     (
-        # Loop infinitely until explicitly broken
         while true; do
-            # 1. Save the previous PID before starting a new one
-            OLD_SECRET_PID=$SECRET_PID
+            # 1. Always check lock status FIRST before spawning
+            IS_LOCKED=$(busctl --user get-property org.freedesktop.secrets /org/freedesktop/secrets/aliases/default org.freedesktop.Secret.Collection Locked 2>/dev/null | awk '{print $2}')
+            if [ "$IS_LOCKED" = "false" ]; then
+                break # Keyring is unlocked, exit loop!
+            fi
 
-            # 2. Fire off the new secret-tool prompt in the background
+            # 2. Fire off the prompt in the background
             secret-tool lookup xdg:schema org.freedesktop.Secret.Generic </dev/null >/dev/null 2>&1 &
             SECRET_PID=$!
 
-            # 3. IMMEDIATELY kill the old prompt if it exists
-            if [ -n "$OLD_SECRET_PID" ]; then
-                kill $OLD_SECRET_PID 2>/dev/null
-            fi
+            # 3. Poll lock status every second for up to 25 seconds
+            for i in $(seq 1 25); do
+                sleep 1
+                IS_LOCKED=$(busctl --user get-property org.freedesktop.secrets /org/freedesktop/secrets/aliases/default org.freedesktop.Secret.Collection Locked 2>/dev/null | awk '{print $2}')
+                if [ "$IS_LOCKED" = "false" ]; then
+                    kill $SECRET_PID 2>/dev/null
+                    break 2 # Break out of the main while-loop
+                fi
 
-            # 4. Give the new prompt window 30 seconds of screen time
-            sleep 30
+                # If secret-tool died/timed-out early on its own, break the inner loop to spawn a new one
+                if ! kill -0 $SECRET_PID 2>/dev/null; then
+                    break
+                fi
+            done
 
-            # 5. Check if the current process died on its own (successful unlock)
-            if ! kill -0 $SECRET_PID 2>/dev/null; then
-                break # Exit the loop immediately, keyring is unlocked
-            fi
-
-            # 6. Double check DBus lock status before killing
-            IS_LOCKED=$(busctl --user get-property org.freedesktop.secrets /org/freedesktop/secrets/aliases/default org.freedesktop.Secret.Collection Locked 2>/dev/null | awk '{print $2}')
-            if [ "$IS_LOCKED" = "false" ]; then
-                break # Keyring is unlocked, exit loop
-            fi
+            # 4. Cleanup old PID if it's still alive after 25 seconds before restarting loop
+            kill $SECRET_PID 2>/dev/null
+            wait $SECRET_PID 2>/dev/null
         done
     ) & disown
 
