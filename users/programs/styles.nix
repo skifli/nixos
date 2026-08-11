@@ -117,6 +117,13 @@ in {
       };
       Service = {
         Type = "oneshot";
+        
+        # Injects the desktop schemas and links sys binaries for notifications
+        Environment = [
+          "XDG_DATA_DIRS=${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}"
+          "PATH=${lib.makeBinPath [ pkgs.libnotify pkgs.coreutils ]}"
+        ];
+
         ExecStart = let
           lat = toString hostVars.latitude;
           lonVal = toString (
