@@ -13,9 +13,14 @@
   Aug 11 14:48:43 lyra systemd-coredump[18922]: [🡕] Process 18916 (.xdg-desktop-po) of user 1000 dumped core.
   */
   xdg-desktop-portal-kde = pkgs.kdePackages.xdg-desktop-portal-kde.overrideAttrs (oldAttrs: {
-    qtWrapperArgs = (oldAttrs.qtWrapperArgs or []) ++ [
-      "--prefix" "QML2_IMPORT_PATH" ":" "${pkgs.kdePackages.qtstyleplugin-kvantum}/lib/qt-6/qml"
-    ];
+    qtWrapperArgs =
+      (oldAttrs.qtWrapperArgs or [])
+      ++ [
+        "--prefix"
+        "QML2_IMPORT_PATH"
+        ":"
+        "${pkgs.kdePackages.qtstyleplugin-kvantum}/lib/qt-6/qml"
+      ];
   });
 in {
   imports = [
@@ -219,7 +224,7 @@ in {
       };
 
       extraPortals = [
-        (xdg-desktop-portal-kde)
+        xdg-desktop-portal-kde
         pkgs.xdg-desktop-portal-gnome
         pkgs.xdg-desktop-portal-gtk # Default fallback portal for Niri
       ];
@@ -235,20 +240,22 @@ in {
     wants = ["xdg-desktop-portal-gnome.service"];
   };
 
-  environment.systemPackages = with pkgs; [
-    nix-output-monitor
-    nvd
+  environment.systemPackages = with pkgs;
+    [
+      nix-output-monitor
+      nvd
 
-    xdg-utils
+      xdg-utils
 
-    xdg-desktop-portal
-    xdg-desktop-portal-gnome
-    xdg-desktop-portal-gtk
+      xdg-desktop-portal
+      xdg-desktop-portal-gnome
+      xdg-desktop-portal-gtk
 
-    # The core Kvantum manager and themes
-    libsForQt5.qtstyleplugin-kvantum
-    qt6Packages.qtstyleplugin-kvantum 
-  ] ++ [
-    (xdg-desktop-portal-kde)
-  ];
+      # The core Kvantum manager and themes
+      libsForQt5.qtstyleplugin-kvantum
+      qt6Packages.qtstyleplugin-kvantum
+    ]
+    ++ [
+      xdg-desktop-portal-kde
+    ];
 }
