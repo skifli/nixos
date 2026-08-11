@@ -62,7 +62,7 @@ in {
     };
 
     # Apply mkDefault for baseline so it layers nicely under Stylix
-    gtk = { enable = true; } // (lib.modules.mapAttrsRecursive (_: lib.mkDefault) lightGtkConfigRaw);
+    gtk = {enable = true;} // (lib.modules.mapAttrsRecursive (_: lib.mkDefault) lightGtkConfigRaw);
 
     dconf.settings = {
       "org/gnome/desktop/interface" = lib.mapAttrs (_: lib.mkDefault) lightDconfInterfaceRaw;
@@ -153,14 +153,14 @@ in {
 
   # Specialisations generate nested configurations under /run/current-system/specialisation
   specialisation = {
-    day.configuration = { pkgs, ... }: {
+    day.configuration = {pkgs, ...}: {
       system.nixos.tags = ["day"];
       environment.etc."specialisation".text = "day";
 
       home-manager.users.${userVars.username} = {
         # Explicitly apply mkForce
         gtk = lib.modules.mapAttrsRecursive (_: lib.mkForce) lightGtkConfigRaw;
-        
+
         dconf.settings = {
           "org/gnome/desktop/interface" = lib.mapAttrs (_: lib.mkForce) lightDconfInterfaceRaw;
         };
@@ -171,14 +171,14 @@ in {
       };
     };
 
-    night.configuration = { pkgs, ... }: {
+    night.configuration = {pkgs, ...}: {
       system.nixos.tags = ["night"];
       environment.etc."specialisation".text = "night";
 
       home-manager.users.${userVars.username} = {
         # Explicitly apply mkForce
         gtk = lib.modules.mapAttrsRecursive (_: lib.mkForce) darkGtkConfigRaw;
-        
+
         dconf.settings = {
           "org/gnome/desktop/interface" = lib.mapAttrs (_: lib.mkForce) darkDconfInterfaceRaw;
         };
@@ -189,7 +189,7 @@ in {
       };
     };
   };
-  
+
   # Grant NOPASSWD access for the user to trigger the compiled specialisation switchers
   security.sudo.extraRules = [
     {
