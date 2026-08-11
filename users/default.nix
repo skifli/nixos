@@ -223,7 +223,7 @@ in {
 
           # Explicitly route URI/link opening through the GTK portal backend
           # Otherwise stuff want kaboom :(
-          "org.freedesktop.impl.portal.OpenURI" = [ "gtk" ];
+          "org.freedesktop.impl.portal.OpenURI" = ["gtk"];
         };
       };
 
