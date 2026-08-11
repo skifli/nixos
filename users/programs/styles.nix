@@ -23,9 +23,14 @@
     };
   };
 
-  lightDconfInterfaceRaw = {
-    color-scheme = "default";
-    gtk-theme = commonHostVars.theme.gtk.dayName;
+  lightDconfRaw = {
+    "org/gnome/desktop/interface" = {
+      color-scheme = "default";
+      gtk-theme = commonHostVars.theme.gtk.dayName;
+    };
+    "org/gnome/desktop/a11y/interface" = {
+      high-contrast = false;
+    };
   };
 
   # Centralized dark configuration reading from host vars
@@ -44,9 +49,15 @@
     };
   };
 
-  darkDconfInterfaceRaw = {
-    color-scheme = "prefer-dark";
-    gtk-theme = commonHostVars.theme.gtk.nightName;
+  darkDconfRaw = {
+    "org/gnome/desktop/interface" = {
+      color-scheme = "prefer-dark";
+      gtk-theme = commonHostVars.theme.gtk.nightName;
+    };
+    "org/gnome/desktop/a11y/interface" = {
+      # For some godforsaken reason this is the only thing that makes Anytype activate its dark mode. NOTHING else that I've set here does! Arggghhh!! At least it works now, but I swear this is going to cause some adverse affects later that will take me forever to trace back to this damned variable ;-;.
+      high-contrast = true;
+    };
   };
 
   applyDefault = cfg: {
@@ -76,6 +87,11 @@ in {
     GTK_THEME = lib.mkDefault commonHostVars.theme.gtk.dayName;
   };
 
+  environment.systemPackages = with pkgs; [
+    # For debugging
+    glib
+  ];
+
   # Enable Qt styling and set the platform theme platform
   qt = {
     enable = true;
@@ -99,9 +115,7 @@ in {
     # Apply mkDefault for baseline so it layers nicely under Stylix
     gtk = {enable = true;} // (applyDefault lightGtkConfigRaw);
 
-    dconf.settings = {
-      "org/gnome/desktop/interface" = lib.mapAttrs (_: lib.mkDefault) lightDconfInterfaceRaw;
-    };
+    dconf.settings = lib.mapAttrsRecursive (_: lib.mkDefault) lightDconfRaw;
 
     systemd.user.services.auto-theme-check = {
       Unit = {
@@ -210,9 +224,8 @@ in {
         # Explicitly apply mkForce
         gtk = applyForce lightGtkConfigRaw;
 
-        dconf.settings = {
-          "org/gnome/desktop/interface" = lib.mapAttrs (_: lib.mkForce) lightDconfInterfaceRaw;
-        };
+        dconf.settings = lib.mapAttrsRecursive (_: lib.mkForce) lightDconfRaw;
+
         stylix = {
           base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.day}.yaml";
           cursor.name = commonHostVars.cursor.day.name;
@@ -232,9 +245,8 @@ in {
         # Explicitly apply mkForce
         gtk = applyForce darkGtkConfigRaw;
 
-        dconf.settings = {
-          "org/gnome/desktop/interface" = lib.mapAttrs (_: lib.mkForce) darkDconfInterfaceRaw;
-        };
+        dconf.settings = lib.mapAttrsRecursive (_: lib.mkForce) darkDconfRaw;
+
         stylix = {
           base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.night}.yaml";
           cursor.name = commonHostVars.cursor.night.name;
