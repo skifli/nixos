@@ -98,21 +98,21 @@ in rec {
             # Fire off secret-tool in the bg
             secret-tool lookup xdg:schema org.freedesktop.Secret.Generic </dev/null >/dev/null 2>&1 &
             SECRET_PID=$!
-            
+
             # Give the prompt window 30 seconds of screen time
             sleep 30
-            
+
             # Check if the process died on its own (meaning it successfully unlocked)
             if ! kill -0 $SECRET_PID 2>/dev/null; then
                 break # Exit the loop immediately, the keyring is unlocked :)
             fi
 
-            # Double check: Did the user unlock it right as sleep ended? 
+            # Double check: Did the user unlock it right as sleep ended?
             # If busctl says false, do NOT kill it, just break out.
             if [ "$(busctl --user get-property org.freedesktop.secrets /org/freedesktop/secrets/aliases/default org.freedesktop.Secret.Collection Locked 2>/dev/null | awk '{print $2}')" = "false" ]; then
                 break
             fi
-            
+
             # If it's still alive, the keyring is still locked. Kill it to refresh the prompt.
             kill $SECRET_PID 2>/dev/null
         done
