@@ -48,6 +48,26 @@
     color-scheme = "prefer-dark";
     gtk-theme = commonHostVars.theme.gtk.nightName;
   };
+
+  applyDefault = cfg: {
+    iconTheme.name = lib.mkDefault cfg.iconTheme.name;
+    theme = {
+      name = lib.mkDefault cfg.theme.name;
+      package = lib.mkDefault cfg.theme.package;
+    };
+    gtk3.extraConfig = lib.mapAttrs (_: lib.mkDefault) cfg.gtk3.extraConfig;
+    gtk4.extraConfig = lib.mapAttrs (_: lib.mkDefault) cfg.gtk4.extraConfig;
+  };
+
+  applyForce = cfg: {
+    iconTheme.name = lib.mkForce cfg.iconTheme.name;
+    theme = {
+      name = lib.mkForce cfg.theme.name;
+      package = lib.mkForce cfg.theme.package;
+    };
+    gtk3.extraConfig = lib.mapAttrs (_: lib.mkForce) cfg.gtk3.extraConfig;
+    gtk4.extraConfig = lib.mapAttrs (_: lib.mkForce) cfg.gtk4.extraConfig;
+  };
 in {
   home-manager.users.${userVars.username} = {
     stylix = {
@@ -62,7 +82,7 @@ in {
     };
 
     # Apply mkDefault for baseline so it layers nicely under Stylix
-    gtk = {enable = true;} // (lib.mapAttrsRecursive (_: lib.mkDefault) lightGtkConfigRaw);
+    gtk = {enable = true;} // (applyDefault lightGtkConfigRaw);
 
     dconf.settings = {
       "org/gnome/desktop/interface" = lib.mapAttrs (_: lib.mkDefault) lightDconfInterfaceRaw;
@@ -159,7 +179,7 @@ in {
 
       home-manager.users.${userVars.username} = {
         # Explicitly apply mkForce
-        gtk = lib.mapAttrsRecursive (_: lib.mkForce) lightGtkConfigRaw;
+        gtk = applyForce lightGtkConfigRaw;
 
         dconf.settings = {
           "org/gnome/desktop/interface" = lib.mapAttrs (_: lib.mkForce) lightDconfInterfaceRaw;
@@ -177,7 +197,7 @@ in {
 
       home-manager.users.${userVars.username} = {
         # Explicitly apply mkForce
-        gtk = lib.mapAttrsRecursive (_: lib.mkForce) darkGtkConfigRaw;
+        gtk = applyForce darkGtkConfigRaw;
 
         dconf.settings = {
           "org/gnome/desktop/interface" = lib.mapAttrs (_: lib.mkForce) darkDconfInterfaceRaw;
