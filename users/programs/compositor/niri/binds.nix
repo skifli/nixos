@@ -506,7 +506,6 @@
     ];
   };
 
-
   # NIRIUS - FOLLOW MODE
   "Mod+Ctrl+F" = {
     _props = {
@@ -519,7 +518,6 @@
       "nirius toggle-follow-mode && info=$(niri msg -j focused-window | jq -r '\"• \" + (.app_id // \"Unknown app\") + \" — \" + (.title // \"Untitled\") + \"\\nWindow ID: \" + (.id|tostring)') && notify-send -e -a nirius -i /home/${userVars.username}/.local/share/misc/niri-icon.svg -u low -t 3500 'Follow mode' \"$info\""
     ];
   };
-
 
   # NIRIUS - MARKS
   "Mod+T" = {
