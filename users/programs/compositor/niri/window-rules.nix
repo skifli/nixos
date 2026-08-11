@@ -18,14 +18,20 @@ in
       match._props.is-floating = true;
       shadow = {
         on = [];
-        softness = 20;
-        spread = 4;
+        softness = 45;
+        spread = 6;
 
         offset._props = {
           x = 0;
-          y = 4;
+          y = 6;
         };
-        color = "rgba(0, 0, 0, 0.5)";
+        color = "rgba(0, 0, 0, 0.18)";
+      };
+      border = {
+        on = [];
+        width = 1;
+        active-color = "rgba(255, 255, 255, 0.08)";
+        inactive-color = "rgba(255, 255, 255, 0.03)";
       };
     }
     # Terminal background blur & open maximized
