@@ -1,4 +1,5 @@
 {
+  commonHostVars,
   inputs,
   pkgs,
   userVars,
@@ -12,16 +13,6 @@
 
   environment.etc."xdg/menus/applications.menu".source = "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu"; # TODO: REMOVE AFTER https://github.com/NixOS/nixpkgs/issues/409986 IS SOLVED
 
-  # Enable Qt styling and set the platform theme platform
-  qt = {
-    enable = true;
-    platformTheme = "qt5ct"; # Automatically sets QT_QPA_PLATFORMTHEME which without means Dolphin in dark mode is funky with black text on a black bg...
-  };
-
-  environment.sessionVariables = {
-    QT_QPA_PLATFORMTHEME = "qt5ct"; # Why do I have to manually set this...
-  };
-
   home-manager.users.${userVars.username} = {
     config,
     lib,
@@ -29,15 +20,7 @@
   }: {
     home = {
       packages = with pkgs; [
-        (symlinkJoin {
-          name = "dolphin-wrapped";
-          paths = [kdePackages.dolphin];
-          nativeBuildInputs = [pkgs.makeWrapper];
-          postBuild = ''
-            wrapProgram $out/bin/dolphin \
-              --set QT_QPA_PLATFORMTHEME "qt5ct"
-          '';
-        })
+        kdePackages.dolphin
         kdePackages.dolphin-plugins
 
         kdePackages.breeze-icons # For sidebar icons iirc

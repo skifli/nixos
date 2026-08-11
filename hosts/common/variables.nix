@@ -46,6 +46,10 @@
       dayName = "adw-gtk3";
       nightName = "adw-gtk3-dark";
     };
+
+    qt = {
+      platform = "qt5ct";
+    }
   };
   shellAliases = {
     nup = "nh os switch . -H";
