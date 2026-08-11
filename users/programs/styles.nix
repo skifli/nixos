@@ -110,15 +110,10 @@ in {
       Service = {
         Type = "oneshot";
 
-        # Injects the desktop schemas and links sys binaries for notifications
         Environment = [
-          "XDG_DATA_DIRS=${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}"
-          "PATH=${lib.makeBinPath [pkgs.libnotify pkgs.coreutils pkgs.bash pkgs.niri pkgs.sudo]}"
+          "PATH=${lib.makeBinPath [ pkgs.libnotify pkgs.coreutils pkgs.bash pkgs.niri pkgs.sudo ]}"
           "USER=${userVars.username}"
-
-          "DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/%U/bus"
           "WAYLAND_DISPLAY=wayland-0"
-          "XDG_RUNTIME_DIR=/run/user/%U"
         ];
 
         ExecStart = let
@@ -138,6 +133,11 @@ in {
           autoCheckScript = pkgs.writeShellScript "auto-theme-check" ''
             set -euo pipefail
 
+            # Dynamically resolve paths for notifications and desktop commands (like niri workspace transitions)
+            RUN_UID=$(id -u)
+            export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$RUN_UID/bus"
+            export XDG_RUNTIME_DIR="/run/user/$RUN_UID"
+
             # 1. Poll sunwait for solar position
             set +e
             ${sunwaitBin} poll ${lat}N ${lonVal}${lonDir} >/dev/null 2>&1
@@ -154,24 +154,14 @@ in {
               exit 1
             fi
 
-            # 2. Query desktop state instead of using a state file
-            # Returns 'prefer-light', 'prefer-dark', or 'default'
-            CURRENT_SCHEME=$(${pkgs.glib}/bin/gsettings get org.gnome.desktop.interface color-scheme)
+            # 2. Query system specialisation file
+            CURRENT_TAG=$(cat /etc/specialisation 2>/dev/null || echo "day")
 
-            if [ "$WANTED" = "day" ]; then
-              # If we want day but the system is currently dark, we need to switch
-              if [ "$CURRENT_SCHEME" = "'prefer-dark'" ]; then
-                NEED_SWITCH=true
-              else
-                NEED_SWITCH=false
-              fi
+            # Check if active system target matches solar state
+            if [ "$WANTED" != "$CURRENT_TAG" ]; then
+              NEED_SWITCH=true
             else
-              # If we want night but the system is currently light/default, we need to switch
-              if [ "$CURRENT_SCHEME" != "'prefer-dark'" ]; then
-                NEED_SWITCH=true
-              else
-                NEED_SWITCH=false
-              fi
+              NEED_SWITCH=false
             fi
 
             # 3. Trigger switch if states mismatch
