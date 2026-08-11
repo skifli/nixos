@@ -20,7 +20,8 @@ if [ -x "$SWITCH_BIN" ]; then
     sudo "$SWITCH_BIN" test
     
     # Niri workspace layout refresh transitions
-    niri msg action do-screen-transition -d 1000 2>/dev/null || true
+    # niri msg action do-screen-transition -d 1000 2>/dev/null || true
+    # Got annoyed at the screen transition being a bit haphazard and yeah...
     notify-send -e -a "nixos" -i "/home/${USER}/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 5000 "Theme Switcher" "Switched to $TARGET mode"
 else
     notify-send -a "nixos" -i "/home/${USER}/.local/share/misc/nix-snowflake-rainbow.svg" -u normal -t 5000 "Theme Switcher" "Specialisation $TARGET not found"
