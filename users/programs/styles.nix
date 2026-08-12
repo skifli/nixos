@@ -180,12 +180,12 @@ in {
         cursor = {
           package = commonHostVars.cursor.package;
           size = commonHostVars.cursor.size;
+        } // applyDefault {
+          name = commonHostVars.cursor.light.name;
         };
       }
       // applyDefault {
         base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.light}.yaml";
-
-        cursor.name = commonHostVars.cursor.light.name;
 
         # Setting gtk/gnome/qt targets broke stuff so do NOT do that!
       };
