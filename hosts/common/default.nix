@@ -84,7 +84,7 @@ in {
         kernel.sysctl = {
           # Write dirty data to HDD in tiny 64MB/128MB chunks to prevent system freezes
           "vm.dirty_background_bytes" = 67108864; # 64 MB
-          "vm.dirty_bytes" = 134217728;           # 128 MB
+          "vm.dirty_bytes" = 134217728; # 128 MB
 
           # Tell kernel to heavily prefer ZRAM over filesystem page flushing
           "vm.swappiness" = 180;

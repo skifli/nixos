@@ -51,7 +51,7 @@
     {device = "/dev/disk/by-uuid/be10efe9-8020-45f9-aa1c-3fdbe59a56e0";}
   ];
   */
-  swapDevices = lib.mkForce [ ]; # This system has a HDD WHY did I have a swap device lol
+  swapDevices = lib.mkForce []; # This system has a HDD WHY did I have a swap device lol
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's
