@@ -172,22 +172,23 @@ in {
     gtk = {enable = true;} // (applyDefault lightGtkConfigRaw);
     dconf.settings = applyDefault lightDconfRaw;
 
-    stylix = {
-      enable = true;
-      inherit (commonHostVars) icons fonts;
+    stylix =
+      {
+        enable = true;
+        inherit (commonHostVars) icons fonts;
 
-      cursor = {
-        package = commonHostVars.cursor.package;
-        size = commonHostVars.cursor.size;
+        cursor = {
+          package = commonHostVars.cursor.package;
+          size = commonHostVars.cursor.size;
+        };
+      }
+      // applyDefault {
+        base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.light}.yaml";
+
+        cursor.name = commonHostVars.cursor.light.name;
+
+        # Setting gtk/gnome/qt targets broke stuff so do NOT do that!
       };
-
-    } // applyDefault {
-      base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.light}.yaml";
-
-      cursor.name = commonHostVars.cursor.light.name;
-
-      # Setting gtk/gnome/qt targets broke stuff so do NOT do that!
-    };
   };
 
   system.nixos.tags = lib.mkDefault ["light"];
@@ -235,7 +236,7 @@ in {
     };
 
     dark.configuration = {pkgs, ...}: {
-      home-manager.users.${userVars.username} = applyForce  {
+      home-manager.users.${userVars.username} = applyForce {
         gtk = darkGtkConfigRaw;
         dconf.settings = darkDconfRaw;
 
@@ -258,11 +259,12 @@ in {
   security.sudo.extraRules = [
     {
       users = [userVars.username];
-      commands = lib.concatMap (sys:
-        map (mode: {
-          command = "/run/${sys}/specialisation/${mode}/bin/switch-to-configuration";
-          options = ["NOPASSWD"];
-        }) ["dark" "light"]
+      commands = lib.concatMap (
+        sys:
+          map (mode: {
+            command = "/run/${sys}/specialisation/${mode}/bin/switch-to-configuration";
+            options = ["NOPASSWD"];
+          }) ["dark" "light"]
       ) ["booted-system" "current-system"];
     }
   ];
