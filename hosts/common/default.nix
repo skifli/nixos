@@ -20,14 +20,6 @@ let
   };
 
   inherit (usersVarsFile) usersVars; # Get variables for all users enabled for this host
-
-  idleConfig = {
-    CPUWeight = "20"; # Defaults to 100 for all processes. Lower value means lower priority. This is a arbitrary weight integer.
-    CPUQuota = "85%"; # Absolute limit on how much CPU time is granted even if nothing else is going on. This is a percent value.
-    IOWeight = "20"; # IOWeight is much the same as CPUWeight.
-    Slice = "nix-daemon.slice";
-    OOMScoreAdjust = 1000; # If a kernel-level OOM event does occur anyway, strongly prefer killing nix-daemon child processes
-  };
 in {
   config = lib.mkMerge [
     {
@@ -60,16 +52,39 @@ in {
         };
 
         services = {
-          nix-daemon.serviceConfig = idleConfig;
-          nixos-upgrade.serviceConfig = idleConfig;
+          nixos-upgrade.serviceConfig = {
+            CPUWeight = "20"; # Defaults to 100 for all processes. Lower value means lower priority. This is a arbitrary weight integer.
+            CPUQuota = "85%"; # Absolute limit on how much CPU time is granted even if nothing else is going on. This is a percent value.
+            IOWeight = "20"; # IOWeight is much the same as CPUWeight.
+            Slice = "nix-daemon.slice";
+            OOMScoreAdjust = 1000; # If a kernel-level OOM event does occur anyway, strongly prefer killing nix-daemon child processes
+          };
+          nix-daemon.serviceConfig = {
+            CPUWeight = "20";
+            CPUQuota = "70%"; # Lowered slightly from 85% to reserve headroom
+            IOWeight = "10"; # Keep lower than default 100
+            Slice = "nix-daemon.slice";
+            OOMScoreAdjust = 1000;
+            Nice = 15; # Set nice level instead of kernel SCHED_IDLE
+          };
         };
       };
 
       nix = {
-        daemonCPUSchedPolicy = lib.mkForce "idle"; # The idle policy may greatly improve responsiveness of a system performing expensive builds.
-        daemonIOSchedClass = lib.mkForce "idle";
+        daemonCPUSchedPolicy = lib.mkForce "batch";
+        daemonIOSchedClass = lib.mkForce "idle"; # The idle policy may greatly improve responsiveness of a system performing expensive builds.
         daemonIOSchedPriority = lib.mkForce 7; # N/A: With "idle", priorities are not used in scheduling decisions. Range 0 (high) to 7 (low). Default 4.
       };
+    })
+
+    (lib.mkIf hostVars.optimiseForHdd {
+      boot.kernelParams = [ "scsi_mod.use_blk_mq=1" ];
+
+      services.udev.extraRules = ''
+        # Set BFQ scheduler for mechanical HDDs only (rotational == 1)
+        # ATTR{queue/rotational}=="1" is a backup just in case because this is behind a host flag but whatever
+        ACTION=="add|change", KERNEL=="sd[a-z]*|mmcblk[0-9]*", ATTR{queue/rotational}=="1", ATTR{queue/scheduler}="bfq"
+      '';
     })
   ];
 

@@ -102,12 +102,6 @@ in {
     libinput
   ];
 
-  users.users.${userVars.username} = {
-    extraGroups = [
-      "input"
-    ];
-  };
-
   home-manager.users.${userVars.username} = {
     xdg.configFile."activitywatch/aw-notify/config.toml".text = ''
       hourly_checkins = true

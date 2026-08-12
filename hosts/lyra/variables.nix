@@ -4,6 +4,13 @@
 
   optimiseBoot = true;
   optimiseBuilds = true;
+  optimiseForHdd = true;
+
+  # nixOS config building-related settings
+  buildSettings = {
+    maxJobs = 2;
+    cores = 2;
+  };
 
   # Host configuration
   cpuFreqGovernor = "performance";
