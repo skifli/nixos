@@ -119,10 +119,13 @@ in {
 
     systemd.user.services.auto-theme-check = {
       Unit = {
-        Description = "Check solar position and switch NixOS theme specialisation";
+        Description = "Solar position watcher and theme switcher daemon";
+        # Ensure it restarts automatically if interrupted or resumed from sleep
       };
       Service = {
-        Type = "oneshot";
+        Type = "simple";
+        Restart = "always";
+        RestartSec = "5s";
 
         Environment = [
           "PATH=/run/wrappers/bin:${lib.makeBinPath [pkgs.libnotify pkgs.coreutils pkgs.bash pkgs.niri]}"
@@ -160,52 +163,52 @@ in {
             export XDG_RUNTIME_DIR="/run/user/$RUN_UID"
             export WAYLAND_DISPLAY="''${WAYLAND_DISPLAY:-wayland-1}"
 
-            # 1. Poll sunwait for solar position
-            set +e
-            ${sunwaitBin} poll ${latVal}${latDir} ${lonVal}${lonDir} >/dev/null 2>&1
-            STATUS=$?
-            set -e
+            while true; do
+              # 1. Poll sunwait for solar position
+              set +e
+              ${sunwaitBin} poll ${latVal}${latDir} ${lonVal}${lonDir} >/dev/null 2>&1
+              STATUS=$?
+              set -e
 
-            # 2: It is DAY or twilight. 3: It is NIGHT. 1: It is an Error.
-            if [ $STATUS -eq 2 ]; then
-              WANTED="day"
-            elif [ $STATUS -eq 3 ]; then
-              WANTED="night"
-            else
-              echo "Sunwait error code: $STATUS" >&2
-              exit 1
-            fi
+              # 2: It is DAY or twilight. 3: It is NIGHT. 1: It is an Error.
+              if [ $STATUS -eq 2 ]; then
+                WANTED="day"
+              elif [ $STATUS -eq 3 ]; then
+                WANTED="night"
+              else
+                echo "Sunwait error code: $STATUS" >&2
+                sleep 60
+                continue
+              fi
 
-            # 2. Query system specialisation file
-            CURRENT_TAG=$(cat /etc/specialisation 2>/dev/null || echo "day")
+              # 2. Query system specialisation file
+              CURRENT_TAG=$(cat /etc/specialisation 2>/dev/null || echo "")
 
-            # Check if active system target matches solar state
-            if [ "$WANTED" != "$CURRENT_TAG" ]; then
-              NEED_SWITCH=true
-            else
-              NEED_SWITCH=false
-            fi
+              # 3. Trigger switch if states mismatch
+              if [ "$WANTED" != "$CURRENT_TAG" ]; then
+                notify-send -e -a "nixos" -i "/home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 5000 "Auto-theme switcher" "Triggering theme switch" || true
+                ${switcherBin}
+              fi
 
-            # 3. Trigger switch if states mismatch
-            if [ "$NEED_SWITCH" = true ]; then
-              notify-send -e -a "nixos" -i "/home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 5000 "Auto-theme switcher" "Triggering theme switch" || true
-              ${switcherBin}
-            fi
+              # 4. Wait until the next solar transition (sunrise or sunset)
+              # Default behavior of 'sunwait wait' without 'rise'/'set' option is 'both',
+              # So, it blocks until the very next sunrise or sunset event occurs.
+              echo "Waiting until next sunrise or sunset..."
+              set +e
+              ${sunwaitBin} wait ${latVal}${latDir} ${lonVal}${lonDir}
+              WAIT_STATUS=$?
+              set -e
+
+              if [ $WAIT_STATUS -ne 0 ]; then
+                echo "Sunwait wait returned error code: $WAIT_STATUS. Retrying in 60s..."
+                sleep 60
+              fi
+            done
           '';
         in "${autoCheckScript}";
       };
-    };
-
-    systemd.user.timers.auto-theme-check = {
-      Unit = {
-        Description = "Automagic solar time checker";
-      };
-      Timer = {
-        OnCalendar = "*:0/10"; # Runs every 10 minutes to verify solar state
-        Persistent = true;
-      };
       Install = {
-        WantedBy = ["timers.target"];
+        WantedBy = ["graphical-session.target"];
       };
     };
   };
