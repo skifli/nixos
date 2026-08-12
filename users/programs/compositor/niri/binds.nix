@@ -724,6 +724,13 @@
     };
     spawn = "qrscan";
   };
+  "Mod+Shift+G" = {
+    _props = {
+      repeat = false;
+      allow-inhibiting = false;
+    };
+    spawn = "qrcreate";
+  };
 
   # Preset layout scripts
   "Mod+Ctrl+1" = {
