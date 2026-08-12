@@ -166,7 +166,7 @@ in {
             while true; do
               # 1. Poll sunwait for solar position
               set +e
-              ${sunwaitBin} poll ${latVal}${latDir} ${lonVal}${lonDir} >/dev/null 2>&1
+              ${sunwaitBin} poll ${latVal}${latDir} ${lonVal}${lonDir} >/tmp/sunwait.log 2>&1 # Redirects stdout to a log file not dev/null
               STATUS=$?
               set -e
 

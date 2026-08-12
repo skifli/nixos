@@ -99,7 +99,7 @@ in rec {
             fi
 
             # 2. Fire off the prompt in the background
-            secret-tool lookup xdg:schema org.freedesktop.Secret.Generic </dev/null >/dev/null 2>&1 &
+            secret-tool lookup xdg:schema org.freedesktop.Secret.Generic </dev/null >/tmp/secret-tool.log 2>&1 & # Redirects stdout to a log file not dev/null, but stdin is dev/null
             SECRET_PID=$!
 
             nirius focus --app-id gcr-prompter # Thanks to nirius - before it was this behemoth - niri msg action focus-window --id $(niri msg --json windows | jq -r '.[] | select(.app_id == "gcr-prompter") | .id' | head -n 1)
@@ -193,6 +193,10 @@ in rec {
     niri msg action focus-monitor "${focusedMonitor}"
     niri msg action focus-workspace 1
 
+    # Start .local/bin/niri-streamer.sh in the bg then we send notif saying it started and end
+    nohup "$HOME/.local/bin/niri-streamer.sh" >/tmp/niri-streamer.log 2>&1 & disown
+
+    notify-send -e -a "niri" -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 "Niri streamer" "Successfully started in the background"
     notify-send -e -a "niri" -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 5000 "Startup complete" "All startup tasks completed"
   '';
 

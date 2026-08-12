@@ -43,7 +43,7 @@
     userCmds = lib.concatStringsSep "\n" (
       map (u: ''
         if [ -x "${kbuildsycoca6}" ] && [ -d "/home/${u}" ]; then
-          ${pkgs.util-linux}/bin/runuser -u "${u}" -- "${kbuildsycoca6}" >/dev/null 2>&1 || true
+          ${pkgs.util-linux}/bin/runuser -u "${u}" -- "${kbuildsycoca6}" >/tmp/kbuildsycoca6.log 2>&1 || true
         fi
       '')
       users
