@@ -189,8 +189,8 @@ in {
     portal = {
       enable = true; # ABSOLUTE DINGLEBERRY
 
-      # https://mynixos.com/nixpkgs/option/xdg.portal.xdgOpenUsePortal
-      # TODO - If this actually fixes all my issues I'm going to... uh... hm.. breuh!
+      # Enable this: https://mynixos.com/nixpkgs/option/xdg.portal.xdgOpenUsePortal
+      # Ok, so before this was true. But now after 12/08/2026@18:18 I've set this to false and now xdg-open etc is working. gio worked when this was true but not xdg-open so I assume I broke something. But now this is false xdg-open does also work.
       xdgOpenUsePortal = false;
 
       config = {

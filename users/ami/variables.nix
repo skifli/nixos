@@ -1,4 +1,5 @@
 {
+  commonHostVars,
   hostVars,
   lib,
   pkgs,
@@ -396,5 +397,17 @@ in rec {
     "killclick" = "kill -9 $(niri msg pick-window | grep PID | tail -n 1 | awk '{print $NF}')";
     "killcurrent" = "kill -9 $(niri msg focused-window | grep PID | tail -n 1 | awk '{print $NF}')";
     "qrscan" = ''selected_area=$(${pkgs.slurp}/bin/slurp) && ${pkgs.grim}/bin/grim -g "$selected_area" - | ${pkgs.zbar}/bin/zbarimg --raw - | wl-copy && ${pkgs.libnotify}/bin/notify-send -e -a ZBar -i "$HOME/.local/share/misc/zbar.200.png" -u low -t 2500 -e "QR Code Captured" "$(wl-paste)"'';
+    "qrcreate" = ''
+      input=$(${pkgs.fuzzel}/bin/fuzzel --dmenu --lines=0 --width=40 \
+        --font="${commonHostVars.fonts.sansSerif.name}:size=14" \
+        --prompt="Enter QR Code URL: " \
+        --background-color=1e1e2eff \
+        --text-color=cdd6f4ff \
+        --input-color=cdd6f4ff \
+        --horizontal-pad=12 \
+        --border-radius=10)
+      
+      [ -n "$input" ] && ${pkgs.qrencode}/bin/qrencode -o - "$input" | ${pkgs.wl-clipboard}/bin/wl-copy -t image/png && ${pkgs.libnotify}/bin/notify-send -a "QR Gen" -u low -t 2000 "QR Code Generated" "Image copied to clipboard"
+      ''; # commonHostVars.fonts.sizes.applications is too small - 14 is best probably
   };
 }
