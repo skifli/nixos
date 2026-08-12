@@ -33,6 +33,25 @@ in
         active-color = "rgba(255, 255, 255, 0.08)";
         inactive-color = "rgba(255, 255, 255, 0.03)";
       };
+
+      # Rounded
+      clip-to-geometry = true;
+      geometry-corner-radius = 10;
+    }
+    # Gets the usually centered status window away and not focus it
+    {
+      match._props.title._raw = ''r#"(?i)Copying — Dolphin"#'';
+      open-focused = false;
+      default-floating-position._props = {
+        x = 10;
+        y = 10;
+        relative-to = "bottom-right";
+      };
+    }
+    # Gets the actually useful requiring-interaction window focused
+    {
+      match._props.title._raw = ''r#"(?i)Already Exists — Dolphin"#'';
+      open-focused = true;
     }
     # Terminal background blur & open maximized
     {
