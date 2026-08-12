@@ -178,7 +178,6 @@ in {
               if [ $WAIT_STATUS -ne 0 ]; then
                 echo "Sunwait wait returned error code: $WAIT_STATUS. Retrying in 60s..."
                 sleep 60
-              fi
               else
                 # Pause 5 seconds to prevent I think what is a race-condition where wait unblocked, the script looped back, poll was run, but it was too soon and poll just about hit the current state and didn't update to the next one, causing the script to break.
                 sleep 5
