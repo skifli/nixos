@@ -287,7 +287,7 @@ in rec {
       # Use https://jtroo.github.io/ to verify
       config = ''
         ;; Physical - Lenovo USB Calliope UK ISO Map
-        (defsrc
+ (defsrc
           grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
           tab  q    w    e    r    t    y    u    i    o    p    [    ]
           caps a    s    d    f    g    h    j    k    l    ;    '    bksl ret
@@ -318,7 +318,7 @@ in rec {
           _    lmet (mwheel-left 20 60) (movemouse-accel-up 5 210 1 9) (mwheel-right 20 60) lalt _ @zmin (mwheel-down 30 60) (mwheel-up 30 60) @zmout _ _
           _    lsft (movemouse-accel-left 5 210 1 9) (movemouse-accel-down 5 210 1 9) (movemouse-accel-right 5 210 1 9) lctl _ mlft mrgt (layer-toggle mouse-slow) _ _ _ _
           _    _    _    _    _    _    _    mmid pgup pgdn _    _    _
-          _    _    _              _              _    _    _
+          _    _    _            XX              _    _    _
         )
 
         ;; Slow precision mode layer (hold l in mouse mode)
@@ -327,9 +327,8 @@ in rec {
           _    _    _    (movemouse-up 20 1) _ _ _ _ _ _ _ _ _
           _    _    (movemouse-left 20 1) (movemouse-down 20 1) (movemouse-right 20 1) _ _ _ _ _ _ _ _ _
           _    _    _    _    _    _    _    _    _    _    _    _    _
-          _    _    _              _              _    _    _
-        )
-      '';
+          _    _    _            XX              _    _    _
+        )      '';
     };
   };
 
