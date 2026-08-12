@@ -1,14 +1,18 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-CURRENT_TAG=$(cat /etc/specialisation 2>/dev/null || echo "day")
-if [ "$CURRENT_TAG" = "day" ]; then
-    TARGET="night"
-else
-    TARGET="day"
-fi
+TARGET="${1:-}"
 
-notify-send -e -a "nixos" -i "/home/${USER}/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 5000 "Theme Switcher" "Switching to $TARGET mode..."
+if [ -z "$TARGET" ]; then
+    CURRENT_TAG=$(cat /etc/specialisation 2>/dev/null || echo "light")
+    if [ "$CURRENT_TAG" = "light" ]; then
+        TARGET="dark"
+    else
+        TARGET="light"
+    fi
+
+    notify-send -e -a "nixos" -i "/home/${USER}/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 5000 "Theme Switcher" "Switching to $TARGET mode..."
+fi
 
 SWITCH_BIN="/run/booted-system/specialisation/$TARGET/bin/switch-to-configuration"
 if [ ! -x "$SWITCH_BIN" ]; then
