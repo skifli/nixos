@@ -7,6 +7,13 @@
   inputs,
   ...
 }: let
+  /*
+  ADW_DISABLE_PORTAL vs a11y/interface/high-contrast = true...
+  ...the battle to make Anytype dark when the rest of my system is dark :sob:
+
+  12/08/2026@21:45 - The latter makes Zen Browser have like accessibility highlights and stuff which are of course useful to those who need it but I realised it's from this (tested it and confirmed) so I'm disabling this setting for good... hopefully somehow Anytype just... follows the rest of my system??? :sob:
+  */
+
   lightGtkConfigRaw = {
     iconTheme.name = commonHostVars.icons.light;
     theme = {
@@ -26,9 +33,11 @@
       color-scheme = "default";
       gtk-theme = commonHostVars.theme.gtk.lightName;
     };
+    /*
     "org/gnome/desktop/a11y/interface" = {
       high-contrast = false;
     };
+    */
   };
 
   darkGtkConfigRaw = {
@@ -50,10 +59,12 @@
       color-scheme = "prefer-dark";
       gtk-theme = commonHostVars.theme.gtk.darkName;
     };
+    /*
     "org/gnome/desktop/a11y/interface" = {
       # For some godforsaken reason this is the only thing that makes Anytype activate its dark mode. NOTHING else that I've set here does! Arggghhh!! At least it works now, but I swear this is going to cause some adverse affects later that will take me forever to trace back to this damned variable ;-;.
       high-contrast = true;
     };
+    */
   };
 
   # Custom helper functions for GTK to avoid recursing into derivation sets (pkgs.adw-gtk3)
