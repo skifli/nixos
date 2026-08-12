@@ -1,4 +1,5 @@
 {
+  commonHostVars,
   hostVars,
   lib,
   pkgs,
@@ -11,7 +12,7 @@
 in {
   usersVars = lib.genAttrs filteredUsers (
     username:
-      (import ./${username}/variables.nix {inherit hostVars lib pkgs;})
+      (import ./${username}/variables.nix {inherit commonHostVars hostVars lib pkgs;})
       // {inherit username;}
   );
 }
