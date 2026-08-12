@@ -2,8 +2,8 @@
   cursor = {
     package = pkgs.bibata-cursors;
     size = 12;
-    day.name = "Bibata-Modern-Ice";
-    night.name = "Bibata-Modern-Classic";
+    light.name = "Bibata-Modern-Ice";
+    dark.name = "Bibata-Modern-Classic";
   };
   fonts = {
     sansSerif = {
@@ -37,14 +37,14 @@
     light = "Papirus-Light";
   };
   theme = {
-    day = "tomorrow";
-    night = "tomorrow-night";
+    light = "tomorrow";
+    dark = "tomorrow-night";
 
     # GTK stuff
     gtk = {
       package = pkgs.adw-gtk3;
-      dayName = "adw-gtk3";
-      nightName = "adw-gtk3-dark";
+      lightName = "adw-gtk3";
+      darkName = "adw-gtk3-dark";
     };
 
     qt = {

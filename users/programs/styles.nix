@@ -7,11 +7,10 @@
   inputs,
   ...
 }: let
-  # Centralized light configuration reading from host vars
   lightGtkConfigRaw = {
     iconTheme.name = commonHostVars.icons.light;
     theme = {
-      name = commonHostVars.theme.gtk.dayName;
+      name = commonHostVars.theme.gtk.lightName;
       package = commonHostVars.theme.gtk.package;
     };
     gtk3.extraConfig = {
@@ -19,25 +18,23 @@
     };
     gtk4.extraConfig = {
       gtk-application-prefer-dark-theme = 0;
-      gtk-theme-name = commonHostVars.theme.gtk.dayName;
+      gtk-theme-name = commonHostVars.theme.gtk.lightName;
     };
   };
-
   lightDconfRaw = {
     "org/gnome/desktop/interface" = {
       color-scheme = "default";
-      gtk-theme = commonHostVars.theme.gtk.dayName;
+      gtk-theme = commonHostVars.theme.gtk.lightName;
     };
     "org/gnome/desktop/a11y/interface" = {
       high-contrast = false;
     };
   };
 
-  # Centralized dark configuration reading from host vars
   darkGtkConfigRaw = {
     iconTheme.name = commonHostVars.icons.dark;
     theme = {
-      name = commonHostVars.theme.gtk.nightName;
+      name = commonHostVars.theme.gtk.darkName;
       package = commonHostVars.theme.gtk.package;
     };
     gtk3.extraConfig = {
@@ -45,14 +42,13 @@
     };
     gtk4.extraConfig = {
       gtk-application-prefer-dark-theme = 1;
-      gtk-theme-name = commonHostVars.theme.gtk.nightName;
+      gtk-theme-name = commonHostVars.theme.gtk.darkName;
     };
   };
-
   darkDconfRaw = {
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
-      gtk-theme = commonHostVars.theme.gtk.nightName;
+      gtk-theme = commonHostVars.theme.gtk.darkName;
     };
     "org/gnome/desktop/a11y/interface" = {
       # For some godforsaken reason this is the only thing that makes Anytype activate its dark mode. NOTHING else that I've set here does! Arggghhh!! At least it works now, but I swear this is going to cause some adverse affects later that will take me forever to trace back to this damned variable ;-;.
@@ -60,33 +56,9 @@
     };
   };
 
-  applyDefault = cfg: {
-    iconTheme.name = lib.mkDefault cfg.iconTheme.name;
-    theme = {
-      name = lib.mkDefault cfg.theme.name;
-      package = lib.mkDefault cfg.theme.package;
-    };
-    gtk3.extraConfig = lib.mapAttrs (_: lib.mkDefault) cfg.gtk3.extraConfig;
-    gtk4.extraConfig = lib.mapAttrs (_: lib.mkDefault) cfg.gtk4.extraConfig;
-  };
-
-  applyForce = cfg: {
-    iconTheme.name = lib.mkForce cfg.iconTheme.name;
-    theme = {
-      name = lib.mkForce cfg.theme.name;
-      package = lib.mkForce cfg.theme.package;
-    };
-    gtk3.extraConfig = lib.mapAttrs (_: lib.mkForce) cfg.gtk3.extraConfig;
-    gtk4.extraConfig = lib.mapAttrs (_: lib.mkForce) cfg.gtk4.extraConfig;
-  };
+  applyDefault = lib.mapAttrsRecursive (_: lib.mkDefault);
+  applyForce = lib.mapAttrsRecursive (_: lib.mkForce);
 in {
-  environment.sessionVariables = {
-    # Forces applications to bypass the portal lookup, instead reading raw gsettings.
-    ADW_DISABLE_PORTAL = "1"; # Without this Anytype would not work...
-
-    GTK_THEME = lib.mkDefault commonHostVars.theme.gtk.dayName;
-  };
-
   environment.systemPackages = with pkgs; [
     # For debugging
     glib
@@ -99,24 +71,6 @@ in {
   };
 
   home-manager.users.${userVars.username} = {
-    stylix = {
-      enable = true;
-      base16Scheme = lib.mkDefault "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.day}.yaml";
-
-      cursor = {
-        inherit (commonHostVars.cursor) package size;
-        name = lib.mkDefault commonHostVars.cursor.day.name;
-      };
-      inherit (commonHostVars) icons fonts;
-
-      # Setting gtk/gnome/qt targets broke stuff so do NOT do that!
-    };
-
-    # Apply mkDefault for baseline so it layers nicely under Stylix
-    gtk = {enable = true;} // (applyDefault lightGtkConfigRaw);
-
-    dconf.settings = lib.mapAttrsRecursive (_: lib.mkDefault) lightDconfRaw;
-
     systemd.user.services.auto-theme-check = {
       Unit = {
         Description = "Solar position watcher and theme switcher daemon";
@@ -172,9 +126,9 @@ in {
 
               # 2: It is DAY or twilight. 3: It is NIGHT. 1: It is an Error.
               if [ $STATUS -eq 2 ]; then
-                WANTED="day"
+                WANTED="light"
               elif [ $STATUS -eq 3 ]; then
-                WANTED="night"
+                WANTED="dark"
               else
                 echo "Sunwait error code: $STATUS" >&2
                 sleep 60
@@ -182,12 +136,12 @@ in {
               fi
 
               # 2. Query system specialisation file
-              CURRENT_TAG=$(cat /etc/specialisation 2>/dev/null || echo "")
+              CURRENT_TAG=$(cat /etc/specialisation 2>/dev/null || echo "light")
 
               # 3. Trigger switch if states mismatch
               if [ "$WANTED" != "$CURRENT_TAG" ]; then
-                notify-send -e -a "nixos" -i "/home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 5000 "Auto-theme switcher" "Triggering theme switch" || true
-                ${switcherBin}
+                notify-send -e -a "nixos" -i "/home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 5000 "Auto-theme switcher" "Switching to $WANTED mode..."
+                ${switcherBin} "$WANTED"
               fi
 
               # 4. Wait until the next solar transition (sunrise or sunset)
@@ -211,88 +165,105 @@ in {
         WantedBy = ["graphical-session.target"];
       };
     };
+
+    # DAY THEME CONFIGURATION OUTSIDE THE SPECIALISATIONS STARTS HERE
+
+    # Apply mkDefault for baseline so it layers nicely under Stylix
+    gtk = {enable = true;} // (applyDefault lightGtkConfigRaw);
+    dconf.settings = applyDefault lightDconfRaw;
+
+    stylix = {
+      enable = true;
+      inherit (commonHostVars) icons fonts;
+
+      cursor = {
+        package = commonHostVars.cursor.package;
+        size = commonHostVars.cursor.size;
+      };
+
+    } // applyDefault {
+      base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.light}.yaml";
+
+      cursor.name = commonHostVars.cursor.light.name;
+
+      # Setting gtk/gnome/qt targets broke stuff so do NOT do that!
+    };
+  };
+
+  system.nixos.tags = lib.mkDefault ["light"];
+  environment.etc."specialisation".text = lib.mkDefault "light";
+
+  environment.sessionVariables = {
+    GTK_THEME = lib.mkDefault commonHostVars.theme.gtk.lightName;
+
+    # DAY THEME CONFIGURATION OUTSIDE THE SPECIALISATIONS ENDS HERE
+
+    # Forces applications to bypass the portal lookup, instead reading raw gsettings.
+    # ADW_DISABLE_PORTAL = "1"; # Without this Anytype would not work...
+    # TODO - Fix: I removed this because it was probably causing some issues and I don't think it's needed anymore. Double check though.
   };
 
   /*
-  The specialisations change the following important things:
+  The specialisations (and also the above outside specialisation light theme configuration) change the following important things:
+  * system.nixos.tags
+  * /etc/specialisation file
   * GTK_THEME environment variable
-  * Home-manager Stylix base16 scheme and cursor name
   * Home-manager GTK configuration
   * Home-manager dconf configuration
+  * Home-manager Stylix base16 scheme and cursor name
   */
 
   # Specialisations generate nested configurations under /run/current-system/specialisation
   specialisation = {
-    day.configuration = {pkgs, ...}: {
-      system.nixos.tags = ["day"];
-      environment.etc."specialisation".text = "day";
-
-      environment.sessionVariables = {
-        GTK_THEME = lib.mkForce commonHostVars.theme.gtk.dayName;
-      };
-
-      home-manager.users.${userVars.username} = {
-        # Explicitly apply mkForce
-        gtk = applyForce lightGtkConfigRaw;
-
-        dconf.settings = lib.mapAttrsRecursive (_: lib.mkForce) lightDconfRaw;
+    light.configuration = {pkgs, ...}: {
+      home-manager.users.${userVars.username} = applyForce {
+        gtk = lightGtkConfigRaw;
+        dconf.settings = lightDconfRaw;
 
         stylix = {
-          base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.day}.yaml";
-          cursor.name = commonHostVars.cursor.day.name;
+          base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.light}.yaml";
+          cursor.name = commonHostVars.cursor.light.name;
         };
+      };
+
+      system.nixos.tags = lib.mkForce ["light"];
+      environment.etc."specialisation".text = lib.mkForce "light";
+
+      environment.sessionVariables = {
+        GTK_THEME = lib.mkForce commonHostVars.theme.gtk.lightName;
       };
     };
 
-    night.configuration = {pkgs, ...}: {
-      system.nixos.tags = ["night"];
-      environment.etc."specialisation".text = "night";
-
-      environment.sessionVariables = {
-        GTK_THEME = lib.mkForce commonHostVars.theme.gtk.nightName;
-      };
-
-      home-manager.users.${userVars.username} = {
-        # Explicitly apply mkForce
-        gtk = applyForce darkGtkConfigRaw;
-
-        dconf.settings = lib.mapAttrsRecursive (_: lib.mkForce) darkDconfRaw;
+    dark.configuration = {pkgs, ...}: {
+      home-manager.users.${userVars.username} = applyForce  {
+        gtk = darkGtkConfigRaw;
+        dconf.settings = darkDconfRaw;
 
         stylix = {
-          base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.night}.yaml";
-          cursor.name = commonHostVars.cursor.night.name;
+          base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.dark}.yaml";
+          cursor.name = commonHostVars.cursor.dark.name;
         };
+      };
+
+      system.nixos.tags = lib.mkForce ["dark"];
+      environment.etc."specialisation".text = lib.mkForce "dark";
+
+      environment.sessionVariables = {
+        GTK_THEME = lib.mkForce commonHostVars.theme.gtk.darkName;
       };
     };
   };
-
-  # Preserve session variables across sudo
-  security.sudo.extraConfig = ''
-    Defaults env_keep += "XDG_RUNTIME_DIR DBUS_SESSION_BUS_ADDRESS WAYLAND_DISPLAY"
-  '';
 
   # Grant NOPASSWD access for the user to trigger the compiled specialisation switchers
   security.sudo.extraRules = [
     {
       users = [userVars.username];
-      commands = [
-        {
-          command = "/run/booted-system/specialisation/night/bin/switch-to-configuration";
+      commands = lib.concatMap (sys:
+        map (mode: {
+          command = "/run/${sys}/specialisation/${mode}/bin/switch-to-configuration";
           options = ["NOPASSWD"];
-        }
-        {
-          command = "/run/booted-system/specialisation/day/bin/switch-to-configuration";
-          options = ["NOPASSWD"];
-        }
-        {
-          command = "/run/current-system/specialisation/night/bin/switch-to-configuration";
-          options = ["NOPASSWD"];
-        }
-        {
-          command = "/run/current-system/specialisation/day/bin/switch-to-configuration";
-          options = ["NOPASSWD"];
-        }
-      ];
+        }) ["dark" "light"]
+      ) ["booted-system" "current-system"];
     }
   ];
 
