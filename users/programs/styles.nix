@@ -172,25 +172,20 @@ in {
     gtk = {enable = true;} // (applyDefault lightGtkConfigRaw);
     dconf.settings = applyDefault lightDconfRaw;
 
-    stylix =
+    stylix = 
       {
-        enable = true;
-        inherit (commonHostVars) icons fonts;
+      enable = true;
+      inherit (commonHostVars) icons fonts;
 
-        cursor =
-          {
-            package = commonHostVars.cursor.package;
-            size = commonHostVars.cursor.size;
-          }
-          // applyDefault {
-            name = commonHostVars.cursor.light.name;
-          };
-      }
-      // applyDefault {
-        base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.light}.yaml";
-
-        # Setting gtk/gnome/qt targets broke stuff so do NOT do that!
+      cursor = {
+        inherit (commonHostVars.cursor) package size;
+        name = lib.mkDefault commonHostVars.cursor.light.name;
       };
+
+      base16Scheme = lib.mkDefault "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.light}.yaml";
+
+      # Setting gtk/gnome/qt targets broke stuff so do NOT do that!
+    };
   };
 
   system.nixos.tags = lib.mkDefault ["light"];
