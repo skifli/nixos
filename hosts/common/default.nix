@@ -78,7 +78,7 @@ in {
     })
 
     (lib.mkIf hostVars.optimiseForHdd {
-      boot.kernelParams = [ "scsi_mod.use_blk_mq=1" ];
+      boot.kernelParams = ["scsi_mod.use_blk_mq=1"];
 
       services.udev.extraRules = ''
         # Set BFQ scheduler for mechanical HDDs only (rotational == 1)
