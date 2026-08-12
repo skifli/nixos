@@ -56,8 +56,29 @@
     };
   };
 
-  applyDefault = lib.mapAttrsRecursive (_: lib.mkDefault);
-  applyForce = lib.mapAttrsRecursive (_: lib.mkForce);
+  # Custom helper functions for GTK to avoid recursing into derivation sets (pkgs.adw-gtk3)
+  applyGtkDefault = cfg: {
+    iconTheme.name = lib.mkDefault cfg.iconTheme.name;
+    theme = {
+      name = lib.mkDefault cfg.theme.name;
+      package = lib.mkDefault cfg.theme.package;
+    };
+    gtk3.extraConfig = lib.mapAttrs (_: lib.mkDefault) cfg.gtk3.extraConfig;
+    gtk4.extraConfig = lib.mapAttrs (_: lib.mkDefault) cfg.gtk4.extraConfig;
+  };
+
+  applyGtkForce = cfg: {
+    iconTheme.name = lib.mkForce cfg.iconTheme.name;
+    theme = {
+      name = lib.mkForce cfg.theme.name;
+      package = lib.mkForce cfg.theme.package;
+    };
+    gtk3.extraConfig = lib.mapAttrs (_: lib.mkForce) cfg.gtk3.extraConfig;
+    gtk4.extraConfig = lib.mapAttrs (_: lib.mkForce) cfg.gtk4.extraConfig;
+  };
+
+  applyDconfDefault = lib.mapAttrsRecursive (_: lib.mkDefault);
+  applyDconfForce = lib.mapAttrsRecursive (_: lib.mkForce);
 in {
   environment.systemPackages = with pkgs; [
     # For debugging
@@ -169,8 +190,8 @@ in {
     # DAY THEME CONFIGURATION OUTSIDE THE SPECIALISATIONS STARTS HERE
 
     # Apply mkDefault for baseline so it layers nicely under Stylix
-    gtk = {enable = true;} // (applyDefault lightGtkConfigRaw);
-    dconf.settings = applyDefault lightDconfRaw;
+    gtk = {enable = true;} // (applyGtkDefault lightGtkConfigRaw);
+    dconf.settings = applyDconfDefault lightDconfRaw;
 
     stylix = {
       enable = true;
@@ -213,9 +234,9 @@ in {
   # Specialisations generate nested configurations under /run/current-system/specialisation
   specialisation = {
     light.configuration = {pkgs, ...}: {
-      home-manager.users.${userVars.username} = applyForce {
-        gtk = lightGtkConfigRaw;
-        dconf.settings = lightDconfRaw;
+      home-manager.users.${userVars.username} = {
+        gtk = applyGtkForce lightGtkConfigRaw;
+        dconf.settings = applyDconfForce lightDconfRaw;
 
         stylix = {
           base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.light}.yaml";
@@ -232,9 +253,9 @@ in {
     };
 
     dark.configuration = {pkgs, ...}: {
-      home-manager.users.${userVars.username} = applyForce {
-        gtk = darkGtkConfigRaw;
-        dconf.settings = darkDconfRaw;
+      home-manager.users.${userVars.username} = {
+        gtk = applyGtkForce darkGtkConfigRaw;
+        dconf.settings = applyDconfForce darkDconfRaw;
 
         stylix = {
           base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.dark}.yaml";
