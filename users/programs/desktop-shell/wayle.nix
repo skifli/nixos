@@ -195,6 +195,10 @@
                 label-color = "status-error";
               }
             ];
+            popup-stacking-order = "oldest-first"; # I hate the fact that the default is newest-first because whenever I get a new notification ALL of them move (I mean duh lol I'm so smart bahahah) as I'm sometimes trying to read one of them :sob:
+            popup-close-behavior = "remove"; # Saves my probably autism ass of whenever I see the notification bar with even 01 and not just 00 as the number of unread notifications I HAVE to click to see what it is and get back down to 00 otherwise it irks me that there's possibly something unread :sob:. So this just helps for those kind of notifications.
+            popup-max-visible = 10;
+            popup-urgency-bar = "normal";
           };
           ram = {
             format = "{{ percent }}%+{{ swap_percent }}%";

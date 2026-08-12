@@ -9,6 +9,7 @@
     match._props.namespace = "notification";
     # E.g., wayle-notification-popup
     block-out-from = "screen-capture";
+    opacity = 0.9; # Makes it a bit nice
   }
 
   # Blur behind top/overlay layers (launchers, desktop shell)
