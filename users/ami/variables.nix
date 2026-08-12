@@ -292,22 +292,11 @@ in rec {
         )
 
         (defalias
-          ;; 1 - tap timeout (unit: ms)
-          ;; 2 - hold timeout (unit: ms)
-          ;; Tap Timeout: 200ms (Double-tap to repeat spaces)
-          ;; Hold Timeout: 300ms (Hold to trigger mouse layer)
-          spc (tap-hold-release 200 300 spc (layer-toggle mouse))
+          ;; 150ms tap timeout, 250ms hold timeout.
+          ;; Mouse layer ONLY activates if Space is held longer than 250ms.
+          spc (tap-hold 150 250 spc (layer-toggle mouse))
           zmin (multi lctl eql)
           zmout (multi lctl min)
-        )
-
-        ;; Required virtual keys for modifier stacking and auto release
-        (defvirtualkeys
-          shift lsft
-          ctrl  lctl
-          alt   lalt
-          meta  lmet
-          modifier (multi (on-press release-vkey shift) (on-press release-vkey ctrl) (on-press release-vkey alt) (on-press release-vkey meta))
         )
 
         ;; Default typing layer
@@ -322,9 +311,9 @@ in rec {
         ;; Mouse mode layer (hold space)
         (deflayer mouse
           _    _    _    _    _    _    _    _    _    _    _    _    _    _
-          _    (on-press press-vkey meta) (mwheel-left 20 60) (movemouse-accel-up 5 210 1 9) (mwheel-right 20 60) (on-press press-vkey alt) _ @zmin (mwheel-down 30 60) (mwheel-up 30 60) @zmout _ _
-          _    (on-press press-vkey shift) (movemouse-accel-left 5 210 1 9) (movemouse-accel-down 5 210 1 9) (movemouse-accel-right 5 210 1 9) (on-press press-vkey ctrl) _ (multi mlft (on-release tap-vkey modifier)) (multi mrgt (on-release tap-vkey modifier)) (layer-toggle mouse-slow) _ _ _ _
-          _    _    _    _    _    _    _    (multi mmid (on-release tap-vkey modifier)) pgup pgdn _    _    _
+          _    lmet (mwheel-left 20 60) (movemouse-accel-up 5 210 1 9) (mwheel-right 20 60) lalt _ @zmin (mwheel-down 30 60) (mwheel-up 30 60) @zmout _ _
+          _    lsft (movemouse-accel-left 5 210 1 9) (movemouse-accel-down 5 210 1 9) (movemouse-accel-right 5 210 1 9) lctl _ mlft mrgt (layer-toggle mouse-slow) _ _ _ _
+          _    _    _    _    _    _    _    mmid pgup pgdn _    _    _
           _    _    _              _              _    _    _
         )
 
