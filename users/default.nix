@@ -190,7 +190,8 @@ in {
       enable = true; # ABSOLUTE DINGLEBERRY
 
       # https://mynixos.com/nixpkgs/option/xdg.portal.xdgOpenUsePortal
-      xdgOpenUsePortal = true;
+      # TODO - If this actually fixes all my issues I'm going to... uh... hm.. breuh!
+      xdgOpenUsePortal = false;
 
       config = {
         common = {
@@ -221,9 +222,11 @@ in {
           # Forces Electron/Anytype to read dark/light preferences via GNOME/GTK instead of failing via KDE
           "org.freedesktop.impl.portal.Settings" = ["gnome" "gtk"];
 
-          # Explicitly route URI/link opening through the GTK portal backend
-          # Otherwise stuff want kaboom :(
-          "org.freedesktop.impl.portal.OpenURI" = ["gtk"];
+          # Explicitly route URI/link opening through the KDE portal backend
+          # Otherwise stuff went kaboom :(
+          "org.freedesktop.impl.portal.OpenURI" = ["kde"];
+          "org.freedesktop.impl.portal.OpenFile" = ["kde"];
+          "org.freedesktop.impl.portal.OpenDirectory" = ["kde"];
         };
       };
 

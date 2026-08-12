@@ -305,6 +305,7 @@
 
   # Misc
   "devtools.toolbox.host" = "left"; # DevTools on left side of browser
+  "widget.use-xdg-desktop-portal.file-picker" = 1; # Force the use of the XDG desktop portal file picker
 
   /**
    *************************************************************************
