@@ -177,12 +177,14 @@ in {
         enable = true;
         inherit (commonHostVars) icons fonts;
 
-        cursor = {
-          package = commonHostVars.cursor.package;
-          size = commonHostVars.cursor.size;
-        } // applyDefault {
-          name = commonHostVars.cursor.light.name;
-        };
+        cursor =
+          {
+            package = commonHostVars.cursor.package;
+            size = commonHostVars.cursor.size;
+          }
+          // applyDefault {
+            name = commonHostVars.cursor.light.name;
+          };
       }
       // applyDefault {
         base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.light}.yaml";
