@@ -255,6 +255,42 @@
     expel-window-from-column = [];
   };
 
+  # FLOATING WINDOW MOVEMENT (Vim H/J/K/L)
+  "Mod+Alt+Shift+H" = {
+    _props.allow-inhibiting = false;
+    spawn = [ "niri" "msg" "action" "move-floating-window" "-x" "-10%" ];
+  };
+  "Mod+Alt+Shift+L" = {
+    _props.allow-inhibiting = false;
+    spawn = [ "niri" "msg" "action" "move-floating-window" "-x" "+10%" ];
+  };
+  "Mod+Alt+Shift+K" = {
+    _props.allow-inhibiting = false;
+    spawn = [ "niri" "msg" "action" "move-floating-window" "-y" "-10%" ];
+  };
+  "Mod+Alt+Shift+J" = {
+    _props.allow-inhibiting = false;
+    spawn = [ "niri" "msg" "action" "move-floating-window" "-y" "+10%" ];
+  };
+
+  # FLOATING WINDOW MOVEMENT (Arrow Keys)
+  "Mod+Alt+Shift+Left" = {
+    _props.allow-inhibiting = false;
+    spawn = [ "niri" "msg" "action" "move-floating-window" "-x" "-10%" ];
+  };
+  "Mod+Alt+Shift+Right" = {
+    _props.allow-inhibiting = false;
+    spawn = [ "niri" "msg" "action" "move-floating-window" "-x" "+10%" ];
+  };
+  "Mod+Alt+Shift+Up" = {
+    _props.allow-inhibiting = false;
+    spawn = [ "niri" "msg" "action" "move-floating-window" "-y" "-10%" ];
+  };
+  "Mod+Alt+Shift+Down" = {
+    _props.allow-inhibiting = false;
+    spawn = [ "niri" "msg" "action" "move-floating-window" "-y" "+10%" ];
+  };
+
   # FOCUS MOVEMENT (Columns & Stacked Windows)
   "Mod+H" = {
     _props.allow-inhibiting = false;
