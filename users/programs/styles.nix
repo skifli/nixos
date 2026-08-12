@@ -172,8 +172,7 @@ in {
     gtk = {enable = true;} // (applyDefault lightGtkConfigRaw);
     dconf.settings = applyDefault lightDconfRaw;
 
-    stylix = 
-      {
+    stylix = {
       enable = true;
       inherit (commonHostVars) icons fonts;
 
