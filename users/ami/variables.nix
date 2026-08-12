@@ -52,7 +52,9 @@
     allOutputs;
 in rec {
   # User configuration
-  extraGroups = [];
+  extraGroups = [
+    "input" # Needed for Activity Watch / ActivityWatch / AW / aw (just so if I ever search it comes up in any form lol)
+  ];
   wallpaper = "Berries.JPG";
 
   networkMounts = {

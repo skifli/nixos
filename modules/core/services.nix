@@ -34,25 +34,6 @@
     */
   };
 
-  # KDE service cache refresh.
-  # This fixes missing/incorrect desktop integration after rebuilds
-  # (for example default app handlers in Dolphin).
-  system.activationScripts.kbuildsycoca6-refresh.text = let
-    kbuildsycoca6 = "${pkgs.kdePackages.kservice}/bin/kbuildsycoca6";
-    users = builtins.attrNames usersVars;
-    userCmds = lib.concatStringsSep "\n" (
-      map (u: ''
-        if [ -x "${kbuildsycoca6}" ] && [ -d "/home/${u}" ]; then
-          ${pkgs.util-linux}/bin/runuser -u "${u}" -- "${kbuildsycoca6}" >/tmp/kbuildsycoca6.log 2>&1 || true
-        fi
-      '')
-      users
-    );
-  in ''
-    # Refresh KDE app cache for enabled users
-    ${userCmds}
-  '';
-
   # Weekly hosts blocklist refresh.
   # Run as root (it updates system hosts) but never hard-fail the system.
   systemd.services.hblock-update = {
