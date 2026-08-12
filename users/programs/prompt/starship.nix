@@ -11,8 +11,7 @@
     programs.starship = {
       enable = true;
       settings = {
-        # Reduce prompts that can timeout
-        command_timeout = 1000; # ms before timeout
+        command_timeout = 2500; # ms before timeout
         scan_timeout = 500;
 
         # Disable slow modules
