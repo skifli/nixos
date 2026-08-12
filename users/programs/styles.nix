@@ -13,7 +13,6 @@
 
   12/08/2026@21:45 - The latter makes Zen Browser have like accessibility highlights and stuff which are of course useful to those who need it but I realised it's from this (tested it and confirmed) so I'm disabling this setting for good... hopefully somehow Anytype just... follows the rest of my system??? :sob:
   */
-
   lightGtkConfigRaw = {
     iconTheme.name = commonHostVars.icons.light;
     theme = {
