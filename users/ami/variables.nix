@@ -286,49 +286,49 @@ in rec {
 
       # Use https://jtroo.github.io/ to verify
       config = ''
-        ;; Physical - Lenovo USB Calliope UK ISO Map
- (defsrc
-          grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
-          tab  q    w    e    r    t    y    u    i    o    p    [    ]
-          caps a    s    d    f    g    h    j    k    l    ;    '    bksl ret
-          lsft 102d z    x    c    v    b    n    m    ,    .    /    rsft
-          lctl lmet lalt           spc            ralt rmet rctl
-        )
+               ;; Physical - Lenovo USB Calliope UK ISO Map
+        (defsrc
+                 grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+                 tab  q    w    e    r    t    y    u    i    o    p    [    ]
+                 caps a    s    d    f    g    h    j    k    l    ;    '    bksl ret
+                 lsft 102d z    x    c    v    b    n    m    ,    .    /    rsft
+                 lctl lmet lalt           spc            ralt rmet rctl
+               )
 
-        (defalias
-          ;; 150ms tap timeout, 250ms hold timeout.
-          ;; Mouse layer ONLY activates if Space is held longer than 250ms.
-          spc (tap-hold 150 250 spc (layer-toggle mouse))
-          zmin (multi lctl eql)
-          zmout (multi lctl min)
-        )
+               (defalias
+                 ;; 150ms tap timeout, 250ms hold timeout.
+                 ;; Mouse layer ONLY activates if Space is held longer than 250ms.
+                 spc (tap-hold 150 250 spc (layer-toggle mouse))
+                 zmin (multi lctl eql)
+                 zmout (multi lctl min)
+               )
 
-        ;; Default typing layer
-        (deflayer default
-          _    _    _    _    _    _    _    _    _    _    _    _    _    _
-          _    _    _    _    _    _    _    _    _    _    _    _    _
-          _    _    _    _    _    _    _    _    _    _    _    _    _    _
-          _    _    _    _    _    _    _    _    _    _    _    _    _
-          _    _    _           @spc           _    _    _
-        )
+               ;; Default typing layer
+               (deflayer default
+                 _    _    _    _    _    _    _    _    _    _    _    _    _    _
+                 _    _    _    _    _    _    _    _    _    _    _    _    _
+                 _    _    _    _    _    _    _    _    _    _    _    _    _    _
+                 _    _    _    _    _    _    _    _    _    _    _    _    _
+                 _    _    _           @spc           _    _    _
+               )
 
-        ;; Mouse mode layer (hold space)
-        (deflayer mouse
-          _    _    _    _    _    _    _    _    _    _    _    _    _    _
-          _    lmet (mwheel-left 20 60) (movemouse-accel-up 5 210 1 9) (mwheel-right 20 60) lalt _ @zmin (mwheel-down 30 60) (mwheel-up 30 60) @zmout _ _
-          _    lsft (movemouse-accel-left 5 210 1 9) (movemouse-accel-down 5 210 1 9) (movemouse-accel-right 5 210 1 9) lctl _ mlft mrgt (layer-toggle mouse-slow) _ _ _ _
-          _    _    _    _    _    _    _    mmid pgup pgdn _    _    _
-          _    _    _            XX              _    _    _
-        )
+               ;; Mouse mode layer (hold space)
+               (deflayer mouse
+                 _    _    _    _    _    _    _    _    _    _    _    _    _    _
+                 _    lmet (mwheel-left 20 60) (movemouse-accel-up 5 210 1 9) (mwheel-right 20 60) lalt _ @zmin (mwheel-down 30 60) (mwheel-up 30 60) @zmout _ _
+                 _    lsft (movemouse-accel-left 5 210 1 9) (movemouse-accel-down 5 210 1 9) (movemouse-accel-right 5 210 1 9) lctl _ mlft mrgt (layer-toggle mouse-slow) _ _ _ _
+                 _    _    _    _    _    _    _    mmid pgup pgdn _    _    _
+                 _    _    _            XX              _    _    _
+               )
 
-        ;; Slow precision mode layer (hold l in mouse mode)
-        (deflayer mouse-slow
-          _    _    _    _    _    _    _    _    _    _    _    _    _    _
-          _    _    _    (movemouse-up 20 1) _ _ _ _ _ _ _ _ _
-          _    _    (movemouse-left 20 1) (movemouse-down 20 1) (movemouse-right 20 1) _ _ _ _ _ _ _ _ _
-          _    _    _    _    _    _    _    _    _    _    _    _    _
-          _    _    _            XX              _    _    _
-        )      '';
+               ;; Slow precision mode layer (hold l in mouse mode)
+               (deflayer mouse-slow
+                 _    _    _    _    _    _    _    _    _    _    _    _    _    _
+                 _    _    _    (movemouse-up 20 1) _ _ _ _ _ _ _ _ _
+                 _    _    (movemouse-left 20 1) (movemouse-down 20 1) (movemouse-right 20 1) _ _ _ _ _ _ _ _ _
+                 _    _    _    _    _    _    _    _    _    _    _    _    _
+                 _    _    _            XX              _    _    _
+               )      '';
     };
   };
 
