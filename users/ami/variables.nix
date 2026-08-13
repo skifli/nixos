@@ -272,6 +272,12 @@ in rec {
           open-maximized = true;
         }
 
+        # FreeRDP - maximize
+        {
+          match._props.app-id._raw = ''r#"(?i)xfreerdp"#'';
+          open-maximized = true;
+        }
+
         # SafeEyes - maximize
         {
           match._props = {
@@ -370,7 +376,7 @@ in rec {
     nightlight = "sunsetr";
     partition-manager = "kde";
     prompt = "starship";
-    remote-desktop = "remmina";
+    remote-desktop = "freerdp";
     screen-recorder = "gpu-screen-recorder";
     system-monitor = "missioncenter"; # Future me - look into http://github.com/Kyza/gpuitop
     terminal = "ghostty";
