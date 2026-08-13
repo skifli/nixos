@@ -24,12 +24,11 @@ let
     lyra
     ami
   ];
-
   /*
-    HOW TO USE:
-    1. Add secret entries to `secrets/secrets.nix` FIRST (ahoy).
-    2. Register secrets in `modules/core/agenix.nix` SECOND.
-    3. THEN create and edit the encrypted files - e.g., `agenix -e secrets/ami/rdp-pifi-linux.age`
+  HOW TO USE:
+  1. Add secret entries to `secrets/secrets.nix` FIRST (ahoy).
+  2. Register secrets in `modules/core/agenix.nix` SECOND.
+  3. THEN create and edit the encrypted files - e.g., `agenix -e secrets/ami/rdp-pifi-linux.age`
   */
 in {
   # Per-user secrets (filenames match secrets/<user>/<name>.age)
