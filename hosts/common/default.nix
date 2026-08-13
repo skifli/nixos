@@ -78,7 +78,7 @@ in {
     (lib.mkIf hostVars.optimiseForHdd {
       boot = {
         kernelParams = [
-          "scsi_mod.use_blk_mq=1" # 
+          "scsi_mod.use_blk_mq=1" #
           "systemd.swap=0" # Do NOT mount swap partitions automatically detected on HDDs. ZRAM should still work though.
         ];
 
