@@ -104,11 +104,10 @@ in {
             VISUAL = userVars.programs.visual;
           };
 
-          shellAliases =
-            let
-              gcHeap = "4G";
-              gc = "GC_INITIAL_HEAP_SIZE=${gcHeap}";
-            in
+          shellAliases = let
+            gcHeap = "4G";
+            gc = "GC_INITIAL_HEAP_SIZE=${gcHeap}";
+          in
             {
               # --- OGs ---
               sup = "sudo -E";
