@@ -5,6 +5,8 @@
   userVars,
   ...
 }: let
+  primaryUser = builtins.head hostVars.enabledUsers; # Dynamically gets "ami" (or whichever user is enabled for this host)
+
   caches = import ../../caches.nix;
 in {
   environment.systemPackages = with pkgs; [
@@ -71,7 +73,7 @@ in {
   programs = {
     nh = {
       enable = true;
-      flake = "/home/${userVars.username}/nixos"; # Assumes config in /etc/nixos
+      flake = "/home/${primaryUser}/nixos"; # Assumes config in /home/${primaryUser}/nixos
       clean = {
         enable = true;
         dates = "weekly";
@@ -87,7 +89,7 @@ in {
       dates = "weekly";
       allowReboot = false;
       operation = "boot"; # Only change on boot
-      flake = "/home/${userVars.username}/nixos#${hostname}"; # Assumes config in /etc/nixos
+      flake = "/home/${primaryUser}/nixos#${hostname}"; # Assumes config in /home/${primaryUser}/nixos
       flags = [];
       persistent = true; # Catch up on missed runs
     };
