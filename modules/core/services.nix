@@ -23,6 +23,13 @@
     # CachyOS - Enable sched-ext support for CPU scheduling
     scx.enable = true; # Uses scx_rustland by default
 
+    # Auto-nice daemon that should raise priority of user stuff vs. bg sys tasks
+    ananicy = {
+      enable = true;
+      package = pkgs.ananicy-cpp; # Use the rewrite
+      rulesProvider = pkgs.ananicy-rules-cachyos; # CachyOS ananicy-cpp rules
+    };
+
     /*
        CAN CAUSE A BUNCH O' PROBLEMS
     # Userspace CPU Scheduler for Improved Latency for Gaming (Hardware Specific)
