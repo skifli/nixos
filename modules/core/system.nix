@@ -87,7 +87,7 @@ in {
       allowReboot = false;
       operation = "boot"; # Only change on boot
       flake = "/etc/nixos#${hostname}"; # Assumes config in /etc/nixos
-      flags = [ ];
+      flags = [];
       persistent = true; # Catch up on missed runs
     };
 
