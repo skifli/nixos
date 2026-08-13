@@ -6,7 +6,7 @@ notify-send -e -a niri -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500
 
 # Send distractions to the nirius scratchpad
 send_to_scratchpad "app_id" "ferdium"
-send_to_scratchpad "app_id" "xfreerdp"
+send_to_scratchpad "title" "TigerVNC"
 send_to_scratchpad "app_id" "anytype"
 
 send_to_scratchpad "app_id" "org.gnome.Evince"
