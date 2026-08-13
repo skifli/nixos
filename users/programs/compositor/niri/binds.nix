@@ -40,7 +40,7 @@
   };
   "Mod+Shift+Return" = {
     _props.allow-inhibiting = false;
-    spawn = [ 
+    spawn = [
       "/home/${userVars.username}/.local/bin/floating-term.sh"
       userVars.programs.terminal
     ];
