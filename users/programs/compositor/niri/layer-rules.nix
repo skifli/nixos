@@ -23,8 +23,8 @@
     match._props = {
       # just match only "launcher" like the string nothing else
       namespace = "^launcher$";
+      layer = "overlay";
     };
-    layer = "overlay";
     opacity = 0.9;
   }
 
