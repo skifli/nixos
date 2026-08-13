@@ -248,8 +248,8 @@ in {
     # Some below used in scripts
     FONT_SANS_SERIF = commonHostVars.fonts.sansSerif.name;
     FONT_SERIF = commonHostVars.fonts.serif.name;
-    FONT_MONOSPACE = commonHostVars.fonts.monospace;
-    FONT_EMOJI = commonHostVars.fonts.emoji;
+    FONT_MONOSPACE = commonHostVars.fonts.monospace.name;
+    FONT_EMOJI = commonHostVars.fonts.emoji.name;
     FONT_SIZE_APPLICATIONS = commonHostVars.fonts.sizes.applications;
     FONT_SIZE_DESKTOP = commonHostVars.fonts.sizes.desktop;
     FONT_SIZE_POPUPS = commonHostVars.fonts.sizes.popups;
