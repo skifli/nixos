@@ -43,6 +43,12 @@
       (mkUserSecret username "anki-usernameFile" {
         path = "/home/${username}/.config/anki-usernameFile";
       })
+
+      #  --- Remote Desktop / VNC Secrets ---
+      (mkUserSecret username "rdp-pifi-linux" {})
+      (mkUserSecret username "rdp-pifi-win" {})
+      (mkUserSecret username "vnc-oracle" {})
+      (mkUserSecret username "oracle-vnc-key" {})
     ];
 
   mkTmpfilesForUser = username: _userVars: [
