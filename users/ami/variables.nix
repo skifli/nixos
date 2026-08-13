@@ -279,10 +279,10 @@ in rec {
 
           # Properties that apply once upon window opening.
           default-column-width = {
-            proportion = 1;
+            proportion = 1.0;
           };
           default-window-height = {
-            proportion = 1;
+            proportion = 1.0;
           };
         }
 
