@@ -57,7 +57,7 @@ connect_oracle_vnc() {
 
 run_target() {
     local secret_name="$1"
-    shift 2 2>/dev/null || true
+    shift 1 2>/dev/null || true
 
     local secret_file="/run/agenix/${USER}-${secret_name}"
 
@@ -74,11 +74,12 @@ run_target() {
 }
 
 TARGET="${1:-}"
-FONT="${FONT_SANS_SERIF:-}"
+FONT="${FONT_MONOSPACE:-}"
+FONT_SIZE="${FONT_SIZE_APPLICATIONS=-}"
 
 if [ -z "$TARGET" ]; then
     TARGET=$(printf "1. Pifi Linux (RDP)\n2. Pifi Windows (RDP)\n3. Oracle Server (VNC)" | fuzzel --dmenu \
-        --font="$FONT:size=14" \
+        --font="$FONT:size=$FONT_SIZE_APPLICATIONS" \
         --prompt="Connect to: " \
         --background-color=1e1e2eff \
         --text-color=cdd6f4ff \
