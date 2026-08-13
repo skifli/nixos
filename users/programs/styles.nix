@@ -215,7 +215,15 @@ in {
 
     stylix = {
       enable = true;
-      inherit (commonHostVars) icons fonts;
+      inherit (commonHostVars) fonts; # There is no stylix.fonts.enable so this is fine!
+
+      icons = {
+        enable = true;
+        package = lib.mkForce commonHostVars.icons.package;
+
+        dark = lib.mkForce commonHostVars.icons.dark;
+        light = lib.mkForce commonHostVars.icons.light;
+      };
 
       cursor = {
         inherit (commonHostVars.cursor) package size;
