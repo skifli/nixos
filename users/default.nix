@@ -1,5 +1,6 @@
 {
   commonHostVars,
+  hostVars,
   inputs,
   pkgs,
   usersVars,
