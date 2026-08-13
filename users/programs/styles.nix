@@ -32,6 +32,9 @@
       color-scheme = "default";
       gtk-theme = commonHostVars.theme.gtk.lightName;
     };
+    "org/freedesktop/appearance" = {
+      color-scheme = "0"; # Prefer light
+    };
     /*
     "org/gnome/desktop/a11y/interface" = {
       high-contrast = false;
@@ -57,6 +60,9 @@
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
       gtk-theme = commonHostVars.theme.gtk.darkName;
+    };
+    "org/freedesktop/appearance" = {
+      color-scheme = "1"; # Prefer dark
     };
     /*
     "org/gnome/desktop/a11y/interface" = {
