@@ -57,7 +57,6 @@ connect_oracle_vnc() {
 
 run_target() {
     local secret_name="$1"
-    local title="$2"
     shift 2 2>/dev/null || true
 
     local secret_file="/run/agenix/${USER}-${secret_name}"
