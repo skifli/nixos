@@ -100,6 +100,11 @@ in {
         # ATTR{queue/rotational}=="1" is a backup just in case because this is behind a host flag but whatever
         ACTION=="add|change", KERNEL=="sd[a-z]*|mmcblk[0-9]*", ATTR{queue/rotational}=="1", ATTR{queue/scheduler}="bfq"
       '';
+
+      fileSystems."/".options = [
+        # access time NOT change time (ctime) or modification time (mtime)
+        "noatime"
+      ];
     })
   ];
 
