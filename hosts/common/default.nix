@@ -89,6 +89,9 @@ in {
 
           # Tell kernel to heavily prefer ZRAM over filesystem page flushing
           "vm.swappiness" = 180;
+
+          # Tells kernel to keep stuff cached in RAM longer, I have enough RAM should be good.
+          "vm.vfs_cache_pressure" = 50;
         };
       };
 
