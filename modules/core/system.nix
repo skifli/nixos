@@ -2,6 +2,7 @@
   hostname,
   hostVars,
   pkgs,
+  userVars,
   ...
 }: let
   caches = import ../../caches.nix;
@@ -28,7 +29,7 @@ in {
     */
 
     /*
-       # Disabled because it just takes too long and yeah, if I get a better system maybe then though!
+    # Disabled because it just takes too long and yeah, if I get a better system maybe then though!
     # Periodic optimisation of the nix store
     optimise = {
       automatic = true;
@@ -70,7 +71,7 @@ in {
   programs = {
     nh = {
       enable = true;
-      flake = "/etc/nixos"; # Assumes config in /etc/nixos
+      flake = "/home/${userVars.username}/nixos"; # Assumes config in /etc/nixos
       clean = {
         enable = true;
         dates = "weekly";
@@ -86,7 +87,7 @@ in {
       dates = "weekly";
       allowReboot = false;
       operation = "boot"; # Only change on boot
-      flake = "/etc/nixos#${hostname}"; # Assumes config in /etc/nixos
+      flake = "/home/${userVars.username}/nixos#${hostname}"; # Assumes config in /etc/nixos
       flags = [];
       persistent = true; # Catch up on missed runs
     };
