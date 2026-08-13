@@ -16,13 +16,19 @@ let
   # Desktop / lyra
   lyra = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILLoR4r2C+luZVCcMqfbhKx23YS3MAnZTxgMZzUXoRkl root@lyra";
 
-  # Optionally add a personal key too (example):
-  # ami = "ssh-ed25519 AAAA...";
+  # Personal key
+  ami = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM00chXNLX0Mdss+qEVuYmoIDVgJNY2AqyGIEgn0Z48I ami@lyra";
 
   all = [
     pifi
     lyra
+    ami
   ];
+
+  /*
+    HOW TO USE:
+    agenix -e secrets/ami/rdp-pifi-linux.age
+  */
 in {
   # Per-user secrets (filenames match secrets/<user>/<name>.age)
   "secrets/ami/hashedPasswordFile.age".publicKeys = all;
