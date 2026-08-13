@@ -182,7 +182,6 @@ in rec {
       sleep 1 # Just a tad of a delay to ensure the keyring is fully ready for use
 
       ${startAndManage "anytype" "app_id" "anytype" secondMonitor "1"}
-      ${startAndManage "remmina" "app_id" "org.remmina.Remmina" secondMonitor "3"}
 
       # Safeyes is NOT keyring dependant, but one time wayle took a while to starup and it meant safeeyes' tray icon dependency popped up with an error and the only options were disable it or quit - so I had to do a manual restart. So, just to be safe it has been plopped here because by now waiting for the unlock means in the meantime wayle has DEFINITELY started and registered for notifications, etc
       safeeyes & disown
@@ -418,5 +417,9 @@ in rec {
 
       [ -n "$input" ] && ${pkgs.qrencode}/bin/qrencode -o - "$input" | ${pkgs.wl-clipboard}/bin/wl-copy -t image/png && ${pkgs.libnotify}/bin/notify-send -a "QR Gen" -u low -t 2000 "QR Code Generated" "Image copied to clipboard"
     ''; # commonHostVars.fonts.sizes.applications is too small - 14 is best probably
+
+    # My own random ones
+    "focus-focused-monitor" = "niri msg action focus-monitor \"${focusedMonitor}\"";
+    "focus-second-monitor" = "niri msg action focus-monitor \"${secondMonitor}\"";
   };
 }

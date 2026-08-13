@@ -684,6 +684,22 @@
     };
     spawn = ["/home/${userVars.username}/.local/bin/theme-switcher.sh"];
   };
+  "Mod+Alt+R" = {
+    _props = {
+      hotkey-overlay-title = "RDP menu";
+      allow-inhibiting = false;
+      repeat = false;
+    };
+    spawn = [
+      "sh"
+      "-c"
+      ''
+        focus-second-monitor
+        niri msg action focus-workspace 3
+        /home/${userVars.username}/.local/bin/rdp.sh
+      ''
+    ];
+  };
 
   # MISC & SCRIPTS
   "Mod+B" = {
