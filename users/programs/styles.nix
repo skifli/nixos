@@ -241,7 +241,7 @@ in {
     # DAY THEME CONFIGURATION OUTSIDE THE SPECIALISATIONS ENDS HERE
 
     # Forces applications to bypass the portal lookup, instead reading raw gsettings.
-    # ADW_DISABLE_PORTAL = 1; # Without this Anytype would not work...
+    ADW_DISABLE_PORTAL = 1; # Without this Anytype would not work...
     # I removed this because it was probably causing some issues and I don't think it's needed anymore. Double check though.
     # 12/08/2026@18:18 - 1. Oooh we got an eclipse going on right now :D. 2 - More boring but yeah confirmed that this is not needed anymore! Maybe was even causing more issues than what it solved. I dunno!
 
