@@ -16,7 +16,7 @@
     Surface:
       Namespace: "launcher"
       Keyboard interactivity: exclusive
-  
+
   This is for FUZZEL
   */
   {
