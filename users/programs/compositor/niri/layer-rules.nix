@@ -11,6 +11,22 @@
     block-out-from = "screen-capture";
     opacity = 0.9; # Makes it a bit nice
   }
+  /*
+  Overlay layer:
+    Surface:
+      Namespace: "launcher"
+      Keyboard interactivity: exclusive
+  
+  This is for FUZZEL
+  */
+  {
+    match._props = {
+      # just match only "launcher" like the string nothing else
+      namespace = "^launcher$";
+    };
+    layer = "overlay";
+    opacity = 0.9;
+  }
 
   # Blur behind top/overlay layers (launchers, desktop shell)
   {
