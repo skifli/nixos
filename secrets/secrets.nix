@@ -31,4 +31,10 @@ in {
   "secrets/ami/gh-hosts.yml.age".publicKeys = all;
   "secrets/ami/anki-keyFile.age".publicKeys = all;
   "secrets/ami/anki-usernameFile.age".publicKeys = all;
+
+  # --- Remote Desktop / VNC Secrets ---
+  "secrets/ami/rdp-pifi-linux.age".publicKeys = all;
+  "secrets/ami/rdp-pifi-win.age".publicKeys = all;
+  "secrets/ami/vnc-oracle.age".publicKeys = all;
+  "secrets/ami/oracle-vnc-key.age".publicKeys = all;
 }
