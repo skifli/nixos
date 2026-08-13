@@ -16,20 +16,24 @@ in {
   hardware.enableRedistributableFirmware = true;
 
   nix = {
+    /* Disable as it is now handled by nh down below
     # Automatic garbage collection weekly
     gc = {
-      automatic = false; # Now handled by nh down below
+      automatic = false; 
       dates = "weekly";
       options = "--delete-older-than 30d";
       persistent = true; # Catch up on missed runs
     };
+    */
 
+    /* # Disabled because it just takes too long and yeah, if I get a better system maybe then though!
     # Periodic optimisation of the nix store
     optimise = {
       automatic = true;
       dates = ["weekly"];
       persistent = true; # Catch up on missed runs
     };
+    */
 
     # Enable flakes + nix-command
     settings = {
@@ -82,9 +86,7 @@ in {
       operation = "boot"; # Only change on boot
       flake = "/etc/nixos#${hostname}"; # Assumes config in /etc/nixos
       flags = [
-        "--update-input"
-        "nixpkgs"
-        "--no-write-lock-file"
+        "--recreate-lock-file"
       ];
       persistent = true; # Catch up on missed runs
     };
