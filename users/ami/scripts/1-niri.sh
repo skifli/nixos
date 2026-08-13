@@ -18,7 +18,7 @@ move_windows "app_id" "org.kde.dolphin" "$MON_1" "3"
 # 2nd Monitor
 move_windows "app_id" "anytype" "$MON_2" "1" "100%"
 move_windows "app_id" "ferdium" "$MON_2" "2" "100%"
-move_windows "app_id" "xfreerdp" "$MON_2" "3" "100%"
+move_windows "title" "TigerVNC" "$MON_2" "3" "100%"
 
 # Focus windows
 focus_window "app_id" "ferdium"

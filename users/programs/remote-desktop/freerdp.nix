@@ -19,6 +19,7 @@ in {
     home.packages = with pkgs; [
       freerdp
       fuzzel
+      tigervnc
     ];
 
     home.sessionVariables = {

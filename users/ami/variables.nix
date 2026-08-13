@@ -273,7 +273,7 @@ in rec {
 
         # FreeRDP - maximize
         {
-          match._props.app-id._raw = ''r#"(?i)xfreerdp"#'';
+          match._props.title._raw = ''r#"(?i)TigerVNC"#'';
           open-maximized = true;
           open-focused = true;
 
