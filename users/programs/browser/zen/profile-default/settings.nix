@@ -288,7 +288,7 @@
   "zen.view.compact.hide-toolbar" = true;
   "zen.view.compact.toolbar-hide-after-hover.duration" = 250; # Makes it better if I accidentally trigger it compared to the 1000 default (as of 07/08/2026 anyway)
   "zen.view.experimental-no-window-controls" = true;
-  "zen.view.hide-window-controls" = true;
+  "zen.view.hide-window-controls" = true; # https://github.com/zen-browser/desktop/pull/13554
   "zen.view.sidebar-expanded" = true;
   "zen.view.use-single-toolbar" = true;
 
