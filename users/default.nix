@@ -221,7 +221,7 @@ in {
 
           # Forces Electron/Anytype to read dark/light preferences via GNOME/GTK instead of failing via KDE
           # Try gtk first though before gnome
-          "org.freedesktop.impl.portal.Settings" = ["gtk" "gnome"];
+          "org.freedesktop.impl.portal.Settings" = ["gtk"];
 
           # Explicitly route URI/link opening through the KDE portal backend
           # Otherwise stuff went kaboom :(
