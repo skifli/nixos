@@ -71,7 +71,7 @@
         niri msg action toggle-window-floating
         niri msg action set-window-height 40%
         niri msg action set-column-width 40%
-        sleep 0.05 # From testing niri needs around this amount of time to realise the actual new size of the window and so centre it accordingly
+        sleep 0.15 # From testing niri needs around this amount of time to realise the actual new size of the window and so centre it accordingly. Edit 13/08/2026@22:22 - Upped it from 0.05 to 0.15 just in case, as I think the reason it is sometimes not auto-centering is because it's too soon? Maybe.
         niri msg action center-window
 
         notify-send -e -a nirius -i /home/${userVars.username}/.local/share/misc/niri-icon.svg -u low -t 3500 "Floating term" "Spawned with title: $ID"
