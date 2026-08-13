@@ -16,17 +16,19 @@ in {
   hardware.enableRedistributableFirmware = true;
 
   nix = {
-    /* Disable as it is now handled by nh down below
+    /*
+       Disable as it is now handled by nh down below
     # Automatic garbage collection weekly
     gc = {
-      automatic = false; 
+      automatic = false;
       dates = "weekly";
       options = "--delete-older-than 30d";
       persistent = true; # Catch up on missed runs
     };
     */
 
-    /* # Disabled because it just takes too long and yeah, if I get a better system maybe then though!
+    /*
+       # Disabled because it just takes too long and yeah, if I get a better system maybe then though!
     # Periodic optimisation of the nix store
     optimise = {
       automatic = true;
