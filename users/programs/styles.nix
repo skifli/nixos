@@ -12,6 +12,7 @@
   ...the battle to make Anytype dark when the rest of my system is dark :sob:
 
   12/08/2026@21:45 - The latter makes Zen Browser have like accessibility highlights and stuff which are of course useful to those who need it but I realised it's from this (tested it and confirmed) so I'm disabling this setting for good... hopefully somehow Anytype just... follows the rest of my system??? :sob:
+  13/08/2026@13:31 - Finally fixed for good - Anytype switches to system theme when it changes without a restart! I THINK (not 100% sure) it was linked to this commit - https://github.com/skifli/nixos/commit/4ec0c216570e677e6ec6d5a4d1d1d083e7dceb2a. Specifically, setting `org.freedesktop.impl.portal.Settings` to just `gtk`. At least this charade is all over now, phew!
   */
   lightGtkConfigRaw = {
     iconTheme.name = commonHostVars.icons.light;
@@ -61,6 +62,7 @@
     /*
     "org/gnome/desktop/a11y/interface" = {
       # For some godforsaken reason this is the only thing that makes Anytype activate its dark mode. NOTHING else that I've set here does! Arggghhh!! At least it works now, but I swear this is going to cause some adverse affects later that will take me forever to trace back to this damned variable ;-;.
+      # Edit 13/08/2026@13:31 - Not true anymore :sob: see first comment block for solution
       high-contrast = true;
     };
     */
@@ -212,7 +214,7 @@ in {
       inherit (commonHostVars) fonts; # There is no stylix.fonts.enable so this is fine!
 
       icons = {
-        enable = true;
+        enable = true; # Without this the icons were borked and I was like why is this happened then realised and was like ahhh lol
         package = lib.mkForce commonHostVars.icons.package;
 
         dark = lib.mkForce commonHostVars.icons.dark;

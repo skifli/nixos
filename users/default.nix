@@ -254,8 +254,8 @@ in {
   # Required to prevent the GNOME portal backend from timing out on startup
   services.dbus.packages = [pkgs.gsettings-desktop-schemas];
   systemd.user.services."xdg-desktop-portal" = {
-    after = ["xdg-desktop-portal-gnome.service"];
-    wants = ["xdg-desktop-portal-gnome.service"];
+    after = ["xdg-desktop-portal-gnome.service" "xdg-desktop-portal-kde.service" "xdg-desktop-portal-gtk.service"];
+    wants = ["xdg-desktop-portal-gnome.service" "xdg-desktop-portal-kde.service" "xdg-desktop-portal-gtk.service"];
   };
 
   environment.systemPackages = with pkgs;
