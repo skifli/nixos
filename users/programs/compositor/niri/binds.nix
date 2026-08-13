@@ -677,7 +677,7 @@
     };
     spawn = ["/home/${userVars.username}/.local/bin/focused-output-info.sh"];
   };
-  "Mod+Alt+N" = {
+  "Mod+Alt+S" = {
     _props = {
       hotkey-overlay-title = "Manual theme switch";
       allow-inhibiting = false;
