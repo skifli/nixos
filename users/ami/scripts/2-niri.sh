@@ -36,7 +36,7 @@ move_windows "app_id" "org.kde.dolphin" "$MON_1" "4"
 # 2nd monitor
 move_windows "app_id" "anytype" "$MON_2" "1" "100%"
 move_windows "app_id" "zen-beta" "$MON_2" "2" "100%"
-move_windows "app_id" "remmina" "$MON_2" "3" "100%"
+move_windows "app_id" "xfreerdp" "$MON_2" "3" "100%"
 
 # Focus windows
 focus_window "app_id" "zen-beta"
