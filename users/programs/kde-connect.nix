@@ -20,6 +20,7 @@
     # Refresh timer
     systemd.user.timers.kdeconnect-refresh = {
       Timer = {
+        OnBootSec = "1m";
         OnUnitActiveSec = "1m";
         AccuracySec = "10s";
       };
