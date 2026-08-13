@@ -275,6 +275,15 @@ in rec {
         {
           match._props.app-id._raw = ''r#"(?i)xfreerdp"#'';
           open-maximized = true;
+          open-focused = true;
+
+          # Properties that apply once upon window opening.
+          default-column-width = {
+            proportion = 1;
+          };
+          default-window-height = {
+            proportion = 1;
+          };
         }
 
         # SafeEyes - maximize
