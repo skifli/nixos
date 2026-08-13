@@ -40,42 +40,9 @@
   };
   "Mod+Shift+Return" = {
     _props.allow-inhibiting = false;
-    spawn = [
-      "sh"
-      "-c"
-      ''
-        # 1. Create a unique identifier for this specific window instance
-        ID="floating-term-$(date +%s%N)"
-
-        # 2. Spawn the terminal with the unique title
-        ${
-          if userVars.programs.terminal == "ghostty"
-          then "ghostty +new-window --title=\"$ID\""
-          else "${userVars.programs.terminal} --title=\"$ID\""
-        } &
-
-        # 3. Continuously poll Niri until the window with our ID appears
-        TIMEOUT=100 # Roughly idk some amount of seconds... like 5s I guess? (100 * 0.05 = 5s)
-        COUNT=0
-        while ! niri msg windows | grep -F "$ID" >/dev/null; do
-          sleep 0.05
-          COUNT=$((COUNT + 1))
-          if [ "$COUNT" -ge "$TIMEOUT" ]; then
-            notify-send -e -a nirius -i /home/${userVars.username}/.local/share/misc/niri-icon.svg -u critical -t 5000 "Error" "Timed out waiting for window $ID"
-            exit 1
-          fi
-        done
-
-        # 4. Target the unique window via Niri IPC now that it exists
-        nirius focus --title "$ID"
-        niri msg action toggle-window-floating
-        niri msg action set-window-height 40%
-        niri msg action set-column-width 40%
-        sleep 0.15 # From testing niri needs around this amount of time to realise the actual new size of the window and so centre it accordingly. Edit 13/08/2026@22:22 - Upped it from 0.05 to 0.15 just in case, as I think the reason it is sometimes not auto-centering is because it's too soon? Maybe.
-        niri msg action center-window
-
-        notify-send -e -a nirius -i /home/${userVars.username}/.local/share/misc/niri-icon.svg -u low -t 3500 "Floating term" "Spawned with title: $ID"
-      ''
+    spawn = [ 
+      "/home/${userVars.username}/.local/bin/floating-term.sh"
+      userVars.programs.terminal
     ];
   };
   "Mod+F" = {
