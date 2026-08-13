@@ -25,11 +25,11 @@ let
     ami
   ];
   /*
-    HOW TO USE:
-    1. Run `export RULES="$PWD/secrets/secrets.nix"` in the ROOT of this repository (`nixos`)
-    2. Add secret entries to `secrets/secrets.nix` FIRST (ahoy).
-    3. Register secrets in `modules/core/agenix.nix` SECOND.
-    4. THEN create and edit the encrypted files - e.g., `agenix -e secrets/ami/rdp-pifi-linux.age`
+  HOW TO USE:
+  1. Run `export RULES="$PWD/secrets/secrets.nix"` in the ROOT of this repository (`nixos`)
+  2. Add secret entries to `secrets/secrets.nix` FIRST (ahoy).
+  3. Register secrets in `modules/core/agenix.nix` SECOND.
+  4. THEN create and edit the encrypted files - e.g., `agenix -e secrets/ami/rdp-pifi-linux.age`
   */
 in {
   # Per-user secrets (filenames match secrets/<user>/<name>.age)
