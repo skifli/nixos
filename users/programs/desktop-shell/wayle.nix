@@ -148,7 +148,7 @@
               label-max-length = 0;
               label-show = true;
               left-click = "${userVars.programs.terminal} -e ${userVars.programs.terminal-shell} -c \"niri msg casts; ${userVars.programs.terminal-shell}\"";
-              right-click = "sh -c \"niri msg casts | awk '/Session ID:/ {print \\$3}' | xargs -I {} niri msg action stop-cast --session-id {}\"";
+              right-click = "sh -c \"niri msg casts | awk '/Session ID:/ {print \\$3}' | while read -r id; do niri msg action stop-cast --session-id \\\"\\$id\\\" && notify-send -e -a niri -i '/home/${userVars.username}/.local/share/misc/niri-icon.svg' -u low -t 2500 'Screencasts' \\\"Stopped stream ID: \\$id\\\"; done\"";
               mode = "poll";
               restart-interval-ms = 1000;
               restart-policy = "never";
