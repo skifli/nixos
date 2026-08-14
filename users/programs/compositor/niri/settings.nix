@@ -111,10 +111,10 @@ in {
       "Alt+Shift+Tab" = {previous-window = [];};
       # Can also do e.g., filter="app-id";, or for scope "all" or "workspace"
       "Alt+grave" = {
-        next-window._props = {filter = "output";};
+        next-window._props = {scope = "output";};
       };
       "Alt+Shift+grave" = {
-        previous-window._props = {filter = "output";};
+        previous-window._props = {scope = "output";};
       };
     };
   };
