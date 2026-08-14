@@ -76,39 +76,46 @@ stop_recording() {
 
     if [ -z "$RAW_FILE" ] || [ ! -f "$RAW_FILE" ]; then
         ERR_MSG=$(tail -n 3 "$LOG_FILE" 2>/dev/null | tr '\n' ' ')
-        notify-send -e -a "gpu-screen-recorder" -u critical "Screen recorder" "Recording failed to save:\n${ERR_MSG:-File missing or cancelled}"
+        notify-send -e -a "gpu-screen-recorder" -i "/home/${USER}/.local/share/misc/68747470733a2f2f64656330356562612e636f6d2f696d616765732f6770755f73637265656e5f7265636f726465725f6c6f676f5f736d616c6c2e706e67.png" -u critical "Screen recorder" "Recording failed to save:\n${ERR_MSG:-File missing or cancelled}"
         exit 1
     fi
 
     FINAL_FILE="$RAW_FILE"
 
-    ACTION_CHOICE=$(printf "1. Copy raw recording\n2. Compress and copy (H.265)\n3. Save recording (nothing more)\n4. Delete recording" | fuzzel_styled "Recording saved: " 4 45)
+    ACTION_CHOICE=$(printf "1. OK, continue\n2. Copy to clipboard\n3. Compress and copy (H.265)\n4. Compress, delete original, copy\n5. Delyeet it" | fuzzel_styled "Recording saved: " 5 45)
 
     case "${ACTION_CHOICE,,}" in
         *compress*)
             COMPRESSED_FILE="${RAW_FILE%.mp4}_compressed.mp4"
-            notify-send -e -a "gpu-screen-recorder" -u low "Screen recorder" "Compressing video with FFmpeg..."
+            notify-send -e -a "gpu-screen-recorder" -i "/home/${USER}/.local/share/misc/68747470733a2f2f64656330356562612e636f6d2f696d616765732f6770755f73637265656e5f7265636f726465725f6c6f676f5f736d616c6c2e706e67.png" -u low "Screen recorder" "Compressing video with FFmpeg..."
 
             ffmpeg -i "$RAW_FILE" -vcodec libx265 -crf 26 -preset fast -acodec aac -b:a 128k "$COMPRESSED_FILE" -y
 
-            rm -f "$RAW_FILE"
+            echo -n "file://$COMPRESSED_FILE" | wl-copy -t text/uri-list
 
-            FINAL_FILE="$COMPRESSED_FILE"
-            echo -n "file://$FINAL_FILE" | wl-copy -t text/uri-list
+            if [[ "${ACTION_CHOICE,,}" == *delete* ]]; then
+                rm -f "$RAW_FILE"
+                FINAL_FILE="$COMPRESSED_FILE"
 
-            notify-send -e -a "gpu-screen-recorder" -i "/home/${USER}/.local/share/misc/68747470733a2f2f64656330356562612e636f6d2f696d616765732f6770755f73637265656e5f7265636f726465725f6c6f676f5f736d616c6c2e706e67.png" -u normal \
-                "Recording saved" "Compressed file copied to clipboard:\n$FINAL_FILE"
+                notify-send -e -a "gpu-screen-recorder" -i "/home/${USER}/.local/share/misc/68747470733a2f2f64656330356562612e636f6d2f696d616765732f6770755f73637265656e5f7265636f726465725f6c6f676f5f736d616c6c2e706e67.png" -u normal \
+                    "Recording saved" "Compressed file copied & original deleted:\n$FINAL_FILE"
+            else
+                notify-send -e -a "gpu-screen-recorder" -i "/home/${USER}/.local/share/misc/68747470733a2f2f64656330356562612e636f6d2f696d616765732f6770755f73637265656e5f7265636f726465725f6c6f676f5f736d616c6c2e706e67.png" -u normal \
+                    "Recording saved" "Compressed file copied (original kept):\n$RAW_FILE\n\nCompressed:\n$COMPRESSED_FILE"
+            fi
             ;;
-        *delete*)
+        *delyeet*)
             rm -f "$RAW_FILE"
-            notify-send -e -a "gpu-screen-recorder" -u low "Screen recorder" "Recording deleted."
+
+            notify-send -e -a "gpu-screen-recorder" -i "/home/${USER}/.local/share/misc/68747470733a2f2f64656330356562612e636f6d2f696d616765732f6770755f73637265656e5f7265636f726465725f6c6f676f5f736d616c6c2e706e67.png" -u low "Screen recorder" "Recording deleted."
+
             exit 0
             ;;
-        *nothing*|*save*)
+        *continue*)
             notify-send -e -a "gpu-screen-recorder" -i "/home/${USER}/.local/share/misc/68747470733a2f2f64656330356562612e636f6d2f696d616765732f6770755f73637265656e5f7265636f726465725f6c6f676f5f736d616c6c2e706e67.png" -u normal \
                 "Recording saved" "File saved to:\n$FINAL_FILE"
             ;;
-        *)
+        *) # E.g., copy
             echo -n "file://$FINAL_FILE" | wl-copy -t text/uri-list
 
             notify-send -e -a "gpu-screen-recorder" -i "/home/${USER}/.local/share/misc/68747470733a2f2f64656330356562612e636f6d2f696d616765732f6770755f73637265656e5f7265636f726465725f6c6f676f5f736d616c6c2e706e67.png" -u normal \
