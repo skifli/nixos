@@ -74,6 +74,15 @@ send_to_scratchpad() {
             # Focus the specific window first so nirius targets it because even if we did by app_id or title if there are multiple matching windows for said flag it can cause confusion, so we'll just focus it and rely on that matching
             niri msg action focus-window --id "$win_id"
 
+            local f_wait=0
+            while [ "$f_wait" -lt "$TIMEOUT" ]; do
+                if niri msg --json windows | jq -e ".[] | select(.id == $win_id and .is_focused == true)" >/dev/null 2>&1; then
+                    break
+                fi
+                sleep 0.02
+                ((f_wait++))
+            done
+
             nirius scratchpad-toggle || true
 
             ((moved_count++))
