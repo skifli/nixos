@@ -106,6 +106,34 @@
               blammo_in=$(cat "$HOME/.cache/mine/blammo" 2>/dev/null)
             fi
           }
+
+          # -t 0 prevents disappearing until manual closing
+
+          safe_reboot() {
+            local target_action=$1
+            shift
+
+            if [ -f /tmp/gpu-screen-recorder.pid ] && kill -0 $(cat /tmp/gpu-screen-recorder.pid) 2>/dev/null; then
+              notify-send -t 0 -u critical -i "/home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg" "Shutdown refused" "Screen recording is currently in progress!"
+              return 1
+            fi
+
+            if pgrep -f "nixos-rebuild|nh os switch" >/dev/null; then
+              notify-send -t 0 -u critical -i "/home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg" "Shutdown refused" "nixOS system rebuild is currently active!"
+              return 1
+            fi
+
+            urgent_wins=$(niri msg --json windows 2>/dev/null | jq -r '.[] | select(.is_urgent == true) | .id')
+            if [ -n "$urgent_wins" ]; then
+              notify-send -t 0 -u critical -i "/home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg" "Shutdown refused" "There are urgent windows requiring attention!"
+              return 1
+            fi
+
+            systemctl "$target_action" "$@"
+          }
+
+          alias reboot="safe_reboot reboot"
+          alias shutdown="safe_reboot shutdown"
         '';
 
         syntaxHighlighting = {
