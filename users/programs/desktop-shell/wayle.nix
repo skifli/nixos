@@ -46,6 +46,7 @@
               left = [
                 "dashboard"
                 "custom-screencast"
+                "custom-screen_recorder"
                 "niri-workspaces"
                 "custom-system_errors"
                 "window-title"
@@ -149,6 +150,30 @@
               label-show = true;
               left-click = "${userVars.programs.terminal} -e ${userVars.programs.terminal-shell} -c \"niri msg casts; ${userVars.programs.terminal-shell}\"";
               right-click = "sh -c \"niri msg casts | awk '/Session ID:/ {print \\$3}' | while read -r id; do niri msg action stop-cast --session-id \\\"\\$id\\\" && notify-send -e -a niri -i '/home/${userVars.username}/.local/share/misc/niri-icon.svg' -u low -t 2500 'Screencasts' \\\"Stopped stream ID: \\$id\\\"; done\"";
+              mode = "poll";
+              restart-interval-ms = 1000;
+              restart-policy = "never";
+              scroll-down = "";
+              scroll-up = "";
+            }
+            {
+              id = "screen_recorder";
+              border-color = "auto";
+              border-show = true;
+              button-bg-color = "bg-surface-elevated";
+              command = "if [ -f /tmp/gpu-screen-recorder.pid ] && kill -0 $(cat /tmp/gpu-screen-recorder.pid) 2>/dev/null; then echo \"REC \U0001f534\"; fi";
+              format = "{{ output }}";
+              hide-if-empty = true;
+              icon-bg-color = "auto";
+              icon-color = "status-error";
+              icon-name = "media-record-symbolic";
+              icon-show = true;
+              interval-ms = 1000;
+              label-color = "status-error";
+              label-max-length = 0;
+              label-show = true;
+              left-click = "/home/${userVars.username}/.local/bin/record.sh --stop";
+              right-click = "/home/${userVars.username}/.local/bin/record.sh";
               mode = "poll";
               restart-interval-ms = 1000;
               restart-policy = "never";
