@@ -120,11 +120,17 @@ restore_from_scratchpad() {
         local prev_scratch_count
         prev_scratch_count=$(nirius list-scratchpad 2>/dev/null | grep -i -c "$match_val" || true)
 
+        local scratch_key="$match_key"
+        [ "$scratch_key" = "app_id" ] && scratch_key="app-id"
+
+        local target_id
+        target_id=$(nirius list-scratchpad 2>/dev/null | grep -i -E "${scratch_key}: Some\(\"[^\"]*${match_val}[^\"]*\"\)" | sed -n -E 's/^id: ([0-9]+).*/\1/p' | head -n 1)
+
         local status=0
-        if [ "$match_key" = "app_id" ]; then
-            nirius scratchpad-toggle -a "$match_val" || status=$?
-        elif [ "$match_key" = "title" ]; then
-            nirius scratchpad-toggle -t "$match_val" || status=$?
+        if [ -n "$target_id" ]; then
+            nirius scratchpad-show --id "$target_id" || status=$?
+        else
+            break
         fi
 
         if [ "$status" -eq 0 ]; then
