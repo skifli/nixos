@@ -68,7 +68,12 @@
       hotkey-overlay-title = null;
       allow-inhibiting = false;
     };
-    spawn = [userVars.programs.explorer-gui];
+    spawn = [
+      "/home/${userVars.username}/.local/bin/find-or-make.sh"
+      "app_id"
+      userVars.programs.explorer-gui
+      userVars.programs.explorer-gui
+    ];
   };
   "Mod+Shift+F" = {
     _props = {
@@ -76,10 +81,11 @@
       allow-inhibiting = false;
     };
     spawn = [
-      userVars.programs.terminal
-      "-e"
+      "/home/${userVars.username}/.local/bin/find-or-make.sh"
+      "app_id"
       userVars.programs.explorer-tui
-    ];
+      "${userVars.programs.terminal} -e ${userVars.programs.terminal-shell} -i -f -c \"${userVars.programs.explorer-tui}; while true; do ${userVars.programs.terminal-shell} -i || break; done\""
+    ]
   };
   "Mod+V" = {
     _props = {
@@ -100,7 +106,12 @@
       hotkey-overlay-title = null;
       allow-inhibiting = false;
     };
-    spawn = [userVars.programs.system-monitor];
+    spawn = [
+      "/home/${userVars.username}/.local/bin/find-or-make.sh"
+      "app_id"
+      userVars.programs.system-monitor
+      userVars.programs.system-monitor
+    ];
   };
   "Shift+Escape" = {
     _props = {
@@ -108,9 +119,10 @@
       allow-inhibiting = false;
     };
     spawn = [
-      userVars.programs.terminal
-      "-e"
+      "/home/${userVars.username}/.local/bin/find-or-make.sh"
+      "title"
       "btop"
+      "${userVars.programs.terminal} -e btop"
     ];
   };
 
