@@ -917,7 +917,7 @@
       allow-inhibiting = false;
       repeat = false;
     };
-    spawn = [ "/home/${userVars.username}/.local/bin/rdp.sh" ];
+    spawn = ["/home/${userVars.username}/.local/bin/rdp.sh"];
   };
   "Mod+Alt+G" = {
     _props = {
