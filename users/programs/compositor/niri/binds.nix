@@ -932,13 +932,12 @@
       allow-inhibiting = false;
     };
     spawn = [
-      "/home/${userVars.username}/.local/bin/floating-term.sh"
-      userVars.programs.terminal
-      "-e"
-      userVars.programs.terminal-shell
-      "-i"
+      "sh"
       "-c"
-      "zngunsh; exec ${userVars.programs.terminal-shell}"
+      ''
+        notify-send -e -a nirius -i "/home/${userVars.username}/.local/share/misc/niri-icon.svg" -u low -t 3500 'nixOS Rebuild' 'Initing nixOS-rebuild switch'
+        /home/${userVars.username}/.local/bin/floating-term.sh "${userVars.programs.terminal}" -e "${userVars.programs.terminal-shell}" -i -c "zngunsh; exec ${userVars.programs.terminal-shell}"
+      ''
     ];
   };
 
