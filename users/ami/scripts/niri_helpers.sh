@@ -136,7 +136,22 @@ restore_from_scratchpad() {
         if [ "$status" -eq 0 ]; then
             ((restored_count++))
 
-            # Poll until nirius list-scratchpad count decreases
+            # Immediately restore floating/tiled state BEFORE checking list-scratchpad
+            if [ -n "$target_id" ] && [ -f "$FLOAT_STATE_DIR/$target_id" ]; then
+                fetch_windows
+                local was_float
+                was_float=$(cat "$FLOAT_STATE_DIR/$target_id")
+                local is_now_float
+                is_now_float=$(echo "$WINDOWS_JSON" | jq -r ".[] | select(.id == $target_id) | .is_floating")
+
+                if [ "$was_float" = "false" ] && [ "$is_now_float" = "true" ]; then
+                    niri msg action focus-window --id "$target_id"
+                    niri msg action toggle-window-floating
+                fi
+                rm -f "$FLOAT_STATE_DIR/$target_id"
+            fi
+
+            # NOW poll until nirius list-scratchpad count decreases
             local t=0
             while [ "$t" -lt "$TIMEOUT" ]; do
                 local curr_scratch_count
@@ -145,24 +160,6 @@ restore_from_scratchpad() {
                 sleep 0.02
                 ((t++))
             done
-
-            fetch_windows
-
-            # Loop through all matching open windows to restore floating/tiled state
-            while read -r win_id; do
-                if [ -n "$win_id" ] && [ -f "$FLOAT_STATE_DIR/$win_id" ]; then
-                    local was_float
-                    was_float=$(cat "$FLOAT_STATE_DIR/$win_id")
-                    local is_now_float
-                    is_now_float=$(echo "$WINDOWS_JSON" | jq -r ".[] | select(.id == $win_id) | .is_floating")
-
-                    if [ "$was_float" = "false" ] && [ "$is_now_float" = "true" ]; then
-                        niri msg action focus-window --id "$win_id"
-                        niri msg action toggle-window-floating
-                    fi
-                    rm -f "$FLOAT_STATE_DIR/$win_id"
-                fi
-            done < <(echo "$WINDOWS_JSON" | jq -r ".[] | select(.$match_key != null) | select(.$match_key | ascii_downcase | contains(\"${match_val,,}\")) | .id")
         else
             break
         fi
