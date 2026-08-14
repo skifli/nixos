@@ -64,7 +64,7 @@ in rec {
     name = "skifli";
     email = "121291719+skifli@users.noreply.github.com";
   };
-  
+
   scroll-cooldown-ms = 80; # Cooldown for scroll events (for workspace switching and column focus switching)
 
   niri = {
