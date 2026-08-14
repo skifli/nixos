@@ -99,8 +99,9 @@ send_to_scratchpad() {
         done
 
         if [ "$moved_count" -gt 0 ]; then
+            local s=""; [ "$moved_count" -gt 1 ] && s="s"
             notify-send -e -a niri -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 \
-                "Scratchpad stash" "Sent $moved_count window(s) ($match_key: $match_val) to scratchpad"
+                "Scratchpad stash" "Sent $moved_count window$s ($match_key: $match_val) to scratchpad"
         fi
     fi
 }
@@ -162,8 +163,9 @@ restore_from_scratchpad() {
     done
 
     if [ "$restored_count" -gt 0 ]; then
+        local s=""; [ "$restored_count" -gt 1 ] && s="s"
         notify-send -e -a niri -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 \
-            "Scratchpad restore" "Restored $restored_count window(s) ($match_key: $match_val) from scratchpad"
+            "Scratchpad restore" "Restored $restored_count window$s ($match_key: $match_val) from scratchpad"
     fi
 }
 
