@@ -82,7 +82,7 @@ stop_recording() {
 
     FINAL_FILE="$RAW_FILE"
 
-    ACTION_CHOICE=$(printf "1. OK, continue\n2. Copy to clipboard\n3. Compress and copy (H.265)\n4. Compress, delete original, copy\n5. Delyeet it" | fuzzel_styled "Recording saved: " 5 45)
+    ACTION_CHOICE=$(printf "1. OK, continue\n2. Copy to clipboard\n3. Compress and copy (H.265)\n4. Compress, delete original, copy\n5. Delyeet it" | fuzzel_styled "Recording saved: " 5 40)
 
     case "${ACTION_CHOICE,,}" in
         *compress*)
@@ -115,7 +115,7 @@ stop_recording() {
             notify-send -e -a "gpu-screen-recorder" -i "/home/${USER}/.local/share/misc/68747470733a2f2f64656330356562612e636f6d2f696d616765732f6770755f73637265656e5f7265636f726465725f6c6f676f5f736d616c6c2e706e67.png" -u normal \
                 "Recording saved" "File saved to:\n$FINAL_FILE"
             ;;
-        *) # E.g., copy
+        *copy*|*) 
             echo -n "file://$FINAL_FILE" | wl-copy -t text/uri-list
 
             notify-send -e -a "gpu-screen-recorder" -i "/home/${USER}/.local/share/misc/68747470733a2f2f64656330356562612e636f6d2f696d616765732f6770755f73637265656e5f7265636f726465725f6c6f676f5f736d616c6c2e706e67.png" -u normal \
@@ -123,10 +123,10 @@ stop_recording() {
             ;;
     esac
 
-    FOLDER_CHOICE=$(printf "1. Yes\n2. No" | fuzzel_styled "Open Folder? " 2 28)
+    FOLDER_CHOICE=$(printf "1. Yes\n2. No" | fuzzel_styled "Open Folder? " 2 30)
 
     if [[ "${FOLDER_CHOICE,,}" == *yes* ]]; then
-        xdg-open "$RECORDINGS_DIR" >/dev/null 2>&1 & # disown and pipe stdout to avoid blocking the script
+        xdg-open "$RECORDINGS_DIR" >/dev/null 2>&1 & disown # disown and pipe stdout to avoid blocking the script
     fi
 }
 
@@ -135,11 +135,11 @@ if is_recording || [ "${1:-}" = "--stop" ]; then
     exit 0
 fi
 
-TARGET_CHOICE=$(printf "1. Select via portal\n2. Focused monitor\n3. Draw region (with mouse)" | fuzzel_styled "Record Target: " 3 45)
+TARGET_CHOICE=$(printf "1. Select via portal\n2. Focused monitor\n3. Draw region (with mouse)" | fuzzel_styled "Record Target: " 3 35)
 
 if [ -z "$TARGET_CHOICE" ]; then exit 0; fi
 
-AUDIO_CHOICE=$(printf "1. System audio + Microphone\n2. System audio only\n3. Microphone only\n4. No audio" | fuzzel_styled "Record Audio: " 4 40)
+AUDIO_CHOICE=$(printf "1. System audio + Microphone\n2. System audio only\n3. Microphone only\n4. No audio" | fuzzel_styled "Record Audio: " 4 30)
 
 if [ -z "$AUDIO_CHOICE" ]; then exit 0; fi
 
