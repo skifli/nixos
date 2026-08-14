@@ -30,7 +30,8 @@
   }) (builtins.attrNames hostVars.workspaces);
 in {
   # Top-level stuff
-  inherit binds input layout;
+  inherit input layout;
+  binds = binds // userVars.niri.binds;
   layer-rule = layerRules;
   output = outputs;
   window-rule = windowRules;
@@ -108,11 +109,12 @@ in {
     binds = {
       "Alt+Tab" = {next-window = [];};
       "Alt+Shift+Tab" = {previous-window = [];};
+      # Can also do e.g., filter="app-id";, or for scope "all" or "workspace"
       "Alt+grave" = {
-        next-window._props = {filter = "app-id";};
+        next-window._props = {filter = "output";};
       };
       "Alt+Shift+grave" = {
-        previous-window._props = {filter = "app-id";};
+        previous-window._props = {filter = "output";};
       };
     };
   };

@@ -70,6 +70,81 @@ in rec {
   niri = {
     spawn-sh-at-startup = "$HOME/.local/bin/startup.sh \"${focusedMonitor}\" \"${secondMonitor}\"";
 
+    binds = {
+      "Mod+Shift+A" = {
+        _props = {
+          hotkey-overlay-title = null;
+          allow-inhibiting = false;
+        };
+        spawn = [
+          "/home/${userVars.username}/.local/bin/find-or-make.sh"
+          "app_id"
+          "anytype"
+          "anytype"
+        ];
+      };
+      "Mod+Shift+N" = {
+        _props = {
+          hotkey-overlay-title = null;
+          allow-inhibiting = false;
+        };
+        spawn = [
+          "/home/${userVars.username}/.local/bin/find-or-make.sh"
+          "app_id"
+          "anki"
+          "anki"
+        ];
+      };
+      "Mod+Shift+C" = {
+        _props = {
+          hotkey-overlay-title = null;
+          allow-inhibiting = false;
+        };
+        spawn = [
+          "/home/${userVars.username}/.local/bin/find-or-make.sh"
+          "app_id"
+          "ferdium"
+          "ferdium"
+        ];
+      };
+      "Mod+Shift+Z" = {
+        _props = {
+          hotkey-overlay-title = null;
+          allow-inhibiting = false;
+        };
+        spawn = [
+          "/home/${userVars.username}/.local/bin/find-or-make.sh"
+          "app_id"
+          "zen-beta"
+          "zen-beta"
+        ];
+      };
+      "Mod+Shift+D" = {
+        _props = {
+          hotkey-overlay-title = null;
+          allow-inhibiting = false;
+        };
+        spawn = [
+          "/home/${userVars.username}/.local/bin/find-or-make.sh"
+          "title"
+          "TigerVNC"
+          "TigerVNC"
+        ];
+      };
+      "Mod+Shift+Y" = {
+        _props = {
+          hotkey-overlay-title = null;
+          allow-inhibiting = false;
+        };
+        spawn = [
+          "/home/${userVars.username}/.local/bin/find-or-make.sh"
+          "app_id"
+          "affinity.exe"
+          "affinity-v3"
+        ];
+      }
+    };
+
     window-rules =
       [
         {
