@@ -206,7 +206,7 @@ in {
       config = {
         common = {
           # Use KDE as the default for everything
-          default = [
+          default = pkgs.lib.mkForce [
             "kde"
           ];
         };
@@ -228,6 +228,7 @@ in {
 
           # Juust in case - https://github.com/niri-wm/niri/wiki/Important-Software#:~:text=If%20you%20do%20not%20want%20to%20install%20nautilus%20%28say%20you%20use%20nemo%20instead%29%2C%20you%20can%20set%20org%2Efreedesktop%2Eimpl%2Eportal%2EFileChooser%3Dgtk%3B%20in%20niri%2Dportals%2Econf%20to%20use%20the%20GTK%20portal%20for%20file%20chooser%20dialogues
           "org.freedesktop.impl.portal.FileChooser" = ["kde"];
+          "org.freedesktop.portal.FileChooser" = ["kde"]; # Anytype - [x:x/x.x:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.Properties.Get: object_path= /org/freedesktop/portal/desktop: org.freedesktop.DBus.Error.InvalidArgs: No such interface “org.freedesktop.portal.FileChooser”
 
           # Forces Electron/Anytype to read dark/light preferences via GNOME/GTK instead of failing via KDE
           # Try gtk first though before gnome
