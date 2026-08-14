@@ -53,6 +53,11 @@ send_to_scratchpad() {
     # Close overview if it's active as that can break scratchpad stuff
     niri msg action close-overview 2>/dev/null || true
 
+    # If ALREADY in scratchpad, do nothing cus that broke a LOT :p
+    if is_in_scratchpad "$match_key" "$match_val"; then
+        return 0
+    fi
+
     fetch_windows
 
     # Collect all matching visible window IDs
