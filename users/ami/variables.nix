@@ -430,5 +430,8 @@ in rec {
     # My own random ones
     "focus-focused-monitor" = "niri msg action focus-monitor \"${focusedMonitor}\"";
     "focus-second-monitor" = "niri msg action focus-monitor \"${secondMonitor}\"";
+    "is-focused-monitor-focused" = "niri msg focused-output | grep -q \"${focusedMonitor}\"";
+    "is-second-monitor-focused" = "niri msg focused-output | grep -q \"${secondMonitor}\"";
+    "is-workspace-focused" = "sh -c 'niri msg workspaces | grep -A 10 \"$1\" | grep \"^\\s*\\*\" | grep -q \" $2 \"' --";
   };
 }

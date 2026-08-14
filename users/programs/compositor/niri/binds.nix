@@ -661,8 +661,8 @@
       "sh"
       "-c"
       ''
-        focus-second-monitor
-        niri msg action focus-workspace 3
+        is-second-monitor-focused || focus-second-monitor # Only if it is NOT focused
+        is-workspace-focused '${secondMonitor}' 3 || niri msg action focus-workspace 3
         /home/${userVars.username}/.local/bin/rdp.sh
       ''
     ];
