@@ -161,7 +161,7 @@
               border-color = "auto";
               border-show = true;
               button-bg-color = "bg-surface-elevated";
-              command = "if [ -f /tmp/gpu-screen-recorder.pid ] && kill -0 $(cat /tmp/gpu-screen-recorder.pid) 2>/dev/null; then echo \"REC \U0001f534\"; fi";
+              command = "if [ -f /tmp/gpu-screen-recorder.pid ] && kill -0 $(cat /tmp/gpu-screen-recorder.pid) 2>/dev/null; then echo \"REC\"; fi";
               format = "{{ output }}";
               hide-if-empty = true;
               icon-bg-color = "auto";
