@@ -679,14 +679,14 @@
   };
   "Shift+Print" = {
     _props = {
-      hotkey-overlay-title = null;
+      hotkey-overlay-title = "Screenshot window";
       allow-inhibiting = false;
     };
     screenshot-window = [];
   };
   "Ctrl+Print" = {
     _props = {
-      hotkey-overlay-title = null;
+      hotkey-overlay-title = "Screenshot OCR";
       allow-inhibiting = false;
     };
     spawn = ["normcap"];
@@ -747,7 +747,7 @@
   # NIRIUS - SCRATCHPAD
   "Mod+P" = {
     _props = {
-      hotkey-overlay-title = null;
+      hotkey-overlay-title = "Toggle scratchpad";
       allow-inhibiting = false;
     };
     spawn = [
@@ -783,7 +783,7 @@
 
   "Mod+Alt+P" = {
     _props = {
-      hotkey-overlay-title = null;
+      hotkey-overlay-title = "List scratchpad windows";
       allow-inhibiting = false;
     };
     spawn = [
@@ -809,7 +809,7 @@
   # NIRIUS - MARKS
   "Mod+T" = {
     _props = {
-      hotkey-overlay-title = null;
+      hotkey-overlay-title = "Toggle mark on focused window";
       allow-inhibiting = false;
     };
     spawn = [
@@ -821,7 +821,7 @@
 
   "Mod+Alt+T" = {
     _props = {
-      hotkey-overlay-title = null;
+      hotkey-overlay-title = "List all marked windows";
       allow-inhibiting = false;
     };
     spawn = [
@@ -869,35 +869,35 @@
   # Mod + Alt Meta Utilities
   "Mod+Alt+C" = {
     _props = {
-      hotkey-overlay-title = null;
+      hotkey-overlay-title = "Spawn colour picker script";
       allow-inhibiting = false;
     };
     spawn = ["/home/${userVars.username}/.local/bin/colour-picker.sh"];
   };
   "Mod+Alt+I" = {
     _props = {
-      hotkey-overlay-title = null;
+      hotkey-overlay-title = "Spawn focused window info script";
       allow-inhibiting = false;
     };
     spawn = ["/home/${userVars.username}/.local/bin/focused-window-info.sh"];
   };
   "Mod+Alt+O" = {
     _props = {
-      hotkey-overlay-title = null;
+      hotkey-overlay-title = "Spawn focused output info script";
       allow-inhibiting = false;
     };
     spawn = ["/home/${userVars.username}/.local/bin/focused-output-info.sh"];
   };
   "Mod+Alt+S" = {
     _props = {
-      hotkey-overlay-title = null;
+      hotkey-overlay-title = "Spawn theme switcher script";
       allow-inhibiting = false;
     };
     spawn = ["/home/${userVars.username}/.local/bin/theme-switcher.sh"];
   };
   "Mod+Alt+R" = {
     _props = {
-      hotkey-overlay-title = null;
+      hotkey-overlay-title = "Spawn RDP script";
       allow-inhibiting = false;
       repeat = false;
     };
@@ -947,7 +947,7 @@
   };
   "Mod+I" = {
     _props = {
-      hotkey-overlay-title = null;
+      hotkey-overlay-title = "Copy focused window info to clipboard";
       allow-inhibiting = false;
     };
     spawn = [
@@ -958,7 +958,7 @@
   };
   "Mod+Shift+Z" = {
     _props = {
-      hotkey-overlay-title = null;
+      hotkey-overlay-title = "Scan QR code";
       repeat = false;
       allow-inhibiting = false;
     };
@@ -966,7 +966,7 @@
   };
   "Mod+Shift+G" = {
     _props = {
-      hotkey-overlay-title = null;
+      hotkey-overlay-title = "Create QR code";
       repeat = false;
       allow-inhibiting = false;
     };
@@ -1001,5 +1001,12 @@
       allow-inhibiting = false;
     };
     spawn = ["/home/${userVars.username}/.local/bin/4-niri.sh"];
+  };
+  "Mod+G" = {
+    _props = {
+      hotkey-overlay-title = "Toggle GPU Screen recorder";
+      allow-inhibiting = false;
+    };
+    spawn = ["/home/${userVars.username}/.local/bin/record.sh"];
   };
 }

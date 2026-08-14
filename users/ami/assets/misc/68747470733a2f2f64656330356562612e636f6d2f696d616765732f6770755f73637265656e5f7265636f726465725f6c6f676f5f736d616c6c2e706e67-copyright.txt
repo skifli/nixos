@@ -1,0 +1,5 @@
+NOT mine.
+
+Source: https://github.com/BrycensRanch/gpu-screen-recorder-git-copr
+Specifically: https://camo.githubusercontent.com/daee9b58a3f6e4958b1ba4486c5aeb830a0e8f945d594ac33433fabccfc1b947/68747470733a2f2f64656330356562612e636f6d2f696d616765732f6770755f73637265656e5f7265636f726465725f6c6f676f5f736d616c6c2e706e67
+
