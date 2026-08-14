@@ -911,6 +911,14 @@
       ''
     ];
   };
+  "Mod+Alt+Shift+R" = {
+    _props = {
+      hotkey-overlay-title = "Spawn RDP script (no workspace/focus checks)";
+      allow-inhibiting = false;
+      repeat = false;
+    };
+    spawn = [ "/home/${userVars.username}/.local/bin/rdp.sh" ];
+  };
   "Mod+Alt+G" = {
     _props = {
       hotkey-overlay-title = "Toggle GPU Screen recorder";
