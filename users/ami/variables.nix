@@ -408,8 +408,7 @@ in rec {
     ];
   };
 
-  focusedMonitor = focusedMonitor;
-  secondMonitor = secondMonitor;
+  inherit focusedMonitor secondMonitor;
 
   shellScripts = {
     # These 3 proudly stolen from https://github.com/MangoCubes/nix/blob/e7fdb3fe51a8dce3c6ce6bc2a9fe8423f276f187/desktop/packages/home/niri.nix#L11 ;p (on a serious note if you ever see this MangoCubes these are really smart 'n useful binds! Thanks sm <3.)
