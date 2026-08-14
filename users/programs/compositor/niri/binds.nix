@@ -926,6 +926,21 @@
     };
     spawn = ["/home/${userVars.username}/.local/bin/record.sh"];
   };
+  "Mod+Alt+N" = {
+    _props = {
+      hotkey-overlay-title = "Prepare for and execute a nixOS-rebuild switch"; 
+      allow-inhibiting = false;
+    };
+    spawn = [
+      "/home/${userVars.username}/.local/bin/floating-term.sh"
+      userVars.programs.terminal
+      "-e"
+      userVars.programs.terminal-shell
+      "-i"
+      "-c"
+      "zngunsh; exec ${userVars.programs.terminal-shell}"
+    ];
+  };
 
   # MISC & SCRIPTS
   "Mod+B" = {
