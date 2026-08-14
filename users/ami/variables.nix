@@ -142,7 +142,7 @@ in rec {
           "affinity.exe"
           "affinity-v3"
         ];
-      }
+      };
     };
 
     window-rules =
