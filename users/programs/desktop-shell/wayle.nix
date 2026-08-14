@@ -133,17 +133,17 @@
               scroll-up = "";
             }
             {
+              id = "screencast";
               border-color = "auto";
               border-show = true;
               button-bg-color = "bg-surface-elevated";
-              command = "casts=$(niri msg casts 2>/dev/null) && if echo \"$casts\" | grep -q \"Target:\"; then echo \"CAST: Active\"; fi";
+              command = "casts=$(niri msg casts 2>/dev/null) && if echo \"$casts\" | grep -q \"Target:\"; then echo \"CAST\"; fi";
               format = "{{ output }}";
               hide-if-empty = true;
               icon-bg-color = "auto";
               icon-color = "status-error";
               icon-name = "media-record-symbolic";
               icon-show = true;
-              id = "screencast";
               interval-ms = 3000;
               label-color = "status-error";
               label-max-length = 0;
