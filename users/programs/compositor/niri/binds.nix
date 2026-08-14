@@ -85,7 +85,7 @@
       "app_id"
       userVars.programs.explorer-tui
       "${userVars.programs.terminal} -e ${userVars.programs.terminal-shell} -i -f -c \"${userVars.programs.explorer-tui}; while true; do ${userVars.programs.terminal-shell} -i || break; done\""
-    ]
+    ];
   };
   "Mod+V" = {
     _props = {
