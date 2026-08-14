@@ -424,7 +424,7 @@ in rec {
         else
           ${pkgs.libnotify}/bin/notify-send -e -a ZBar  -i "$HOME/.local/share/misc/zbar.200.png" -u normal -t 2500 -e "QR Code Failed" "No valid QR code found in selection."
         fi
-        
+
         rm -f /tmp/qr_result.txt
       fi
     ''; # Customised a lot from MangoCubes' though!
