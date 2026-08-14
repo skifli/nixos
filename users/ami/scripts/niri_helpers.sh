@@ -50,6 +50,9 @@ send_to_scratchpad() {
     local match_key="$1"
     local match_val="$2"
 
+    # Close overview if it's active as that can break scratchpad stuff
+    niri msg action close-overview 2>/dev/null || true
+
     fetch_windows
 
     # Collect all matching visible window IDs
@@ -105,6 +108,9 @@ send_to_scratchpad() {
 restore_from_scratchpad() {
     local match_key="$1"
     local match_val="$2"
+
+    # Close overview if it's active as that can break scratchpad stuff
+    niri msg action close-overview 2>/dev/null || true
 
     local restored_count=0
 
