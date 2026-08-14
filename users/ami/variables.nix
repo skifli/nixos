@@ -408,6 +408,9 @@ in rec {
     ];
   };
 
+  focusedMonitor = focusedMonitor;
+  secondMonitor = secondMonitor;
+
   shellScripts = {
     # These 3 proudly stolen from https://github.com/MangoCubes/nix/blob/e7fdb3fe51a8dce3c6ce6bc2a9fe8423f276f187/desktop/packages/home/niri.nix#L11 ;p (on a serious note if you ever see this MangoCubes these are really smart 'n useful binds! Thanks sm <3.)
     "killclick" = "kill -9 $(niri msg pick-window | grep PID | tail -n 1 | awk '{print $NF}')";
@@ -432,6 +435,6 @@ in rec {
     "focus-second-monitor" = "niri msg action focus-monitor \"${secondMonitor}\"";
     "is-focused-monitor-focused" = "niri msg focused-output | grep -q \"${focusedMonitor}\"";
     "is-second-monitor-focused" = "niri msg focused-output | grep -q \"${secondMonitor}\"";
-    "is-workspace-focused" = "sh -c 'niri msg workspaces | grep -A 10 \"$1\" | grep \"^\\s*\\*\" | grep -q \" $2 \"' --";
+    "is-workspace-focused" = "niri msg focused-output | grep -q \"$1\" && niri msg workspaces | grep -A 10 \"$1\" | grep \"^\\s*\\*\" | grep -q \" $2 \""; # Checks both 1. Is the requested monitor the one that currently has focus, AND 2. Is the requested workspace the active one on that monitor. Because `niri msg workspaces` shows which workspace is active per monitor, but doesn't care which monitor is active, so before it had said race condition.
   };
 }
