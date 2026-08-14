@@ -73,7 +73,7 @@ in {
   programs = {
     nh = {
       enable = true;
-      flake = "/home/${primaryUser}/nixos"; # Assumes config in /home/${primaryUser}/nixos
+      flake = "path:/home/${primaryUser}/nixos"; # Assumes config in /home/${primaryUser}/nixos
       clean = {
         enable = true;
         dates = "weekly";
@@ -89,7 +89,7 @@ in {
       dates = "weekly";
       allowReboot = false;
       operation = "boot"; # Only change on boot
-      flake = "/home/${primaryUser}/nixos#${hostname}"; # Assumes config in /home/${primaryUser}/nixos
+      flake = "path:/home/${primaryUser}/nixos#${hostname}"; # Assumes config in /home/${primaryUser}/nixos
       flags = [];
       persistent = true; # Catch up on missed runs
     };
