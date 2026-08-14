@@ -4,7 +4,7 @@
   ...
 }: {
   "Mod+Escape" = {
-    _props.hotkey-overlay-title = null;
+    _props.hotkey-overlay-title = "Toggle keyboard shortcuts inhibit";
     toggle-keyboard-shortcuts-inhibit = [];
   };
 
@@ -125,7 +125,7 @@
   };
   "Mod+Ctrl+Q" = {
     _props = {
-      hotkey-overlay-title = null;
+      hotkey-overlay-title = "Kill click window";
       repeat = false;
       allow-inhibiting = false;
     };
@@ -133,7 +133,7 @@
   };
   "Mod+Shift+Q" = {
     _props = {
-      hotkey-overlay-title = null;
+      hotkey-overlay-title = "Kill current window";
       repeat = false;
       allow-inhibiting = false;
     };
@@ -148,7 +148,7 @@
   };
   "Mod+Shift+F11" = {
     _props = {
-      hotkey-overlay-title = null;
+      hotkey-overlay-title = "Toggle windowed fullscreen";
       allow-inhibiting = false;
     };
     toggle-windowed-fullscreen = [];
@@ -178,7 +178,7 @@
   };
   "Mod+C" = {
     _props = {
-      hotkey-overlay-title = null;
+      hotkey-overlay-title = "Center column";
       allow-inhibiting = false;
     };
     center-column = [];
@@ -206,28 +206,28 @@
   };
   "Mod+R" = {
     _props = {
-      hotkey-overlay-title = null;
+      hotkey-overlay-title = "Switch preset column width";
       allow-inhibiting = false;
     };
     switch-preset-column-width = [];
   };
   "Mod+Shift+R" = {
     _props = {
-      hotkey-overlay-title = null;
+      hotkey-overlay-title = "Switch preset column width (back)";
       allow-inhibiting = false;
     };
     switch-preset-column-width-back = [];
   };
   "Mod+Ctrl+R" = {
     _props = {
-      hotkey-overlay-title = null;
+      hotkey-overlay-title = "Switch preset window height";
       allow-inhibiting = false;
     };
     switch-preset-window-height = [];
   };
   "Mod+Ctrl+Shift+R" = {
     _props = {
-      hotkey-overlay-title = null;
+      hotkey-overlay-title = "Switch preset window height (back)";
       allow-inhibiting = false;
     };
     switch-preset-window-height-back = [];
@@ -236,7 +236,7 @@
   # WINDOW MOVEMENT (Vim H/J/K/L & Arrows)
   "Mod+Shift+Home" = {
     _props = {
-      hotkey-overlay-title = null;
+      hotkey-overlay-title = "Move column to first";
       allow-inhibiting = false;
     };
     move-column-to-first = [];
@@ -251,7 +251,7 @@
 
   "Mod+Shift+H" = {
     _props = {
-      hotkey-overlay-title = null;
+      hotkey-overlay-title = "Move column left (also with left arrow)";
       allow-inhibiting = false;
     };
     move-column-left = [];
@@ -307,14 +307,14 @@
   };
   "Mod+Comma" = {
     _props = {
-      hotkey-overlay-title = null;
+      hotkey-overlay-title = "Consume window into column";
       allow-inhibiting = false;
     };
     consume-window-into-column = [];
   };
   "Mod+Period" = {
     _props = {
-      hotkey-overlay-title = null;
+      hotkey-overlay-title = "Expel window from column";
       allow-inhibiting = false;
     };
     expel-window-from-column = [];
@@ -323,7 +323,7 @@
   # FLOATING WINDOW MOVEMENT (Vim H/J/K/L)
   "Mod+Alt+Shift+H" = {
     _props = {
-      hotkey-overlay-title = null;
+      hotkey-overlay-title = "Move floating window left 10% (also with left arrow)";
       allow-inhibiting = false;
     };
     spawn = ["niri" "msg" "action" "move-floating-window" "-x" "-10%"];
@@ -383,7 +383,7 @@
   # FOCUS MOVEMENT (Columns & Stacked Windows)
   "Mod+H" = {
     _props = {
-      hotkey-overlay-title = null;
+      hotkey-overlay-title = "Focus column left (also with left arrow)";
       allow-inhibiting = false;
     };
     focus-column-left = [];
@@ -457,7 +457,7 @@
   # WORKSPACE NAVIGATION (Keyboard + Scroll + Arrows)
   "Mod+Ctrl+J" = {
     _props = {
-      hotkey-overlay-title = null;
+      hotkey-overlay-title = "Focus workspace down (also with down arrow and Mod+Ctrl+Down)";
       allow-inhibiting = false;
     };
     focus-workspace-down = [];
@@ -502,7 +502,7 @@
 
   "Mod+Ctrl+Shift+J" = {
     _props = {
-      hotkey-overlay-title = null;
+      hotkey-overlay-title = "Move column to workspace down (also with down arrow and Mod+Ctrl+WheelScrollDown)";
       allow-inhibiting = false;
     };
     move-column-to-workspace-down = [];
@@ -548,7 +548,7 @@
   # Monitor Navigation
   "Mod+1" = {
     _props = {
-      hotkey-overlay-title = null;
+      hotkey-overlay-title = "Focus monitor left (also with left arrow and Mod+Alt+H)";
       allow-inhibiting = false;
     };
     focus-monitor-left = [];
@@ -647,7 +647,7 @@
     focus-workspace = "8";
   };
 
-  # LAYOUT
+  # LAYOUT - Keyboard - I don't really use though
   "Mod+Space" = {
     _props = {
       hotkey-overlay-title = null;
@@ -747,7 +747,7 @@
   # NIRIUS - SCRATCHPAD
   "Mod+P" = {
     _props = {
-      hotkey-overlay-title = "Park/unpark window (scratchpad toggle)";
+      hotkey-overlay-title = null;
       allow-inhibiting = false;
     };
     spawn = [
@@ -783,7 +783,7 @@
 
   "Mod+Alt+P" = {
     _props = {
-      hotkey-overlay-title = "List scratchpad windows";
+      hotkey-overlay-title = null;
       allow-inhibiting = false;
     };
     spawn = [
@@ -809,7 +809,7 @@
   # NIRIUS - MARKS
   "Mod+T" = {
     _props = {
-      hotkey-overlay-title = "Tag/untag window";
+      hotkey-overlay-title = null;
       allow-inhibiting = false;
     };
     spawn = [
@@ -821,7 +821,7 @@
 
   "Mod+Alt+T" = {
     _props = {
-      hotkey-overlay-title = "List tagged windows";
+      hotkey-overlay-title = null;
       allow-inhibiting = false;
     };
     spawn = [
@@ -869,21 +869,21 @@
   # Mod + Alt Meta Utilities
   "Mod+Alt+C" = {
     _props = {
-      hotkey-overlay-title = "Pick color from screen";
+      hotkey-overlay-title = null;
       allow-inhibiting = false;
     };
     spawn = ["/home/${userVars.username}/.local/bin/colour-picker.sh"];
   };
   "Mod+Alt+I" = {
     _props = {
-      hotkey-overlay-title = "Copy focused window info";
+      hotkey-overlay-title = null;
       allow-inhibiting = false;
     };
     spawn = ["/home/${userVars.username}/.local/bin/focused-window-info.sh"];
   };
   "Mod+Alt+O" = {
     _props = {
-      hotkey-overlay-title = "Copy focused output info";
+      hotkey-overlay-title = null;
       allow-inhibiting = false;
     };
     spawn = ["/home/${userVars.username}/.local/bin/focused-output-info.sh"];
@@ -897,7 +897,7 @@
   };
   "Mod+Alt+R" = {
     _props = {
-      hotkey-overlay-title = "RDP menu";
+      hotkey-overlay-title = null;
       allow-inhibiting = false;
       repeat = false;
     };
@@ -947,7 +947,7 @@
   };
   "Mod+I" = {
     _props = {
-      hotkey-overlay-title = "Copy picked window info";
+      hotkey-overlay-title = null;
       allow-inhibiting = false;
     };
     spawn = [
