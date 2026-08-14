@@ -940,6 +940,22 @@
       ''
     ];
   };
+  "Mod+Alt+Z" = {
+    _props = {
+      hotkey-overlay-title = "Scan QR code";
+      repeat = false;
+      allow-inhibiting = false;
+    };
+    spawn = "qrscan";
+  };
+  "Mod+Alt+Q" = {
+    _props = {
+      hotkey-overlay-title = "Create QR code";
+      repeat = false;
+      allow-inhibiting = false;
+    };
+    spawn = "qrcreate";
+  };
 
   # MISC & SCRIPTS
   "Mod+B" = {
@@ -984,22 +1000,6 @@
       "-c"
       ''out=$(niri msg pick-window | grep -v '^[[:space:]]*~' | sed -E 's/^[[:space:]]+//') && [ ! -z "$out" ] && echo "$out" | wl-copy && notify-send -e -a niri -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 3500 "Window Captured" "$(echo "$out" | grep -E '^(Window ID|Title|App ID|PID|Window size)')"''
     ];
-  };
-  "Mod+Shift+Z" = {
-    _props = {
-      hotkey-overlay-title = "Scan QR code";
-      repeat = false;
-      allow-inhibiting = false;
-    };
-    spawn = "qrscan";
-  };
-  "Mod+Shift+G" = {
-    _props = {
-      hotkey-overlay-title = "Create QR code";
-      repeat = false;
-      allow-inhibiting = false;
-    };
-    spawn = "qrcreate";
   };
 
   # Preset layout scripts
