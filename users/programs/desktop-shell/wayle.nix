@@ -148,7 +148,7 @@
               label-max-length = 0;
               label-show = true;
               left-click = "${userVars.programs.terminal} -e ${userVars.programs.terminal-shell} -c \"niri msg casts; ${userVars.programs.terminal-shell}\"";
-              right-click = "${userVars.programs.terminal} -e ${userVars.programs.terminal-shell} -c \"niri msg casts | awk '/Session ID:/ {print \\$3}' | xargs -I {} niri msg action stop-cast --session-id {}; ${userVars.programs.terminal-shell}\"";
+              right-click = "sh -c \"niri msg casts | awk '/Session ID:/ {print \\$3}' | xargs -I {} niri msg action stop-cast --session-id {}\"";
               mode = "poll";
               restart-interval-ms = 1000;
               restart-policy = "never";
