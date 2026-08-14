@@ -911,6 +911,13 @@
       ''
     ];
   };
+  "Mod+Alt+G" = {
+    _props = {
+      hotkey-overlay-title = "Toggle GPU Screen recorder";
+      allow-inhibiting = false;
+    };
+    spawn = ["/home/${userVars.username}/.local/bin/record.sh"];
+  };
 
   # MISC & SCRIPTS
   "Mod+B" = {
@@ -1001,12 +1008,5 @@
       allow-inhibiting = false;
     };
     spawn = ["/home/${userVars.username}/.local/bin/4-niri.sh"];
-  };
-  "Mod+G" = {
-    _props = {
-      hotkey-overlay-title = "Toggle GPU Screen recorder";
-      allow-inhibiting = false;
-    };
-    spawn = ["/home/${userVars.username}/.local/bin/record.sh"];
   };
 }

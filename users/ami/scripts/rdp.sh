@@ -79,7 +79,7 @@ run_target() {
 
 TARGET="${1:-}"
 FONT="${FONT_MONOSPACE:-}"
-FONT_SIZE="${FONT_SIZE_APPLICATIONS=-}"
+FONT_SIZE="${FONT_SIZE_APPLICATIONS:-}"
 
 if [ -z "$TARGET" ]; then
     TARGET=$(printf "1. Pifi Linux (RDP)\n2. Pifi Windows (RDP)\n3. Oracle Server (VNC)" | fuzzel --dmenu \
