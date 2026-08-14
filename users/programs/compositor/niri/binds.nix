@@ -4,13 +4,16 @@
   ...
 }: {
   "Mod+Escape" = {
-    _props.hotkey-overlay-title = "Toggle keyboard shortcuts inhibit";
+    _props.hotkey-overlay-title = null;
     toggle-keyboard-shortcuts-inhibit = [];
   };
 
   # APPLICATION LAUNCHER
   "Mod+D" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     spawn =
       [userVars.programs.launcher]
       ++ pkgs.lib.optional (userVars.programs.launcher == "vicinae") "toggle";
@@ -18,39 +21,60 @@
 
   # HELP & OVERVIEW
   "Mod+Slash" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     show-hotkey-overlay = [];
   };
   "Mod+Tab" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     spawn = ["/home/${userVars.username}/.local/bin/smart-overview.sh"];
   };
   "Mod+Shift+Tab" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     toggle-overview = [];
   };
 
   # APPLICATIONS
   "Mod+Return" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     spawn =
       if userVars.programs.terminal == "ghostty"
       then ["ghostty" "+new-window"]
       else [userVars.programs.terminal];
   };
   "Mod+Shift+Return" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     spawn = [
       "/home/${userVars.username}/.local/bin/floating-term.sh"
       userVars.programs.terminal
     ];
   };
   "Mod+F" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     spawn = [userVars.programs.explorer-gui];
   };
   "Mod+Shift+F" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     spawn = [
       userVars.programs.terminal
       "-e"
@@ -58,19 +82,31 @@
     ];
   };
   "Mod+V" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     spawn = [userVars.programs.visual];
   };
   "Mod+E" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     spawn = [userVars.programs.editor];
   };
   "Ctrl+Shift+Escape" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     spawn = [userVars.programs.system-monitor];
   };
   "Shift+Escape" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     spawn = [
       userVars.programs.terminal
       "-e"
@@ -81,7 +117,7 @@
   # WINDOW MANAGEMENT
   "Mod+Q" = {
     _props = {
-      hotkey-overlay-title = "Close current window";
+      hotkey-overlay-title = null;
       repeat = false;
       allow-inhibiting = false;
     };
@@ -89,6 +125,7 @@
   };
   "Mod+Ctrl+Q" = {
     _props = {
+      hotkey-overlay-title = null;
       repeat = false;
       allow-inhibiting = false;
     };
@@ -96,6 +133,7 @@
   };
   "Mod+Shift+Q" = {
     _props = {
+      hotkey-overlay-title = null;
       repeat = false;
       allow-inhibiting = false;
     };
@@ -103,21 +141,21 @@
   };
   "Mod+F11" = {
     _props = {
-      hotkey-overlay-title = "Toggle fullscreen";
+      hotkey-overlay-title = null;
       allow-inhibiting = false;
     };
     fullscreen-window = [];
   };
   "Mod+Shift+F11" = {
     _props = {
-      hotkey-overlay-title = "Toggle windowed fullscreen";
+      hotkey-overlay-title = null;
       allow-inhibiting = false;
     };
     toggle-windowed-fullscreen = [];
   };
   "Mod+O" = {
     _props = {
-      hotkey-overlay-title = "Toggle floating window";
+      hotkey-overlay-title = null;
       allow-inhibiting = false;
     };
     toggle-window-floating = [];
@@ -125,19 +163,31 @@
 
   # COLUMN MANAGEMENT
   "Mod+Equal" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     set-column-width = "+10%";
   };
   "Mod+Minus" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     set-column-width = "-10%";
   };
   "Mod+C" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     center-column = [];
   };
   "Mod+M" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     maximize-column = [];
   };
   /*
@@ -155,144 +205,241 @@
     toggle-column-tabbed-display = [];
   };
   "Mod+R" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     switch-preset-column-width = [];
   };
   "Mod+Shift+R" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     switch-preset-column-width-back = [];
   };
   "Mod+Ctrl+R" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     switch-preset-window-height = [];
   };
   "Mod+Ctrl+Shift+R" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     switch-preset-window-height-back = [];
   };
 
   # WINDOW MOVEMENT (Vim H/J/K/L & Arrows)
   "Mod+Shift+Home" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     move-column-to-first = [];
   };
   "Mod+Shift+End" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     move-column-to-last = [];
   };
 
   "Mod+Shift+H" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     move-column-left = [];
   };
   "Mod+Shift+Left" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     move-column-left = [];
   };
   "Mod+Shift+L" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     move-column-right = [];
   };
   "Mod+Shift+Right" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     move-column-right = [];
   };
   "Mod+Shift+J" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     move-window-down = [];
   };
   "Mod+Shift+Down" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     move-window-down = [];
   };
   "Mod+Shift+K" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     move-window-up = [];
   };
   "Mod+Shift+Up" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     move-window-up = [];
   };
   "Mod+Comma" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     consume-window-into-column = [];
   };
   "Mod+Period" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     expel-window-from-column = [];
   };
 
   # FLOATING WINDOW MOVEMENT (Vim H/J/K/L)
   "Mod+Alt+Shift+H" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     spawn = ["niri" "msg" "action" "move-floating-window" "-x" "-10%"];
   };
   "Mod+Alt+Shift+L" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     spawn = ["niri" "msg" "action" "move-floating-window" "-x" "+10%"];
   };
   "Mod+Alt+Shift+K" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     spawn = ["niri" "msg" "action" "move-floating-window" "-y" "-10%"];
   };
   "Mod+Alt+Shift+J" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     spawn = ["niri" "msg" "action" "move-floating-window" "-y" "+10%"];
   };
 
   # FLOATING WINDOW MOVEMENT (Arrow Keys)
   "Mod+Alt+Shift+Left" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     spawn = ["niri" "msg" "action" "move-floating-window" "-x" "-10%"];
   };
   "Mod+Alt+Shift+Right" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     spawn = ["niri" "msg" "action" "move-floating-window" "-x" "+10%"];
   };
   "Mod+Alt+Shift+Up" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     spawn = ["niri" "msg" "action" "move-floating-window" "-y" "-10%"];
   };
   "Mod+Alt+Shift+Down" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     spawn = ["niri" "msg" "action" "move-floating-window" "-y" "+10%"];
   };
 
   # FOCUS MOVEMENT (Columns & Stacked Windows)
   "Mod+H" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     focus-column-left = [];
   };
   "Mod+Left" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     focus-column-left = [];
   };
   "Mod+L" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     focus-column-right = [];
   };
   "Mod+Right" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     focus-column-right = [];
   };
   "Mod+J" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     focus-window-down = [];
   };
   "Mod+Down" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     focus-window-down = [];
   };
   "Mod+K" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     focus-window-up = [];
   };
   "Mod+Up" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     focus-window-up = [];
   };
   "Mod+Shift+WheelScrollDown" = {
     _props = {
+      hotkey-overlay-title = null;
       cooldown-ms = userVars.scroll-cooldown-ms;
       allow-inhibiting = false;
     };
@@ -300,6 +447,7 @@
   };
   "Mod+Shift+WheelScrollUp" = {
     _props = {
+      hotkey-overlay-title = null;
       cooldown-ms = userVars.scroll-cooldown-ms;
       allow-inhibiting = false;
     };
@@ -308,23 +456,36 @@
 
   # WORKSPACE NAVIGATION (Keyboard + Scroll + Arrows)
   "Mod+Ctrl+J" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     focus-workspace-down = [];
   };
   "Mod+Ctrl+Down" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     focus-workspace-down = [];
   };
   "Mod+Ctrl+K" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     focus-workspace-up = [];
   };
   "Mod+Ctrl+Up" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     focus-workspace-up = [];
   };
   "Mod+WheelScrollDown" = {
     _props = {
+      hotkey-overlay-title = null;
       cooldown-ms = userVars.scroll-cooldown-ms;
       allow-inhibiting = false;
     };
@@ -332,6 +493,7 @@
   };
   "Mod+WheelScrollUp" = {
     _props = {
+      hotkey-overlay-title = null;
       cooldown-ms = userVars.scroll-cooldown-ms;
       allow-inhibiting = false;
     };
@@ -339,23 +501,36 @@
   };
 
   "Mod+Ctrl+Shift+J" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     move-column-to-workspace-down = [];
   };
   "Mod+Ctrl+Shift+Down" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     move-column-to-workspace-down = [];
   };
   "Mod+Ctrl+Shift+K" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     move-column-to-workspace-up = [];
   };
   "Mod+Ctrl+Shift+Up" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     move-column-to-workspace-up = [];
   };
   "Mod+Ctrl+WheelScrollDown" = {
     _props = {
+      hotkey-overlay-title = null;
       cooldown-ms = userVars.scroll-cooldown-ms;
       allow-inhibiting = false;
     };
@@ -363,6 +538,7 @@
   };
   "Mod+Ctrl+WheelScrollUp" = {
     _props = {
+      hotkey-overlay-title = null;
       cooldown-ms = userVars.scroll-cooldown-ms;
       allow-inhibiting = false;
     };
@@ -372,30 +548,44 @@
   # Monitor Navigation
   "Mod+1" = {
     _props = {
+      hotkey-overlay-title = null;
       allow-inhibiting = false;
     };
     focus-monitor-left = [];
   };
   "Mod+2" = {
     _props = {
+      hotkey-overlay-title = null;
       allow-inhibiting = false;
     };
     focus-monitor-right = [];
   };
   "Mod+Alt+H" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     focus-monitor-left = [];
   };
   "Mod+Alt+Left" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     focus-monitor-left = [];
   };
   "Mod+Alt+L" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     focus-monitor-right = [];
   };
   "Mod+Alt+Right" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     focus-monitor-right = [];
   };
 
@@ -408,95 +598,149 @@
     focus-workspace = "1";
   };
   "Mod+Shift+2" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     focus-workspace = "2";
   };
   "Mod+Shift+3" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     focus-workspace = "3";
   };
   "Mod+Shift+4" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     focus-workspace = "4";
   };
   "Mod+Shift+5" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     focus-workspace = "5";
   };
   "Mod+Shift+6" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     focus-workspace = "6";
   };
   "Mod+Shift+7" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     focus-workspace = "7";
   };
   "Mod+Shift+8" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     focus-workspace = "8";
   };
 
   # LAYOUT
   "Mod+Space" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     switch-layout = "next";
   };
   "Mod+Shift+Space" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     switch-layout = "prev";
   };
 
   # SYSTEM
   "Mod+Shift+E" = {
-    _props.hotkey-overlay-title = "Exit Niri compositor";
+    _props.hotkey-overlay-title = null;
     quit = [];
   };
 
   # SCREENSHOTS
   "Print" = {
     _props = {
-      hotkey-overlay-title = "Take screenshot";
+      hotkey-overlay-title = null;
       allow-inhibiting = false;
     };
     screenshot = [];
   };
   "Shift+Print" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     screenshot-window = [];
   };
   "Ctrl+Print" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     spawn = ["normcap"];
   };
 
   # MEDIA KEYS
   "XF86AudioRaiseVolume" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     spawn = ["wayle" "audio" "output-volume" "+2"];
   };
   "XF86AudioLowerVolume" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     spawn = ["wayle" "audio" "output-volume" "-2"];
   };
   "XF86AudioMute" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     spawn = ["wayle" "audio" "output-mute"];
   };
   "XF86AudioMicMute" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     spawn = ["wayle" "audio" "input-mute"];
   };
 
   "XF86AudioPlay" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     spawn = ["wayle" "media" "play-pause"];
   };
   "XF86AudioNext" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     spawn = ["wayle" "media" "next"];
   };
   "XF86AudioPrev" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     spawn = ["wayle" "media" "previous"];
   };
 
@@ -646,7 +890,7 @@
   };
   "Mod+Alt+S" = {
     _props = {
-      hotkey-overlay-title = "Manual theme switch";
+      hotkey-overlay-title = null;
       allow-inhibiting = false;
     };
     spawn = ["/home/${userVars.username}/.local/bin/theme-switcher.sh"];
@@ -670,19 +914,31 @@
 
   # MISC & SCRIPTS
   "Mod+B" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     spawn = ["wayle" "panel" "toggle"];
   };
   "Mod+S" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     spawn = ["sunsetr"];
   };
   "Mod+Shift+S" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     spawn = ["sunsetr" "stop"];
   };
   "Mod+Z" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     spawn = [
       "sh"
       "-c"
@@ -702,6 +958,7 @@
   };
   "Mod+Shift+Z" = {
     _props = {
+      hotkey-overlay-title = null;
       repeat = false;
       allow-inhibiting = false;
     };
@@ -709,6 +966,7 @@
   };
   "Mod+Shift+G" = {
     _props = {
+      hotkey-overlay-title = null;
       repeat = false;
       allow-inhibiting = false;
     };
@@ -724,15 +982,24 @@
     spawn = ["/home/${userVars.username}/.local/bin/1-niri.sh"];
   };
   "Mod+Ctrl+2" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     spawn = ["/home/${userVars.username}/.local/bin/2-niri.sh"];
   };
   "Mod+Ctrl+3" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     spawn = ["/home/${userVars.username}/.local/bin/3-niri.sh"];
   };
   "Mod+Ctrl+4" = {
-    _props.allow-inhibiting = false;
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
     spawn = ["/home/${userVars.username}/.local/bin/4-niri.sh"];
   };
 }
