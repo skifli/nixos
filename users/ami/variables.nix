@@ -3,6 +3,7 @@
   hostVars,
   lib,
   pkgs,
+  username,
   ...
 }: let
   allOutputs = builtins.attrNames hostVars.outputs;
@@ -77,7 +78,7 @@ in rec {
           allow-inhibiting = false;
         };
         spawn = [
-          "/home/${userVars.username}/.local/bin/find-or-make.sh"
+          "/home/${username}/.local/bin/find-or-make.sh"
           "app_id"
           "anytype"
           "anytype"
@@ -89,7 +90,7 @@ in rec {
           allow-inhibiting = false;
         };
         spawn = [
-          "/home/${userVars.username}/.local/bin/find-or-make.sh"
+          "/home/${username}/.local/bin/find-or-make.sh"
           "app_id"
           "anki"
           "anki"
@@ -101,7 +102,7 @@ in rec {
           allow-inhibiting = false;
         };
         spawn = [
-          "/home/${userVars.username}/.local/bin/find-or-make.sh"
+          "/home/${username}/.local/bin/find-or-make.sh"
           "app_id"
           "ferdium"
           "ferdium"
@@ -113,7 +114,7 @@ in rec {
           allow-inhibiting = false;
         };
         spawn = [
-          "/home/${userVars.username}/.local/bin/find-or-make.sh"
+          "/home/${username}/.local/bin/find-or-make.sh"
           "app_id"
           "zen-beta"
           "zen-beta"
@@ -125,7 +126,7 @@ in rec {
           allow-inhibiting = false;
         };
         spawn = [
-          "/home/${userVars.username}/.local/bin/find-or-make.sh"
+          "/home/${username}/.local/bin/find-or-make.sh"
           "title"
           "TigerVNC"
           "TigerVNC"
@@ -137,7 +138,7 @@ in rec {
           allow-inhibiting = false;
         };
         spawn = [
-          "/home/${userVars.username}/.local/bin/find-or-make.sh"
+          "/home/${username}/.local/bin/find-or-make.sh"
           "app_id"
           "affinity.exe"
           "affinity-v3"
