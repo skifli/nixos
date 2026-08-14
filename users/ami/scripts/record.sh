@@ -6,8 +6,8 @@ PID_FILE="/tmp/gpu-screen-recorder.pid"
 INFO_FILE="/tmp/gpu-screen-recorder.info"
 LOG_FILE="/tmp/gpu-screen-recorder.log"
 
-FONT="${FONT_MONOSPACE:-Monospace}"
-FONT_SIZE="${FONT_SIZE_APPLICATIONS:-12}"
+FONT="${FONT_MONOSPACE:-}"
+FONT_SIZE="${FONT_SIZE_APPLICATIONS:-}"
 
 mkdir -p "$RECORDINGS_DIR"
 
