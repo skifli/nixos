@@ -70,6 +70,8 @@ in {
     inherit (hostVars) cpuFreqGovernor;
   };
 
+  # `path:` is needed prepended before programs.nh.flake and system.autoUpgrade.flake otherwise they shalt error on git submodules - error: getting status of '/nix/store/x-source/users/programs/browser/zen/profile-default/hidden/space-routing.nix'
+
   programs = {
     nh = {
       enable = true;

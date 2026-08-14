@@ -414,12 +414,25 @@ in rec {
     # These 3 proudly stolen from https://github.com/MangoCubes/nix/blob/e7fdb3fe51a8dce3c6ce6bc2a9fe8423f276f187/desktop/packages/home/niri.nix#L11 ;p (on a serious note if you ever see this MangoCubes these are really smart 'n useful binds! Thanks sm <3.)
     "killclick" = "kill -9 $(niri msg pick-window | grep PID | tail -n 1 | awk '{print $NF}')";
     "killcurrent" = "kill -9 $(niri msg focused-window | grep PID | tail -n 1 | awk '{print $NF}')";
-    "qrscan" = ''selected_area=$(${pkgs.slurp}/bin/slurp) && ${pkgs.grim}/bin/grim -g "$selected_area" - | ${pkgs.zbar}/bin/zbarimg --raw - | wl-copy && ${pkgs.libnotify}/bin/notify-send -e -a ZBar -i "$HOME/.local/share/misc/zbar.200.png" -u low -t 2500 -e "QR Code Captured" "$(wl-paste)"'';
+    "qrscan" = ''
+      selected_area=$(${pkgs.slurp}/bin/slurp)
+
+      if [ -n "$selected_area" ]; then
+        if ${pkgs.grim}/bin/grim -g "$selected_area" - | ${pkgs.zbar}/bin/zbarimg --raw - > /tmp/qr_result.txt 2>/dev/null; then
+          ${pkgs.wl-clipboard}/bin/wl-copy < /tmp/qr_result.txt
+          ${pkgs.libnotify}/bin/notify-send -e -a ZBar -i "$HOME/.local/share/misc/zbar.200.png" -u low -t 2500 -e "QR Code Captured" "$(cat /tmp/qr_result.txt)"
+        else
+          ${pkgs.libnotify}/bin/notify-send -e -a ZBar  -i "$HOME/.local/share/misc/zbar.200.png" -u normal -t 2500 -e "QR Code Failed" "No valid QR code found in selection."
+        fi
+        
+        rm -f /tmp/qr_result.txt
+      fi
+    ''; # Customised a lot from MangoCubes' though!
     # My own but inspired by them lol
     "qrcreate" = ''
       input=$(${pkgs.fuzzel}/bin/fuzzel --dmenu --lines=0 --width=40 \
         --font="${commonHostVars.fonts.sansSerif.name}:size=14" \
-        --prompt="Enter QR Code URL: " \
+        --prompt="QR Code Data: " \
         --background-color=1e1e2eff \
         --text-color=cdd6f4ff \
         --input-color=cdd6f4ff \

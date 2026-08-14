@@ -49,8 +49,12 @@ connect_oracle_vnc() {
     local user="${SSH_USER:-}"
     local port="${VNC_PORT:-5901}"
 
+    notify-send -e -a VNCViewer -i "/home/${USER}/.local/share/misc/663376.png" -u low "VNC Connection" "Connecting to Oracle server via SSH tunnel"
+
     # Open SSH tunnel in background
     ssh -f -i "$key_file" -L "$port:127.0.0.1:$port" "$user@$host" sleep 10 # Keeps the tunnel open just long enough for the local vncviewer to make a connection. Once closed, the SSH tunnel will automatically clean itself up and exit.
+
+    notify-send -e -a VNCViewer -i "/home/${USER}/.local/share/misc/663376.png" -u low "VNC Connection" "Launching VNC viewer"
     
     vncviewer "127.0.0.1:$port" "$@"
 }
@@ -95,6 +99,8 @@ else
 fi
 
 TARGET_NORM=$(echo "$TARGET" | tr '[:upper:]' '[:lower:]')
+
+notify-send -e -a FreeRDP -i "/home/${USER}/.local/share/misc/663376.png" -u low "Remote desktop" "Connecting to: $TARGET"
 
 case "$TARGET_NORM" in
     *pifi-linux*|*1*|*"pifi linux"*) run_target "rdp-pifi-linux" "$@" ;;
