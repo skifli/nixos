@@ -928,7 +928,7 @@
   };
   "Mod+Alt+N" = {
     _props = {
-      hotkey-overlay-title = "Prepare for and execute a nixOS-rebuild switch"; 
+      hotkey-overlay-title = "Prepare for and execute a nixOS-rebuild switch";
       allow-inhibiting = false;
     };
     spawn = [
