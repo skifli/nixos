@@ -7,6 +7,8 @@ export PATH="$PATH:/run/current-system/sw/bin:$HOME/.nix-profile/bin"
 export MON_1="HDMI-A-1"
 export MON_2="DP-1"
 
+export TIMEOUT=50 # 50*0.02 = 1s
+
 STATE_DIR="$HOME/.cache/niri-layouts"
 STATE_FILE="$STATE_DIR/last_layout"
 FLOAT_STATE_DIR="$HOME/.local/state/nirius-floating"
@@ -48,38 +50,45 @@ send_to_scratchpad() {
     local match_key="$1"
     local match_val="$2"
 
-    # Only toggle if the window EXISTS AND is NOT already in the scratchpad
-    if window_exists "$match_key" "$match_val" && ! is_in_scratchpad "$match_key" "$match_val"; then
-        # Save floating/tiled state before parking
-        fetch_windows
-        local win_id
-        win_id=$(echo "$WINDOWS_JSON" | jq -r ".[] | select(.$match_key != null) | select(.$match_key | ascii_downcase | contains(\"${match_val,,}\")) | .id" | head -n 1)
+    fetch_windows
 
-        if [ -n "$win_id" ]; then
+    # Collect all matching visible window IDs
+    local win_ids
+    mapfile -t win_ids < <(echo "$WINDOWS_JSON" | jq -r ".[] | select(.$match_key != null) | select(.$match_key | ascii_downcase | contains(\"${match_val,,}\")) | .id")
+
+    local valid_ids=()
+    for id in "${win_ids[@]}"; do
+        [ -n "$id" ] && [ "$id" != "null" ] && valid_ids+=("$id")
+    done
+
+    if [ ${#valid_ids[@]} -gt 0 ]; then
+        mkdir -p "$FLOAT_STATE_DIR"
+        local moved_count=0
+
+        for win_id in "${valid_ids[@]}"; do
+            # Save floating/tiled state before parking
             local is_floating
             is_floating=$(echo "$WINDOWS_JSON" | jq -r ".[] | select(.id == $win_id) | .is_floating")
-            mkdir -p "$FLOAT_STATE_DIR"
             echo "$is_floating" > "$FLOAT_STATE_DIR/$win_id"
-        fi
 
-        local attempts=0
-        local max_attempts=5
+            # Focus the specific window first so nirius targets it because even if we did by app_id or title if there are multiple matching windows for said flag it can cause confusion, so we'll just focus it and rely on that matching
+            niri msg action focus-window --id "$win_id"
 
-        while ! is_in_scratchpad "$match_key" "$match_val" && [ "$attempts" -lt "$max_attempts" ]; do
-            if [ "$match_key" = "app_id" ]; then
-                nirius scratchpad-toggle -a "$match_val" || true
-            elif [ "$match_key" = "title" ]; then
-                nirius scratchpad-toggle -t "$match_val" || true
-            fi
+            nirius scratchpad-toggle || true
 
-            ((attempts++))
-            sleep 0.15  # Gives niriusd time to process so it doesn't accidentally toggle it back out
+            ((moved_count++))
+
+            # Poll until window appears in nirius list-scratchpad
+            local t=0
+            while ! is_in_scratchpad "$match_key" "$match_val" && [ "$t" -lt "$TIMEOUT" ]; do
+                sleep 0.02
+                ((t++))
+            done
         done
 
-        # Send notification if it successfully landed in the scratchpad
-        if is_in_scratchpad "$match_key" "$match_val"; then
+        if [ "$moved_count" -gt 0 ]; then
             notify-send -e -a niri -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 \
-                "Scratchpad stash" "Sent window with $match_key: $match_val to scratchpad"
+                "Scratchpad stash" "Sent $moved_count window(s) ($match_key: $match_val) to scratchpad"
         fi
     fi
 }
@@ -88,8 +97,13 @@ restore_from_scratchpad() {
     local match_key="$1"
     local match_val="$2"
 
-    # is_in_scratchpad already checks list-scratchpad, which therefore verifies existence in scratchpad
-    if is_in_scratchpad "$match_key" "$match_val"; then
+    local restored_count=0
+
+    # Keep restoring as long as there are matching windows remaining in the scratchpad
+    while is_in_scratchpad "$match_key" "$match_val"; do
+        local prev_scratch_count
+        prev_scratch_count=$(nirius list-scratchpad 2>/dev/null | grep -i -c "$match_val" || true)
+
         local status=0
         if [ "$match_key" = "app_id" ]; then
             nirius scratchpad-toggle -a "$match_val" || status=$?
@@ -97,30 +111,44 @@ restore_from_scratchpad() {
             nirius scratchpad-toggle -t "$match_val" || status=$?
         fi
 
-        # Send notification & restore tiled state if nirius succeeded
         if [ "$status" -eq 0 ]; then
-            notify-send -e -a niri -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 \
-                "Scratchpad restore" "Restored window with $match_key: $match_val from scratchpad"
+            ((restored_count++))
 
-            sleep 0.05 # Just in case
+            # Poll until nirius list-scratchpad count decreases
+            local t=0
+            while [ "$t" -lt "$TIMEOUT" ]; do
+                local curr_scratch_count
+                curr_scratch_count=$(nirius list-scratchpad 2>/dev/null | grep -i -c "$match_val" || true)
+                [ "$curr_scratch_count" -lt "$prev_scratch_count" ] && break
+                sleep 0.02
+                ((t++))
+            done
 
             fetch_windows
-            local win_id
-            win_id=$(echo "$WINDOWS_JSON" | jq -r ".[] | select(.$match_key != null) | select(.$match_key | ascii_downcase | contains(\"${match_val,,}\")) | .id" | head -n 1)
 
-            if [ -n "$win_id" ] && [ -f "$FLOAT_STATE_DIR/$win_id" ]; then
-                local was_float
-                was_float=$(cat "$FLOAT_STATE_DIR/$win_id")
-                local is_now_float
-                is_now_float=$(echo "$WINDOWS_JSON" | jq -r ".[] | select(.id == $win_id) | .is_floating")
+            # Loop through all matching open windows to restore floating/tiled state
+            while read -r win_id; do
+                if [ -n "$win_id" ] && [ -f "$FLOAT_STATE_DIR/$win_id" ]; then
+                    local was_float
+                    was_float=$(cat "$FLOAT_STATE_DIR/$win_id")
+                    local is_now_float
+                    is_now_float=$(echo "$WINDOWS_JSON" | jq -r ".[] | select(.id == $win_id) | .is_floating")
 
-                if [ "$was_float" = "false" ] && [ "$is_now_float" = "true" ]; then
-                    niri msg action focus-window --id "$win_id"
-                    niri msg action toggle-window-floating
+                    if [ "$was_float" = "false" ] && [ "$is_now_float" = "true" ]; then
+                        niri msg action focus-window --id "$win_id"
+                        niri msg action toggle-window-floating
+                    fi
+                    rm -f "$FLOAT_STATE_DIR/$win_id"
                 fi
-                rm -f "$FLOAT_STATE_DIR/$win_id"
-            fi
+            done < <(echo "$WINDOWS_JSON" | jq -r ".[] | select(.$match_key != null) | select(.$match_key | ascii_downcase | contains(\"${match_val,,}\")) | .id")
+        else
+            break
         fi
+    done
+
+    if [ "$restored_count" -gt 0 ]; then
+        notify-send -e -a niri -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 \
+            "Scratchpad restore" "Restored $restored_count window(s) ($match_key: $match_val) from scratchpad"
     fi
 }
 
@@ -199,8 +227,8 @@ ensure_window_exists() {
         eval "$fallback_cmd &"
         
         local count=0
-        while [ "$count" -lt 30 ]; do
-            sleep 0.5
+        while [ "$count" -lt 150 ]; do # 150*0.1=15s
+            sleep 0.1
             fetch_windows
             
             if echo "$WINDOWS_JSON" | jq -e \
