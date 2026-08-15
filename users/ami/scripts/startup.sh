@@ -89,6 +89,8 @@ start_and_manage "zen-beta" "app_id" "zen-beta" "$FOCUSED_MONITOR" "1"
 start_and_manage "anki" "title" "User 1 - Anki" "$FOCUSED_MONITOR" "2" # Otherwise it would sometimes just move the syncing window not the actual window which was annoying... tad of a workaround... but it works!
 start_and_manage "ferdium" "app_id" "ferdium" "$SECOND_MONITOR" "2"
 
+nohup "$HOME/.local/bin/task-receiver.sh" >/tmp/task-receiver.log 2>&1 & disown
+
 notify-send -e -a "niri" -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 "Pre-keyring apps" "Apps spawned"
 
 # - START AWWW STUFF -

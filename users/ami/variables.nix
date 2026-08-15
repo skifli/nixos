@@ -378,6 +378,9 @@ in rec {
       [ -n "$input" ] && ${pkgs.qrencode}/bin/qrencode -o - "$input" | ${pkgs.wl-clipboard}/bin/wl-copy -t image/png && ${pkgs.libnotify}/bin/notify-send -a "QR Gen" -u low -t 2000 "QR Code Generated" "Image copied to clipboard"
     ''; # commonHostVars.fonts.sizes.applications is too small - 14 is best probably
 
+    # Inspired by axlefublr
+    "schedule" = builtins.readFile ./scripts/schedule.sh;
+
     # My own random ones
     "focus-focused-monitor" = "niri msg action focus-monitor \"${focusedMonitor}\"";
     "focus-second-monitor" = "niri msg action focus-monitor \"${secondMonitor}\"";
