@@ -39,15 +39,63 @@ while true; do
         LOG_FILE="$LOGS_DIR/$ID.log"
         UNIT_NAME="task-scheduler-$ID"
 
+        BEFORE_WIN_IDS=$(niri msg -j windows 2>/dev/null | jq -r '.[].id' 2>/dev/null | tr '\n' ' ')
+
+        EVENT_FIFO=$(mktemp -u)
+        mkfifo "$EVENT_FIFO"
+        exec 4<> "$EVENT_FIFO"
+
+        niri msg -j event-stream >&4 2>/dev/null &
+        STREAM_PID=$!
+
+        FIRST_WORD=$(echo "$CMD" | awk '{print $1}')
+        CMD_BASE=$(basename "$FIRST_WORD" .sh)
+        CMD_LOWER=$(echo "$CMD_BASE" | tr '[:upper:]' '[:lower:]')
+
         systemd-run --user --scope --unit="$UNIT_NAME" \
             bash -c "cd $(printf '%q' "$CWD") && eval $(printf '%q' "$CMD")" > "$LOG_FILE" 2>&1 &
-        
-        sleep 1
 
-        # Wait until every process inside the isolated cgroup has exited
-        while systemctl --user is-active --quiet "$UNIT_NAME.scope" 2>/dev/null; do
-            sleep 0.5
+        TRACKED_WIN_ID=""
+
+        while true; do
+            SCOPE_ACTIVE=0
+            if systemctl --user is-active --quiet "$UNIT_NAME.scope" 2>/dev/null; then
+                SCOPE_ACTIVE=1
+            fi
+
+            if read -t 0.1 -u 4 LINE; then
+                if [ -n "$LINE" ]; then
+                    WIN_JSON=$(echo "$LINE" | jq -c '.WindowOpenedOrChanged.window // empty' 2>/dev/null || true)
+                    
+                    if [ -n "$WIN_JSON" ]; then
+                        EVENT_WIN_ID=$(echo "$WIN_JSON" | jq -r '.id')
+                        EVENT_APP_ID=$(echo "$WIN_JSON" | jq -r '.app_id // ""' | tr '[:upper:]' '[:lower:]')
+                        EVENT_TITLE=$(echo "$WIN_JSON" | jq -r '.title // ""' | tr '[:upper:]' '[:lower:]')
+
+                        if [ -z "$TRACKED_WIN_ID" ] && ! [[ " $BEFORE_WIN_IDS " =~ " $EVENT_WIN_ID " ]]; then
+                            if [[ "$EVENT_APP_ID" == *"ghostty"* ]] || [[ "$EVENT_TITLE" == *"floating-term"* ]] || [[ "$EVENT_TITLE" == *"$CMD_LOWER"* ]] || [[ "$EVENT_APP_ID" == *"$CMD_LOWER"* ]]; then
+                                TRACKED_WIN_ID="$EVENT_WIN_ID"
+                                echo -e "\e[1;33m[Task #$ID]\e[0m Tracking window ID: $TRACKED_WIN_ID"
+                            fi
+                        fi
+                    fi
+
+                    CLOSED_ID=$(echo "$LINE" | jq -r '.WindowClosed.id // empty' 2>/dev/null || true)
+                    if [ -n "$TRACKED_WIN_ID" ] && [ "$CLOSED_ID" = "$TRACKED_WIN_ID" ]; then
+                        break
+                    fi
+                fi
+            fi
+
+            # If systemd scope ended and no window was opened, CLI task is complete
+            if [ "$SCOPE_ACTIVE" -eq 0 ] && [ -z "$TRACKED_WIN_ID" ]; then
+                break
+            fi
         done
+
+        kill "$STREAM_PID" 2>/dev/null || true
+        exec 4>&-
+        rm -f "$EVENT_FIFO"
 
         EXIT_CODE=$(systemctl --user show "$UNIT_NAME.scope" --property=ExecMainStatus --value 2>/dev/null || echo 0)
 
