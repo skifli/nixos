@@ -960,12 +960,20 @@
 
         /home/${userVars.username}/.local/bin/floating-term.sh ${userVars.programs.terminal} -e ${userVars.programs.terminal-shell} -i -c '
           cd /home/${userVars.username}/nixos && sudo chown -R ${userVars.username} .git/;
+          git pull;
+          git submodule update --init --recursive;
+          git log --oneline ORIG_HEAD..HEAD;
+
           start_time=\$(date +%s.%N);
-          zngunsh;
-          end_time=\$(date +%s.%N);
-          duration=\$(echo \"scale=2; \$end_time - \$start_time\" | bc);
-          log_date=\$(date \"+%Y-%m-%d %H:%M:%S\");
-          echo \"[\$log_date] zngunsh execution time: \$duration seconds\" >> /home/${userVars.username}/Documents/nixos_rebuild.log;
+          sudo GC_INITIAL_HEAP_SIZE=\"\$CUSTOM_NIXOS_REBUILD_GC\" nixos-rebuild switch --flake path:.#${hostVars.hostname};
+
+          if [ \$? -eq 0 ]; then
+            end_time=\$(date +%s.%N);
+            duration=\$(echo \"scale=2; \$end_time - \$start_time\" | bc);
+            log_date=\$(date \"+%Y-%m-%d %H:%M:%S\");
+            echo \"[\$log_date] zngunsh execution time: \$duration seconds\" >> /home/${userVars.username}/Documents/nixos_rebuild.log;
+          fi
+
           exec ${userVars.programs.terminal-shell}
         '
       "
