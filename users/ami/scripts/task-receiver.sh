@@ -62,12 +62,21 @@ while true; do
             WIN_ID=$(niri msg -j focused-window 2>/dev/null | jq -r '.id // empty' || true)
             [ -n "$WIN_ID" ] && niri msg action set-window-urgent --id "$WIN_ID" 2>/dev/null || true
 
-            ACTION=$(printf "1. Retry task\n2. Edit command\n3. Mark failed / skip" | fuzzel --dmenu \
+            CHOICES="1. Retry task
+2. Edit command
+3. Mark failed / skip"
+            PROMPT="Task #$ID Failed: "
+            MAX_LEN=$(echo "$CHOICES" | wc -L)
+            CALC_WIDTH=$(( ${#PROMPT} + MAX_LEN + 4 ))
+
+            ACTION=$(echo "$CHOICES" | fuzzel --dmenu \
                 --font="$FONT:size=$FONT_SIZE" \
-                --prompt="Task #$ID Failed: " \
+                --prompt="$PROMPT" \
                 --background-color=1e1e2eff \
                 --text-color=cdd6f4ff \
-                --width=25 --lines=3 --border-radius=10 || echo "skip")
+                --width="$CALC_WIDTH" \
+                --lines=3 \
+                --border-radius=10 || echo "skip")
 
             case "${ACTION,,}" in
                 *retry*)

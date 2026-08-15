@@ -13,10 +13,29 @@ mkdir -p "$RECORDINGS_DIR"
 
 fuzzel_styled() {
     local prompt="$1"
-    local lines="$2"
-    local width="${3:-40}"
+    local lines="${2:-0}"
+    local width="${3:-0}"
+    local input
+    input=$(cat)
 
-    fuzzel --dmenu \
+    if [ -z "$input" ]; then
+        return 0
+    fi
+
+    if [ "$lines" -eq 0 ]; then
+        lines=$(echo "$input" | wc -l)
+    fi
+
+    if [ "$width" -eq 0 ]; then
+        local max_len prompt_len
+        max_len=$(echo "$input" | wc -L 2>/dev/null || echo 20)
+        prompt_len=${#prompt}
+        width=$(( prompt_len + max_len + 4 ))
+        [ "$width" -lt 25 ] && width=25
+        [ "$width" -gt 100 ] && width=100
+    fi
+
+    echo "$input" | fuzzel --dmenu \
         --font="$FONT:size=$FONT_SIZE" \
         --prompt="$prompt" \
         --background-color=1e1e2eff \
@@ -82,7 +101,7 @@ stop_recording() {
 
     FINAL_FILE="$RAW_FILE"
 
-    ACTION_CHOICE=$(printf "1. OK, continue\n2. Copy to clipboard\n3. Compress and copy (H.265)\n4. Compress, delete original, copy\n5. Delyeet it" | fuzzel_styled "Recording saved: " 5 40)
+    ACTION_CHOICE=$(printf "1. OK, continue\n2. Copy to clipboard\n3. Compress and copy (H.265)\n4. Compress, delete original, copy\n5. Delyeet it" | fuzzel_styled "Recording saved: ")
 
     case "${ACTION_CHOICE,,}" in
         *compress*)
@@ -123,7 +142,7 @@ stop_recording() {
             ;;
     esac
 
-    FOLDER_CHOICE=$(printf "1. Yes\n2. No" | fuzzel_styled "Open Folder? " 2 30)
+    FOLDER_CHOICE=$(printf "1. Yes\n2. No" | fuzzel_styled "Open Folder? ")
 
     if [[ "${FOLDER_CHOICE,,}" == *yes* ]]; then
         xdg-open "$RECORDINGS_DIR" >/dev/null 2>&1 & disown # disown and pipe stdout to avoid blocking the script
@@ -135,11 +154,11 @@ if is_recording || [ "${1:-}" = "--stop" ]; then
     exit 0
 fi
 
-TARGET_CHOICE=$(printf "1. Select via portal\n2. Focused monitor\n3. Draw region (with mouse)" | fuzzel_styled "Record Target: " 3 35)
+TARGET_CHOICE=$(printf "1. Select via portal\n2. Focused monitor\n3. Draw region (with mouse)" | fuzzel_styled "Record Target: ")
 
 if [ -z "$TARGET_CHOICE" ]; then exit 0; fi
 
-AUDIO_CHOICE=$(printf "1. System audio + Microphone\n2. System audio only\n3. Microphone only\n4. No audio" | fuzzel_styled "Record Audio: " 4 30)
+AUDIO_CHOICE=$(printf "1. System audio + Microphone\n2. System audio only\n3. Microphone only\n4. No audio" | fuzzel_styled "Record Audio: ")
 
 if [ -z "$AUDIO_CHOICE" ]; then exit 0; fi
 

@@ -82,15 +82,22 @@ FONT="${FONT_MONOSPACE:-}"
 FONT_SIZE="${FONT_SIZE_APPLICATIONS:-}"
 
 if [ -z "$TARGET" ]; then
-    TARGET=$(printf "1. Pifi Linux (RDP)\n2. Pifi Windows (RDP)\n3. Oracle Server (VNC)" | fuzzel --dmenu \
+    OPTIONS="1. Pifi Linux (RDP)
+2. Pifi Windows (RDP)
+3. Oracle Server (VNC)"
+    PROMPT="Connect to: "
+    MAX_LEN=$(echo "$OPTIONS" | wc -L)
+    WIDTH=$(( ${#PROMPT} + MAX_LEN + 4 ))
+
+    TARGET=$(echo "$OPTIONS" | fuzzel --dmenu \
         --font="$FONT:size=$FONT_SIZE" \
-        --prompt="Connect to: " \
+        --prompt="$PROMPT" \
         --background-color=1e1e2eff \
         --text-color=cdd6f4ff \
         --input-color=cdd6f4ff \
         --selection-color=585b70ff \
         --selection-text-color=cdd6f4ff \
-        --width=35 \
+        --width="$WIDTH" \
         --lines=3 \
         --horizontal-pad=12 \
         --border-radius=10)
