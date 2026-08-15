@@ -269,10 +269,20 @@ in rec {
           lctl lmet lalt           spc            ralt rmet rctl
         )
 
+        (defvirtualkeys
+          release-mouse (release-layer mouse)
+          release-mouse-slow (release-layer mouse-slow)
+        )
+
         (defalias
           ;; 150ms tap timeout, 250ms hold timeout.
           ;; Mouse layer ONLY activates if Space is held longer than 250ms.
-          spc (tap-hold 150 250 spc (layer-toggle mouse))
+          spc (multi
+            (tap-hold 150 250 spc (layer-toggle mouse))
+            (on-release tap-vkey release-mouse)
+            (on-release tap-vkey release-mouse-slow)
+          )
+          
           zmin (multi lctl eql)
           zmout (multi lctl min)
         )
