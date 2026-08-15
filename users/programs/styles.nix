@@ -175,7 +175,7 @@ in {
               # 3. Trigger switch if states mismatch
               if [ "$WANTED" != "$CURRENT_TAG" ]; then
                 echo "Theme mismatch detected. Switching to $WANTED mode."
-                notify-send -e -a "nixos" -i "/home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 5000 "Auto-theme switcher" "Switching to $WANTED mode..."
+                notify-send -e -a "nixOS" -i "/home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 5000 "Auto-theme switcher" "Switching to $WANTED mode..."
                 ${switcherBin} "$WANTED"
               fi
 
