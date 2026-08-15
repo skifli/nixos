@@ -39,6 +39,7 @@ in {
   # NixOS-level configuration
   environment.systemPackages = [
     pkgs.niri
+    pkgs.bc # Used for some scripts
     pkgs.jq # Used for some scripts
     pkgs.libnotify # Used for sending notifications to the notification daemon
 
