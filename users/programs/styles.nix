@@ -132,8 +132,8 @@ in {
           lonDir =
             if hostVars.longitude >= 0
             then "E"
-            else "W"; in 
-        [
+            else "W";
+        in [
           "PATH=/run/wrappers/bin:${lib.makeBinPath [pkgs.libnotify pkgs.coreutils pkgs.bash pkgs.niri pkgs.sunwait]}"
           "USER=${userVars.username}"
           "LAT_VAL=${latVal}"
