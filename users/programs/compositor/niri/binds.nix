@@ -1046,7 +1046,7 @@
       hotkey-overlay-title = null;
       allow-inhibiting = false;
     };
-    spawn = [ "/home/${userVars.username}/.local/bin/todo.sh" ];
+    spawn = ["/home/${userVars.username}/.local/bin/todo.sh"];
   };
 
   # Preset layout scripts

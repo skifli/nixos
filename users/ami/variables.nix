@@ -364,7 +364,7 @@ in rec {
         OnBootSec = "1m";
         OnUnitActiveSec = "1m";
       };
-      Install.WantedBy = [ "timers.target" ];
+      Install.WantedBy = ["timers.target"];
     };
   };
 
