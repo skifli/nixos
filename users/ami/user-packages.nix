@@ -34,7 +34,8 @@
 
       mpv
 
-      /* Not needed anymore?
+      /*
+         Not needed anymore?
       (pkgs.ferdium.overrideAttrs (oldAttrs: {
         postFixup = (oldAttrs.postFixup or "") + ''
           wrapProgram $out/bin/ferdium \

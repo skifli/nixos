@@ -13,7 +13,8 @@
       enable = true;
       autoInstallDependencies = true;
 
-      /* NOT NEEDED ANYMORE AS AWWW IS DONE SEPARATELY FOR NIRI WORKSPACE BLUR
+      /*
+         NOT NEEDED ANYMORE AS AWWW IS DONE SEPARATELY FOR NIRI WORKSPACE BLUR
       # Safely wraps wayle to include awww in its PATH before systemd runs it
       package = pkgs.symlinkJoin {
         name = "wayle-wrapped";
