@@ -104,7 +104,7 @@ in {
     platformTheme = commonHostVars.theme.qt.platform; # Automatically sets QT_QPA_PLATFORMTHEME which without means Dolphin in dark mode is funky with black text on a black bg...
   };
 
-  home-manager.users.${userVars.username} = {
+  home-manager.users.${userVars.username} = {lib, ...}: {
     # Force auto-theme-check to restart after every HM activation/rebuild because it didn't before and since we always rebuild into light if we don't do this this can cause some theme mismatches.
     home.activation.triggerThemeCheck = lib.hm.dag.entryAfter ["reloadSystemd"] ''
       run ${pkgs.systemd}/bin/systemctl --user restart auto-theme-check.service
