@@ -130,7 +130,7 @@ notify-send -e -a "niri" -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 25
 
   sleep 1 # Just a tad of a delay to ensure the keyring is fully ready for use
 
-  start_and_manage "ADW_DISABLE_PORTAL=1 anytype" "app_id" "anytype" "$SECOND_MONITOR" "1"
+  start_and_manage "anytype" "app_id" "anytype" "$SECOND_MONITOR" "1"
 
   # Safeyes is NOT keyring dependant, but one time wayle took a while to starup and it meant safeeyes' tray icon dependency popped up with an error and the only options were disable it or quit - so I had to do a manual restart. So, just to be safe it has been plopped here because by now waiting for the unlock means in the meantime wayle has DEFINITELY started and registered for notifications, etc
   safeeyes & disown

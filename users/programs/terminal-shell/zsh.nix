@@ -60,7 +60,7 @@
         # This is the same default behavior of modern Home Manager (26.05+),
         # without needing to bump stateVersion, which for me is before said
         # needed version and should not be bumped in general.
-        dotDir = ".config/zsh"; # Directory where the zsh configuration and more should be located, relative to the users home directory. The default is the home directory.
+        dotDir = "${config.home-manager.users.${userVars.username}.home.homeDirectory}/.config/zsh"; # Directory where the zsh configuration and more should be located, relative to the users home directory. The default is the home directory.
 
         autosuggestion.enable = true;
         enableCompletion = true;
