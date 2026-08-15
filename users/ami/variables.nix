@@ -270,6 +270,7 @@ in rec {
         )
 
         (defvirtualkeys
+          mouse-mode (layer-toggle mouse)
           release-mouse (release-layer mouse)
           release-mouse-slow (release-layer mouse-slow)
         )
@@ -285,6 +286,9 @@ in rec {
 
           zmin (multi lctl eql)
           zmout (multi lctl min)
+
+          ;; Toggles virtual key mouse-mode on/off
+          ntog (on-press toggle-vkey mouse-mode)
         )
 
         ;; Default typing layer
@@ -301,7 +305,7 @@ in rec {
           _    _    _    _    _    _    _    _    _    _    _    _    _    _
           _    lmet (mwheel-left 20 60) (movemouse-accel-up 5 210 1 9) (mwheel-right 20 60) lalt _ @zmin (mwheel-down 30 60) (mwheel-up 30 60) @zmout _ _
           _    lsft (movemouse-accel-left 5 210 1 9) (movemouse-accel-down 5 210 1 9) (movemouse-accel-right 5 210 1 9) lctl _ mlft mrgt (layer-toggle mouse-slow) _ _ _ _
-          _    _    _    _    _    _    _    mmid pgup pgdn _    _    _
+          _    _    _    _    _    _  @ntog mmid pgup pgdn _    _    _
           _    _    _            XX              _    _    _
         )
 

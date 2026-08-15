@@ -975,6 +975,13 @@
     };
     spawn = "qrcreate";
   };
+  "Mod+Alt+V" = {
+    _props = {
+      hotkey-overlay-title = "Preview clipboard image";
+      allow-inhibiting = false;
+    };
+    spawn = ["/home/${userVars.username}/.local/bin/view-clipboard-image.sh"];
+  };
 
   # MISC & SCRIPTS
   "Mod+B" = {

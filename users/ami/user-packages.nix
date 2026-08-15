@@ -22,6 +22,7 @@
       kdePackages.qtwayland # Needed by typstwriter
       kicad
       ocrmypdf
+      moreutils # Used in some scripts (e.g., task-receiver.sh)
       normcap
       noto-fonts
       noto-fonts-color-emoji
@@ -31,6 +32,7 @@
       scrcpy
       soundwireserver
       # siyuan
+      swayimg # Used in some scripts (e.g., view-clipboard-image.sh)
       termdown
 
       mpv
