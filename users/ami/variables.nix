@@ -384,6 +384,7 @@ in rec {
       "steam"
       "styles"
       "typst"
+      "ydotool"
     ];
   };
 

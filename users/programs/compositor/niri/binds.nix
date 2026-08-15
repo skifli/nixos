@@ -982,6 +982,13 @@
     };
     spawn = ["/home/${userVars.username}/.local/bin/view-clipboard-image.sh"];
   };
+  "Mod+Alt+A" = {
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
+    spawn = ["/home/${userVars.username}/.local/bin/autoclicker.sh"];
+  };
 
   # MISC & SCRIPTS
   "Mod+B" = {
