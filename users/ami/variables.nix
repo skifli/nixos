@@ -345,6 +345,29 @@ in rec {
     ];
   };
 
+  systemdServices = {
+    todo-checker = {
+      Unit.Description = "Check for due todo reminders";
+      Service = {
+        Type = "oneshot";
+        ExecStart = "/home/${userVars.username}/.local/bin/todo.sh --check";
+      };
+    };
+  };
+
+  systemdTimers = {
+    todo-checker = {
+      Unit = {
+        Description = "Timer for todo reminder checker";
+      };
+      Timer = {
+        OnBootSec = "1m";
+        OnUnitActiveSec = "1m";
+      };
+      Install.WantedBy = [ "timers.target" ];
+    };
+  };
+
   inherit focusedMonitor secondMonitor;
 
   shellScripts = {

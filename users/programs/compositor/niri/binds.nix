@@ -1041,6 +1041,13 @@
       ''out=$(niri msg pick-window | grep -v '^[[:space:]]*~' | sed -E 's/^[[:space:]]+//') && [ ! -z "$out" ] && echo "$out" | wl-copy && notify-send -e -a niri -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 3500 "Window Captured" "$(echo "$out" | grep -E '^(Window ID|Title|App ID|PID|Window size)')"''
     ];
   };
+  "Mod+N" = {
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
+    spawn = [ "/home/${userVars.username}/.local/bin/todo.sh" ];
+  };
 
   # Preset layout scripts
   "Mod+Ctrl+1" = {

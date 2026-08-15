@@ -16,6 +16,7 @@
       haruna # Media player
       hblock
       imagemagick # mogrify EXIF
+      javaPackages.compiler.temurin-bin.jdk-25 # For Prism Launcher
       kdePackages.gwenview # Image viewer
       # kdePackages.kate # Also installs kwrite
       kdePackages.qtwayland # Needed by typstwriter
@@ -25,12 +26,12 @@
       noto-fonts
       noto-fonts-color-emoji
       prismlauncher
-      javaPackages.compiler.temurin-bin.jdk-25 # For Prism Launcher
       proton-vpn
       qtscrcpy
       scrcpy
       soundwireserver
       # siyuan
+      termdown
 
       mpv
 

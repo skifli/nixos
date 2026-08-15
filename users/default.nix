@@ -51,6 +51,9 @@ in {
       builtins.mapAttrs (username: userVars: {
         programs.home-manager.enable = true; # Let Home Manager install and manage itself.
 
+        systemd.user.services = userVars.systemdServices;
+        systemd.user.timers = userVars.systemdTimers;
+
         xdg = {
           configFile."mimeapps.list".force = true;
 
