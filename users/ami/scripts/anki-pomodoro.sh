@@ -28,7 +28,7 @@ dismiss_notif() {
     local id="$1"
 
     if [ "$id" -ne 0 ]; then
-        notify-send -a "anki" -r "$id" -t 1000 "Dismissed" "" &>/dev/null || true
+        notify-send -a "anki" -i "/home/${USER}/.local/share/misc/Anki-icon.svg" -r "$id" -t 1000 "Dismissed" "" &>/dev/null || true
     fi
 }
 
