@@ -105,11 +105,11 @@
           size = 100000;
           save = 100000;
           saveNoDups = true;
-          ignoreDups = true;            # Do not enter duplicate commands
-          ignoreSpace = true;           # Ignore commands starting with a space (e.g., secrets)
+          ignoreDups = true; # Do not enter duplicate commands
+          ignoreSpace = true; # Ignore commands starting with a space (e.g., secrets)
           expireDuplicatesFirst = true; # When history fills up, purge duplicates first
-          share = true;                 # Share command history across open zsh sessions (better than append imo)
-          extended = true;              # Save timestamps alongside commands
+          share = true; # Share command history across open zsh sessions (better than append imo)
+          extended = true; # Save timestamps alongside commands
         };
 
         historySubstringSearch = {

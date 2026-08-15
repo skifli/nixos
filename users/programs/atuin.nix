@@ -18,14 +18,14 @@
         forceOverwriteSettings = true;
 
         # Keep Up-Arrow for Zsh historySubstringSearch, use Ctrl+R for Atuin
-        flags = [ "--disable-up-arrow" ];
+        flags = ["--disable-up-arrow"];
 
         settings = {
-          auto_sync = false;            # No cloud sync
+          auto_sync = false; # No cloud sync
           search_mode = "daemon-fuzzy"; # This search mode uses an in-memory index, stored in the daemon, to perform fast and customizable searches.
           style = "auto";
-          inline_height = 15;           # How many lines the history popup occupies
-          show_preview = true;          # Shows command details in a side preview pane
+          inline_height = 15; # How many lines the history popup occupies
+          show_preview = true; # Shows command details in a side preview pane
         };
       };
     };
