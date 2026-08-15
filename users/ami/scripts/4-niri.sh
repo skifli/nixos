@@ -15,16 +15,26 @@ send_to_scratchpad "app_id" "wineboot.exe"
 send_to_scratchpad "app_id" "affinity.exe"
 send_to_scratchpad "app_id" "org.kde.dolphin"
 
+# Anki Pomodoro stuff
+
+if is_in_scratchpad "title" "Anki Pomodoro"; then
+    restore_from_scratchpad "title" "Anki Pomodoro"
+fi
+
+ensure_window_exists "com.mitchellh.ghostty" "Anki Pomodoro" "${BASH_SOURCE%/*}/floating-term.sh ghostty -w 30% -h 30% --title='Anki Pomodoro' -e ${BASH_SOURCE%/*}/anki-pomodoro.sh" "com.mitchellh.ghostty" "Anki Pomodoro"
+
 # 1st Monitor
-move_windows app_id "zen-beta" "$MON_1" "1" "100%"
+move_windows "app_id" "zen-beta" "$MON_1" "1" "100%"
+move_windows "title" "Anki Pomodoro" "$MON_1" "1" "40%"
 move_windows "app_id" "gcr-prompter" "$MON_1" "1"
 
 # 2nd Monitor
-move_windows app_id "anki" "$MON_2" "1" "100%"
+move_windows "app_id" "anki" "$MON_2" "1" "100%"
 
 # Focus windows
 focus_window "app_id" "anki"
 focus_window "app_id" "zen-beta"
+focus_window "title" "Anki Pomodoro"
 focus_window "app_id" "gcr-prompter"
 
 notify-send -e -a niri -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 "Anki configuration" "Window positions restored"

@@ -156,6 +156,25 @@ in rec {
           open-on-workspace = "1";
         }
 
+        {
+          match._props = {
+            title._raw = ''r#"(?i)Anki Pomodoro"#'';
+          };
+          open-floating = true;
+          open-on-workspace = "1";
+          default-floating-position._props = {
+            x = 20;
+            y = 20;
+            relative-to = "top-left";
+          };
+          default-column-width = {
+            proportion = 0.30;
+          };
+          default-window-height = {
+            proportion = 0.30;
+          };
+        }
+
         ## https://www.reddit.com/r/niri/comments/1skrhet/steam_notifications_appear_in_the_center_of_the/
         {
           match._props = {
