@@ -11,6 +11,13 @@
 
     # Refresh service
     systemd.user.services.kdeconnect-refresh = {
+      Unit = {
+        Description = "Refresh KDE Connect devices";
+
+        # So this only runs AFTER the main service is running
+        After = [ "kdeconnect.service" ];
+        Requires = [ "kdeconnect.service" ];
+      };
       Service = {
         Type = "oneshot";
         ExecStart = "${pkgs.kdePackages.kdeconnect-kde}/bin/kdeconnect-cli --refresh";
