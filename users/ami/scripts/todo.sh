@@ -62,7 +62,7 @@ fuzzel_prompt() {
 
 if [ "${1:-}" = "--startup" ]; then
     NOW=$(date +%s)
-    STARTUP_ITEMS=$(jq -r --argjson now "$NOW" '.[] | select(.done != true) | select(.on_startup == true or (.due_ts != null and .due_ts <= $now)) | "• " + .text' "$TODO_FILE")
+    STARTUP_ITEMS=$(jq -r --argjson now "$NOW" '.[] | select(.done != true) | select(.on_startup == true or (.due_ts != null and .due_ts <= $now)) | "\u2022 " + .text' "$TODO_FILE")
 
     if [ -n "$STARTUP_ITEMS" ]; then
         notify-send -e -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" -u critical -t 0 "Pending reminders" "$STARTUP_ITEMS"
@@ -145,7 +145,7 @@ parse_time_preset() {
                 if [ -n "$PARSED_TS" ]; then
                     DUE_TS="$PARSED_TS"
                     DUE_STR="$(format_ts_str "$DUE_TS")"
-                    
+                else
                     notify-send -u critical -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Invalid time" "Could not parse relative time '$REL_INPUT'"
                 fi
             fi
@@ -177,28 +177,34 @@ parse_time_preset() {
 
 NOW=$(date +%s)
 
-SORTED_ACTIVE_TODOS=$(jq -r --argjson now "$NOW" '
+ACTIVE_TODOS_JSON=$(jq -c --argjson now "$NOW" '
     [ .[] | select(.done != true) ] |
     (
         (map(select(.due_ts != null and .on_startup != true)) | sort_by(.due_ts)) +
         (map(select(.on_startup == true))) +
         (map(select(.due_ts == null and .on_startup != true)) | sort_by(.text | ascii_downcase))
     ) |
-    .[] |
-    (
-        if .on_startup == true then
-            "[Boot] "
-        elif .due_ts != null then
-            if .due_ts < $now then
-                "[OVERDUE: " + .due_str + "] "
-            else
-                "[" + .due_str + "] "
-            end
-        else
-            "[Task] "
-        end
-    ) + .text + "  (ID:" + .id + ")"
+    map({
+        id: .id,
+        display: (
+            (
+                if .on_startup == true then
+                    "[Boot] "
+                elif .due_ts != null then
+                    if .due_ts < $now then
+                        "[OVERDUE: " + .due_str + "] "
+                    else
+                        "[" + .due_str + "] "
+                    end
+                else
+                    "[Task] "
+                end
+            ) + .text
+        )
+    })
 ' "$TODO_FILE")
+
+SORTED_ACTIVE_TODOS=$(echo "$ACTIVE_TODOS_JSON" | jq -r '.[].display')
 
 ADD_HEADER="[+ Add New Todo / Reminder]"
 HISTORY_FOOTER="[View Completed Tasks / History]"
@@ -295,7 +301,9 @@ $COMPLETED_ITEMS"
     fi
 
 else
-    TODO_ID=$(echo "$SELECTED" | sed -n 's/.*(ID:\([0-9]*\))/\1/p')
+    # Look up the task ID matching the display text selected in Fuzzel
+    
+    TODO_ID=$(echo "$ACTIVE_TODOS_JSON" | jq -r --arg sel "$SELECTED" '.[] | select(.display == $sel) | .id' | head -n1)
     [ -z "$TODO_ID" ] && exit 0
 
     ACTION_MENU="1. Mark Completed
