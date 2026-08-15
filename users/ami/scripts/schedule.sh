@@ -13,7 +13,6 @@ resolve_task_file() {
     local input="${1:-}"
     [ -z "$input" ] && return 1
 
-    # Strip leading zeros to get raw integer (0005 -> 5)
     local raw_id
     raw_id=$(echo "$input" | sed 's/^0*//')
     [ -z "$raw_id" ] && raw_id="0"
@@ -30,6 +29,22 @@ resolve_task_file() {
     else
         return 1
     fi
+}
+
+get_next_id() {
+    local max_id=0
+    shopt -s nullglob
+    for f in "$QUEUE_DIR"/*.task; do
+        local filename
+        filename=$(basename "$f" .task)
+        local num_id
+        num_id=$(echo "$filename" | sed 's/^0*//')
+        [ -z "$num_id" ] && num_id=0
+        if [[ "$num_id" =~ ^[0-9]+$ ]] && [ "$num_id" -gt "$max_id" ]; then
+            max_id="$num_id"
+        fi
+    done
+    echo $((max_id + 1))
 }
 
 show_help() {
@@ -64,7 +79,7 @@ case "$1" in
         for f in "${tasks[@]}"; do
             (
                 source "$f"
-                case "$STATUS" in
+                case "${STATUS:-pending}" in
                     pending)   COLOR="\e[1;33m" ;;
                     running)   COLOR="\e[1;35m" ;;
                     completed) COLOR="\e[1;32m" ;;
@@ -77,9 +92,13 @@ case "$1" in
         ;;
 
     edit)
-        TASK_FILE=$(resolve_task_file "${2:-}" || true)
+        if [ -z "${2:-}" ]; then
+            echo "Usage: schedule edit <task_id>"
+            exit 1
+        fi
+        TASK_FILE=$(resolve_task_file "$2" || true)
         if [ -z "$TASK_FILE" ]; then
-            echo "Error: Task '${2:-}' not found."
+            echo "Error: Task '$2' not found."
             exit 1
         fi
         source "$TASK_FILE"
@@ -92,9 +111,13 @@ case "$1" in
         ;;
 
     rm|cancel)
-        TASK_FILE=$(resolve_task_file "${2:-}" || true)
+        if [ -z "${2:-}" ]; then
+            echo "Usage: schedule rm <task_id>"
+            exit 1
+        fi
+        TASK_FILE=$(resolve_task_file "$2" || true)
         if [ -z "$TASK_FILE" ]; then
-            echo "Error: Task '${2:-}' not found."
+            echo "Error: Task '$2' not found."
             exit 1
         fi
         source "$TASK_FILE"
@@ -103,16 +126,20 @@ case "$1" in
         ;;
 
     logs|log)
-        TASK_FILE=$(resolve_task_file "${2:-}" || true)
+        if [ -z "${2:-}" ]; then
+            echo "Usage: schedule logs <task_id>"
+            exit 1
+        fi
+        TASK_FILE=$(resolve_task_file "$2" || true)
         if [ -z "$TASK_FILE" ]; then
-            echo "Error: Task '${2:-}' not found."
+            echo "Error: Task '$2' not found."
             exit 1
         fi
         source "$TASK_FILE"
         LOG_FILE="$LOGS_DIR/$ID.log"
-        if [ ! -f "$LOG_FILE" ]; then
-            echo "No logs found for task '$ID'."
-            exit 1
+        if [ ! -f "$LOG_FILE" ] || [ ! -s "$LOG_FILE" ]; then
+            echo "[Log file is empty for task #$ID]"
+            exit 0
         fi
         cat "$LOG_FILE"
         ;;
@@ -133,11 +160,8 @@ case "$1" in
     *)
         # Queue new task
         CMD="$*"
-        SEQ_FILE="$DATA_DIR/seq"
-        SEQ=$(cat "$SEQ_FILE" 2>/dev/null || echo 0)
-        NEXT_ID=$((SEQ + 1))
-        echo "$NEXT_ID" > "$SEQ_FILE"
-        ID=$(printf "%04d" "$NEXT_ID")
+        NEXT_NUM=$(get_next_id)
+        ID=$(printf "%04d" "$NEXT_NUM")
 
         TASK_FILE="$QUEUE_DIR/$ID.task"
         cat << EOF > "$TASK_FILE"

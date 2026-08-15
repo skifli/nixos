@@ -35,7 +35,23 @@ while true; do
 
         LOG_FILE="$LOGS_DIR/$ID.log"
 
-        if (cd "$CWD" && eval "$CMD") > "$LOG_FILE" 2>&1; then
+        # Launch task in a dedicated session so child GUI processes (e.g., ghostty) inherit session ID
+        setsid bash -c "cd $(printf '%q' "$CWD") && eval $(printf '%q' "$CMD")" > "$LOG_FILE" 2>&1 &
+        MAIN_PID=$!
+
+        # Wait for both main script and spawned floating terminal windows in the session
+        while kill -0 "$MAIN_PID" 2>/dev/null || pgrep -s "$MAIN_PID" >/dev/null 2>&1; do
+            sleep 0.5
+        done
+
+        EXIT_CODE=0
+        if wait "$MAIN_PID" 2>/dev/null; then
+            EXIT_CODE=0
+        else
+            EXIT_CODE=$?
+        fi
+
+        if [ "$EXIT_CODE" -eq 0 ]; then
             sed -i 's/STATUS="running"/STATUS="completed"/' "$NEXT_TASK"
             echo -e "\e[1;32m[Success #$ID]\e[0m $CMD"
             notify-send -e -a "Task receiver" -i "$HOME/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 3000 "Task completed (#$ID)" "$CMD"
