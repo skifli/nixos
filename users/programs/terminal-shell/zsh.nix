@@ -67,7 +67,7 @@
         completionInit = builtins.readFile ./zsh/completionInit.sh;
 
         # Force the functions to the bottom of .zshrc
-        initContent = lib.mkOrder 1500 builtins.readFile ./zsh/initContent.sh;
+        initContent = lib.mkOrder 1500 (builtins.readFile ./zsh/initContent.sh); # Brackets needed due to currying
 
         syntaxHighlighting = {
           enable = true;

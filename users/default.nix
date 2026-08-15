@@ -23,6 +23,9 @@
         "${pkgs.kdePackages.qtstyleplugin-kvantum}/lib/qt-6/qml"
       ];
   });
+
+  gcHeap = "4G";
+  gc = "GC_INITIAL_HEAP_SIZE=${gcHeap}";
 in {
   imports = [
     inputs.home-manager.nixosModules.home-manager
@@ -103,13 +106,11 @@ in {
             # SHELL = userVars.programs.terminal-shell; # - This and below commented out because can cause problems in SSH
             # TERM = userVars.programs.terminal;
             VISUAL = userVars.programs.visual;
+
+            CUSTOM_NIXOS_REBUILD_GC = gcHeap;
           };
 
-          shellAliases = let
-            gcHeap = "4G";
-            gc = "GC_INITIAL_HEAP_SIZE=${gcHeap}";
-          in
-            {
+          shellAliases =  {
               # --- OGs ---
               sup = "sudo -E";
               nfu = "nix flake update";
