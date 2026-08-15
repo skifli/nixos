@@ -3,32 +3,49 @@ set -euo pipefail
 
 # Inspired by axlefublr
 
-FIFO_PATH="$HOME/Documents/custom-scripts/task-scheduler"
-mkdir -p "$(dirname "$FIFO_PATH")"
-[ -p "$FIFO_PATH" ] || mkfifo "$FIFO_PATH"
+DATA_DIR="$HOME/.local/share/task-scheduler"
+QUEUE_DIR="$DATA_DIR/queue"
+LOGS_DIR="$DATA_DIR/logs"
 
-notify-send -e -a "Task Receiver" -i "$HOME/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 2500 "Task receiver started" "Listening on $FIFO_PATH"
-echo "Listening on $FIFO_PATH..."
+mkdir -p "$QUEUE_DIR" "$LOGS_DIR"
+
+notify-send -e -a "Task receiver" -i "$HOME/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 2500 "Task receiver started" "Listening for tasks..."
+echo "Listening for queued tasks..."
 
 while true; do
-    # Read NUL-delimited CWD and CMD
-    
-    if read -r -d $'\0' WORK_DIR < "$FIFO_PATH" && read -r -d $'\0' CMD < "$FIFO_PATH"; then
-        [ -z "$CMD" ] && continue
-        
-        notify-send -e -a "Task Receiver" -i "$HOME/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 2500 "Executing task" "$CMD (in $WORK_DIR)"
-        echo -e "\e[1;35m[Executing]\e[0m $CMD (in $WORK_DIR)"
-        
-        if (cd "$WORK_DIR" && eval "$CMD"); then
-            echo -e "\e[1;32m[Success]\e[0m $CMD"
+    shopt -s nullglob
+    TASKS=("$QUEUE_DIR"/*.task)
 
-            notify-send -e -a "Task Receiver" -i "$HOME/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 3000 "Task completed" "$CMD"
-        else
-          echo -e "\e[1;31m[Failed]\e[0m $CMD"
-
-          notify-send -e -a "Task Receiver" -i "$HOME/.local/share/misc/nix-snowflake-rainbow.svg" -u critical -t 0 "Task failed" "$CMD"
+    NEXT_TASK=""
+    for f in "${TASKS[@]}"; do
+        if grep -q 'STATUS="pending"' "$f"; then
+            NEXT_TASK="$f"
+            break
         fi
+    done
 
-        echo "\n"
+    if [ -n "$NEXT_TASK" ] && [ -f "$NEXT_TASK" ]; then
+        unset ID CWD CMD STATUS
+        source "$NEXT_TASK"
+
+        sed -i 's/STATUS="pending"/STATUS="running"/' "$NEXT_TASK"
+
+        notify-send -e -a "Task receiver" -i "$HOME/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 2500 "Executing task (#$ID)" "$CMD (in $CWD)"
+        echo -e "\e[1;35m[Executing #$ID]\e[0m $CMD (in $CWD)"
+
+        LOG_FILE="$LOGS_DIR/$ID.log"
+
+        if (cd "$CWD" && eval "$CMD") > "$LOG_FILE" 2>&1; then
+            sed -i 's/STATUS="running"/STATUS="completed"/' "$NEXT_TASK"
+            echo -e "\e[1;32m[Success #$ID]\e[0m $CMD"
+            notify-send -e -a "Task receiver" -i "$HOME/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 3000 "Task completed (#$ID)" "$CMD"
+        else
+            sed -i 's/STATUS="running"/STATUS="failed"/' "$NEXT_TASK"
+            echo -e "\e[1;31m[Failed #$ID]\e[0m $CMD"
+            notify-send -e -a "Task receiver" -i "$HOME/.local/share/misc/nix-snowflake-rainbow.svg" -u critical -t 0 "Task failed (#$ID)" "$CMD"
+        fi
+        echo -e "\n"
+    else
+        sleep 1
     fi
 done

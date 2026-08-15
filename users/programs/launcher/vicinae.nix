@@ -316,6 +316,9 @@
 
             core = {
               entrypoints = {
+                search-emojis = {
+                  alias = "em";
+                };
                 sponsor = {
                   enabled = false;
                 };
