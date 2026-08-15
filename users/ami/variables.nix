@@ -282,7 +282,7 @@ in rec {
             (on-release tap-vkey release-mouse)
             (on-release tap-vkey release-mouse-slow)
           )
-          
+
           zmin (multi lctl eql)
           zmout (multi lctl min)
         )
