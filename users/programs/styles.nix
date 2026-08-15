@@ -114,7 +114,26 @@ in {
         Restart = "always";
         RestartSec = "5s";
 
-        Environment = [
+        Environment = let
+          latVal = toString (
+            if hostVars.latitude >= 0
+            then hostVars.latitude
+            else (0 - hostVars.latitude)
+          );
+          latDir =
+            if hostVars.latitude >= 0
+            then "N"
+            else "S";
+          lonVal = toString (
+            if hostVars.longitude >= 0
+            then hostVars.longitude
+            else (0 - hostVars.longitude)
+          );
+          lonDir =
+            if hostVars.longitude >= 0
+            then "E"
+            else "W"; in 
+        [
           "PATH=/run/wrappers/bin:${lib.makeBinPath [pkgs.libnotify pkgs.coreutils pkgs.bash pkgs.niri pkgs.sunwait]}"
           "USER=${userVars.username}"
           "LAT_VAL=${latVal}"
