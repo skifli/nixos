@@ -108,7 +108,6 @@ in {
     systemd.user.services.auto-theme-check = {
       Unit = {
         Description = "Solar position watcher and theme switcher daemon";
-        # Ensure it restarts automatically if interrupted or resumed from sleep
       };
       Service = {
         Type = "simple";
@@ -116,88 +115,18 @@ in {
         RestartSec = "5s";
 
         Environment = [
-          "PATH=/run/wrappers/bin:${lib.makeBinPath [pkgs.libnotify pkgs.coreutils pkgs.bash pkgs.niri]}"
+          "PATH=/run/wrappers/bin:${lib.makeBinPath [pkgs.libnotify pkgs.coreutils pkgs.bash pkgs.niri pkgs.sunwait]}"
           "USER=${userVars.username}"
+          "LAT_VAL=${latVal}"
+          "LAT_DIR=${latDir}"
+          "LON_VAL=${lonVal}"
+          "LON_DIR=${lonDir}"
+          "SUNWAIT_BIN=${pkgs.sunwait}/bin/sunwait"
+          "SWITCHER_BIN=/home/${userVars.username}/.local/bin/theme-switcher.sh"
+          "ICON_PATH=/home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg"
         ];
 
-        ExecStart = let
-          latVal = toString (
-            if hostVars.latitude >= 0
-            then hostVars.latitude
-            else (0 - hostVars.latitude)
-          );
-          latDir =
-            if hostVars.latitude >= 0
-            then "N"
-            else "S";
-          lonVal = toString (
-            if hostVars.longitude >= 0
-            then hostVars.longitude
-            else (0 - hostVars.longitude)
-          );
-          lonDir =
-            if hostVars.longitude >= 0
-            then "E"
-            else "W";
-          sunwaitBin = "${pkgs.sunwait}/bin/sunwait";
-          switcherBin = "/home/${userVars.username}/.local/bin/theme-switcher.sh";
-
-          autoCheckScript = pkgs.writeShellScript "auto-theme-check" ''
-            set -euo pipefail
-
-            # Dynamically resolve paths for notifications and desktop commands (like niri workspace transitions)
-            RUN_UID=$(id -u)
-            export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$RUN_UID/bus"
-            export XDG_RUNTIME_DIR="/run/user/$RUN_UID"
-            export WAYLAND_DISPLAY="''${WAYLAND_DISPLAY:-wayland-1}"
-
-            while true; do
-              # 1. Poll sunwait for solar position
-              set +e
-              ${sunwaitBin} poll ${latVal}${latDir} ${lonVal}${lonDir} >/tmp/sunwait.log 2>&1 # Redirects stdout to a log file not dev/null
-              STATUS=$?
-              set -e
-
-              # 2: It is DAY or twilight. 3: It is NIGHT. 1: It is an Error.
-              if [ $STATUS -eq 2 ]; then
-                WANTED="light"
-              elif [ $STATUS -eq 3 ]; then
-                WANTED="dark"
-              else
-                echo "Sunwait error code: $STATUS" >&2
-                sleep 60
-                continue
-              fi
-
-              # 2. Query system specialisation file
-              CURRENT_TAG=$(cat /etc/specialisation 2>/dev/null || echo "light")
-
-              # 3. Trigger switch if states mismatch
-              if [ "$WANTED" != "$CURRENT_TAG" ]; then
-                echo "Theme mismatch detected. Switching to $WANTED mode."
-                notify-send -e -a "nixOS" -i "/home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 5000 "Auto-theme switcher" "Switching to $WANTED mode..."
-                ${switcherBin} "$WANTED"
-              fi
-
-              # 4. Wait until the next solar transition (sunrise or sunset)
-              # Default behavior of 'sunwait wait' without 'rise'/'set' option is 'both',
-              # So, it blocks until the very next sunrise or sunset event occurs.
-              echo "Waiting until next sunrise or sunset..."
-              set +e
-              ${sunwaitBin} wait ${latVal}${latDir} ${lonVal}${lonDir}
-              WAIT_STATUS=$?
-              set -e
-
-              if [ $WAIT_STATUS -ne 0 ]; then
-                echo "Sunwait wait returned error code: $WAIT_STATUS. Retrying in 60s..."
-                sleep 60
-              else
-                # Pause 5 seconds to prevent I think what is a race-condition where wait unblocked, the script looped back, poll was run, but it was too soon and poll just about hit the current state and didn't update to the next one, causing the script to break.
-                sleep 5
-              fi
-            done
-          '';
-        in "${autoCheckScript}";
+        ExecStart = "${pkgs.writeShellScript "auto-theme-check" (builtins.readFile ./auto-theme-check.sh)}";
       };
       Install = {
         WantedBy = ["graphical-session.target"];
