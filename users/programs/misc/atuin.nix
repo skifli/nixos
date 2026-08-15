@@ -22,6 +22,7 @@
 
         settings = {
           auto_sync = false; # No cloud sync
+          update_check = false; # As on nix
           search_mode = "daemon-fuzzy"; # This search mode uses an in-memory index, stored in the daemon, to perform fast and customizable searches.
           style = "auto";
           inline_height = 15; # How many lines the history popup occupies
