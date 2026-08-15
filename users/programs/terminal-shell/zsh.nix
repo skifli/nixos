@@ -6,19 +6,26 @@
   ...
 }: {
   home-manager.users.${userVars.username} = {
-    home.packages = with pkgs; [
-      bat
-      fd
-      pay-respects
+    home = {
+      packages = with pkgs; [
+        bat
+        fd
+        pay-respects
 
-      # Packages for zsh plugins
-      chroma
-      eza
-      fzf
-      ripgrep # "completion is already included when installed via package managers"
-      # rigrep-all
-      zoxide
-    ];
+        # Packages for zsh plugins
+        chroma
+        eza
+        fzf
+        ripgrep # "completion is already included when installed via package managers"
+        repgrep
+        # rigrep-all
+        zoxide
+      ];
+
+      shellAliases = {
+        rgr = "repgrep";
+      };
+    };
 
     xdg.terminal-exec.settings.default = ["ghostty.desktop"];
 
