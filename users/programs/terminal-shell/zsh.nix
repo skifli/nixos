@@ -55,7 +55,7 @@
 
       zsh = {
         enable = true;
-        
+
         # Below I opt-in to the modern XDG directory layout (~/.config/zsh).
         # This is the same default behavior of modern Home Manager (26.05+),
         # without needing to bump stateVersion, which for me is before said
