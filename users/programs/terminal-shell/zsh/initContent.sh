@@ -52,5 +52,3 @@ safe_reboot() {
 
 alias reboot="safe_reboot reboot"
 alias shutdown="safe_reboot shutdown"
-
-eval "$(pay-respects zsh)"

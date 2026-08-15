@@ -288,6 +288,13 @@ in rec {
     };
   };
 
+  zsh = {
+    shellGlobalAliases = {
+      G = "| grep";
+      UUID = "$(uuidgen | tr -d \\n)";
+    };
+  };
+
   bar = {
     output = "DP-1";
   };
@@ -332,12 +339,14 @@ in rec {
     other = [
       "affinity"
       "anki"
+      "atuin"
       "aw"
       # "discord"
       "kde-connect"
       "lan-mouse"
       "nix-direnv"
       "nix-index-database"
+      "nix-your-shell"
       "opentabletdriver"
       "steam"
       "styles"
