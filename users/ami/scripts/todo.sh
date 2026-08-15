@@ -179,7 +179,7 @@ ACTIVE_TODOS_JSON=$(jq -c --argjson now "$NOW" '
     (
         (map(select(.due_ts != null and .on_startup != true)) | sort_by(.due_ts)) +
         (map(select(.on_startup == true))) +
-        (map(select(.due_ts == null and .on_startup != true)) | sort_by(.text | ascii_downcase))
+        (map(select(.due_ts == null and .on_startup != true)) | sort_by([.id, (.text | ascii_downcase)]))
     ) |
     map({
         id: .id,
