@@ -972,7 +972,7 @@
             end_time=\$(date +%s.%N);
             duration=\$(echo \"scale=2; \$end_time - \$start_time\" | bc);
             log_date=\$(date \"+%Y-%m-%d %H:%M:%S\");
-            echo \"[\$log_date] zngunsh execution time: \$duration seconds\" >> /home/${userVars.username}/Documents/nixos_rebuild.log;
+            echo \"[\$log_date] zngunsh execution time: \$duration seconds\" >> /home/${userVars.username}/Documents/custom-scripts/nixos_rebuild.log;
           fi
 
           exec ${userVars.programs.terminal-shell}
