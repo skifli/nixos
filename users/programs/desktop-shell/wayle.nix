@@ -40,6 +40,7 @@
             {
               center = [
                 "cpu"
+                "custom-load"
                 "ram"
                 "weather"
               ];
@@ -174,6 +175,30 @@
               label-show = true;
               left-click = "/home/${userVars.username}/.local/bin/record.sh --stop";
               right-click = "/home/${userVars.username}/.local/bin/record.sh";
+              mode = "poll";
+              restart-interval-ms = 1000;
+              restart-policy = "never";
+              scroll-down = "";
+              scroll-up = "";
+            }
+            {
+              id = "load";
+              border-color = "auto";
+              border-show = true;
+              button-bg-color = "bg-surface-elevated";
+              command = "awk '{print $1, $2, $3}' /proc/loadavg";
+              format = "{{ output }}";
+              hide-if-empty = false;
+              icon-bg-color = "auto";
+              icon-color = "fg-default";
+              icon-name = "ld-activity-symbolic";
+              icon-show = true;
+              interval-ms = 5000;
+              label-color = "fg-default";
+              label-max-length = 0;
+              label-show = true;
+              left-click = "${userVars.programs.terminal} -e btop";
+              right-click = userVars.programs.system-monitor;
               mode = "poll";
               restart-interval-ms = 1000;
               restart-policy = "never";
