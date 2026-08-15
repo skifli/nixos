@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Inspired by axlefublr
 
-DATA_DIR="$HOME/.local/share/task-scheduler"
+DATA_DIR="$HOME/Documents/custom-scripts/task-scheduler"
 QUEUE_DIR="$DATA_DIR/queue"
 LOGS_DIR="$DATA_DIR/logs"
 
