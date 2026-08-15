@@ -39,7 +39,7 @@
     [
       (requireModulePath "user-packages" ./${userVars.username}/user-packages.nix)
     ]
-    ++ lib.optional userVars.git.enabled ./programs/git.nix
+    ++ lib.optional userVars.git.enabled ./programs/misc/git.nix
     ++ regular
     ++ others;
 
