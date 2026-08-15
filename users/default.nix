@@ -137,15 +137,15 @@ in {
 
               # --- Actual useful ones ---
               # If already in the dir zoxide errors so use ; not && to continue even if zoxide fails
-              zngp = "z nixos; git pull";
-              zngs = "z nixos; git submodule update --init --recursive";
-              zngu = "z nixos; git pull && git submodule update --init --recursive";
+              zngp = "z nixos; git pull && git log --oneline ORIG_HEAD..HEAD";
+              zngs = "z nixos; git submodule update --init --recursive && git log --oneline ORIG_HEAD..HEAD";
+              zngu = "z nixos; git pull && git submodule update --init --recursive && git log --oneline ORIG_HEAD..HEAD";
               znnisw = "z nixos; ${gc} sudo nixos-rebuild switch --flake"; # Needs path:.#
-              znguns = "z nixos; git pull && git submodule update --init --recursive && ${gc} sudo nixos-rebuild switch --flake"; # Needs path:.#
+              znguns = "z nixos; git pull && git submodule update --init --recursive && git log --oneline ORIG_HEAD..HEAD && ${gc} sudo nixos-rebuild switch --flake"; # Needs path:.#
 
               # --- Host-Specific Commands ---
-              zngunsh = "z nixos; git pull && git submodule update --init --recursive && ${gc} sudo nixos-rebuild switch --flake path:.#${hostVars.hostname}";
-              znhunsh = "z nixos; git pull && git submodule update --init --recursive && ${gc} nh os switch path:. --accept-flake-config -H ${hostVars.hostname}";
+              zngunsh = "z nixos; git pull && git submodule update --init --recursive && git log --oneline ORIG_HEAD..HEAD && ${gc} sudo nixos-rebuild switch --flake path:.#${hostVars.hostname}";
+              znhunsh = "z nixos; git pull && git submodule update --init --recursive && git log --oneline ORIG_HEAD..HEAD && ${gc} nh os switch path:. --accept-flake-config -H ${hostVars.hostname}";
 
               gfu = "git add . && git commit -m 'feat(flake.lock): update' && git pull && git push";
             }
