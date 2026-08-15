@@ -34,22 +34,19 @@ while true; do
         echo -e "\e[1;35m[Executing #$ID]\e[0m $CMD (in $CWD)"
 
         LOG_FILE="$LOGS_DIR/$ID.log"
+        UNIT_NAME="task-scheduler-$ID"
 
-        # Launch task in a dedicated session so child GUI processes (e.g., ghostty) inherit session ID
-        setsid bash -c "cd $(printf '%q' "$CWD") && eval $(printf '%q' "$CMD")" > "$LOG_FILE" 2>&1 &
-        MAIN_PID=$!
+        systemd-run --user --scope --unit="$UNIT_NAME" \
+            bash -c "cd $(printf '%q' "$CWD") && eval $(printf '%q' "$CMD")" > "$LOG_FILE" 2>&1 &
+        
+        sleep 1
 
-        # Wait for both main script and spawned floating terminal windows in the session
-        while kill -0 "$MAIN_PID" 2>/dev/null || pgrep -s "$MAIN_PID" >/dev/null 2>&1; do
+        # Wait until every process inside the isolated cgroup has exited
+        while systemctl --user is-active --quiet "$UNIT_NAME.scope" 2>/dev/null; do
             sleep 0.5
         done
 
-        EXIT_CODE=0
-        if wait "$MAIN_PID" 2>/dev/null; then
-            EXIT_CODE=0
-        else
-            EXIT_CODE=$?
-        fi
+        EXIT_CODE=$(systemctl --user show "$UNIT_NAME.scope" --property=ExecMainStatus --value 2>/dev/null || echo 0)
 
         if [ "$EXIT_CODE" -eq 0 ]; then
             sed -i 's/STATUS="running"/STATUS="completed"/' "$NEXT_TASK"
