@@ -954,7 +954,7 @@
       allow-inhibiting = false;
     };
     spawn = [
-      "/home/${userVars.username}/.local/bin/nixos-rebuild-switch.sh"
+      "/home/${userVars.username}/.local/bin/smart-rebuild.sh"
       userVars.programs.terminal
       userVars.programs.terminal-shell
       hostVars.hostname
