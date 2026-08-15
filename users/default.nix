@@ -110,7 +110,8 @@ in {
             CUSTOM_NIXOS_REBUILD_GC = gcHeap;
           };
 
-          shellAliases =  {
+          shellAliases =
+            {
               # --- OGs ---
               sup = "sudo -E";
               nfu = "nix flake update";
