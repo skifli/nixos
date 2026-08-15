@@ -114,18 +114,18 @@
             shift
 
             if [ -f /tmp/gpu-screen-recorder.pid ] && kill -0 $(cat /tmp/gpu-screen-recorder.pid) 2>/dev/null; then
-              notify-send -t 0 -u critical -i "/home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg" "Shutdown refused" "Screen recording is currently in progress!"
+              notify-send -e -a nixOS -t 0 -u critical -i "/home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg" "Shutdown refused" "Screen recording is currently in progress!"
               return 1
             fi
 
             if pgrep -f "nixos-rebuild|nh os switch" >/dev/null; then
-              notify-send -t 0 -u critical -i "/home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg" "Shutdown refused" "nixOS system rebuild is currently active!"
+              notify-send -e -a nixOS -t 0 -u critical -i "/home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg" "Shutdown refused" "nixOS system rebuild is currently active!"
               return 1
             fi
 
             urgent_wins=$(niri msg --json windows 2>/dev/null | jq -r '.[] | select(.is_urgent == true) | .id')
             if [ -n "$urgent_wins" ]; then
-              notify-send -t 0 -u critical -i "/home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg" "Shutdown refused" "There are urgent windows requiring attention!"
+              notify-send -e -a nixOS -t 0 -u critical -i "/home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg" "Shutdown refused" "There are urgent windows requiring attention!"
               return 1
             fi
 
