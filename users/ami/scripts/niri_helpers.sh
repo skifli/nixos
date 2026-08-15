@@ -296,3 +296,17 @@ focus_window() {
         echo "Window '$match_val' not found to focus."
     fi
 }
+
+stash_pomodoro_if_running() {
+    if window_exists "title" "Anki Pomodoro" || is_in_scratchpad "title" "Anki Pomodoro"; then
+        local current_dnd
+        current_dnd=$(wayle notify status 2>/dev/null | grep -i "Do Not Disturb" | grep -i "enabled" || true)
+
+        if [ -n "$current_dnd" ]; then
+            wayle notify dnd 2>/dev/null || true
+        fi
+
+        send_to_scratchpad "title" "Anki Pomodoro"
+        notify-send -e -a "anki" -i "/home/${USER}/.local/share/misc/Anki-icon.svg" -u low "Pomodoro stashed" "Timer moved to scratchpad; DND disabled."
+    fi
+}

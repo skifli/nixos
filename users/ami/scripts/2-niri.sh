@@ -4,6 +4,8 @@ source "${BASH_SOURCE%/*}/niri_helpers.sh"
 
 notify-send -e -a niri -i "/home/${USER}/.local/share/misc/niri-icon.svg" -u low -t 2500 "NEA configuration" "Initing window positions"
 
+stash_pomodoro_if_running
+
 # Future me: For zed you can do e.g., :45:10 to put ze cursor on line 45, column 10
 ensure_window_exists "org.gnome.Evince" "main.pdf — hmon NEA Writeup" "evince ~/Documents/hmon-nea/src/out/main.pdf" "org.gnome.Evince" "main.pdf — hmon NEA Writeup"
 ensure_window_exists "dev.zed.Zed" "hmon-nea —" "zeditor ~/Documents/hmon-nea ~/Documents/hmon-nea/src/main.tex" "dev.zed.Zed" "hmon-nea —"

@@ -4,6 +4,8 @@ source "${BASH_SOURCE%/*}/niri_helpers.sh"
 
 notify-send -e -a niri -i "/home/${USER}/.local/share/misc/niri-icon.svg" -u low -t 2500 "F1iS configuration" "Initing window positions"
 
+stash_pomodoro_if_running
+
 ensure_window_exists "affinity.exe" "" "affinity-v3" "wineboot.exe" "Wine"
 
 notify-send -e -a niri -i "/home/${USER}/.local/share/misc/niri-icon.svg" -u low -t 2500 "F1iS configuration" "Restoring window positions"
