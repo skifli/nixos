@@ -14,7 +14,7 @@
 
         nix-index = {
           enable = true;
-          enableZshIntegration = true;
+          enableZshIntegration = userVars.programs.terminal-shell == "zsh";
         };
 
         nix-index-database.comma.enable = true;

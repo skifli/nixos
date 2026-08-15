@@ -10,7 +10,6 @@
       packages = with pkgs; [
         bat
         fd
-        pay-respects
 
         # Packages for zsh plugins
         chroma
@@ -21,15 +20,28 @@
         # rigrep-all
         zoxide
       ];
-
-      shellAliases = {
-        rgr = "repgrep";
-      };
     };
 
     xdg.terminal-exec.settings.default = ["ghostty.desktop"];
 
     programs = {
+      pay-respects = {
+        enable = true;
+        enableZshIntegration = true; # Auto sets up `eval "$(pay-respects zsh)"`
+
+        options = [
+          "--alias"
+          "f"
+        ]; # Auto sets up `f = "pay-respects"` alias;
+      };
+
+      carapace = {
+        enable = true;
+        enableZshIntegration = true;
+
+        ignoreCase = true;
+      };
+
       eza = {
         enable = true;
         enableZshIntegration = true;
@@ -44,24 +56,24 @@
         enableZshIntegration = true;
       };
 
-      /*
       vivid = {
         enable = true;
         enableZshIntegration = true;
       };
-      */
 
       zoxide = {
         enable = true;
         enableZshIntegration = true;
 
         options = [
-          "--cmd cd"
+          "--cmd cd" # Bind cd to z
         ];
       };
 
       zsh = {
         enable = true;
+
+        shellGlobalAliases = userVars.zsh.shellGlobalAliases;
 
         # Below I opt-in to the modern XDG directory layout (~/.config/zsh).
         # This is the same default behavior of modern Home Manager (26.05+),
@@ -86,10 +98,25 @@
 
         shellAliases = {
           cat = "bat";
-          f = "pay-respects";
+          rgr = "repgrep";
         };
 
-        history.size = 100000;
+        history = {
+          size = 100000;
+          save = 100000;
+          saveNoDups = true;
+          ignoreDups = true;            # Do not enter duplicate commands
+          ignoreSpace = true;           # Ignore commands starting with a space (e.g., secrets)
+          expireDuplicatesFirst = true; # When history fills up, purge duplicates first
+          share = true;                 # Share command history across open zsh sessions (better than append imo)
+          extended = true;              # Save timestamps alongside commands
+        };
+
+        historySubstringSearch = {
+          enable = true;
+        };
+
+        autocd = true; # Change to a directory by typing its name (no need for `cd`)
 
         oh-my-zsh = {
           enable = true;
