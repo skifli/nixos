@@ -15,8 +15,8 @@
         Description = "Refresh KDE Connect devices";
 
         # So this only runs AFTER the main service is running
-        After = [ "kdeconnect.service" ];
-        Requires = [ "kdeconnect.service" ];
+        After = ["kdeconnect.service"];
+        Requires = ["kdeconnect.service"];
       };
       Service = {
         Type = "oneshot";
