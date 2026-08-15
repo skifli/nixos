@@ -63,19 +63,23 @@ fuzzel_prompt() {
 if [ "${1:-}" = "--startup" ]; then
     NOW=$(date +%s)
     STARTUP_ITEMS=$(jq -r --argjson now "$NOW" '.[] | select(.done != true) | select(.on_startup == true or (.due_ts != null and .due_ts <= $now)) | "• " + .text' "$TODO_FILE")
+
     if [ -n "$STARTUP_ITEMS" ]; then
         notify-send -e -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" -u critical -t 0 "Pending reminders" "$STARTUP_ITEMS"
     fi
+
     exit 0
 fi
 
 if [ "${1:-}" = "--check" ]; then
     NOW=$(date +%s)
+
     jq -r --argjson now "$NOW" '.[] | select(.done != true and .due_ts != null and .due_ts <= $now and .notified != true) | .id + "|" + .text' "$TODO_FILE" | while IFS='|' read -r id text; do
         notify-send -e -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" -u critical -t 0 "Reminder due" "$text"
         TMP=$(mktemp)
         jq --arg id "$id" 'map(if .id == $id then .notified = true else . end)' "$TODO_FILE" > "$TMP" && mv "$TMP" "$TODO_FILE"
     done
+    
     exit 0
 fi
 
