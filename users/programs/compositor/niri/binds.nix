@@ -946,9 +946,11 @@
     spawn = [
       "sh"
       "-c"
-      "notify-send -e -a nirius -i /home/${userVars.username}/.local/share/misc/niri-icon.svg -u low -t 3500 'nixOS Rebuild' 'Initing nixOS-rebuild switch'; 
+      "
+        notify-send -e -a nixOS -i /home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg -u low -t 3500 'nixOS Rebuild' 'Initing nixOS-rebuild switch'; 
+
         /home/${userVars.username}/.local/bin/floating-term.sh ${userVars.programs.terminal} -e ${userVars.programs.terminal-shell} -i -c '
-          cd /home/${userVars.username}/nixos && sudo chown -R ami .git/;
+          cd /home/${userVars.username}/nixos && sudo chown -R ${userVars.username} .git/;
           start_time=\$(date +%s.%N);
           zngunsh;
           end_time=\$(date +%s.%N);
@@ -956,7 +958,8 @@
           log_date=\$(date \"+%Y-%m-%d %H:%M:%S\");
           echo \"[\$log_date] zngunsh execution time: \$duration seconds\" >> /home/${userVars.username}/Documents/nixos_rebuild.log;
           exec ${userVars.programs.terminal-shell}
-        '"
+        '
+      "
     ];
   };
   "Mod+Alt+Z" = {
