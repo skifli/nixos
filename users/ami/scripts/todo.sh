@@ -143,7 +143,7 @@ parse_time_preset() {
                     DUE_TS="$PARSED_TS"
                     DUE_STR="$(format_ts_str "$DUE_TS")"
                 else
-                    notify-send -u critical -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Invalid time" "Could not parse relative time '$REL_INPUT'"
+                    notify-send -e -u critical -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Invalid time" "Could not parse relative time '$REL_INPUT'"
                 fi
             fi
             ;;
@@ -157,7 +157,7 @@ parse_time_preset() {
                     DUE_TS="$PARSED_TS"
                     DUE_STR="$(format_ts_str "$DUE_TS")"
                 else
-                    notify-send -u critical -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Invalid date" "Could not parse date '$ABS_INPUT'"
+                    notify-send -e -u critical -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Invalid date" "Could not parse date '$ABS_INPUT'"
                 fi
             fi
             ;;
@@ -248,11 +248,11 @@ if [[ "$SELECTED" == *"$ADD_HEADER"* ]]; then
        "$TODO_FILE" > "$TMP" && mv "$TMP" "$TODO_FILE"
 
     if [ "$ON_STARTUP" = "true" ]; then
-        notify-send -u low -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Todo added" "'$TODO_TEXT' (set for next startup)"
+        notify-send -e -u low -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Todo added" "'$TODO_TEXT' (set for next startup)"
     elif [ "$DUE_STR" != "" ]; then
-        notify-send -u low -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Reminder set" "'$TODO_TEXT' (due: $DUE_STR)"
+        notify-send -e -u low -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Reminder set" "'$TODO_TEXT' (due: $DUE_STR)"
     else
-        notify-send -u low -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Task added" "$TODO_TEXT"
+        notify-send -e -u low -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Task added" "$TODO_TEXT"
     fi
 
     exec "$0"
@@ -261,7 +261,7 @@ elif [[ "$SELECTED" == *"$HISTORY_FOOTER"* ]]; then
     COMPLETED_ITEMS=$(jq -r '.[] | select(.done == true) | "[Done] " + .text + "  (ID:" + .id + ")"' "$TODO_FILE")
 
     if [ -z "$COMPLETED_ITEMS" ]; then
-        notify-send -u low -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "History empty" "No completed tasks in history."
+        notify-send -e -u low -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "History empty" "No completed tasks in history."
         exit 0
     fi
 
@@ -274,7 +274,7 @@ $COMPLETED_ITEMS"
     if [[ "$HIST_SEL" == *"[Clear All Completed History]"* ]]; then
         TMP=$(mktemp)
         jq 'map(select(.done != true))' "$TODO_FILE" > "$TMP" && mv "$TMP" "$TODO_FILE"
-        notify-send -u low -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "History cleared"
+        notify-send -e -u low -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "History cleared"
     else
         HIST_ID=$(echo "$HIST_SEL" | sed -n 's/.*(ID:\([0-9]*\))/\1/p')
         [ -z "$HIST_ID" ] && exit 0
@@ -287,12 +287,12 @@ $COMPLETED_ITEMS"
             *"restore"*)
                 TMP=$(mktemp)
                 jq --arg id "$HIST_ID" 'map(if .id == $id then .done = false | .notified = false else . end)' "$TODO_FILE" > "$TMP" && mv "$TMP" "$TODO_FILE"
-                notify-send -u low -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Task restored"
+                notify-send -e -u low -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Task restored"
                 ;;
             *"delete"*)
                 TMP=$(mktemp)
                 jq --arg id "$HIST_ID" 'map(select(.id != $id))' "$TODO_FILE" > "$TMP" && mv "$TMP" "$TODO_FILE"
-                notify-send -u low -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Task deleted"
+                notify-send -e -u low -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Task deleted"
                 ;;
         esac
     fi
@@ -313,7 +313,7 @@ else
         *"completed"*)
             TMP=$(mktemp)
             jq --arg id "$TODO_ID" 'map(if .id == $id then .done = true else . end)' "$TODO_FILE" > "$TMP" && mv "$TMP" "$TODO_FILE"
-            notify-send -u low -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Task completed"
+            notify-send -e -u low -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Task completed"
             ;;
         *"change"*)
             TIME_PRESETS="1. In 1 Hour
@@ -337,7 +337,7 @@ else
                --argjson on_startup "$ON_STARTUP" \
                'map(if .id == $id then .due_ts = $due_ts | .due_str = $due_str | .on_startup = $on_startup | .notified = false else . end)' \
                "$TODO_FILE" > "$TMP" && mv "$TMP" "$TODO_FILE"
-            notify-send -u low -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Reminder updated"
+            notify-send -e -u low -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Reminder updated"
             ;;
         *"edit"*)
             OLD_TEXT=$(jq -r --arg id "$TODO_ID" '.[] | select(.id == $id) | .text' "$TODO_FILE")
@@ -347,13 +347,13 @@ else
                 jq --arg id "$TODO_ID" --arg text "$NEW_TEXT" \
                    'map(if .id == $id then .text = $text else . end)' \
                    "$TODO_FILE" > "$TMP" && mv "$TMP" "$TODO_FILE"
-                notify-send -u low -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Task updated"
+                notify-send -e -u low -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Task updated"
             fi
             ;;
         *"delete"*)
             TMP=$(mktemp)
             jq --arg id "$TODO_ID" 'map(select(.id != $id))' "$TODO_FILE" > "$TMP" && mv "$TMP" "$TODO_FILE"
-            notify-send -u low -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Task deleted"
+            notify-send -e -u low -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Task deleted"
             ;;
         *)
             exit 0
