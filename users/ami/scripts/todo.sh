@@ -14,11 +14,11 @@ fuzzel_prompt() {
     local min_lines="${3:-0}"
     
     local num_lines=0
-    local max_len=60
-
     local prompt_len=${#prompt}
+    local calculated_width=35
 
     if [ -n "$text_data" ]; then
+        # Calculate height
         num_lines=$(echo "$text_data" | wc -l)
         if [ "$num_lines" -gt 12 ]; then
             num_lines=12
@@ -27,26 +27,23 @@ fuzzel_prompt() {
             num_lines="$min_lines"
         fi
 
+        # Find longest line length
         local longest
-        longest=$(echo "$text_data" | awk '{ if (length > max) { max = length } } END { print max }')
+        longest=$(echo "$text_data" | wc -L 2>/dev/null || echo "$text_data" | awk '{ if (length > max) { max = length } } END { print max }')
+        
         if [ -n "$longest" ] && [ "$longest" -gt 0 ]; then
-            local total_needed=$((longest + prompt_len + 4))
-            if [ "$total_needed" -gt "$max_len" ]; then
-                max_len="$total_needed"
-            fi
+            calculated_width=$((longest + prompt_len + 4))
         fi
     else
         num_lines="$min_lines"
-        local total_needed=$((prompt_len + 35))
-        if [ "$total_needed" -gt "$max_len" ]; then
-            max_len="$total_needed"
-        fi
+        calculated_width=$((prompt_len + 30))
     fi
 
-    if [ "$max_len" -lt 60 ]; then max_len=60; fi
-    if [ "$max_len" -gt 90 ]; then max_len=90; fi
+    if [ "$calculated_width" -lt 35 ]; then calculated_width=35; fi
+    if [ "$calculated_width" -gt 120 ]; then calculated_width=120; fi
 
     fuzzel --dmenu \
+        --minimal-lines \
         --font="$FONT:size=$FONT_SIZE" \
         --prompt="$prompt" \
         --background-color=1e1e2eff \
@@ -54,7 +51,7 @@ fuzzel_prompt() {
         --input-color=cdd6f4ff \
         --selection-color=585b70ff \
         --selection-text-color=cdd6f4ff \
-        --width="$max_len" \
+        --width="$calculated_width" \
         --lines="$num_lines" \
         --horizontal-pad=12 \
         --border-radius=10
@@ -301,8 +298,6 @@ $COMPLETED_ITEMS"
     fi
 
 else
-    # Look up the task ID matching the display text selected in Fuzzel
-    
     TODO_ID=$(echo "$ACTIVE_TODOS_JSON" | jq -r --arg sel "$SELECTED" '.[] | select(.display == $sel) | .id' | head -n1)
     [ -z "$TODO_ID" ] && exit 0
 
