@@ -18,6 +18,15 @@
       [userVars.programs.launcher]
       ++ pkgs.lib.optional (userVars.programs.launcher == "vicinae") "toggle";
   };
+  "Mod+A" = {
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
+    spawn = [
+      "/home/${userVars.username}/.local/bin/window-switcher.sh"
+    ];
+  };
 
   # HELP & OVERVIEW
   "Mod+Slash" = {
