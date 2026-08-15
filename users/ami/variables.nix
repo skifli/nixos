@@ -413,6 +413,7 @@ in rec {
 
     # Inspired by axlefublr
     "schedule" = builtins.readFile ./scripts/schedule.sh;
+    "smart-rebuild" = builtins.readFile ./scripts/smart-rebuild.sh;
 
     # My own random ones
     "focus-focused-monitor" = "niri msg action focus-monitor \"${focusedMonitor}\"";
