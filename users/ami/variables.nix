@@ -350,7 +350,7 @@ in rec {
       Unit.Description = "Check for due todo reminders";
       Service = {
         Type = "oneshot";
-        ExecStart = "/home/${userVars.username}/.local/bin/todo.sh --check";
+        ExecStart = "/home/${username}/.local/bin/todo.sh --check";
       };
     };
   };
