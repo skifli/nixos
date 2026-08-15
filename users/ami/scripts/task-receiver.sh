@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Inspired by axlefublr
 
-FIFO_PATH="$HOME/.local/share/mine/task-scheduler"
+FIFO_PATH="$HOME/Documents/custom-scripts/task-scheduler"
 mkdir -p "$(dirname "$FIFO_PATH")"
 [ -p "$FIFO_PATH" ] || mkfifo "$FIFO_PATH"
 

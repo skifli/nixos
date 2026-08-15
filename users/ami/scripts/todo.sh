@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-TODO_FILE="$HOME/.local/share/mine/todos.json"
+TODO_FILE="$HOME/Documents/custom-scripts/todo.json"
 FONT="${FONT_MONOSPACE:-JetBrainsMono Nerd Font}"
 FONT_SIZE="${FONT_SIZE_APPLICATIONS:-11}"
 
