@@ -16,11 +16,11 @@ send_to_scratchpad "app_id" "affinity.exe"
 send_to_scratchpad "app_id" "org.kde.dolphin"
 
 # 1st Monitor
-move_windows app_id "anki" "$MON_1" "1" "100%"
+move_windows app_id "zen-beta" "$MON_1" "1" "100%"
 move_windows "app_id" "gcr-prompter" "$MON_1" "1"
 
 # 2nd Monitor
-move_windows app_id "zen-beta" "$MON_2" "1" "100%"
+move_windows app_id "anki" "$MON_2" "1" "100%"
 
 # Focus windows
 focus_window "app_id" "anki"
