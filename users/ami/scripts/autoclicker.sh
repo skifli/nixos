@@ -30,15 +30,23 @@ if ! pgrep -f ydotoold >/dev/null 2>&1; then
     sleep 0.2 # Just in case
 fi
 
-MODE_SELECTION=$(printf "1. Fast continuous (50ms)\n2. Interval anti-AFK (10s)\n3. Click burst (100 clicks)\n4. Custom interval" | fuzzel --dmenu \
+MODE_OPTIONS="1. Fast continuous (50ms)
+2. Interval anti-AFK (10s)
+3. Click burst (100 clicks)
+4. Custom interval"
+MODE_PROMPT="Auto-Clicker Mode: "
+MAX_LEN=$(echo "$MODE_OPTIONS" | wc -L)
+MODE_WIDTH=$(( ${#MODE_PROMPT} + MAX_LEN + 4 ))
+
+MODE_SELECTION=$(echo "$MODE_OPTIONS" | fuzzel --dmenu \
     --font="$FONT:size=$FONT_SIZE" \
-    --prompt="Auto-Clicker Mode: " \
+    --prompt="$MODE_PROMPT" \
     --background-color=1e1e2eff \
     --text-color=cdd6f4ff \
     --input-color=cdd6f4ff \
     --selection-color=585b70ff \
     --selection-text-color=cdd6f4ff \
-    --width=40 \
+    --width="$MODE_WIDTH" \
     --lines=4 \
     --horizontal-pad=12 \
     --border-radius=10 || true)
@@ -60,12 +68,15 @@ case "${MODE_SELECTION,,}" in
         COUNT=100
         ;;
     *custom*)
+        INPUT_PROMPT="Delay in seconds (e.g., 0.1, 2): "
+        INPUT_WIDTH=$(( ${#INPUT_PROMPT} + 15 ))
+
         DELAY_INPUT=$(fuzzel --dmenu \
             --font="$FONT:size=$FONT_SIZE" \
-            --prompt="Delay in seconds (e.g., 0.1, 2): " \
+            --prompt="$INPUT_PROMPT" \
             --background-color=1e1e2eff \
             --text-color=cdd6f4ff \
-            --width=40 \
+            --width="$INPUT_WIDTH" \
             --lines=0 \
             --horizontal-pad=12 \
             --border-radius=10 || true)
