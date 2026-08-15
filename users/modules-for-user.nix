@@ -33,7 +33,7 @@
       else []
   ) (builtins.attrNames programs); # Get all programs specified in the usual way
 
-  others = map (program: requireModulePath "other" ./programs/${program}.nix) (programs.other or []); # Get all programs specified in the "other" variable
+  others = map (program: requireModulePath "other" ./programs/misc/${program}.nix) (programs.other or []); # Get all programs specified in the "other" variable
 
   all =
     [
