@@ -134,7 +134,7 @@ parse_time_preset() {
             DUE_STR="$(format_ts_str "$DUE_TS")"
             ;;
         *"relative"*)
-            REL_INPUT=$(echo "" | fuzzel_prompt "Time offset (e.g. 2 hours, 3 days): " "" 0)
+            REL_INPUT=$(echo "" | fuzzel_prompt "Time offset (e.g., 2 hours, 3 days): " "" 0)
             if [ -n "$REL_INPUT" ]; then
                 set +e
                 PARSED_TS=$(date -d "now + $REL_INPUT" +%s 2>/dev/null)
@@ -148,7 +148,7 @@ parse_time_preset() {
             fi
             ;;
         *"absolute"*)
-            ABS_INPUT=$(echo "" | fuzzel_prompt "Exact time (e.g. 2026-08-25 14:00): " "" 0)
+            ABS_INPUT=$(echo "" | fuzzel_prompt "Exact time (e.g., 2026-08-25 14:00): " "" 0)
             if [ -n "$ABS_INPUT" ]; then
                 set +e
                 PARSED_TS=$(date -d "$ABS_INPUT" +%s 2>/dev/null)
@@ -228,8 +228,8 @@ if [[ "$SELECTED" == *"$ADD_HEADER"* ]]; then
 4. Next Morning (09:00)
 5. Tomorrow (Same Time)
 6. In 1 Week
-7. Custom Relative (e.g. 2 hours, 3 days)
-8. Custom Absolute (e.g. 2026-08-25 14:00)
+7. Custom Relative (e.g., 2 hours, 3 days)
+8. Custom Absolute (e.g., 2026-08-25 14:00)
 9. No Reminder (Task Only)"
 
     TIME_SEL=$(echo "$TIME_PRESETS" | fuzzel_prompt "Set Reminder Preset: " "$TIME_PRESETS" 9)
@@ -322,8 +322,8 @@ else
 4. Next Morning (09:00)
 5. Tomorrow (Same Time)
 6. In 1 Week
-7. Custom Relative (e.g. 2 hours, 3 days)
-8. Custom Absolute (e.g. 2026-08-25 14:00)
+7. Custom Relative (e.g., 2 hours, 3 days)
+8. Custom Absolute (e.g., 2026-08-25 14:00)
 9. Remove Reminder"
             TIME_SEL=$(echo "$TIME_PRESETS" | fuzzel_prompt "New Reminder Preset: " "$TIME_PRESETS" 9)
             [ -z "$TIME_SEL" ] && exit 0
