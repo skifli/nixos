@@ -1,4 +1,5 @@
 {
+  hostVars,
   pkgs,
   userVars,
   ...
@@ -960,8 +961,8 @@
 
         /home/${userVars.username}/.local/bin/floating-term.sh ${userVars.programs.terminal} -e ${userVars.programs.terminal-shell} -i -c '
           cd /home/${userVars.username}/nixos && sudo chown -R ${userVars.username} .git/;
-          git pull;
-          git submodule update --init --recursive;
+          git pull &&
+          git submodule update --init --recursive &&
           git log --oneline ORIG_HEAD..HEAD;
 
           start_time=\$(date +%s.%N);
