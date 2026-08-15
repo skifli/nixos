@@ -16,8 +16,8 @@ copyl() {
 blammo() {
   if [ -f /tmp/blammo ]; then
     cat /tmp/blammo
-  elif [ -f "$HOME/.cache/mine/blammo" ]; then
-    cat "$HOME/.cache/mine/blammo"
+  elif [ -f "$HOME/Documents/custom-scripts/blammo" ]; then
+    cat "$HOME/Documents/custom-scripts/blammo"
   else
     echo "No blammo selection found"
   fi
@@ -27,8 +27,8 @@ blammo() {
 precmd() {
   if [ -f /tmp/blammo ]; then
     blammo_in=$(cat /tmp/blammo 2>/dev/null)
-  elif [ -f "$HOME/.cache/mine/blammo" ]; then
-    blammo_in=$(cat "$HOME/.cache/mine/blammo" 2>/dev/null)
+  elif [ -f "$HOME/Documents/custom-scripts/blammo" ]; then
+    blammo_in=$(cat "$HOME/Documents/custom-scripts/blammo" 2>/dev/null)
   fi
 }
 
