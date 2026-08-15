@@ -318,6 +318,7 @@ in rec {
     launcher = "vicinae";
     network-mounts = "nfs";
     nightlight = "sunsetr";
+    pager = "ov";
     partition-manager = "kde";
     prompt = "starship";
     remote-desktop = "freerdp";
