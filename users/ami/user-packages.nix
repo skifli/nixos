@@ -12,7 +12,6 @@
       doxx
       droidcam
       evince # Document viewer
-      ferdium
       fira-code
       haruna # Media player
       hblock
@@ -34,6 +33,17 @@
       # siyuan
 
       mpv
+
+      /* Not needed anymore?
+      (pkgs.ferdium.overrideAttrs (oldAttrs: {
+        postFixup = (oldAttrs.postFixup or "") + ''
+          wrapProgram $out/bin/ferdium \
+            --add-flags "--ozone-platform=wayland" \
+            --add-flags "--enable-features=WaylandWindowDecorations,UseOzonePlatform,WebRTCPipeWireCapturer"
+        '';
+      }))
+      */
+      ferdium
     ];
 
     xdg.mimeApps.defaultApplications = {
