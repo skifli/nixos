@@ -9,6 +9,29 @@ LOGS_DIR="$DATA_DIR/logs"
 
 mkdir -p "$QUEUE_DIR" "$LOGS_DIR"
 
+resolve_task_file() {
+    local input="${1:-}"
+    [ -z "$input" ] && return 1
+
+    # Strip leading zeros to get raw integer (0005 -> 5)
+    local raw_id
+    raw_id=$(echo "$input" | sed 's/^0*//')
+    [ -z "$raw_id" ] && raw_id="0"
+
+    local padded_id
+    padded_id=$(printf "%04d" "$raw_id" 2>/dev/null || echo "$raw_id")
+
+    if [ -f "$QUEUE_DIR/$padded_id.task" ]; then
+        echo "$QUEUE_DIR/$padded_id.task"
+    elif [ -f "$QUEUE_DIR/$raw_id.task" ]; then
+        echo "$QUEUE_DIR/$raw_id.task"
+    elif [ -f "$QUEUE_DIR/$input.task" ]; then
+        echo "$QUEUE_DIR/$input.task"
+    else
+        return 1
+    fi
+}
+
 show_help() {
     cat << EOF
 Task Scheduler CLI
@@ -42,11 +65,11 @@ case "$1" in
             (
                 source "$f"
                 case "$STATUS" in
-                    pending)  COLOR="\e[1;33m" ;;
-                    running)  COLOR="\e[1;35m" ;;
+                    pending)   COLOR="\e[1;33m" ;;
+                    running)   COLOR="\e[1;35m" ;;
                     completed) COLOR="\e[1;32m" ;;
-                    failed)   COLOR="\e[1;31m" ;;
-                    *)        COLOR="\e[0m" ;;
+                    failed)    COLOR="\e[1;31m" ;;
+                    *)         COLOR="\e[0m" ;;
                 esac
                 printf "%-6s ${COLOR}%-12s\e[0m %s\n" "$ID" "$STATUS" "$CMD"
             )
@@ -54,13 +77,9 @@ case "$1" in
         ;;
 
     edit)
-        if [ -z "${2:-}" ]; then
-            echo "Usage: schedule edit <task_id>"
-            exit 1
-        fi
-        TASK_FILE="$QUEUE_DIR/$2.task"
-        if [ ! -f "$TASK_FILE" ]; then
-            echo "Error: Task '$2' not found."
+        TASK_FILE=$(resolve_task_file "${2:-}" || true)
+        if [ -z "$TASK_FILE" ]; then
+            echo "Error: Task '${2:-}' not found."
             exit 1
         fi
         source "$TASK_FILE"
@@ -73,27 +92,26 @@ case "$1" in
         ;;
 
     rm|cancel)
-        if [ -z "${2:-}" ]; then
-            echo "Usage: schedule rm <task_id>"
+        TASK_FILE=$(resolve_task_file "${2:-}" || true)
+        if [ -z "$TASK_FILE" ]; then
+            echo "Error: Task '${2:-}' not found."
             exit 1
         fi
-        TASK_FILE="$QUEUE_DIR/$2.task"
-        if [ ! -f "$TASK_FILE" ]; then
-            echo "Error: Task '$2' not found."
-            exit 1
-        fi
-        rm -f "$TASK_FILE" "$LOGS_DIR/$2.log"
-        echo "Task '$2' removed."
+        source "$TASK_FILE"
+        rm -f "$TASK_FILE" "$LOGS_DIR/$ID.log"
+        echo "Task '$ID' removed."
         ;;
 
     logs|log)
-        if [ -z "${2:-}" ]; then
-            echo "Usage: schedule logs <task_id>"
+        TASK_FILE=$(resolve_task_file "${2:-}" || true)
+        if [ -z "$TASK_FILE" ]; then
+            echo "Error: Task '${2:-}' not found."
             exit 1
         fi
-        LOG_FILE="$LOGS_DIR/$2.log"
+        source "$TASK_FILE"
+        LOG_FILE="$LOGS_DIR/$ID.log"
         if [ ! -f "$LOG_FILE" ]; then
-            echo "No logs found for task '$2'."
+            echo "No logs found for task '$ID'."
             exit 1
         fi
         cat "$LOG_FILE"
