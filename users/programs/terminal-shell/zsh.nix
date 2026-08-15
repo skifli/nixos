@@ -74,7 +74,11 @@
         completionInit = builtins.readFile ./zsh/completionInit.sh;
 
         # Force the functions to the bottom of .zshrc
-        initContent = lib.mkOrder 1500 (builtins.readFile ./zsh/initContent.sh); # Brackets needed due to currying
+        initContent = lib.mkOrder 1500 ''
+          export WL_COPY_BIN="${pkgs.wl-clipboard}/bin/wl-copy"
+          
+          ${builtins.readFile ./zsh/initContent.sh}
+        '';
 
         syntaxHighlighting = {
           enable = true;
