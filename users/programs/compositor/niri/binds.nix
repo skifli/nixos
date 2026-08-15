@@ -954,10 +954,9 @@
       allow-inhibiting = false;
     };
     spawn = [
-      "/home/${userVars.username}/.local/bin/smart-rebuild.sh"
-      userVars.programs.terminal
-      userVars.programs.terminal-shell
-      hostVars.hostname
+      "sh"
+      "-c"
+      "/home/${userVars.username}/.local/bin/smart-rebuild.sh ${userVars.programs.terminal} ${userVars.programs.terminal-shell} ${hostVars.hostname}"
     ];
   };
   "Mod+Alt+Z" = {
