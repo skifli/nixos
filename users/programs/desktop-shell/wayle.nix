@@ -184,7 +184,7 @@
             {
               id = "load";
               border-color = "auto";
-              border-show = true;
+              border-show = false; # CPU, RAM, Weather don't so this should not either
               button-bg-color = "bg-surface-elevated";
               command = "awk '{print $1, $2, $3}' /proc/loadavg";
               format = "{{ output }}";
