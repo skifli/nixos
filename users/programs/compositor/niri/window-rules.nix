@@ -46,7 +46,7 @@ in
     }
     # Gets the usually centered status window away and not focus it
     {
-      match._props.title._raw = ''r#"(?i)Copying — Dolphin"#'';
+      match._props.title._raw = ''r#"(?i)(Copying — Dolphin|Progress Dialogue — Dolphin)"#'';
       open-focused = false;
       default-floating-position._props = {
         x = 10;
