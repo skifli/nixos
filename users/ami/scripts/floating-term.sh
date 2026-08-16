@@ -27,7 +27,7 @@ if [[ $# -gt 0 ]]; then
   shift 1
 fi
 
-ID="floating-term-$(date +%s%N)"
+ID="floating-term-$$-$(date +%s%N)"
 
 case "$TERM_CMD" in
   ghostty)
