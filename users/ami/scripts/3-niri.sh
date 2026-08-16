@@ -12,7 +12,7 @@ notify-send -e -a niri -i "/home/${USER}/.local/share/misc/niri-icon.svg" -u low
 
 # 1st Monitor
 move_windows "app_id" "zen-beta" "$MON_1" "1" "100%"
-move_windows "app_id" "wineboot.exe " "$MON_1" "2" # Affinity booting-up
+move_windows "app_id" "wineboot.exe" "$MON_1" "2" # Affinity booting-up
 move_windows "app_id" "affinity.exe" "$MON_1" "2" "100%"
 move_windows "app_id" "gcr-prompter" "$MON_1" "2"
 move_windows "app_id" "anki" "$MON_1" "3" "100%"
