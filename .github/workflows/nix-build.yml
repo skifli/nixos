@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           token: ${{ secrets.GH_PAT }}
           submodules: recursive
@@ -32,4 +32,4 @@ jobs:
 
       - name: Build nixOS system (lyra)
         run: |
-          nix build .#nixosConfigurations.lyra.config.system.build.toplevel --verbose
+          nix build .?submodules=1#nixosConfigurations.lyra.config.system.build.toplevel --verbose
