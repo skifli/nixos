@@ -18,10 +18,12 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
+      - uses: wimpysworld/nothing-but-nix@main
+
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
 
-      - name: Magic Nix Cache
+      - name: Magic Nix cache
         uses: DeterminateSystems/magic-nix-cache-action@main
 
       - name: Setup Cachix
@@ -32,4 +34,4 @@ jobs:
 
       - name: Build nixOS system (lyra)
         run: |
-          nix build .?submodules=1#nixosConfigurations.lyra.config.system.build.toplevel --verbose
+          nix build .?submodules=1#nixosConfigurations.lyra.config.system.build.toplevel --verbose --accept-flake-config

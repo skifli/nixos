@@ -1,4 +1,4 @@
-name: Flake checker
+name: Flake health checker
 
 on:
   pull_request:
@@ -6,8 +6,11 @@ on:
     branches:
       - main
   schedule:
-    - cron: "0 6 * * 1" # weekly on Monday
-  workflow_dispatch:
+    - cron: '0 0 * * 0' # Runs weekly on Sunday at 00:00
+  workflow_dispatch: # Allows manual triggering from GitHub UI
+
+permissions:
+  pull-requests: write # Allows writing comments on PRs
 
 jobs:
   flake-check:
@@ -20,3 +23,4 @@ jobs:
         with:
           flake-lock-path: flake.lock
           fail-mode: true
+          send-comment: true # Sends an automated status comment on Pull Requests.
