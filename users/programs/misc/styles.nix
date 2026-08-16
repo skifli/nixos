@@ -207,7 +207,7 @@ in {
     FONT_SIZE_APPLICATIONS = commonHostVars.fonts.sizes.applications;
     FONT_SIZE_DESKTOP = commonHostVars.fonts.sizes.desktop;
     FONT_SIZE_POPUPS = commonHostVars.fonts.sizes.popups;
-    FONT_SIZE_TERMINAl = commonHostVars.fonts.sizes.terminal;
+    FONT_SIZE_TERMINAL = commonHostVars.fonts.sizes.terminal;
   };
 
   /*
