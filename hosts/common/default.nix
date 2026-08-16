@@ -87,9 +87,6 @@ in {
           "vm.dirty_background_bytes" = 67108864; # 64 MB
           "vm.dirty_bytes" = 134217728; # 128 MB
 
-          # Tell kernel to heavily prefer ZRAM over filesystem page flushing
-          "vm.swappiness" = 180;
-
           # Tells kernel to keep stuff cached in RAM longer, I have enough RAM should be good.
           "vm.vfs_cache_pressure" = 50;
         };
@@ -100,11 +97,6 @@ in {
         # ATTR{queue/rotational}=="1" is a backup just in case because this is behind a host flag but whatever
         ACTION=="add|change", KERNEL=="sd[a-z]*|mmcblk[0-9]*", ATTR{queue/rotational}=="1", ATTR{queue/scheduler}="bfq"
       '';
-
-      fileSystems."/".options = [
-        # access time NOT change time (ctime) or modification time (mtime)
-        "noatime"
-      ];
     })
   ];
 

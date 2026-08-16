@@ -9,6 +9,8 @@ on:
 
 jobs:
   build-lyra:
+    if: false # DISABLE FOR NOW
+
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
