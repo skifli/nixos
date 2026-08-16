@@ -40,15 +40,16 @@
 
   home-manager.users.${userVars.username} = {lib, ...}: {
     home.activation.setKTailctlConfig = lib.hm.dag.entryAfter ["writeBoundary"] ''
-          # Make sure that the target dir exists
-          mkdir -p "$HOME/.config"
+      TARGET_FILE="$HOME/.config/KTailctlrc"
+      mkdir -p "$(dirname "$TARGET_FILE")"
 
-          # Create or overwrite the writeable configuration file
-          cat << 'EOF' > "$HOME/.config/KTailctlrc"
-      [Interface]
-      peerFilter=
-      startMinimized=true
-      EOF
+      if [ ! -f "$TARGET_FILE" ]; then
+        cat << 'EOF' > "$TARGET_FILE"
+    [Interface]
+    peerFilter=
+    startMinimized=true
+    EOF
+      fi
     '';
   };
 }
