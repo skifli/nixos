@@ -6,7 +6,7 @@ mkdir -p "$CACHE_DIR"
 TMP_IMG="$CACHE_DIR/clipboard-preview.png"
 
 if wl-paste -t image/png > "$TMP_IMG" 2>/dev/null; then
-    swayimg --scale=fit "$TMP_IMG"
+    swayimg --size=image "$TMP_IMG"
 
     rm -f "$TMP_IMG"
 else

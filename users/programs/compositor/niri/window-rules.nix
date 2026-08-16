@@ -38,6 +38,12 @@ in
       clip-to-geometry = true;
       geometry-corner-radius = 10;
     }
+    # Swayimg - open centered and floating
+    {
+      match._props.app-id._raw = ''r#"(?i)swayimg"#'';
+      open-floating = true;
+      # By default, new floating windows open at the center of the screen, and windows from the tiling layout open close to their visual screen position.
+    }
     # Gets the usually centered status window away and not focus it
     {
       match._props.title._raw = ''r#"(?i)Copying — Dolphin"#'';
