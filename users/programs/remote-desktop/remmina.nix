@@ -22,11 +22,13 @@ in {
       ];
 
       activation.setRemminaKeyboard = lib.hm.dag.entryAfter ["writeBoundary"] ''
-        # Make it use the desired keyboard layout
-        sed -i 's/^rdp_keyboard_layout.*/rdp_keyboard_layout=${rdpCode}/' "$HOME/.config/remmina/remmina.pref"
+TARGET_FILE="$HOME/.config/remmina/remmina.pref"
+mkdir -p "$(dirname "$TARGET_FILE")"
 
-        # Don't passthrough Windows / mod key
-        sed -i 's/^rdp_kbd_remap.*/rdp_kbd_remap=0x15b=/' "$HOME/.config/remmina/remmina.pref"
+if [ -f "$TARGET_FILE" ]; then
+  sed -i 's/^rdp_keyboard_layout.*/rdp_keyboard_layout=${rdpCode}/' "$TARGET_FILE"
+  sed -i 's/^rdp_kbd_remap.*/rdp_kbd_remap=0x15b=/' "$TARGET_FILE"
+fi
       '';
     };
   };
