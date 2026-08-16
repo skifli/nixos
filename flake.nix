@@ -123,9 +123,7 @@
           ];
           # Attribute set of extra arguments passed to Nix module functions
           specialArgs = {
-            pkgsUnstable = import nixpkgs-unstable {
-              inherit system;
-            };
+            pkgsUnstable = inputs.nixpkgs-unstable.legacyPackages.${system};
 
             inherit
               self
