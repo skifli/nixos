@@ -95,7 +95,8 @@ in {
     # Copy the NixOS configuration file and link it from the resulting system
     # (/run/current-system/configuration.nix). This is useful in case you
     # accidentally delete configuration.nix.
-    copySystemConfiguration = true;
+    # copySystemConfiguration = true;
+    # NOT SUPPORTED WITH FLAKES
 
     stateVersion = "25.05"; # Do not change!
   };
