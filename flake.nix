@@ -15,7 +15,7 @@
       "https://nyx-cache.chaotic.cx/"
       "https://niri-nix.cachix.org"
     ];
-    
+
     extra-trusted-public-keys = [
       "skifli-nixos.cachix.org-1:XfgWwHJkEfjc+66r9CwpWQ30CvI2J+M5D3LpyaN2UN0="
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
