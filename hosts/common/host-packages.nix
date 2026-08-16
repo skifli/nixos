@@ -19,5 +19,7 @@
     android-tools # Provides adb/fastboot (ensure adb available system-wide)
 
     fbcat # Allows taking screenshots of a TTY
+
+    gsmartcontrol # Monitoring of connected drives
   ];
 }
