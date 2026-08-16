@@ -20,12 +20,10 @@
       flake = false;
     };
 
-    /*
     browseros-ai = {
       url = "github:skifli/browseros-ai"; # Run nix store prefetch-file \
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    */
 
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
