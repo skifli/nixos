@@ -35,29 +35,29 @@
 
   # noatime is access time NOT change time (ctime) or modification time (mtime)
 
-  fileSystems."/" =
-    { device = "/dev/disk/by-uuid/8017dc36-9408-4a47-9de5-6d048cd080e2";
-      fsType = "btrfs";
-      options = [ "subvol=@root" "compress=zstd:1" "noatime" ];
-    };
+  fileSystems."/" = {
+    device = "/dev/disk/by-uuid/8017dc36-9408-4a47-9de5-6d048cd080e2";
+    fsType = "btrfs";
+    options = ["subvol=@root" "compress=zstd:1" "noatime"];
+  };
 
-  fileSystems."/home" =
-    { device = "/dev/disk/by-uuid/8017dc36-9408-4a47-9de5-6d048cd080e2";
-      fsType = "btrfs";
-      options = [ "subvol=@home" "compress=zstd:1" "noatime" ];
-    };
+  fileSystems."/home" = {
+    device = "/dev/disk/by-uuid/8017dc36-9408-4a47-9de5-6d048cd080e2";
+    fsType = "btrfs";
+    options = ["subvol=@home" "compress=zstd:1" "noatime"];
+  };
 
-  fileSystems."/nix" =
-    { device = "/dev/disk/by-uuid/8017dc36-9408-4a47-9de5-6d048cd080e2";
-      fsType = "btrfs";
-      options = [ "subvol=@nix" "compress=zstd:1" "noatime" ];
-    };
+  fileSystems."/nix" = {
+    device = "/dev/disk/by-uuid/8017dc36-9408-4a47-9de5-6d048cd080e2";
+    fsType = "btrfs";
+    options = ["subvol=@nix" "compress=zstd:1" "noatime"];
+  };
 
-  fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/EED6-CA1F";
-      fsType = "vfat";
-      options = [ "fmask=0022" "dmask=0022" ];
-    };
+  fileSystems."/boot" = {
+    device = "/dev/disk/by-uuid/EED6-CA1F";
+    fsType = "vfat";
+    options = ["fmask=0022" "dmask=0022"];
+  };
 
   /*
   swapDevices = [
