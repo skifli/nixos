@@ -14,10 +14,7 @@
       autoInstallDependencies = true;
 
       /*
-      NOT NEEDED ANYMORE AS AWWW IS DONE SEPARATELY FOR NIRI WORKSPACE BLUR;
-      BUT KEPT BECAUSE OTHERWISE I HAVE TO REBUILD WAYLE WHICH TAKES HOURS :SOB:
-      */
-
+      # NOT NEEDED ANYMORE AS AWWW IS DONE SEPARATELY FOR NIRI WORKSPACE BLUR
       # Safely wraps wayle to include awww in its PATH before systemd runs it
       package = pkgs.symlinkJoin {
         name = "wayle-wrapped";
@@ -27,6 +24,7 @@
           wrapProgram $out/bin/wayle --prefix PATH : ${pkgs.lib.makeBinPath [pkgs.awww]}
         '';
       };
+      */
 
       # Needs wallpaper.engine-enabled = true; to work
 

@@ -1,0 +1,34 @@
+name: "Build & cache"
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-lyra:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Magic Nix Cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: Setup Cachix
+        uses: cachix/cachix-action@v17
+        with:
+          name: 'skifli-nixos'
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+
+      - name: Build nixOS system (lyra)
+        run: |
+          nix build .#nixosConfigurations.lyra.config.system.build.toplevel --verbose
