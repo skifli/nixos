@@ -115,39 +115,49 @@ restore_from_scratchpad() {
     local match_key="$1"
     local match_val="$2"
 
+    if [ -z "$TIMEOUT" ]; then local TIMEOUT=25; fi
+
     # Close overview if it's active as that can break scratchpad stuff
     niri msg action close-overview 2>/dev/null || true
 
+    local scratch_key="$match_key"
+    [ "$scratch_key" = "app_id" ] && scratch_key="app-id"
+
     local restored_count=0
 
-    # Keep restoring as long as there are matching windows remaining in the scratchpad
-    while is_in_scratchpad "$match_key" "$match_val"; do
-        local prev_scratch_count
-        prev_scratch_count=$(nirius list-scratchpad 2>/dev/null | grep -i -c "$match_val" || true)
-
-        local scratch_key="$match_key"
-        [ "$scratch_key" = "app_id" ] && scratch_key="app-id"
+    while true; do
+        local scratch_list
+        scratch_list=$(nirius list-scratchpad 2>/dev/null || true)
 
         local target_id
-        target_id=$(nirius list-scratchpad 2>/dev/null | grep -i -E "${scratch_key}: Some\(\"[^\"]*${match_val}[^\"]*\"\)" | sed -n -E 's/^id: ([0-9]+).*/\1/p' | head -n 1)
+        target_id=$(echo "$scratch_list" | grep -i -E "${scratch_key}: Some\(\"[^\"]*${match_val}[^\"]*\"\)" | sed -n -E 's/^id: ([0-9]+).*/\1/p' | head -n 1)
+
+        [ -z "$target_id" ] && break
 
         local status=0
-        if [ -n "$target_id" ]; then
-            nirius scratchpad-show --id "$target_id" || status=$?
-        else
-            break
-        fi
-
+        nirius scratchpad-show --id "$target_id" || status=$?
+        
         if [ "$status" -eq 0 ]; then
             ((restored_count++))
 
-            # Immediately restore floating/tiled state BEFORE checking list-scratchpad
-            if [ -n "$target_id" ] && [ -f "$FLOAT_STATE_DIR/$target_id" ]; then
-                fetch_windows
+            local t=0
+
+            while [ "$t" -lt "$TIMEOUT" ]; do
+                sleep 0.02
+                if ! nirius list-scratchpad 2>/dev/null | grep -q "^id: ${target_id}$"; then
+                    break
+                fi
+                ((t++))
+            done
+
+            if [ -f "$FLOAT_STATE_DIR/$target_id" ]; then
                 local was_float
                 was_float=$(cat "$FLOAT_STATE_DIR/$target_id")
+                
+                fetch_windows
+
                 local is_now_float
-                is_now_float=$(echo "$WINDOWS_JSON" | jq -r ".[] | select(.id == $target_id) | .is_floating")
+                is_now_float=$(echo "$WINDOWS_JSON" | jq -r ".[] | select(.id == $target_id) | .is_floating" 2>/dev/null)
 
                 if [ "$was_float" = "false" ] && [ "$is_now_float" = "true" ]; then
                     niri msg action focus-window --id "$target_id"
@@ -155,16 +165,6 @@ restore_from_scratchpad() {
                 fi
                 rm -f "$FLOAT_STATE_DIR/$target_id"
             fi
-
-            # NOW poll until nirius list-scratchpad count decreases
-            local t=0
-            while [ "$t" -lt "$TIMEOUT" ]; do
-                local curr_scratch_count
-                curr_scratch_count=$(nirius list-scratchpad 2>/dev/null | grep -i -c "$match_val" || true)
-                [ "$curr_scratch_count" -lt "$prev_scratch_count" ] && break
-                sleep 0.02
-                ((t++))
-            done
         else
             break
         fi

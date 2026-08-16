@@ -12,6 +12,7 @@ fuzzel_prompt() {
     local prompt="$1"
     local text_data="${2:-}"
     local min_lines="${3:-0}"
+    local initial_search="${4:-}"
     
     local num_lines=0
     local prompt_len=${#prompt}
@@ -39,11 +40,25 @@ fuzzel_prompt() {
         calculated_width=$((prompt_len + 30))
     fi
 
+    if [ -n "$initial_search" ]; then
+        local search_len=${#initial_search}
+        local search_width=$((prompt_len + search_len + 10))
+        if [ "$search_width" -gt "$calculated_width" ]; then
+            calculated_width=$search_width
+        fi
+    fi
+
     if [ "$calculated_width" -lt 35 ]; then calculated_width=35; fi
     if [ "$calculated_width" -gt 120 ]; then calculated_width=120; fi
 
+    local search_opt=()
+    if [ -n "$initial_search" ]; then
+        search_opt=("--search=$initial_search")
+    fi
+
     fuzzel --dmenu \
         --minimal-lines \
+        "${search_opt[@]}" \
         --font="$FONT:size=$FONT_SIZE" \
         --prompt="$prompt" \
         --background-color=1e1e2eff \
@@ -341,7 +356,7 @@ else
             ;;
         *"edit"*)
             OLD_TEXT=$(jq -r --arg id "$TODO_ID" '.[] | select(.id == $id) | .text' "$TODO_FILE")
-            NEW_TEXT=$(echo "" | fuzzel_prompt "Edit Task: " "" 0)
+            NEW_TEXT=$(echo "" | fuzzel_prompt "Edit Task: " "" 0 "$OLD_TEXT")
             if [ -n "$NEW_TEXT" ]; then
                 TMP=$(mktemp)
                 jq --arg id "$TODO_ID" --arg text "$NEW_TEXT" \
