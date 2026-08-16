@@ -47,7 +47,7 @@ in {
       // {
         rescue = {
           isNormalUser = true;
-          password = "rescue";
+          initialHashedPassword = "$6$w5rJGlUIrUUpdCv5$15XHwpco.PFtpg7gOUL7OoXQ34UWG9E2OTXaoRsg1k6wbky6ieG4sANsLZp9HWr/PQsslUH8HQDnZwj5QYMl./"; # `rescue`
         };
       };
   };
