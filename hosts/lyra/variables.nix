@@ -26,6 +26,7 @@
     ../../modules/core/printing.nix
     ../../modules/core/security.nix
     ../../modules/core/services.nix
+    ../../modules/core/smartd.nix
     ../../modules/core/system.nix
     ../../modules/core/users.nix
     ../../modules/core/zram.nix
