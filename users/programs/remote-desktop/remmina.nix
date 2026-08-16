@@ -22,13 +22,13 @@ in {
       ];
 
       activation.setRemminaKeyboard = lib.hm.dag.entryAfter ["writeBoundary"] ''
-TARGET_FILE="$HOME/.config/remmina/remmina.pref"
-mkdir -p "$(dirname "$TARGET_FILE")"
+        TARGET_FILE="$HOME/.config/remmina/remmina.pref"
+        mkdir -p "$(dirname "$TARGET_FILE")"
 
-if [ -f "$TARGET_FILE" ]; then
-  sed -i 's/^rdp_keyboard_layout.*/rdp_keyboard_layout=${rdpCode}/' "$TARGET_FILE"
-  sed -i 's/^rdp_kbd_remap.*/rdp_kbd_remap=0x15b=/' "$TARGET_FILE"
-fi
+        if [ -f "$TARGET_FILE" ]; then
+          sed -i 's/^rdp_keyboard_layout.*/rdp_keyboard_layout=${rdpCode}/' "$TARGET_FILE"
+          sed -i 's/^rdp_kbd_remap.*/rdp_kbd_remap=0x15b=/' "$TARGET_FILE"
+        fi
       '';
     };
   };
