@@ -15,6 +15,35 @@
   13/08/2026@13:31 - Finally fixed for good - Anytype switches to system theme when it changes without a restart! I THINK (not 100% sure) it was linked to this commit - https://github.com/skifli/nixos/commit/4ec0c216570e677e6ec6d5a4d1d1d083e7dceb2a. Specifically, setting `org.freedesktop.impl.portal.Settings` to just `gtk`. At least this charade is all over now, phew!
   13/08/2026@22:22 - It broke again but after a rebuild with ADW_DISABLE_PORTAL=1 it works again??? I didn't know before, I definitely don't know now. Just, if I restart my PC tomorrow, and it's switched - I'll be a happy blob of existence. Anyway this hurts my brain, goodnight :sob:.
   */
+
+  latVal = toString (
+    if hostVars.latitude >= 0
+    then hostVars.latitude
+    else (0 - hostVars.latitude)
+  );
+  latDir =
+    if hostVars.latitude >= 0
+    then "N"
+    else "S";
+  lonVal = toString (
+    if hostVars.longitude >= 0
+    then hostVars.longitude
+    else (0 - hostVars.longitude)
+  );
+  lonDir =
+    if hostVars.longitude >= 0
+    then "E"
+    else "W";
+  sunwaitCoords = "${latVal}${latDir} ${lonVal}${lonDir}";
+
+  # Create the script we run during HM activation to make the switch more seamless
+  checkAndSwitchTheme = pkgs.writeShellScript "check-and-switch-theme" ''
+    SUNWAIT_BIN="${pkgs.sunwait}/bin/sunwait"
+    SUNWAIT_COORDS="${sunwaitCoords}"
+
+    ${builtins.readFile ./check-and-switch-theme.sh}
+  '';
+
   lightGtkConfigRaw = {
     iconTheme.name = commonHostVars.icons.light;
     theme = {
@@ -105,9 +134,9 @@ in {
   };
 
   home-manager.users.${userVars.username} = {lib, ...}: {
-    # Force auto-theme-check to restart after every HM activation/rebuild because it didn't before and since we always rebuild into light if we don't do this this can cause some theme mismatches.
-    home.activation.triggerThemeCheck = lib.hm.dag.entryAfter ["reloadSystemd"] ''
-      run ${pkgs.systemd}/bin/systemctl --user restart auto-theme-check.service
+    # Check sun position during HM activation because it didn't before and since we always rebuild into light if we don't do this this can cause some theme mismatches.
+    home.activation.triggerThemeCheck = lib.hm.dag.entryAfter ["linkGeneration"] ''
+      run ${checkAndSwitchTheme}
     '';
 
     systemd.user.services.auto-theme-check = {
@@ -119,26 +148,7 @@ in {
         Restart = "always";
         RestartSec = "5s";
 
-        Environment = let
-          latVal = toString (
-            if hostVars.latitude >= 0
-            then hostVars.latitude
-            else (0 - hostVars.latitude)
-          );
-          latDir =
-            if hostVars.latitude >= 0
-            then "N"
-            else "S";
-          lonVal = toString (
-            if hostVars.longitude >= 0
-            then hostVars.longitude
-            else (0 - hostVars.longitude)
-          );
-          lonDir =
-            if hostVars.longitude >= 0
-            then "E"
-            else "W";
-        in [
+        Environment = [
           "PATH=/run/wrappers/bin:${lib.makeBinPath [pkgs.libnotify pkgs.coreutils pkgs.bash pkgs.niri pkgs.sunwait]}"
           "USER=${userVars.username}"
           "LAT_VAL=${latVal}"
