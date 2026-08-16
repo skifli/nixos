@@ -56,6 +56,7 @@ while true; do
             bash -c "cd $(printf '%q' "$CWD") && eval $(printf '%q' "$CMD")" > "$LOG_FILE" 2>&1 &
 
         TRACKED_WIN_ID=""
+        GRACE_TICKS=0
 
         while true; do
             SCOPE_ACTIVE=0
@@ -87,9 +88,12 @@ while true; do
                 fi
             fi
 
-            # If systemd scope ended and no window was opened, CLI task is complete
+            # If systemd scope ended and no window has been detected yet, wait up to 1.5s grace period
             if [ "$SCOPE_ACTIVE" -eq 0 ] && [ -z "$TRACKED_WIN_ID" ]; then
-                break
+                ((GRACE_TICKS++)) || true
+                if [ "$GRACE_TICKS" -ge 15 ]; then
+                    break
+                fi
             fi
         done
 
@@ -98,6 +102,12 @@ while true; do
         rm -f "$EVENT_FIFO"
 
         EXIT_CODE=$(systemctl --user show "$UNIT_NAME.scope" --property=ExecMainStatus --value 2>/dev/null || echo 0)
+        [ -z "$EXIT_CODE" ] && EXIT_CODE=0
+
+        # If a floating terminal window was successfully tracked and closed by the user, mark as success
+        if [ -n "$TRACKED_WIN_ID" ]; then
+            EXIT_CODE=0
+        fi
 
         if [ "$EXIT_CODE" -eq 0 ]; then
             sed -i 's/STATUS="running"/STATUS="completed"/' "$NEXT_TASK"
