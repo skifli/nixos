@@ -34,4 +34,4 @@ jobs:
 
       - name: Build nixOS system (lyra)
         run: |
-          nix build .?submodules=1#nixosConfigurations.lyra.config.system.build.toplevel --verbose --accept-flake-config
+          nix build .?submodules=1#nixosConfigurations.lyra.config.system.build.toplevel --accept-flake-config
