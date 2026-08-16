@@ -8,8 +8,8 @@
 
   # nixOS config building-related settings
   buildSettings = {
-    maxJobs = 2;
-    cores = 2;
+    maxJobs = "auto";
+    cores = 0;
   };
 
   # Host configuration
