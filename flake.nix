@@ -1,11 +1,9 @@
-let
-  caches = import ./caches.nix;
-in {
+{
   description = "nixOS + Home Manager configuration";
 
   nixConfig = {
-    extra-substituters = caches.substituters;
-    extra-trusted-public-keys = caches.trusted-public-keys;
+    extra-substituters = (import ./caches.nix).substituters;
+    extra-trusted-public-keys = (import ./caches.nix).trusted-public-keys;
   };
 
   inputs = {
