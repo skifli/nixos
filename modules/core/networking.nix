@@ -39,10 +39,6 @@
 
   services.resolved = {
     enable = true;
-    fallbackDns = [
-      "1.1.1.1"
-      "9.9.9.9"
-      "1.0.0.1"
-    ];
+    # It auto sets settings.Resolve.DNS to config.networking.nameservers
   };
 }
