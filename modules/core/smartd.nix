@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{pkgs, ...}: {
   environment.systemPackages = with pkgs; [
     smartmontools # provides `smartctl`
     gsmartcontrol # provides the GTK GUI inspector
