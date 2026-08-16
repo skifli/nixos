@@ -40,16 +40,16 @@
 
   home-manager.users.${userVars.username} = {lib, ...}: {
     home.activation.setKTailctlConfig = lib.hm.dag.entryAfter ["writeBoundary"] ''
-        TARGET_FILE="$HOME/.config/KTailctlrc"
-        mkdir -p "$(dirname "$TARGET_FILE")"
+  TARGET_FILE="$HOME/.config/KTailctlrc"
+  mkdir -p "$(dirname "$TARGET_FILE")"
 
-        if [ ! -f "$TARGET_FILE" ]; then
-          cat << 'EOF' > "$TARGET_FILE"
-      [Interface]
-      peerFilter=
-      startMinimized=true
-      EOF
-        fi
+  if [ ! -f "$TARGET_FILE" ]; then
+    cat << 'EOF' > "$TARGET_FILE"
+[Interface]
+peerFilter=
+startMinimized=true
+EOF
+  fi
     '';
   };
 }
