@@ -60,7 +60,7 @@ case "${MODE_SELECTION,,}" in
     *fast*)
         DELAY="0.05"
         ;;
-    *interval*)
+    *afk*)
         DELAY="10"
         ;;
     *burst*)
@@ -87,9 +87,9 @@ esac
 
 (
     trap 'rm -f "$PID_FILE"' EXIT
-    
+
     CLICKS=0
-    
+
     while true; do
         ydotool click 0xC0
         CLICKS=$((CLICKS + 1))

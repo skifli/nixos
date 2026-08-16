@@ -956,7 +956,7 @@
     spawn = [
       "sh"
       "-c"
-      "/home/${userVars.username}/.local/bin/smart-rebuild.sh ${userVars.programs.terminal} ${userVars.programs.terminal-shell} ${hostVars.hostname}"
+      "/home/${userVars.username}/.local/bin/smart-rebuild.sh --terminal ${userVars.programs.terminal} --host ${hostVars.hostname}"
     ];
   };
   "Mod+Alt+Z" = {

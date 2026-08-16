@@ -1,8 +1,34 @@
 #!/usr/bin/env bash
 
-TERMINAL="${1:-ghostty}"
-SHELL_BIN="${2:-$SHELL}"
-HOSTNAME="${3:-$(hostname)}"
+# Defaults
+TERMINAL="ghostty"
+SHELL_BIN="$SHELL"
+HOSTNAME="$(hostname)"
+POST_ACTION="shell"
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -r|--reboot)
+      POST_ACTION="reboot"
+      shift
+      ;;
+    -s|--shutdown|--poweroff)
+      POST_ACTION="shutdown"
+      shift
+      ;;
+    -t|--terminal)
+      TERMINAL="$2"
+      shift 2
+      ;;
+    -h|--host)
+      HOSTNAME="$2"
+      shift 2
+      ;;
+    *)
+      shift
+      ;;
+  esac
+done
 
 notify-send -e -a nixOS \
   -i "$HOME/.local/share/misc/nix-snowflake-rainbow.svg" \
@@ -23,7 +49,24 @@ notify-send -e -a nixOS \
     duration=\$(echo \"scale=2; \$end_time - \$start_time\" | bc)
     log_date=\$(date '+%Y-%m-%d %H:%M:%S')
     echo \"[\$log_date] zngunsh execution time: \$duration seconds\" >> '$HOME/Documents/custom-scripts/nixos_rebuild.log'
-  fi
 
-  exec '$SHELL_BIN'
+    case '$POST_ACTION' in
+      reboot)
+        echo 'Rebuilding complete. Rebooting in 5 seconds (Ctrl+C to abort)...'
+        sleep 5
+        systemctl reboot
+        ;;
+      shutdown)
+        echo 'Rebuilding complete. Shutting down in 5 seconds (Ctrl+C to abort)...'
+        sleep 5
+        systemctl poweroff
+        ;;
+      *)
+        exec '$SHELL_BIN'
+        ;;
+    esac
+  else
+    echo 'Rebuild failed - dropping to shell.'
+    exec '$SHELL_BIN'
+  fi
 "

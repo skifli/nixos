@@ -8,8 +8,6 @@ on:
 
 jobs:
   check:
-    if: false # DISABLE FOR NOW
-
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
