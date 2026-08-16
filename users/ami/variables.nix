@@ -161,7 +161,7 @@ in rec {
             title._raw = ''r#"(?i)Anki Pomodoro"#'';
           };
           open-floating = true;
-          open-on-workspace = "1";
+          open-on-workspace = "5";
           default-floating-position._props = {
             x = 20;
             y = 20;

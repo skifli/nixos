@@ -24,12 +24,12 @@ fi
 ensure_window_exists "com.mitchellh.ghostty" "Anki Pomodoro" "${BASH_SOURCE%/*}/floating-term.sh ghostty -w 30% -h 30% --title='Anki Pomodoro' -e ${BASH_SOURCE%/*}/anki-pomodoro.sh" "com.mitchellh.ghostty" "Anki Pomodoro"
 
 # 1st Monitor
-move_windows "app_id" "zen-beta" "$MON_1" "1" "100%"
-move_windows "title" "Anki Pomodoro" "$MON_1" "1" "40%"
+move_windows "app_id" "anki" "$MON_1" "1" "100%"
 move_windows "app_id" "gcr-prompter" "$MON_1" "1"
 
 # 2nd Monitor
-move_windows "app_id" "anki" "$MON_2" "1" "100%"
+move_windows "app_id" "zen-beta" "$MON_2" "1" "100%"
+move_windows "title" "Anki Pomodoro" "$MON_2" "1" "30%"
 
 # Focus windows
 focus_window "app_id" "anki"
