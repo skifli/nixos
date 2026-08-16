@@ -6,8 +6,6 @@
   ...
 }: let
   primaryUser = builtins.head hostVars.enabledUsers; # Dynamically gets "ami" (or whichever user is enabled for this host)
-
-  caches = import ../../caches.nix;
 in {
   environment.systemPackages = with pkgs; [
     git # Great insinuating tool
@@ -58,8 +56,6 @@ in {
       # Optimize disk I/O for builds
       fsync-metadata = false; # Don't fsync metadata on every change
       keep-build-log = false; # Don't keep build logs to reduce IO
-
-      inherit (caches) substituters trusted-public-keys;
     };
   };
 
