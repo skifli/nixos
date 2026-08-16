@@ -9,4 +9,11 @@ _: {
     # You can check what other algorithms are supported by your zram device with cat /sys/class/block/zram*/comp_algorithm
     algorithm = "zstd";
   };
+
+  boot = {
+    kernel.sysctl = {
+      # Tell kernel to heavily prefer ZRAM over filesystem page flushing
+      "vm.swappiness" = 180;
+    };
+  };
 }

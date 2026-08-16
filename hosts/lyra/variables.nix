@@ -4,7 +4,7 @@
 
   optimiseBoot = true;
   optimiseBuilds = true;
-  optimiseForHdd = true;
+  optimiseForHdd = false;
 
   # nixOS config building-related settings
   buildSettings = {
@@ -18,6 +18,7 @@
     # Host specific modules
     ../../modules/core/audio.nix
     ../../modules/core/boot.nix
+    ../../modules/core/btrfs.nix
     ../../modules/core/fonts.nix
     ../../modules/core/gaming.nix
     ../../modules/core/locale.nix
