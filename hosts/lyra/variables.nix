@@ -76,6 +76,29 @@
     "8" = {open-on-output = "DP-1";};
   };
 
+  devices = [
+    # -d nvme: Use NVMe driver
+    # -H: Monitor NVMe health status & available spare threshold
+    # -W 4,70,80: Report on 4°C delta, warn at 70°C, critical at 80°C
+    # -s (S/../.././02): Quick background self-test daily at 2:00 AM
+    {
+      device = "/dev/nvme0n1";
+      options = "-d nvme -H -W 4,70,80 -s (S/../.././02)";
+    }
+
+    # -a: Monitor all standard ATA SMART attributes
+    # -o on -S on: Enable background testing & auto-save of attribute data
+    # -n standby,q: Never wake up the HDD from sleep/standby to run checks
+    # -W 4,50,55: Warn at 50°C, Critical at 55°C
+    # -C 197+: Alert immediately on any Current Pending Sectors (failing drive)
+    # -U 198+: Alert immediately on any Offline Uncorrectable Sectors (bad sectors)
+    # -s (S/../.././03|L/../../6/04): Short test daily at 3:00 AM, Long scan Saturdays at 4:00 AM
+    {
+      device = "/dev/sda";
+      options = "-a -o on -S on -n standby,q -W 4,50,55 -C 197+ -U 198+ -s (S/../.././03|L/../../6/04)";
+    }
+  ];
+
   niri.input = {
   };
 
