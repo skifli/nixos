@@ -1,5 +1,6 @@
 {
   substituters = [
+    "https://skifli-nixos.cachix.org"
     "https://cache.nixos.org/"
     "https://cachix.cachix.org"
     # "https://lan-mouse.cachix.org/"
@@ -13,6 +14,7 @@
   ];
 
   trusted-public-keys = [
+    "skifli-nixos.cachix.org-1:XfgWwHJkEfjc+66r9CwpWQ30CvI2J+M5D3LpyaN2UN0="
     "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
     "cachix.cachix.org-1:eWNHQldwUO7G2VkjpnjDbWwy4KQ/HNxht7H4SSoMckM="
     # "lan-mouse.cachix.org-1:KlE2AEZUgkzNKM7BIzMQo8w9yJYqUpor1CAUNRY6OyM="
