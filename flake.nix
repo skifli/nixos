@@ -1,5 +1,12 @@
-{
+let
+  caches = import ./caches.nix;
+in {
   description = "nixOS + Home Manager configuration";
+
+  nixConfig = {
+    extra-substituters = caches.substituters;
+    extra-trusted-public-keys = caches.trusted-public-keys;
+  };
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
