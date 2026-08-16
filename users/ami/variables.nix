@@ -376,7 +376,7 @@ in rec {
       "aw"
       # "discord"
       "kde-connect"
-      "lan-mouse"
+      # "lan-mouse"
       "nix-direnv"
       "nix-index-database"
       "nix-your-shell"
