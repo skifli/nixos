@@ -23,4 +23,4 @@ jobs:
         with:
           flake-lock-path: flake.lock
           fail-mode: true
-          send-comment: true # Sends an automated status comment on Pull Requests.
+          send-statistics: true # Sends an automated status comment on Pull Requests.
