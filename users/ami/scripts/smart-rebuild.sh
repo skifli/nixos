@@ -16,8 +16,8 @@ notify-send -e -a nixOS \
   git log --oneline ORIG_HEAD..HEAD
 
   start_time=\$(date +%s.%N)
-  sudo env GC_INITIAL_HEAP_SIZE="$CUSTOM_NIXOS_REBUILD_GC" nixos-rebuild switch --flake "path:.#$HOSTNAME"
-
+  sudo GC_INITIAL_HEAP_SIZE=\"\$CUSTOM_NIXOS_REBUILD_GC\" nixos-rebuild switch --flake 'path:.#$HOSTNAME'
+  
   if [ \$? -eq 0 ]; then
     end_time=\$(date +%s.%N)
     duration=\$(echo \"scale=2; \$end_time - \$start_time\" | bc)
