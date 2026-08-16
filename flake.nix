@@ -10,20 +10,28 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    anki-seara = {
+      url = "github:rodrada/seara";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     betterfox = {
       url = "github:yokoffing/Betterfox";
       flake = false;
     };
+
+    /*
     browseros-ai = {
       url = "github:skifli/browseros-ai"; # Run nix store prefetch-file \
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    */
+
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     }; # Managing files and configs in each users' home directory
-    ironbar.url = "github:JakeStanger/ironbar";
-    lan-mouse.url = "github:feschber/lan-mouse";
+
     # Switched from sodiboo/niri-flake to BANanaD3V/niri-nix
     # See: https://github.com/niri-wm/niri/pull/4404
     # TODO: Switch back to sodiboo/niri-flake when it gets updated again <3
@@ -31,34 +39,34 @@
       url = "git+https://codeberg.org/BANanaD3V/niri-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     stylix = {
       url = "github:nix-community/stylix/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     }; # System wide theming
-    way-edges = {
-      url = "github:way-edges/way-edges";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+
     /*
     winapps = {
       url = "github:winapps-org/winapps";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     */
+
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
     affinity-nix.url = "github:mrshmllow/affinity-nix";
-    anki-seara.url = "github:rodrada/seara";
-    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     # anki-mcp.url = "github:ankimcp/anki-mcp-server-addon";
+    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     # concord.url = "github:chojs23/concord";
+    # lan-mouse.url = "github:feschber/lan-mouse";
     vicinae.url = "github:vicinaehq/vicinae"; # Following nixpkgs makes cache miss
     vicinae-extensions.url = "github:vicinaehq/extensions";
   };
