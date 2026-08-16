@@ -62,7 +62,7 @@
   fileSystems."/mnt/Storage" = {
     device = "/dev/disk/by-label/Storage";
     fsType = "ext4";
-    options = [ "nofail" "noatime" ];
+    options = ["nofail" "noatime"];
   };
 
   /*
