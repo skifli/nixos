@@ -134,9 +134,11 @@ in {
 
   home-manager.users.${userVars.username} = {lib, ...}: {
     # Check sun position during HM activation because it didn't before and since we always rebuild into light if we don't do this this can cause some theme mismatches.
+    /*
     home.activation.triggerThemeCheck = lib.hm.dag.entryAfter ["linkGeneration"] ''
       run ${checkAndSwitchTheme}
     '';
+    */
 
     systemd.user.services.auto-theme-check = {
       Unit = {
