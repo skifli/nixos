@@ -6,8 +6,10 @@
   inherit (userVars) programs;
 
   # Map plural categories to singular directory names
-  categoryDir = cat: # Support ones where multiple packages can be installed from a single category, e.g. "browsers" to "browser"
-    if cat == "browsers" then "browser"
+  categoryDir = cat:
+  # Support ones where multiple packages can be installed from a single category, e.g. "browsers" to "browser"
+    if cat == "browsers"
+    then "browser"
     else cat;
 
   regular = lib.concatMap (
@@ -35,5 +37,7 @@
     ++ others;
 in
   # Wrap each module so it receives expected args (userVars, pkgs, etc.)
-  map (path: import path attrs) all # attrs captured the entire argument set, including not explicitly listed keys
-  # Combine all programs into one big list
+  map (path: import path attrs) all
+# attrs captured the entire argument set, including not explicitly listed keys
+# Combine all programs into one big list
+
