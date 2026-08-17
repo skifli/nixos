@@ -27,7 +27,6 @@ if [[ $# -gt 0 ]]; then
   shift 1
 fi
 
-# Still set title because it's used in _some_ places e.g., mah schedule script but now don't rely on it because sometimes caller overrides it
 ID="floating-term-$$-$(date +%s%N)"
 
 case "$TERM_CMD" in
@@ -39,12 +38,11 @@ case "$TERM_CMD" in
     ;;
 esac
 
-SPAWN_PID=$!
 WINDOW_ID=""
 
 for i in $(seq 1 $TIMEOUT); do
-  WINDOW_ID=$(niri msg --json windows 2>/dev/null | jq -r ".[] | select(.pid == $SPAWN_PID) | .id" 2>/dev/null || true)
-  [[ -n "$WINDOW_ID" ]] && break
+  WINDOW_ID=$(niri msg --json windows 2>/dev/null | jq -r ".[] | select(.title == \"$ID\") | .id" 2>/dev/null || true)
+  if [ -n "$WINDOW_ID" ]; then break; fi
   sleep 0.05
 done
 
