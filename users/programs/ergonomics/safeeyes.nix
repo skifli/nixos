@@ -13,6 +13,10 @@
             python3Packages.croniter # Needed for Health Statistics
             python3Packages.pywayland # Needed for Smart Pause
           ];
+        propagatedBuildInputs = (oldAttrs.propagatedBuildInputs or []) ++ [
+            pkgs.python3Packages.croniter
+            pkgs.python3Packages.pywayland
+        ]; # Depending on the nixpkgs channel version overriding by just dependencies may not propagate so do both
       }))
     ];
 
