@@ -40,3 +40,4 @@ in
   map (path: import path attrs) all
 # attrs captured the entire argument set, including not explicitly listed keys
 # Combine all programs into one big list
+
