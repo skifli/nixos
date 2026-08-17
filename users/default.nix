@@ -42,7 +42,7 @@ in {
     backupFileExtension = "hm-backup";
     overwriteBackup = true;
 
-    useGlobalPkgs = false; # Stylix HM module sets nixpkgs overlays; avoid warnings by letting HM manage its own pkgs
+    useGlobalPkgs = true; # Stylix HM module sets nixpkgs overlays; avoid warnings by letting HM manage its own pkgs
     useUserPackages = true; # Make packages not available system-wide, instead in ~/.nix-profile
     # extraSpecialArgs = { inherit commonHostVars hostVars; }; # Home manager WHY do you use this ;-;
 
