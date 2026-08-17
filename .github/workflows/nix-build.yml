@@ -34,6 +34,8 @@ jobs:
 
       - name: Magic Nix cache
         uses: DeterminateSystems/magic-nix-cache-action@main
+        with:
+          use-flakehub: false # Disable it
 
       - name: Setup Cachix
         uses: cachix/cachix-action@v17
