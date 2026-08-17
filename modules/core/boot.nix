@@ -12,10 +12,23 @@
     # Previous: kernelPackages = pkgs.linuxPackages_latest; # Use latest kernel version available
     kernelPackages = pkgs.linuxPackages_cachyos; # Use high-performance CachyOS Kernel (BORE Scheduler + Thin LTO)
     kernelParams = [
-      "preempt=full" # Lower latency but less throughput
-      # "quiet" # Non verbose boot mode
-      # "splash" # Eye-candy loading screen
+      "preempt=full"              # Lower latency but less throughput
+      "quiet"                     # Non-verbose boot mode
+      "splash"                    # Eye-candy loading screen
+      "loglevel=3"                # Restricts kernel log messages to errors/critical only
+      "boot.shell_on_fail"        # Drops to a recovery shell safely if boot fails instead of locking up
+      "rd.udev.log_level=3"       # Quiets early udev device manager logs
+      "rd.systemd.show_status=false" # Hides systemd startup text in initrd
+      "vt.global_cursor_default=0"   # Hides the blinking text cursor on the console
+    ];
 
+    # "splash" above
+    plymouth = {
+      enable = true;
+      theme = "breeze"; # A NixOS branded variant of the breeze theme when config.boot.plymouth.theme == "breeze", otherwise [ ].
+    };
+
+    kernel.sysctl = [
       # Reduce kworker IO pressure during heavy builds
       "vm.dirty_ratio=10" # Percentage of RAM before aggressive writeback
       "vm.dirty_background_ratio=5" # Background writeback threshold
@@ -30,7 +43,11 @@
         canTouchEfiVariables = true; # E.g., can set as default boot entry
         efiSysMountPoint = "/boot";
       };
-      timeout = 1; # How long to wait on initial boot choices before proceeding into default sys
+
+      # Hide the OS choice for bootloaders.
+      # It's still possible to open the bootloader list by pressing any key
+      # It will just not appear on screen unless a key is pressed
+      timeout = 0; # How long to wait on initial boot choices before proceeding into default sys
 
       limine = {
         enable = true;
@@ -57,6 +74,16 @@
         efiSupport = true;
         useOSProber = true;
       };
+    };
+
+    tmp = {
+      useTmpfs = true;
+      useZram = false;
+
+      tmpfsSize = "75%"; # Allows /tmp to grow up to 75% of RAM dynamically if needed
+      tmpfsHugeMemoryPages = "within_size"; # Only allocate huge memory pages if it will be fully within i_size. Also respect madvise(2) hints. Recommended.
+
+      cleanOnBoot = true;
     };
 
     # Filesystems support

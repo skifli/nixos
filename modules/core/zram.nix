@@ -11,9 +11,17 @@ _: {
   };
 
   boot = {
+    kernelParams = [
+      "zswap.enabled=0" # Prevent CPU wasting cycles compressing before ZRAM
+    ];
+
     kernel.sysctl = {
       # Tell kernel to heavily prefer ZRAM over filesystem page flushing
       "vm.swappiness" = 180;
+
+      "vm.watermark_boost_factor" = 0;
+      "vm.watermark_scale_factor" = 125;
+      "vm.page-cluster" = 0; # Reads 1 page at a time (0 disk readahead latency overhead)
     };
   };
 }
