@@ -12,14 +12,14 @@
     # Previous: kernelPackages = pkgs.linuxPackages_latest; # Use latest kernel version available
     kernelPackages = pkgs.linuxPackages_cachyos; # Use high-performance CachyOS Kernel (BORE Scheduler + Thin LTO)
     kernelParams = [
-      "preempt=full"              # Lower latency but less throughput
-      "quiet"                     # Non-verbose boot mode
-      "splash"                    # Eye-candy loading screen
-      "loglevel=3"                # Restricts kernel log messages to errors/critical only
-      "boot.shell_on_fail"        # Drops to a recovery shell safely if boot fails instead of locking up
-      "rd.udev.log_level=3"       # Quiets early udev device manager logs
+      "preempt=full" # Lower latency but less throughput
+      "quiet" # Non-verbose boot mode
+      "splash" # Eye-candy loading screen
+      "loglevel=3" # Restricts kernel log messages to errors/critical only
+      "boot.shell_on_fail" # Drops to a recovery shell safely if boot fails instead of locking up
+      "rd.udev.log_level=3" # Quiets early udev device manager logs
       "rd.systemd.show_status=false" # Hides systemd startup text in initrd
-      "vt.global_cursor_default=0"   # Hides the blinking text cursor on the console
+      "vt.global_cursor_default=0" # Hides the blinking text cursor on the console
     ];
 
     # "splash" above
