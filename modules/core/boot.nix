@@ -28,12 +28,12 @@
       theme = "breeze"; # A NixOS branded variant of the breeze theme when config.boot.plymouth.theme == "breeze", otherwise [ ].
     };
 
-    kernel.sysctl = [
+    kernel.sysctl = {
       # Reduce kworker IO pressure during heavy builds
-      "vm.dirty_ratio=10" # Percentage of RAM before aggressive writeback
-      "vm.dirty_background_ratio=5" # Background writeback threshold
-      "vm.dirty_writeback_centisecs=500" # Reduce frequency of writeback
-    ];
+      "vm.dirty_ratio" = 10; # Percentage of RAM before aggressive writeback
+      "vm.dirty_background_ratio" = 5; # Background writeback threshold
+      "vm.dirty_writeback_centisecs" = 500; # Reduce frequency of writeback
+    };
 
     # CachyOS-specific pkg
     zfs.package = pkgs.zfs_cachyos;
@@ -93,8 +93,8 @@
       "ext4"
       # "fat32" # Old eh
       "ntfs"
+      "zfs"
     ];
-    tmp.cleanOnBoot = true; # Cleanse tmp dir
   };
 
   environment.systemPackages = with pkgs; [
