@@ -56,13 +56,15 @@ notify-send -e -a "gcr-prompter" -i "$HOME/.local/share/misc/Seahorse_icon_hicol
         secret-tool lookup xdg:schema org.freedesktop.Secret.Generic </dev/null >/tmp/secret-tool.log 2>&1 & # Redirects stdout to a log file not dev/null, but stdin is dev/null
         SECRET_PID=$!
 
-        nirius focus --app-id gcr-prompter # Thanks to nirius - before it was this behemoth - niri msg action focus-window --id $(niri msg --json windows | jq -r '.[] | select(.app_id == "gcr-prompter") | .id' | head -n 1)
-
         # 3. Poll lock status every second for up to 25 seconds
         # I THINK 25 is the standard d-bus method call timeout? Idk!
         for i in $(seq 1 25); do
+            nirius focus --app-id gcr-prompter # Thanks to nirius - before it was this behemoth - niri msg action focus-window --id $(niri msg --json windows | jq -r '.[] | select(.app_id == "gcr-prompter") | .id' | head -n 1)
+
             sleep 1
+
             IS_LOCKED=$(busctl --user get-property org.freedesktop.secrets /org/freedesktop/secrets/aliases/default org.freedesktop.Secret.Collection Locked 2>/dev/null | awk '{print $2}')
+            
             if [ "$IS_LOCKED" = "false" ]; then
                 kill $SECRET_PID 2>/dev/null
                 break 2 # Break out of the main while-loop
