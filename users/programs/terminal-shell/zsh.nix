@@ -142,7 +142,7 @@
     };
   };
 
-  environment.pathsToLink = [ "/share/zsh" ];
+  environment.pathsToLink = ["/share/zsh"];
 
   users.users.${userVars.username}.shell = pkgs.zsh;
 }
