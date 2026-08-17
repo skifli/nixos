@@ -28,7 +28,8 @@
 
   others = map (program: ./programs/misc/${program}.nix) (programs.other or []); # Get all programs specified in the "other" variable
 
-  all = [ ./${userVars.username}/user-packages.nix ]
+  all =
+    [./${userVars.username}/user-packages.nix]
     ++ lib.optional userVars.git.enabled ./programs/misc/git.nix
     ++ regular
     ++ others;

@@ -15,8 +15,8 @@
   */
   xdg-desktop-portal-kde = pkgs.symlinkJoin {
     name = "xdg-desktop-portal-kde-wrapped";
-    paths = [ pkgs.kdePackages.xdg-desktop-portal-kde ];
-    nativeBuildInputs = [ pkgs.makeBinaryWrapper ];
+    paths = [pkgs.kdePackages.xdg-desktop-portal-kde];
+    nativeBuildInputs = [pkgs.makeBinaryWrapper];
     postBuild = ''
       wrapProgram $out/libexec/xdg-desktop-portal-kde \
         --prefix QML2_IMPORT_PATH : "${pkgs.kdePackages.qtstyleplugin-kvantum}/lib/qt-6/qml"
