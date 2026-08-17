@@ -93,7 +93,6 @@
       "ext4"
       # "fat32" # Old eh
       "ntfs"
-      "zfs"
     ];
   };
 
