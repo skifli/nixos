@@ -18,10 +18,19 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
+      - name: Set up Swap Space
+        uses: pierotofy/set-swap-space@master
+        with:
+          swap-size-gb: 10
+
       - uses: wimpysworld/nothing-but-nix@main
 
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@main
+        uses: DeterminateSystems/determinate-nix-action@main
+        with:
+          extra-conf: |
+            max-jobs = 1
+            cores = 2
 
       - name: Magic Nix cache
         uses: DeterminateSystems/magic-nix-cache-action@main
@@ -34,4 +43,6 @@ jobs:
 
       - name: Build nixOS system (lyra)
         run: |
-          nix build .?submodules=1#nixosConfigurations.lyra.config.system.build.toplevel --accept-flake-config
+          nix build .?submodules=1#nixosConfigurations.lyra.config.system.build.toplevel \
+            --accept-flake-config \
+            --max-jobs 1

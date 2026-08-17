@@ -2,7 +2,7 @@
 
 # TODO - Integrate https://sr.ht/~tsdh/nirius for better technical debt
 
-export PATH="$PATH:/run/current-system/sw/bin:$HOME/.nix-profile/bin"
+export PATH="$PATH:/run/current-system/sw/bin:/etc/profiles/per-user/${USER:-user}/bin:$HOME/.local/bin"
 
 export MON_1="HDMI-A-2"
 export MON_2="DP-1"

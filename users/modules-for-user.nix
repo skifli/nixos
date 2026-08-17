@@ -28,16 +28,12 @@
 
   others = map (program: ./programs/misc/${program}.nix) (programs.other or []); # Get all programs specified in the "other" variable
 
-  all =
-    [
-      ./${userVars.username}/user-packages.nix
-    ]
+  all = [ ./${userVars.username}/user-packages.nix ]
     ++ lib.optional userVars.git.enabled ./programs/misc/git.nix
     ++ regular
     ++ others;
 in
-  # Wrap each module so it receives expected args (userVars, pkgs, etc.)
-  map (path: import path attrs) all
+  all
 # attrs captured the entire argument set, including not explicitly listed keys
 # Combine all programs into one big list
 

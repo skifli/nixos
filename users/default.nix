@@ -13,16 +13,15 @@
   Aug 11 14:48:41 lyra xdg-desktop-portal-kde[18916]: qrc:/qt/qml/org/kde/xdgdesktopportal/AppChooserDialog.qml: module "kvantum" is not installed
   Aug 11 14:48:43 lyra systemd-coredump[18922]: [🡕] Process 18916 (.xdg-desktop-po) of user 1000 dumped core.
   */
-  xdg-desktop-portal-kde = pkgs.kdePackages.xdg-desktop-portal-kde.overrideAttrs (oldAttrs: {
-    qtWrapperArgs =
-      (oldAttrs.qtWrapperArgs or [])
-      ++ [
-        "--prefix"
-        "QML2_IMPORT_PATH"
-        ":"
-        "${pkgs.kdePackages.qtstyleplugin-kvantum}/lib/qt-6/qml"
-      ];
-  });
+  xdg-desktop-portal-kde = pkgs.symlinkJoin {
+    name = "xdg-desktop-portal-kde-wrapped";
+    paths = [ pkgs.kdePackages.xdg-desktop-portal-kde ];
+    nativeBuildInputs = [ pkgs.makeBinaryWrapper ];
+    postBuild = ''
+      wrapProgram $out/libexec/xdg-desktop-portal-kde \
+        --prefix QML2_IMPORT_PATH : "${pkgs.kdePackages.qtstyleplugin-kvantum}/lib/qt-6/qml"
+    '';
+  };
 
   gcHeap = "4G";
   gc = "GC_INITIAL_HEAP_SIZE=${gcHeap}";
