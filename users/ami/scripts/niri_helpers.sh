@@ -138,13 +138,15 @@ restore_from_scratchpad() {
         nirius scratchpad-show --id "$target_id" || status=$?
         
         if [ "$status" -eq 0 ]; then
+            niri msg action focus-window --id "$target_id" 2>/dev/null || true
+            nirius scratchpad-toggle || true
+
             ((restored_count++))
 
             local t=0
-
             while [ "$t" -lt "$TIMEOUT" ]; do
                 sleep 0.02
-                if ! nirius list-scratchpad 2>/dev/null | grep -q "^id: ${target_id}$"; then
+                if ! nirius list-scratchpad 2>/dev/null | grep -q -E "^id: ${target_id}(,|$)"; then
                     break
                 fi
                 ((t++))
