@@ -153,7 +153,7 @@ in rec {
           match._props.app-id._raw = ''r#"(?i)gcr-prompter"#'';
           block-out-from = "screen-capture";
           open-focused = true;
-          open-on-workspace = "1";
+          # open-on-workspace = "1"; # Was annoying because sometimes it opens later on
         }
 
         {
