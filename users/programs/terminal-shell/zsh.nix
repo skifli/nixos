@@ -82,7 +82,7 @@
         dotDir = "${config.home-manager.users.${userVars.username}.home.homeDirectory}/.config/zsh"; # Directory where the zsh configuration and more should be located, relative to the users home directory. The default is the home directory.
 
         autosuggestion.enable = true;
-        enableCompletion = true;
+        enableCompletion = true; # Enable zsh completion. Don\u2019t forget to add environment.pathsToLink = [ "/share/zsh" ]; to your system configuration to get completion for system packages (e.g. systemd).
         completionInit = builtins.readFile ./zsh/completionInit.sh;
 
         # Force the functions to the bottom of .zshrc
@@ -141,6 +141,8 @@
       };
     };
   };
+
+  environment.pathsToLink = [ "/share/zsh" ];
 
   users.users.${userVars.username}.shell = pkgs.zsh;
 }
