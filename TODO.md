@@ -1,5 +1,5 @@
 - [ ] Ghostty bg blur? - And maybe remove floating window border then.
-- [ ] When Ghostty updates to 1.4.0, alias ssh to ghostty ssh - https://ghostty.org/docs/features/ssh
+- [ ] When Ghostty updates to 1.4.0, alias ssh to ghostty ssh - https://ghostty.org/docs/features/ssh - e.g., `ssh = "ghostty +ssh --";`
 - [ ] Add more kool nirius related notification stuff when the nixpkgs stable one updates
 - [ ] When niri gets accessibility / zoom - add options for it to kanata
 - [ ] At some point take on the arduous task of rebuilding Wayle without the wrap ;-;

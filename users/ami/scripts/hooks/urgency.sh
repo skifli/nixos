@@ -14,7 +14,8 @@ clear_notification() {
         local notif_id
         notif_id=$(cat "$file" 2>/dev/null || true)
         if [[ -n "$notif_id" ]]; then
-            notify-send -r "$notif_id" -e -a "niri" "${ICON_ARGS[@]}" -u low -t 1500 \
+            # 1 to get it out the way ASAP but 0 means only close upon user interaction
+            notify-send -r "$notif_id" -e -a "niri" "${ICON_ARGS[@]}" -u low -t 1 \
                 "Urgent alert resolved" "Attention resolved." 2>/dev/null || true
         fi
         rm -f "$file"

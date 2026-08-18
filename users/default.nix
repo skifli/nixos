@@ -42,7 +42,7 @@ in {
     backupFileExtension = "hm-backup";
     overwriteBackup = true;
 
-    useGlobalPkgs = true; # Stylix HM module sets nixpkgs overlays; avoid warnings by letting HM manage its own pkgs
+    useGlobalPkgs = true; # Stylix HM module sets nixpkgs overlays; avoid warnings by letting HM manage its own pkgs. However now set to true for speed heehee
     useUserPackages = true; # Make packages not available system-wide, instead in ~/.nix-profile
     # extraSpecialArgs = { inherit commonHostVars hostVars; }; # Home manager WHY do you use this ;-;
 
@@ -166,16 +166,9 @@ in {
             };
 
           file.".local/share/wallpaper-blurred" = let
-            asset = ./${username}/assets/wallpapers/${userVars.wallpaper};
-
-            blurredAsset =
-              pkgs.runCommand "wallpaper-blurred" {
-                nativeBuildInputs = [pkgs.imagemagick];
-              } ''
-                magick "${asset}" -blur 0x20 $out
-              '';
+            blurredAsset = ./${username}/assets/wallpapers/${userVars.wallpaper}-blurred;
           in
-            pkgs.lib.mkIf (builtins.pathExists asset) {
+            pkgs.lib.mkIf (builtins.pathExists blurredAsset) {
               source = blurredAsset;
             };
 

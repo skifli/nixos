@@ -27,6 +27,21 @@ in {
         XDG_CURRENT_DESKTOP = "niri";
         XDG_SESSION_DESKTOP = "niri";
       };
+
+      systemd.user.services.niriusd = {
+        Unit = {
+          Description = "nirius daemon";
+          PartOf = ["graphical-session.target"];
+          After = ["graphical-session.target"];
+        };
+        Service = {
+          Type = "simple";
+          ExecStart = "${pkgsUnstable.nirius}/bin/niriusd";
+          Restart = "on-failure";
+          RestartSec = "2s";
+        };
+        Install.WantedBy = ["graphical-session.target"];
+      };
     };
   };
 

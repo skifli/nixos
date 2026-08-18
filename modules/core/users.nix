@@ -38,6 +38,25 @@ in {
   security.sudo = {
     enable = true;
     wheelNeedsPassword = true; # Normal sudo still asks for password
+    extraRules = [
+      {
+        users = builtins.attrNames usersVars;
+        commands = [
+          {
+            command = "/run/current-system/sw/bin/nixos-rebuild";
+            options = ["NOPASSWD"];
+          }
+          {
+            command = "/nix/var/nix/profiles/system/bin/switch-to-configuration";
+            options = ["NOPASSWD"];
+          }
+          {
+            command = "/run/current-system/bin/switch-to-configuration";
+            options = ["NOPASSWD"];
+          }
+        ];
+      }
+    ];
   };
 
   users = {
@@ -53,4 +72,5 @@ in {
   };
 
   nix.settings.allowed-users = builtins.attrNames usersVars; # Users allowed to connect to the Nix daemon
+  nix.settings.trusted-users = builtins.attrNames usersVars; # Users allowed to change system-level settings, add arbitrary binary caches, etc.,
 }

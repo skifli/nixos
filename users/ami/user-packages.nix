@@ -6,6 +6,7 @@
   home-manager.users.${userVars.username} = {
     home.packages = with pkgs; [
       anytype
+      cachix # Command-line client for Nix binary cache hosting https://cachix.org
       cameractrls
       cameractrls-gtk4
       # davinci-resolve # This was removed due to the builders not already having it and rebuilding was taking forever
@@ -23,6 +24,8 @@
       kicad
       ocrmypdf
       moreutils # Used in some scripts (e.g., task-receiver.sh)
+      nix-prefetch
+      nix-prefetch-github # REALLY USEFUL - e.g., `nix-prefetch-github skifli awatcher --rev e93f57b818d9c29952940ebb3e6927958a310166`
       normcap
       noto-fonts
       noto-fonts-color-emoji

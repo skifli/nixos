@@ -44,16 +44,23 @@
         path = "/home/${username}/.config/anki-usernameFile";
       })
 
-      #  --- Remote Desktop / VNC Secrets ---
+      # --- Remote Desktop / VNC Secrets ---
       (mkUserSecret username "rdp-pifi-linux" {})
       (mkUserSecret username "rdp-pifi-win" {})
       (mkUserSecret username "vnc-oracle" {})
       (mkUserSecret username "oracle-vnc-key" {})
+
+      # --- Misc ---
+      (mkUserSecret username "cachix.dhall" {
+        path = "/home/${username}/.config/cachix/cachix.dhall";
+        mode = "0600";
+      })
     ];
 
   mkTmpfilesForUser = username: _userVars: [
     "d /home/${username}/.config 0700 ${username} users -"
     "d /home/${username}/.config/gh 0700 ${username} users -"
+    "d /home/${username}/.config/cachix 0700 ${username} users -"
   ];
 in {
   imports = [inputs.agenix.nixosModules.default];

@@ -1,6 +1,5 @@
 {
   pkgs,
-  pkgsUnstable,
   ...
 }: {
   boot = {
@@ -54,8 +53,10 @@
         biosSupport = false;
         efiSupport = true;
         maxGenerations = 50;
+
         style = {
-          wallpapers = [pkgsUnstable.nixos-artwork.wallpapers.binary-blue.gnomeFilePath];
+          backdrop = "#202626"; # Matches the wallpaper
+          wallpapers = [pkgs.nixos-artwork.wallpapers.gear.gnomeFilePath];
           wallpaperStyle = "centered";
         };
       };

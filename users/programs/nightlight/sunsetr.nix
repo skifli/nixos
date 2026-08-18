@@ -1,6 +1,5 @@
 {
   hostVars,
-  lib,
   pkgs,
   userVars,
   ...
@@ -9,6 +8,21 @@
     home.packages = with pkgs; [
       sunsetr
     ];
+
+    systemd.user.services.sunsetr = {
+      Unit = {
+        Description = "Sunsetr daemon";
+        PartOf = ["graphical-session.target"];
+        After = ["graphical-session.target"];
+      };
+      Service = {
+        Type = "simple";
+        ExecStart = "${pkgs.sunsetr}/bin/sunsetr";
+        Restart = "on-failure";
+        RestartSec = "2s";
+      };
+      Install.WantedBy = ["graphical-session.target"];
+    };
 
     home.activation.setSunsetrCoordinates = lib.hm.dag.entryAfter ["writeBoundary"] ''
         TARGET_FILE="$HOME/.config/sunsetr/sunsetr.toml"
