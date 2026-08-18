@@ -52,7 +52,7 @@
       };
       Install.WantedBy = ["graphical-session.target"];
     };
-    
+
     home.activation.setKTailctlConfig = lib.hm.dag.entryAfter ["writeBoundary"] ''
         TARGET_FILE="$HOME/.config/KTailctlrc"
         mkdir -p "$(dirname "$TARGET_FILE")"

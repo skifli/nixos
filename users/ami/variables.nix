@@ -446,7 +446,7 @@ in rec {
       Install.WantedBy = ["graphical-session.target"];
     };
   };
- 
+
   systemdTimers = {
     todo-checker = {
       Unit = {

@@ -41,7 +41,7 @@
       };
       Install.WantedBy = ["graphical-session.target"];
     };
-    
+
     services.wayle = {
       enable = true;
       autoInstallDependencies = true;
