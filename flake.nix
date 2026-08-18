@@ -34,7 +34,7 @@
   inputs = {
     # Enable automatic submodule fetching for this flake. Lovely option :sob:
     self.submodules = true;
-    
+
     nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
@@ -166,7 +166,7 @@
           ) (hostsForSystem system)
         )
     );
-    
+
     devShells = nixpkgs.lib.genAttrs systems (
       system: let
         pkgs = nixpkgs.legacyPackages.${system};

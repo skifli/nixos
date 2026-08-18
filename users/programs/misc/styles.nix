@@ -168,7 +168,7 @@ in {
       inherit (commonHostVars) fonts; # There is no stylix.fonts.enable so this is fine!
 
       # Stylix's Home Manager module injects an internal package overlay itself.
-      # When `home-manager.useGlobalPkgs = true` is enabled, Home Manager emits an evaluation warning because it ignores per-user nixpkgs settings. 
+      # When `home-manager.useGlobalPkgs = true` is enabled, Home Manager emits an evaluation warning because it ignores per-user nixpkgs settings.
       # This is a Stylix bug documented in https://github.com/nix-community/stylix/issues/1832 with PR https://github.com/nix-community/stylix/pull/2473.
       # For now, the recommended fix from here https://github.com/nix-community/stylix/issues/1832#issuecomment-3169274982 is used
       overlays.enable = false;

@@ -1,7 +1,4 @@
-{
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   boot = {
     # Allow cross-compilation
     binfmt.emulatedSystems = [
