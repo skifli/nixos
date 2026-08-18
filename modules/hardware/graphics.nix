@@ -1,4 +1,8 @@
-_: {
+{...}: {
+  imports = [
+    ./graphics/intel.nix
+  ];
+
   hardware = {
     graphics = {
       enable = true;

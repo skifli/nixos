@@ -54,7 +54,7 @@ in {
       Type = "oneshot";
       RemainAfterExit = true;
       # -l is a lazy unmount, -a unmounts all, -t nfs limits to NFS types
-      ExecStop = "${pkgs.umount}/bin/umount -l -a -t nfs,nfs4";
+      ExecStop = "${pkgs.util-linux}/bin/umount -l -a -t nfs,nfs4";
       TimeoutStopSec = "10s";
     };
   };

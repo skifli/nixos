@@ -2,6 +2,8 @@ _: {
   zramSwap = {
     enable = true;
     memoryPercent = 125;
+    priority = 100;
+
     # Compression algorithm.
     # lzo has good compression, but is slow.
     # lz4 has bad compression, but is fast.

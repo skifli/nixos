@@ -18,14 +18,14 @@ start_and_manage() {
 
     (
         eval "${cmd} &"
-        while ! niri msg --json windows | grep -qi "\"${key}\": *\"[^\"]*${val}"; do
-            sleep 0.5
+        while ! niri msg --json windows 2>/dev/null | grep -qi "\"${key}\": *\"[^\"]*${val}"; do
+            sleep 0.1
         done
-        
+       
         WIN_ID=$(niri msg --json windows 2>/dev/null | jq -r --arg k "$key" --arg v "$val" '
-  .[] | select(.[$k] != null and (.[$k] | ascii_downcase | contains($v | ascii_downcase))) | .id
-' | head -n 1)
-
+          .[] | select(.[$k] != null and (.[$k] | ascii_downcase | contains($v | ascii_downcase))) | .id
+        ' 2>/dev/null | head -n 1)
+        
         if [ -n "$WIN_ID" ]; then
             niri msg action move-window-to-monitor --id "$WIN_ID" "${target_mon}"
             niri msg action move-window-to-workspace "${target_ws}" --window-id "$WIN_ID"
@@ -82,45 +82,12 @@ notify-send -e -a "gcr-prompter" -i "$HOME/.local/share/misc/Seahorse_icon_hicol
     done
 ) & disown
 
-# Sys-tray apps that don't need keyring unlock
-kdeconnect-indicator & disown
-ktailctl & disown
-niriusd & disown
-sunsetr & disown
-
-notify-send -e -a "niri" -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 "Pre-keyring sys-tray" "Apps spawned"
-
 # Apps that don't need keyring unlock
 start_and_manage "zen-beta" "app_id" "zen-beta" "$FOCUSED_MONITOR" "1"
 start_and_manage "anki" "title" "User 1 - Anki" "$FOCUSED_MONITOR" "2" # Otherwise it would sometimes just move the syncing window not the actual window which was annoying... tad of a workaround... but it works!
 start_and_manage "ferdium" "app_id" "ferdium" "$SECOND_MONITOR" "2"
 
 notify-send -e -a "niri" -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 "Pre-keyring apps" "Apps spawned"
-
-# - START AWWW STUFF -
-
-# Start ze primary background daemon (Default namespace: awww-daemon)
-awww-daemon & disown
-
-# Start ze special overview background daemon (Custom namespace: awww-daemonoverview)
-awww-daemon --namespace overview & disown
-
-# Wait till sock is populated
-while [ ! -S "$XDG_RUNTIME_DIR/${WAYLAND_DISPLAY:-wayland-1}-awww-daemon.sock" ] || [ ! -S "$XDG_RUNTIME_DIR/${WAYLAND_DISPLAY:-wayland-1}-awww-daemon.overview.sock" ]; do
-  sleep 0.01 # Loop until the sockets are created
-done
-
-notify-send -e -a "niri" -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 "AWWW daemons" "Daemons spawned"
-
-# Load ze sharp wallpaper into the default daemon surface
-awww img ~/.local/share/wallpaper
-
-# Load ze pre-blurred wallpaper into the overview daemon surface
-awww img --namespace overview ~/.local/share/wallpaper-blurred
-
-notify-send -e -a "niri" -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 "AWWW wallpaper" "Wallpapers loaded"
-
-# - END AWWW STUFF -
 
 # Bg process: wait for keyring to be unlocked, then launch apps that depend on the keyring
 (
@@ -149,13 +116,5 @@ wait
 
 niri msg action focus-monitor "$FOCUSED_MONITOR"
 niri msg action focus-workspace 1
-
-# Start .local/bin/niri-streamer.sh in the bg then we send notif saying it started and end
-nohup "$HOME/.local/bin/niri-streamer.sh" >/tmp/niri-streamer.log 2>&1 & disown
-
-notify-send -e -a "niri" -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 "Niri streamer" "Successfully started in the background"
-
-nohup "$HOME/.local/bin/task-receiver.sh" >/tmp/task-receiver.log 2>&1 & disown
-nohup "$HOME/.local/bin/todo.sh --startup" >/tmp/todo.log 2>&1 & disown
 
 notify-send -e -a "niri" -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 5000 "Startup complete" "All startup tasks completed"

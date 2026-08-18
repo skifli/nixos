@@ -27,18 +27,32 @@
     allowedUDPPorts = [config.services.tailscale.port];
   };
 
-  # 2. Force tailscaled to use nftables (Critical for clean nftables-only systems)
+  # Force tailscaled to use nftables (needed for clean nftables-only systems)
   # This avoids the "iptables-compat" translation layer issues.
   systemd.services.tailscaled.serviceConfig.Environment = [
     "TS_DEBUG_FIREWALL_MODE=nftables"
   ];
 
-  # 3. Optimization: Prevent systemd from waiting for network online
-  # (Optional but recommended for faster boot with VPNs)
+  # Prevent systemd from waiting for network online
   systemd.network.wait-online.enable = false;
   boot.initrd.systemd.network.wait-online.enable = false;
 
   home-manager.users.${userVars.username} = {lib, ...}: {
+    systemd.user.services.ktailctl = {
+      Unit = {
+        Description = "KTailctl system tray applet";
+        PartOf = ["graphical-session.target"];
+        After = ["graphical-session.target"];
+      };
+      Service = {
+        Type = "simple";
+        ExecStart = "${pkgs.ktailctl}/bin/ktailctl";
+        Restart = "on-failure";
+        RestartSec = "2s";
+      };
+      Install.WantedBy = ["graphical-session.target"];
+    };
+    
     home.activation.setKTailctlConfig = lib.hm.dag.entryAfter ["writeBoundary"] ''
         TARGET_FILE="$HOME/.config/KTailctlrc"
         mkdir -p "$(dirname "$TARGET_FILE")"

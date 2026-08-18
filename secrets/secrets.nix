@@ -45,4 +45,7 @@ in {
   "secrets/ami/rdp-pifi-win.age".publicKeys = all;
   "secrets/ami/vnc-oracle.age".publicKeys = all;
   "secrets/ami/oracle-vnc-key.age".publicKeys = all;
+
+  # --- Misc ---
+  "secrets/ami/cachix.dhall.age".publicKeys = all;
 }

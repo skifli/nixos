@@ -19,9 +19,9 @@ send_to_scratchpad "app_id" "org.kde.dolphin"
 
 if is_in_scratchpad "title" "Anki Pomodoro"; then
     restore_from_scratchpad "title" "Anki Pomodoro"
+else
+    ensure_window_exists "com.mitchellh.ghostty" "Anki Pomodoro" "${BASH_SOURCE%/*}/floating-term.sh ghostty -w 50% -h 30% --title='Anki Pomodoro' -e ${BASH_SOURCE%/*}/anki-pomodoro.sh" "com.mitchellh.ghostty" "Anki Pomodoro"
 fi
-
-ensure_window_exists "com.mitchellh.ghostty" "Anki Pomodoro" "${BASH_SOURCE%/*}/floating-term.sh ghostty -w 50% -h 30% --title='Anki Pomodoro' -e ${BASH_SOURCE%/*}/anki-pomodoro.sh" "com.mitchellh.ghostty" "Anki Pomodoro"
 
 # 1st Monitor
 move_windows "app_id" "anki" "$MON_1" "1" "100%"

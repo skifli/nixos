@@ -390,14 +390,63 @@ in rec {
 
   systemdServices = {
     todo-checker = {
-      Unit.Description = "Check for due todo reminders";
+      Unit = {
+        Description = "Check for due todo reminders";
+        PartOf = ["graphical-session.target"];
+        After = ["graphical-session.target"];
+      };
+
       Service = {
         Type = "oneshot";
         ExecStart = "/home/${username}/.local/bin/todo.sh --check";
       };
     };
-  };
 
+    todo-startup = {
+      Unit = {
+        Description = "Check and show startup todo reminders";
+        PartOf = ["graphical-session.target"];
+        After = ["graphical-session.target"];
+      };
+      Service = {
+        Type = "oneshot";
+        ExecStart = "/home/${username}/.local/bin/todo.sh --startup";
+        ExecStartPre = "${pkgs.coreutils}/bin/sleep 10"; # Give enough time for notification daemon to start
+      };
+      Install.WantedBy = ["graphical-session.target"];
+    };
+
+    niri-streamer = {
+      Unit = {
+        Description = "Niri event streamer";
+        PartOf = ["graphical-session.target"];
+        After = ["graphical-session.target"];
+      };
+      Service = {
+        Type = "simple";
+        ExecStart = "/home/${username}/.local/bin/niri-streamer.sh";
+        Restart = "always";
+        RestartSec = "2s";
+      };
+      Install.WantedBy = ["graphical-session.target"];
+    };
+
+    task-receiver = {
+      Unit = {
+        Description = "Task scheduler receiver daemon";
+        PartOf = ["graphical-session.target"];
+        After = ["graphical-session.target"];
+      };
+      Service = {
+        Type = "simple";
+        ExecStart = "/home/${username}/.local/bin/task-receiver.sh";
+        Restart = "always";
+        RestartSec = "2s";
+      };
+      Install.WantedBy = ["graphical-session.target"];
+    };
+  };
+ 
   systemdTimers = {
     todo-checker = {
       Unit = {

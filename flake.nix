@@ -32,6 +32,9 @@
   };
 
   inputs = {
+    # Enable automatic submodule fetching for this flake. Lovely option :sob:
+    self.submodules = true;
+    
     nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
@@ -156,14 +159,14 @@
           map (
             hostname: {
               name = "eval-${hostname}";
-              value = pkgs.runCommand "eval-${hostname}" {} ''
-                echo "${self.nixosConfigurations.${hostname}.config.system.build.toplevel.drvPath}" > "$out"
-              '';
+              value = pkgs.writeText "eval-${hostname}" (
+                builtins.unsafeDiscardStringContext self.nixosConfigurations.${hostname}.config.system.build.toplevel.drvPath
+              );
             }
           ) (hostsForSystem system)
         )
     );
-
+    
     devShells = nixpkgs.lib.genAttrs systems (
       system: let
         pkgs = nixpkgs.legacyPackages.${system};

@@ -32,10 +32,11 @@ jobs:
             max-jobs = 1
             cores = 2
 
-      - name: Magic Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
-        with:
-          use-flakehub: false # Disable it
+      # Disabled because it just takes too long in post...
+      # - name: Magic Nix cache
+      #   uses: DeterminateSystems/magic-nix-cache-action@main
+      #   with:
+      #    use-flakehub: false # Disable it
 
       - name: Setup Cachix
         uses: cachix/cachix-action@v17
