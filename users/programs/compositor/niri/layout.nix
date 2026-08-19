@@ -1,4 +1,4 @@
-{...}: {
+_: {
   gaps = 0;
   center-focused-column = "on-overflow";
   # always-center-single-column = [];

@@ -935,7 +935,7 @@
       "-c"
       ''
         is-second-monitor-focused || focus-second-monitor # Only if it is NOT focused
-        is-workspace-focused '${userVars.secondMonitor}' 3 || niri msg action focus-workspace 3 # Again, only if it is NOT focused
+        is-workspace-focused '${builtins.elemAt hostVars.orderedOutputs 1}' 3 || niri msg action focus-workspace 3 # Again, only if it is NOT focused
         /home/${userVars.username}/.local/bin/rdp.sh
       ''
     ];

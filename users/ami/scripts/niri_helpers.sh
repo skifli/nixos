@@ -4,8 +4,8 @@
 
 export PATH="$PATH:/run/current-system/sw/bin:/etc/profiles/per-user/${USER:-user}/bin:$HOME/.local/bin"
 
-export MON_1="HDMI-A-2"
-export MON_2="DP-1"
+export MON_1="${MON_1:-HDMI-A-2}"
+export MON_2="${MON_2:-DP-1}"
 
 export TIMEOUT=50 # 50*0.02 = 1s
 
@@ -136,7 +136,7 @@ restore_from_scratchpad() {
 
         local status=0
         nirius scratchpad-show --id "$target_id" || status=$?
-        
+
         if [ "$status" -eq 0 ]; then
             niri msg action focus-window --id "$target_id" 2>/dev/null || true
             nirius scratchpad-toggle || true
@@ -155,7 +155,7 @@ restore_from_scratchpad() {
             if [ -f "$FLOAT_STATE_DIR/$target_id" ]; then
                 local was_float
                 was_float=$(cat "$FLOAT_STATE_DIR/$target_id")
-                
+
                 fetch_windows
 
                 local is_now_float
@@ -194,16 +194,16 @@ move_windows() {
     while read -r win_id; do
         if [ -n "$win_id" ]; then
             niri msg action focus-window --id "$win_id"
-            
+
             if [ "$target_mon" = "$MON_2" ]; then
                 niri msg action move-column-to-monitor-right
             else
                 niri msg action move-column-to-monitor-left
             fi
-            
+
             niri msg action focus-monitor "$target_mon"
             niri msg action move-column-to-workspace "$target_ws"
-                
+
             if [ -n "$target_width" ] && [ "$target_width" != "1/1" ]; then
                 niri msg action set-column-width "$target_width"
             fi
@@ -212,7 +212,7 @@ move_windows() {
             if [ "$target_width" = "100%" ]; then
                 local is_floating
                 is_floating=$(echo "$WINDOWS_JSON" | jq -r ".[] | select(.id == $win_id) | .is_floating")
-                
+
                 if [ "$is_floating" = "true" ]; then
                     niri msg action toggle-window-floating
                 fi
@@ -250,19 +250,19 @@ ensure_window_exists() {
         notif_id=$(notify-send -p -e -a niri -i "/home/${USER}/.local/share/misc/niri-icon.svg" -u low -t 0 \
             "Starting $app_name" \
             "Window not found - launching...")
-        
+
         eval "$fallback_cmd &"
-        
+
         local count=0
         while [ "$count" -lt 150 ]; do # 150*0.1=15s
             sleep 0.1
             fetch_windows
-            
+
             if echo "$WINDOWS_JSON" | jq -e \
                 --arg w_app "${watch_app_id,,}" \
                 --arg w_title "${watch_title,,}" \
                 '.[] | select((.app_id != null and (.app_id | ascii_downcase | contains($w_app))) and (.title != null and (.title | ascii_downcase | contains($w_title))))' >/dev/null; then
-                
+
                 if [ -n "$notif_id" ]; then
                     # -r means replace, so replace old notification with id notif_id
                     notify-send -r "$notif_id" -e -a niri -i "/home/${USER}/.local/share/misc/niri-icon.svg" -u low -t 2500 \
@@ -273,7 +273,7 @@ ensure_window_exists() {
             fi
             ((count++))
         done
-                
+
         if [ -n "$notif_id" ]; then
             notify-send -r "$notif_id" -e -a niri -i "/home/${USER}/.local/share/misc/niri-icon.svg" -u normal -t 5000 \
                 "$app_name Launch timeout" \

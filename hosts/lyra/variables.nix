@@ -102,6 +102,9 @@
   niri.input = {
   };
 
+  sessionVariables = {
+  };
+
   screen-lock-timeout = 5;
   screen-blank-timeout = 15;
 

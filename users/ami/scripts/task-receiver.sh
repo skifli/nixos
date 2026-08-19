@@ -52,6 +52,8 @@ while true; do
         CMD_BASE=$(basename "$FIRST_WORD" .sh)
         CMD_LOWER=$(echo "$CMD_BASE" | tr '[:upper:]' '[:lower:]')
 
+        systemctl --user reset-failed "$UNIT_NAME.scope" 2>/dev/null || true # In case it previously failed and we are rerunning
+
         systemd-run --user --scope --unit="$UNIT_NAME" \
             bash -c "cd $(printf '%q' "$CWD") && eval $(printf '%q' "$CMD")" > "$LOG_FILE" 2>&1 &
 
@@ -67,7 +69,7 @@ while true; do
             if read -t 0.1 -u 4 LINE; then
                 if [ -n "$LINE" ]; then
                     WIN_JSON=$(echo "$LINE" | jq -c '.WindowOpenedOrChanged.window // empty' 2>/dev/null || true)
-                    
+
                     if [ -n "$WIN_JSON" ]; then
                         EVENT_WIN_ID=$(echo "$WIN_JSON" | jq -r '.id')
                         EVENT_APP_ID=$(echo "$WIN_JSON" | jq -r '.app_id // ""' | tr '[:upper:]' '[:lower:]')

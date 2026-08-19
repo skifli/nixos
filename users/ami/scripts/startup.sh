@@ -21,21 +21,17 @@ start_and_manage() {
         while ! niri msg --json windows 2>/dev/null | grep -qi "\"${key}\": *\"[^\"]*${val}"; do
             sleep 0.1
         done
-       
+
         WIN_ID=$(niri msg --json windows 2>/dev/null | jq -r --arg k "$key" --arg v "$val" '
           .[] | select(.[$k] != null and (.[$k] | ascii_downcase | contains($v | ascii_downcase))) | .id
         ' 2>/dev/null | head -n 1)
-        
+
         if [ -n "$WIN_ID" ]; then
             niri msg action move-window-to-monitor --id "$WIN_ID" "${target_mon}"
             niri msg action move-window-to-workspace "${target_ws}" --window-id "$WIN_ID"
         fi
     ) &
 }
-
-# Niri has its own option for this but keep just in case
-# Or tbh just remove...
-dbus-update-activation-environment --systemd --all
 
 notify-send -e -a "gcr-prompter" -i "$HOME/.local/share/misc/Seahorse_icon_hicolor.svg" -u low -t 2500 "Keyring Locked" "Polling for keyring unlock..."
 
@@ -64,7 +60,7 @@ notify-send -e -a "gcr-prompter" -i "$HOME/.local/share/misc/Seahorse_icon_hicol
             sleep 1
 
             IS_LOCKED=$(busctl --user get-property org.freedesktop.secrets /org/freedesktop/secrets/aliases/default org.freedesktop.Secret.Collection Locked 2>/dev/null | awk '{print $2}')
-            
+
             if [ "$IS_LOCKED" = "false" ]; then
                 kill $SECRET_PID 2>/dev/null
                 break 2 # Break out of the main while-loop

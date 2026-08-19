@@ -7,11 +7,27 @@
 # Combine everything passed into here into one variable, attrs (includes not explicitly used variables)
 let
   commonHostVars = import ./variables.nix {inherit pkgs;};
-  hostVars =
+  hostVarsRaw =
     import ../${hostname}/variables.nix
     // {
       inherit hostname;
     }; # Merges hostname with the other config, to more seamlessly combine
+
+  hostVars = let
+    # Focused screens first, then the rest
+    all = builtins.attrNames (hostVarsRaw.outputs or {});
+    split = lib.partition (name: hostVarsRaw.outputs.${name}.focus-at-startup or false) all;
+    orderedOutputs = split.right ++ split.wrong;
+
+    indexedMonitors = lib.listToAttrs (
+      lib.imap1 (i: name: lib.nameValuePair "monitor${toString i}" name) orderedOutputs
+    );
+  in
+    hostVarsRaw
+    // indexedMonitors
+    // {
+      inherit orderedOutputs;
+    };
 
   usersVarsFile = import ../../users/variables.nix {
     inherit commonHostVars hostVars lib pkgs;
@@ -91,6 +107,12 @@ in {
       };
     })
   ];
+
+  environment.sessionVariables =
+    lib.listToAttrs (
+      lib.imap1 (i: mon: lib.nameValuePair "MON_${toString i}" mon) hostVars.orderedOutputs
+    )
+    // hostVars.sessionVariables;
 
   imports =
     [

@@ -6,26 +6,6 @@
   username,
   ...
 }: let
-  allOutputs = builtins.attrNames hostVars.outputs;
-
-  focusedOutputs =
-    builtins.filter (
-      name: (hostVars.outputs.${name}.focus-at-startup or false) == true
-    )
-    allOutputs;
-
-  focusedMonitor =
-    if focusedOutputs == []
-    then builtins.head allOutputs
-    else builtins.head focusedOutputs;
-
-  otherOutputs = builtins.filter (name: name != focusedMonitor) allOutputs;
-
-  secondMonitor =
-    if otherOutputs == []
-    then focusedMonitor
-    else builtins.head otherOutputs;
-
   # Dynamic SafeEyes window rules based on ze outputs
   safeEyesRules =
     lib.imap0 (idx: outputName: {
@@ -37,7 +17,7 @@
       open-focused = true;
       open-fullscreen = true;
     })
-    allOutputs;
+    hostVars.orderedOutputs;
 in rec {
   # User configuration
   extraGroups = [
@@ -69,7 +49,7 @@ in rec {
   scroll-cooldown-ms = 80; # Cooldown for scroll events (for workspace switching and column focus switching)
 
   niri = {
-    spawn-sh-at-startup = "$HOME/.local/bin/startup.sh \"${focusedMonitor}\" \"${secondMonitor}\"";
+    spawn-sh-at-startup = "$HOME/.local/bin/startup.sh \"${builtins.elemAt hostVars.orderedOutputs 0}\" \"${builtins.elemAt hostVars.orderedOutputs 1}\"";
 
     binds = {
       "Mod+Shift+A" = {
@@ -390,6 +370,8 @@ in rec {
     ];
   };
 
+  sessionVariables = {};
+
   systemdServices = {
     todo-checker = {
       Unit = {
@@ -462,7 +444,115 @@ in rec {
     };
   };
 
-  inherit focusedMonitor secondMonitor;
+  historyBlockers = {
+    # Exact commands to ignore
+    exact = [
+      # Navigation
+      "cd"
+      "cd .."
+      "cd -"
+      "cd ~"
+      ".."
+      "..."
+      "pwd"
+      "popd"
+      "dirs"
+      "z"
+      "zi"
+
+      # Listing
+      "ls"
+      "l"
+      "ll"
+      "la"
+      "eza"
+      "tree"
+
+      # Terminal / job control
+      "c"
+      "clear"
+      "cls"
+      "reset"
+      "exit"
+      "logout"
+      "q"
+      "fg"
+      "bg"
+      "jobs"
+
+      # Sys inspection
+      "top"
+      "htop"
+      "btop"
+      "iotop"
+      "fastfetch"
+      "neofetch"
+      "uptime"
+      "date"
+      "cal"
+      "whoami"
+      "hostname"
+      "uname -a"
+
+      # Git status
+      "git status"
+      "git s"
+      "gs"
+      "git diff"
+      "git d"
+      "gd"
+      "git branch"
+      "git branch -a"
+      "git log --oneline"
+      "git log"
+      "gl"
+      "git stash list"
+
+      # Custom aliases
+      "y"
+      "f"
+      "rgr"
+      "blammo"
+      "zngp"
+      "zngs"
+      "zngu"
+      "nhdry"
+      "nhtest"
+      "nhdiff"
+      "ov"
+    ];
+
+    # Commands where anything starting with this prefix should be ignored
+    prefixes = [
+      "copyl"
+      "secret-tool"
+      "agenix"
+      "gh auth"
+      "bw"
+      "pass"
+      "ssh-add"
+      "which"
+      "where"
+      "type"
+      "man"
+      "tldr"
+      "less"
+      "more"
+      "pushd"
+      "ov"
+      "eza"
+    ];
+
+    # Keywords that should never be recorded when exported
+    sensitiveKeywords = [
+      "TOKEN"
+      "KEY"
+      "SECRET"
+      "PAT"
+      "PASSWORD"
+      "AUTH"
+    ];
+  };
 
   shellScripts = {
     # These 3 proudly stolen from https://github.com/MangoCubes/nix/blob/e7fdb3fe51a8dce3c6ce6bc2a9fe8423f276f187/desktop/packages/home/niri.nix#L11 ;p (on a serious note if you ever see this MangoCubes these are really smart 'n useful binds! Thanks sm <3.)
@@ -501,10 +591,10 @@ in rec {
     "smart-rebuild" = builtins.readFile ./scripts/smart-rebuild.sh;
 
     # My own random ones
-    "focus-focused-monitor" = "niri msg action focus-monitor \"${focusedMonitor}\"";
-    "focus-second-monitor" = "niri msg action focus-monitor \"${secondMonitor}\"";
-    "is-focused-monitor-focused" = "niri msg focused-output | grep -q \"${focusedMonitor}\"";
-    "is-second-monitor-focused" = "niri msg focused-output | grep -q \"${secondMonitor}\"";
+    "focus-focused-monitor" = "niri msg action focus-monitor \"${builtins.elemAt hostVars.orderedOutputs 0}\"";
+    "focus-second-monitor" = "niri msg action focus-monitor \"${builtins.elemAt hostVars.orderedOutputs 1}\"";
+    "is-focused-monitor-focused" = "niri msg focused-output | grep -q \"${builtins.elemAt hostVars.orderedOutputs 0}\"";
+    "is-second-monitor-focused" = "niri msg focused-output | grep -q \"${builtins.elemAt hostVars.orderedOutputs 1}\"";
     "is-workspace-focused" = "niri msg focused-output | grep -q \"$1\" && niri msg workspaces | grep -A 10 \"$1\" | grep \"^\\s*\\*\" | grep -q \" $2 \""; # Checks both 1. Is the requested monitor the one that currently has focus, AND 2. Is the requested workspace the active one on that monitor. Because `niri msg workspaces` shows which workspace is active per monitor, but doesn't care which monitor is active, so before it had said race condition.
   };
 }
