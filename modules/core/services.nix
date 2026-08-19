@@ -1,7 +1,4 @@
-{
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   # Services to start
   services = {
     fstrim.enable = true; # Auto SSD trimming of no longer used blocks
