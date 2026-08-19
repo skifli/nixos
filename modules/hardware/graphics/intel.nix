@@ -4,15 +4,18 @@
   pkgs,
   ...
 }: let
+  sanitizeMode = mode: builtins.head (lib.splitString "@" mode);
+
   # 'e' forces DRM to prioritize and enable that output on the initial framebuffer
   videoKernelParams = lib.mapAttrsToList (
     name: conf: let
       isPrimary = conf.focus-at-startup or false;
-      primaryFlag =
+      cleanMode = sanitizeMode (conf.mode or "1920x1080");
+      flag =
         if isPrimary
         then "e"
         else "";
-    in "video=${name}:${conf.mode}${primaryFlag}"
+    in "video=${name}:${cleanMode}${flag}"
   ) (hostVars.outputs or {});
 in
   lib.mkIf (hostVars.videoDriver == "intel") {

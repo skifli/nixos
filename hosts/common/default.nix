@@ -89,12 +89,6 @@ in {
           "vm.vfs_cache_pressure" = 50;
         };
       };
-
-      services.udev.extraRules = ''
-        # Set BFQ scheduler for mechanical HDDs only (rotational == 1)
-        # ATTR{queue/rotational}=="1" is a backup just in case because this is behind a host flag but whatever
-        ACTION=="add|change", KERNEL=="sd[a-z]*|mmcblk[0-9]*", ATTR{queue/rotational}=="1", ATTR{queue/scheduler}="bfq"
-      '';
     })
   ];
 

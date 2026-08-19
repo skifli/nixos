@@ -214,7 +214,6 @@ OUTPUT_FILE="${RECORDINGS_DIR}/Recording_${TIMESTAMP}.mp4"
 stdbuf -o0 -e0 gpu-screen-recorder \
     "${TARGET_ARGS[@]}" \
     "${AUDIO_ARGS[@]}" \
-    -fallback-cpu-encoding yes \
     -f 60 \
     -o "$OUTPUT_FILE" >"$LOG_FILE" 2>&1 &
 

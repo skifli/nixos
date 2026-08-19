@@ -264,58 +264,60 @@ in rec {
         (defsrc
           grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
           tab  q    w    e    r    t    y    u    i    o    p    [    ]
-          caps a    s    d    f    g    h    j    k    l    ;    '    bksl ret
+          caps a    s    d    f    g    h    j    k    l    ;    bksl ret
           lsft 102d z    x    c    v    b    n    m    ,    .    /    rsft
           lctl lmet lalt           spc            ralt rmet rctl
         )
 
-        (defvirtualkeys
-          mouse-mode (layer-toggle mouse)
-          release-mouse (release-layer mouse)
-          release-mouse-slow (release-layer mouse-slow)
-        )
+        ;; (defvirtualkeys
+        ;; )
 
         (defalias
           ;; 150ms tap timeout, 250ms hold timeout.
           ;; Mouse layer ONLY activates if Space is held longer than 250ms.
-          spc (multi
-            (tap-hold 150 250 spc (layer-toggle mouse))
-            (on-release tap-vkey release-mouse)
-            (on-release tap-vkey release-mouse-slow)
-          )
+          spc (tap-hold 150 250 spc (layer-toggle mouse))
 
           zmin (multi lctl eql)
           zmout (multi lctl min)
 
           ;; Toggles virtual key mouse-mode on/off
-          ntog (on-press toggle-vkey mouse-mode)
+          ntog (layer-switch mouse-lock)
+          nunlock (layer-switch default)
         )
 
         ;; Default typing layer
         (deflayer default
           _    _    _    _    _    _    _    _    _    _    _    _    _    _
           _    _    _    _    _    _    _    _    _    _    _    _    _
-          _    _    _    _    _    _    _    _    _    _    _    _    _    _
           _    _    _    _    _    _    _    _    _    _    _    _    _
-          _    _    _           @spc           _    _    _
+          _    _    _    _    _    _    _    _    _    _    _    _    _
+          _    _    _              @spc           _    _    _
         )
 
         ;; Mouse mode layer (hold space)
         (deflayer mouse
           _    _    _    _    _    _    _    _    _    _    _    _    _    _
-          _    lmet (mwheel-left 20 60) (movemouse-accel-up 5 210 1 9) (mwheel-right 20 60) lalt _ @zmin (mwheel-down 30 60) (mwheel-up 30 60) @zmout _ _
-          _    lsft (movemouse-accel-left 5 210 1 9) (movemouse-accel-down 5 210 1 9) (movemouse-accel-right 5 210 1 9) lctl _ mlft mrgt (layer-toggle mouse-slow) _ _ _ _
-          _    _    _    _    _    _  @ntog mmid pgup pgdn _    _    _
-          _    _    _            XX              _    _    _
+          _    lmet (mwheel-left 20 60) (movemouse-accel-up 5 210 1 9) (mwheel-right 20 60) lalt _    @zmin (mwheel-down 30 60) (mwheel-up 30 60) @zmout _    _
+          _    lsft (movemouse-accel-left 5 210 1 9) (movemouse-accel-down 5 210 1 9) (movemouse-accel-right 5 210 1 9) lctl _    mlft mrgt (layer-toggle mouse-slow) _    _    _
+          _    _    _    _    _    _    _    @ntog mmid pgup pgdn _    _
+          _    _    _              _              _    _    _
+        )
+
+        (deflayer mouse-lock
+          _    _    _    _    _    _    _    _    _    _    _    _    _    _
+          _    lmet (mwheel-left 20 60) (movemouse-accel-up 5 210 1 9) (mwheel-right 20 60) lalt _    @zmin (mwheel-down 30 60) (mwheel-up 30 60) @zmout _    _
+          _    lsft (movemouse-accel-left 5 210 1 9) (movemouse-accel-down 5 210 1 9) (movemouse-accel-right 5 210 1 9) lctl _    mlft mrgt (layer-toggle mouse-slow) _    _    _
+          _    _    _    _    _    _    _    @nunlock mmid pgup pgdn _    _
+          _    _    _              _              _    _    _
         )
 
         ;; Slow precision mode layer (hold l in mouse mode)
         (deflayer mouse-slow
           _    _    _    _    _    _    _    _    _    _    _    _    _    _
-          _    _    _    (movemouse-up 20 1) _ _ _ _ _ _ _ _ _
-          _    _    (movemouse-left 20 1) (movemouse-down 20 1) (movemouse-right 20 1) _ _ _ _ _ _ _ _ _
-          _    _    _    _    _    _    _    _    _    _    _    _    _
-          _    _    _            XX              _    _    _
+          _    _    _    (movemouse-up 20 1) _    _    _    _    _    _    _    _    _
+          _    _    (movemouse-left 20 1) (movemouse-down 20 1) (movemouse-right 20 1) _    _    _    _    _    _    _    _
+          _    _    _    _    _    _    _    XX   _    _    _    _    _
+          _    _    _              _              _    _    _
         )
       '';
     };

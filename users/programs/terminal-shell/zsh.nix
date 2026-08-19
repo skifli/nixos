@@ -97,7 +97,6 @@
         };
 
         shellAliases = {
-          cat = "bat";
           rgr = "repgrep";
         };
 

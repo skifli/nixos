@@ -14,6 +14,7 @@
       droidcam
       evince # Document viewer
       fira-code
+      grim # Grab images from a Wayland compositor
       haruna # Media player
       hblock
       imagemagick # mogrify EXIF
@@ -37,6 +38,7 @@
       # siyuan
       swayimg # Used in some scripts (e.g., view-clipboard-image.sh)
       termdown
+      zstd # Short for Zstandard, this is a fast lossless compression algorithm, targeting real-time compression scenarios at zlib-level compression ratio
 
       mpv
 
