@@ -1,7 +1,4 @@
-{
-  userVars,
-  ...
-}: {
+{userVars, ...}: {
   # Enable Kanata system service
   services.kanata = {
     enable = true;
