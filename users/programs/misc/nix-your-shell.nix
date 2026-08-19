@@ -1,7 +1,4 @@
-{
-  userVars,
-  ...
-}: {
+{userVars, ...}: {
   home-manager = {
     users.${userVars.username} = {
       programs = {
