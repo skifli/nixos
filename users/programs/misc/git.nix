@@ -7,7 +7,6 @@
     programs = {
       delta = {
         enable = true;
-
         enableGitIntegration = true;
       };
 
@@ -20,19 +19,23 @@
 
           core.editor = userVars.programs.editor;
           init.defaultBranch = "main";
+        };
 
-          # Use a credentials file to avoid interactive prompts.
-          # The file should contain lines like:
-          # https://<TOKEN>@github.com
-          credential = {
-            helper = "store --file ~/.git-credentials";
-            useHttpPath = true;
-          };
+        signing = {
+          format = "ssh";
+          key = "/home/${userVars.username}/.ssh/id_ed25519_signing.pub";
+          signByDefault = true;
         };
       };
 
       gh = {
         enable = true;
+
+        # Let GitHub CLI act as Git's credential helper
+        gitCredentialHelper = {
+          enable = true;
+          hosts = ["https://github.com" "https://gist.github.com"];
+        };
 
         extensions = with pkgs; [
           gh-dash
