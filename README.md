@@ -63,16 +63,16 @@ This is the configuration that started my NixOS journey, and it has stayed with 
 
 Before we go more in depth, I want to first state that I have a personal cache setup on [Cachix](https://cachix.org) under [skifli-nixos](https://app.cachix.org/cache/skifli-nixos) (yes it's free). This is extremely useful and I would suggest anyone reading this to also set one up (unless you have your own alternative already). 5 GB may not seem a lot but since in Cachix you can also configure upstream caches (i.e., they skip uploading store paths already present in any of them), 5 GB is plenty. Plus, you can pin specific paths to tell them not to delete (which they do based on a LRU policy if you are over 5 GB), and my pins are less than 4 GiB, so I have plenty of space!
 
-I have a workflow setup under [`nix-build.yml`](.github/workflows/nix-build.yml) that automatically builds on push, and caches anything built locally (i.e., not pulled from caches), and it also makes sure to pin my main system paths! This has helped bring my rebuild times down to an average of 2-3 minutes, which compared to the 10+ it was before is quite an improvement :p. Of course, my system is a bit complex with e.g., multiple specialisations for light / dark theme, Home Manager, etc, which mean it won't be the fastest to rebuild - but if anyone has any other ideas I'm all ears :).
+I have a workflow setup under [`nix-build.yml`](.github/workflows/nix-build.yml) that builds when I tell it to (which used to be on push but sometimes I don't want / need it to), and caches anything built locally (i.e., not pulled from caches), and it also makes sure to pin my main system paths! This has helped bring my rebuild times down to an average of 2-3 minutes, which compared to the 10+ it was before is quite an improvement :p. Of course, my system is a bit complex with e.g., multiple specialisations for light / dark theme, Home Manager, etc, which mean it won't be the fastest to rebuild - but if anyone has any other ideas I'm all ears :).
 
 ## GitHub workflows
 
 My configuration also uses some other GitHub Actions located in [`.github/workflows/`](.github/workflows/):
 
-- [`nix-build.yml`](.github/workflows/nix-build.yml): As aforementioned, this builds the `lyra` system (for both light and dark theme specialisations) on pushes and pull requests. On pushes to `main`, it pushes the results directly to Cachix and pins the latest two revisions.
-- [`alejandra-autoformat.yml`](.github/workflows/alejandra-autoformat.yml): Runs [Alejandra](https://github.com/kamadorueda/alejandra) on all `.nix` files on pushes/PRs and auto-commits the changes if there were any.
-- [`update-lockfile.yml`](.github/workflows/update-lockfile.yml): Scheduled weekly run (Sundays at 00:00) that automatically updates `flake.lock` and opens an automated PR.
 - [`flake-checker.yml`](.github/workflows/flake-checker.yml): Runs weekly checks on `flake.lock` health.
+- [`nix-build.yml`](.github/workflows/nix-build.yml): As aforementioned, this builds the `lyra` system (for both light and dark theme specialisations), and pushes the results directly to Cachix and pins the latest two revisions.
+- [`nix-maid.yml`](.github/workflows/nix-maid.yml): Automatically runs [`statix`](https://github.com/molybdenumsoftware/statix), [`deadnix`](https://github.com/astro/deadnix), and [`alejandra`](https://github.com/kamadorueda/alejandra) on pushes/PRs, automatically opening a PR with the changes.
+- [`update-lockfile.yml`](.github/workflows/update-lockfile.yml): Scheduled weekly run (Sundays at 00:00) that automatically updates `flake.lock` and opens an automated PR.
 - [`dependabot.yml`](.github/dependabot.yml): Make sure the GitHub Actions dependencies are up to date, weekly.
 
 ## Keyboard-centric workflow
@@ -224,6 +224,27 @@ Configured in [`users/programs/terminal-shell/zsh/initContent.sh`](users/program
 - `copyl <file>`: Converts any local path into a `file:///` URI and copies it to the Wayland clipboard using `wl-clipboard`.
 - `blammo` and `$blammo_in`: When selecting files in Yazi (`Mod + Shift + F`) and suspending (`Ctrl + Z`) or quitting (`q`), Yazi saves the selected paths into `/tmp/blammo`. The Zsh prompt automatically loads this into `$blammo_in` so you can do things like `copyl $blammo_in`, `ls -la $blammo_in`, or run batch operations on the file selection.
 - `safe_reboot`: System shutdown or restart is auto blocked with a notification if a screen recording is active, a NixOS rebuild is running, or urgent windows need attention.
+
+<details>
+<summary>Nix and rebuild aliases (nh)</summary>
+
+I use `nh` nearly all the time instead of raw `nixos-rebuild` commands:
+
+| Alias   | Command / Action                               | Usage                                                  |
+| :------ | :--------------------------------------------- | :----------------------------------------------------- |
+| `nsw`   | `nh os switch`                                 | Normal switch for daily config changes                 |
+| `nup`   | `nh os switch --update`                        | Updates all flake inputs and switches at once          |
+| `ntest` | `nh os test`                                   | Temporary switch (back to previous on reboot)          |
+| `nboot` | `nh os boot`                                   | Build and set as default for the next boot only        |
+| `ndry`  | `nh os switch --dry`                           | Dry run with inbuilt nvd package diff                  |
+| `nask`  | `nh os switch --ask`                           | Shows visual package diff and prompts before switching |
+| `nvm`   | `nh os build-vm`                               | QEMU sandbox build to test bigger changes              |
+| `ncl`   | `nh clean all --keep 5`                        | Garbage collects old generations while keeping 5 safe  |
+| `znsw`  | `z nixos && git pull && nh os switch`          | Syncs repo changes and switches                        |
+| `znup`  | `z nixos && git pull && nh os switch -u`       | Syncs repo changes, updates flake inputs, and switches |
+| `gfu`   | `git commit -m 'feat(flake.lock): update' ...` | Commit and push for updated lockfiles                  |
+
+</details>
 
 ## User configuration and scripts
 

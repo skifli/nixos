@@ -42,13 +42,14 @@ notify-send -e -a nixOS \
   git log --oneline ORIG_HEAD..HEAD
 
   start_time=\$(date +%s.%N)
-  sudo GC_INITIAL_HEAP_SIZE=\"\$CUSTOM_NIXOS_REBUILD_GC\" nixos-rebuild switch --flake 'path:.#$HOSTNAME'
-  
+
+  nh os switch path:. --accept-flake-config -H $HOSTNAME
+
   if [ \$? -eq 0 ]; then
     end_time=\$(date +%s.%N)
     duration=\$(echo \"scale=2; \$end_time - \$start_time\" | bc)
     log_date=\$(date '+%Y-%m-%d %H:%M:%S')
-    echo \"[\$log_date] zngunsh execution time: \$duration seconds\" >> '$HOME/Documents/custom-scripts/nixos_rebuild.log'
+    echo \"[\$log_date] switch execution time: \$duration seconds\" >> '$HOME/Documents/custom-scripts/nixos_rebuild.log'
 
     case '$POST_ACTION' in
       reboot)
