@@ -46,12 +46,13 @@ in
     }
     # Gets the usually centered status window away and not focus it
     {
-      match._props.title._raw = ''r#"(?i)(Copying — Dolphin|Progress Dialogue — Dolphin)"#'';
+      match._props.title._raw = ''r#"(?i)(Deleting — Dolphin|Copying — Dolphin|Moving — Dolphin|Progress Dialogue — Dolphin)"#'';
       open-focused = false;
+      open-floating = true; # Why did it once open not floating...
       default-floating-position._props = {
         x = 10;
         y = 10;
-        relative-to = "bottom-right";
+        relative-to = "top-right"; # bottom is a tad problematic if the window is e.g., taller than usual etc
       };
     }
     # Gets the actually useful requiring-interaction window focused

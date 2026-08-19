@@ -4,7 +4,11 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "**/*.nix"
   pull_request:
+    paths:
+      - "**/*.nix"
   workflow_dispatch:
 
 jobs:
@@ -32,20 +36,31 @@ jobs:
             max-jobs = 1
             cores = 2
 
-      # Disabled because it just takes too long in post...
-      # - name: Magic Nix cache
-      #   uses: DeterminateSystems/magic-nix-cache-action@main
-      #   with:
-      #    use-flakehub: false # Disable it
-
       - name: Setup Cachix
         uses: cachix/cachix-action@v17
         with:
-          name: 'skifli-nixos'
-          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+          name: "skifli-nixos"
+          authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
 
       - name: Build nixOS system (lyra)
         run: |
-          nix build .?submodules=1#nixosConfigurations.lyra.config.system.build.toplevel \
+          LIGHT_PATH=$(nix build .?submodules=1#nixosConfigurations.lyra.config.system.build.toplevel \
             --accept-flake-config \
-            --max-jobs 1
+            --max-jobs 1 \
+            --no-link \
+            --print-out-paths)
+
+          DARK_PATH=$(readlink -f "$LIGHT_PATH/specialisation/dark")
+
+          echo "LIGHT_PATH=$LIGHT_PATH" >> $GITHUB_ENV
+          echo "DARK_PATH=$DARK_PATH" >> $GITHUB_ENV
+
+      - name: Pin builds on Cachix
+        if: github.ref == 'refs/heads/main'
+        run: |
+          # Push both closures to ensure they are on Cachix
+          cachix push skifli-nixos "$LIGHT_PATH" "$DARK_PATH"
+
+          # Pin both to 2 latest revisions
+          cachix pin skifli-nixos lyra-light "$LIGHT_PATH" --keep-revisions 2
+          cachix pin skifli-nixos lyra-dark "$DARK_PATH" --keep-revisions 2

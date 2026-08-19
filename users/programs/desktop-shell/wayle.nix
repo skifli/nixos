@@ -78,6 +78,7 @@
                 "cpu"
                 "custom-load"
                 "ram"
+                "custom-storage"
                 "weather"
               ];
               left = [
@@ -230,6 +231,30 @@
               icon-name = "ld-activity-symbolic";
               icon-show = true;
               interval-ms = 5000;
+              label-color = "fg-default";
+              label-max-length = 0;
+              label-show = true;
+              left-click = "${userVars.programs.terminal} -e btop";
+              right-click = userVars.programs.system-monitor;
+              mode = "poll";
+              restart-interval-ms = 1000;
+              restart-policy = "never";
+              scroll-down = "";
+              scroll-up = "";
+            }
+            {
+              id = "storage";
+              border-color = "auto";
+              border-show = false;
+              button-bg-color = "bg-surface-elevated";
+              command = "df -h / | awk 'NR==2{printf \"%s \", $5}'; awk '{t[NR]=int($1/1000)} END {printf \"@%d/%dC\\n\", t[1], t[2]}' /sys/class/nvme/nvme0/hwmon*/temp1_input /sys/class/nvme/nvme0/hwmon*/temp2_input 2>/dev/null";
+              format = "{{ output }}";
+              hide-if-empty = false;
+              icon-bg-color = "auto";
+              icon-color = "fg-default";
+              icon-name = "drive-harddisk-symbolic";
+              icon-show = true;
+              interval-ms = 10000;
               label-color = "fg-default";
               label-max-length = 0;
               label-show = true;

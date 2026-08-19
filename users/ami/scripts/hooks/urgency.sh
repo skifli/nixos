@@ -33,7 +33,7 @@ urgency_hook() {
             if [[ "$urgent" == "true" ]]; then
                 date +%s > "$NIRI_STATE_DIR/last_win"
 
-                if [[ ! -f "$NIRI_STATE_DIR/win_${id}" ]]; then
+                if [[ ! -f $NIRI_STATE_DIR/win_${id} && ! "${app,,}" =~ ghostty ]]; then # Exclude ghostty since it does its own notifications
                     IFS=$'\t' read -r app title <<< "$(niri_get_window_info "$id")"
 
                     app="${app:-Application}"
@@ -50,29 +50,30 @@ urgency_hook() {
             fi
             ;;
 
-        WorkspaceUrgencyChanged)
-            if [[ "$urgent" == "true" ]]; then
-                local win_ts
-                win_ts=$(cat "$NIRI_STATE_DIR/last_win" 2>/dev/null || echo 0)
-
-                (
-                    sleep 0.15
-                    local latest_win_ts now
-                    latest_win_ts=$(cat "$NIRI_STATE_DIR/last_win" 2>/dev/null || echo 0)
-                    now=$(date +%s)
-
-                    if [[ "$latest_win_ts" -eq "$win_ts" ]] && (( (now - latest_win_ts) > 1 )) && [[ ! -f "$NIRI_STATE_DIR/ws_${id}" ]]; then
-                        local notif_id
-                        notif_id=$(notify-send -p -e -a "niri" "${ICON_ARGS[@]}" -u critical -t 0 "Urgent workspace" "Workspace $id has urgent windows." 2>/dev/null || true)
-                        if [[ -n "$notif_id" ]]; then
-                            echo "$notif_id" > "$NIRI_STATE_DIR/ws_${id}"
-                        fi
-                    fi
-                ) &
-            else
-                clear_notification "ws" "$id"
-            fi
-            ;;
+# No me gusta...
+#        WorkspaceUrgencyChanged)
+#            if [[ "$urgent" == "true" ]]; then
+#                local win_ts
+#                win_ts=$(cat "$NIRI_STATE_DIR/last_win" 2>/dev/null || echo 0)
+#
+#                (
+#                    sleep 0.15
+#                    local latest_win_ts now
+#                    latest_win_ts=$(cat "$NIRI_STATE_DIR/last_win" 2>/dev/null || echo 0)
+#                    now=$(date +%s)
+#
+#                    if [[ "$latest_win_ts" -eq "$win_ts" ]] && (( (now - latest_win_ts) > 1 )) && [[ ! -f "$NIRI_STATE_DIR/ws_${id}" ]]; then
+#                        local notif_id
+#                        notif_id=$(notify-send -p -e -a "niri" "${ICON_ARGS[@]}" -u critical -t 0 "Urgent workspace" "Workspace $id has urgent windows." 2>/dev/null || true)
+#                        if [[ -n "$notif_id" ]]; then
+#                            echo "$notif_id" > "$NIRI_STATE_DIR/ws_${id}"
+#                        fi
+#                    fi
+#                ) &
+#            else
+#                clear_notification "ws" "$id"
+#            fi
+#            ;;
 
         WindowFocusChanged)
             if [[ -n "$id" ]]; then

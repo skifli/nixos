@@ -713,6 +713,13 @@
     };
     spawn = ["normcap"];
   };
+  "Alt+Print" = {
+    _props = {
+      hotkey-overlay-title = "Screenshot all monitors";
+      allow-inhibiting = false;
+    };
+    spawn-sh = "grim - | wl-copy";
+  };
 
   # MEDIA KEYS
   "XF86AudioRaiseVolume" = {
