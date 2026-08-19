@@ -1,9 +1,25 @@
 {
   inputs,
+  lib,
   pkgs,
   userVars,
   ...
-}: {
+}: let
+  blockers = userVars.historyBlockers or {};
+
+  escapeRegex = str: lib.replaceStrings ["."] ["\\."] str;
+
+  # Exact matches: "^ls$", "^cd \\.\\.$"
+  exactFilters = map (cmd: "^${escapeRegex cmd}$") (blockers.exact or []);
+
+  # Prefix matches: "^copyl.*", "^secret-tool.*"
+  prefixFilters = map (p: "^${escapeRegex p}.*") (blockers.prefixes or []);
+
+  # Sensitive exports: "^export .*TOKEN.*"
+  sensitiveFilters = map (s: "^export .*${s}.*") (blockers.sensitiveKeywords or []);
+
+  generatedHistoryFilter = exactFilters ++ prefixFilters ++ sensitiveFilters;
+in {
   home-manager = {
     users.${userVars.username} = {
       # First run run atuin import auto
@@ -27,6 +43,11 @@
           style = "auto";
           inline_height = 15; # How many lines the history popup occupies
           show_preview = true; # Shows command details in a side preview pane
+          store_failed = false; # Whether or not to store commands that failed
+
+          ## Note that these regular expressions are unanchored, i.e. if they don't start
+          ## with ^ or end with $, they'll match anywhere in the command.
+          history_filter = generatedHistoryFilter;
         };
       };
     };

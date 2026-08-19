@@ -6,7 +6,9 @@ VAL="$2"
 CMD="$3"
 
 WINDOWS=$(niri msg --json windows 2>/dev/null)
-FOUND=$(echo "$WINDOWS" | jq -r ".[] | select(.$KEY != null) | select(.$KEY | ascii_downcase | contains(\"${VAL,,}\"))")
+FOUND=$(echo "$WINDOWS" | jq -r --arg key "$KEY" --arg val "${VAL,,}" '
+  .[] | select(.[$key] != null) | select(.[$key] | ascii_downcase | contains($val))
+')
 
 if [ -n "$FOUND" ]; then
     IS_FOCUSED=$(echo "$FOUND" | jq -r 'select(.is_focused == true)')

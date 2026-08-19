@@ -33,12 +33,11 @@ urgency_hook() {
             if [[ "$urgent" == "true" ]]; then
                 date +%s > "$NIRI_STATE_DIR/last_win"
 
-                if [[ ! -f $NIRI_STATE_DIR/win_${id} && ! "${app,,}" =~ ghostty ]]; then # Exclude ghostty since it does its own notifications
-                    IFS=$'\t' read -r app title <<< "$(niri_get_window_info "$id")"
+                IFS=$'\t' read -r app title <<< "$(niri_get_window_info "$id")"
+                app="${app:-Application}"
+                title="${title:-ID $id}"
 
-                    app="${app:-Application}"
-                    title="${title:-ID $id}"
-
+                if [[ ! -f "$NIRI_STATE_DIR/win_${id}" && ! "${app,,}" =~ ghostty ]]; then
                     local notif_id
                     notif_id=$(notify-send -p -e -a "niri" "${ICON_ARGS[@]}" -u critical -t 0 "Urgent window" "$app: $title" 2>/dev/null || true)
                     if [[ -n "$notif_id" ]]; then

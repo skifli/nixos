@@ -109,7 +109,7 @@
       definedAliases = [
         "@hm"
         "@home"
-        "'homeman"
+        "@homeman"
       ];
     };
     "My NixOS" = {

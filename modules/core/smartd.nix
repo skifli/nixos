@@ -12,7 +12,7 @@
     enable = true;
     autodetect = false; # Explicitly defined below
 
-    devices = hostVars.devices;
+    inherit (hostVars) devices;
 
     notifications = {
       wall.enable = false; # Disable terminal-wide broadcasting

@@ -4,7 +4,20 @@
   pkgs,
   userVars,
   ...
-}: {
+}: let
+  blockers = userVars.historyBlockers or {};
+
+  # Exact matches: "ls", "cd .."
+  exactPatterns = blockers.exact or [];
+
+  # Prefix matches: "copyl", "copyl *"
+  prefixPatterns = lib.concatMap (p: [p "${p} *"]) (blockers.prefixes or []);
+
+  # Sensitive exports: "export *TOKEN*"
+  sensitivePatterns = map (s: "export *${s}*") (blockers.sensitiveKeywords or []);
+
+  generatedIgnorePatterns = exactPatterns ++ prefixPatterns ++ sensitivePatterns;
+in {
   home-manager.users.${userVars.username} = {
     home = {
       packages = with pkgs; [
@@ -109,6 +122,8 @@
           expireDuplicatesFirst = true; # When history fills up, purge duplicates first
           share = true; # Share command history across open zsh sessions (better than append imo)
           extended = true; # Save timestamps alongside commands
+
+          ignorePatterns = generatedIgnorePatterns;
         };
 
         historySubstringSearch = {
@@ -128,12 +143,9 @@
               "dirhistory"
               "dotenv"
               "extract"
-              "eza"
               "git"
-              "history-substring-search"
               "safe-paste"
               "sudo"
-              "zoxide"
             ]
             ++ lib.optional (userVars.programs.prompt == "starship") "starship";
         };

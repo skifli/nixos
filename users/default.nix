@@ -102,15 +102,17 @@ in {
 
           sessionVariables = let
             primaryBrowser = builtins.elemAt userVars.programs.browsers 0;
-          in {
-            BROWSER = pkgs.lib.mkForce primaryBrowser;
-            EDITOR = userVars.programs.editor;
-            # SHELL = userVars.programs.terminal-shell; # - This and below commented out because can cause problems in SSH
-            # TERM = userVars.programs.terminal;
-            VISUAL = userVars.programs.visual;
+          in
+            {
+              BROWSER = pkgs.lib.mkForce primaryBrowser;
+              EDITOR = userVars.programs.editor;
+              # SHELL = userVars.programs.terminal-shell; # - This and below commented out because can cause problems in SSH
+              # TERM = userVars.programs.terminal;
+              VISUAL = userVars.programs.visual;
 
-            CUSTOM_NIXOS_REBUILD_GC = gcHeap;
-          };
+              CUSTOM_NIXOS_REBUILD_GC = gcHeap;
+            }
+            // userVars.sessionVariables;
 
           shellAliases =
             {
