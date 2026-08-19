@@ -2,7 +2,6 @@
   hostname,
   hostVars,
   pkgs,
-  userVars,
   ...
 }: let
   primaryUser = builtins.head hostVars.enabledUsers; # Dynamically gets "ami" (or whichever user is enabled for this host)

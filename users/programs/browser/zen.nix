@@ -1,7 +1,6 @@
 {
   hostVars,
   inputs,
-  lib,
   pkgs,
   userVars,
   ...
@@ -14,7 +13,7 @@ in {
   home-manager = {
     sharedModules = [inputs.zen-browser.homeModules.beta];
 
-    users.${userVars.username} = {lib, ...}: {
+    users.${userVars.username} = _: {
       home.packages = with pkgs; [kdePackages.kdialog speechd];
 
       stylix.targets.zen-browser.enable = false;

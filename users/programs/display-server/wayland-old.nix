@@ -1,7 +1,6 @@
 {
   hostVars,
   pkgs,
-  pkgsUnstable,
   userVars,
   ...
 }: {
