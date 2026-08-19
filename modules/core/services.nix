@@ -1,7 +1,5 @@
 {
-  lib,
   pkgs,
-  usersVars,
   ...
 }: {
   # Services to start

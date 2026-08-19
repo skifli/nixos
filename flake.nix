@@ -105,7 +105,6 @@
   outputs = {
     self,
     nixpkgs,
-    nixpkgs-unstable,
     ...
   } @ inputs:
   # Captures all inputs into a variable
