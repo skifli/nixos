@@ -1,11 +1,9 @@
 {
-  hostVars,
-  lib,
   pkgs,
   userVars,
   ...
 }: {
-  home-manager.users.${userVars.username} = {lib, ...}: {
+  home-manager.users.${userVars.username} = _: {
     home = {
       packages = with pkgs; [
         ov
