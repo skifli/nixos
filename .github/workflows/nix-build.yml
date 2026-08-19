@@ -1,14 +1,6 @@
 name: "Build & cache"
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - "**/*.nix"
-  pull_request:
-    paths:
-      - "**/*.nix"
   workflow_dispatch:
 
 jobs:

@@ -22,9 +22,6 @@
         --prefix QML2_IMPORT_PATH : "${pkgs.kdePackages.qtstyleplugin-kvantum}/lib/qt-6/qml"
     '';
   };
-
-  gcHeap = "4G";
-  gc = "GC_INITIAL_HEAP_SIZE=${gcHeap}";
 in {
   imports = [
     inputs.home-manager.nixosModules.home-manager
@@ -109,49 +106,31 @@ in {
               # SHELL = userVars.programs.terminal-shell; # - This and below commented out because can cause problems in SSH
               # TERM = userVars.programs.terminal;
               VISUAL = userVars.programs.visual;
-
-              CUSTOM_NIXOS_REBUILD_GC = gcHeap;
             }
             // userVars.sessionVariables;
 
           shellAliases =
             {
-              # --- OGs ---
+              # Essentials
               sup = "sudo -E";
-              nfu = "nix flake update";
+              nsw = "nh os switch path:. --accept-flake-config -H ${hostVars.hostname}";
+              nup = "nh os switch path:. --update --accept-flake-config -H ${hostVars.hostname}"; # Updates flake inputs & switches
 
-              nhsw = "${gc} nh os switch path:. --accept-flake-config -H";
-              nisw = "${gc} sudo nixos-rebuild switch --flake"; # Needs path:.#
+              # Testing & Verification
+              ntest = "nh os test path:. --accept-flake-config -H ${hostVars.hostname}"; # Apply temporary (resets on reboot)
+              nboot = "nh os boot path:. --accept-flake-config -H ${hostVars.hostname}"; # Apply to next boot only
+              ndry = "nh os switch path:. --dry --accept-flake-config -H ${hostVars.hostname}"; # Dry run (shows nvd diff automatically)
+              nask = "nh os switch path:. --ask --accept-flake-config -H ${hostVars.hostname}"; # Shows diff & prompts before switching
+              nvm = "nh os build-vm path:. --accept-flake-config -H ${hostVars.hostname}"; # Build & run in VM
 
-              nunh = "nix flake update && ${gc} nh os switch path:. --accept-flake-config -H";
-              nuni = "nix flake update && ${gc} sudo nixos-rebuild switch --flake"; # Needs path:.#
+              # Maintenance
+              ncl = "nh clean all --keep 5"; # Removes old generations, keeps 5
 
-              # --- Testing & Dry Runs ---
-              nhtest = "${gc} nh os test path:. --accept-flake-config -H"; # Apply immediately, revert on reboot
-              nhdry = "${gc} nh os switch path:. --dry --accept-flake-config -H"; # See what WOULD happen
-              nhask = "${gc} nh os switch path:. --ask --accept-flake-config -H"; # Ask for confirmation after diff
-
-              # --- VM Prototyping (Sandbox) ---
-              # Standard rebuild VM command
-              nivm = "${gc} nixos-rebuild build-vm --flake"; # Needs path:.#
-              # nh equivalent (available in newer versions)
-              nhvm = "${gc} nh os build-vm path:. --accept-flake-config -H";
-
-              # --- Comparison & Cleanup ---
-              # Quick diff between current system and a potential build
-              nhdiff = "nix build path:.#nixosConfigurations.${hostVars.hostname}.config.system.build.toplevel --dry-run && nvd diff /run/current-system ./result";
-
-              # --- Actual useful ones ---
-              # If already in the dir zoxide errors so use ; not && to continue even if zoxide fails
-              zngp = "z nixos; git pull && git log --oneline ORIG_HEAD..HEAD";
-              zngs = "z nixos; git submodule update --init --recursive && git log --oneline ORIG_HEAD..HEAD";
+              # Git & Sync Workflows
+              # Sync submodules/git pull, then switch
               zngu = "z nixos; git pull && git submodule update --init --recursive && git log --oneline ORIG_HEAD..HEAD";
-              znnisw = "z nixos; ${gc} sudo nixos-rebuild switch --flake"; # Needs path:.#
-              znguns = "z nixos; git pull && git submodule update --init --recursive && git log --oneline ORIG_HEAD..HEAD && ${gc} sudo nixos-rebuild switch --flake"; # Needs path:.#
-
-              # --- Host-Specific Commands ---
-              zngunsh = "z nixos; git pull && git submodule update --init --recursive && git log --oneline ORIG_HEAD..HEAD && ${gc} sudo nixos-rebuild switch --flake path:.#${hostVars.hostname}";
-              znhunsh = "z nixos; git pull && git submodule update --init --recursive && git log --oneline ORIG_HEAD..HEAD && ${gc} nh os switch path:. --accept-flake-config -H ${hostVars.hostname}";
+              znsw = "z nixos; git pull && git submodule update --init --recursive && nh os switch path:. --accept-flake-config -H ${hostVars.hostname}";
+              znup = "z nixos; git pull && git submodule update --init --recursive && nh os switch path:. --update --accept-flake-config -H ${hostVars.hostname}";
 
               gfu = "git add . && git commit -m 'feat(flake.lock): update' && git pull && git push";
             }

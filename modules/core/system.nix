@@ -45,6 +45,7 @@ in {
       experimental-features = [
         "nix-command"
         "flakes"
+        # "flake-self-attrs"
       ];
       extra-platforms = ["aarch64-linux"]; # Allow cross-compilation
       use-xdg-base-directories = true;
@@ -57,6 +58,14 @@ in {
       fsync-metadata = false; # Don't fsync metadata on every change
       keep-build-log = false; # Don't keep build logs to reduce IO
     };
+
+    /*
+    https://discourse.nixos.org/t/lix-mismatch-in-feature-name-compared-to-nix/59879
+    Had something probably similar with flake-self-attrs
+    */
+    extraOptions = ''
+      experimental-features = nix-command flakes flake-self-attrs
+    '';
   };
 
   nixpkgs.config.allowUnfree = true;

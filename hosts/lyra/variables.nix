@@ -86,6 +86,8 @@
       options = "-d nvme -H -W 4,70,80 -s (S/../.././02)";
     }
 
+    /*
+       TODO - Fix: Add to Pi config as no longer on this device
     # -a: Monitor all standard ATA SMART attributes
     # -o on -S on: Enable background testing & auto-save of attribute data
     # -n standby,q: Never wake up the HDD from sleep/standby to run checks
@@ -97,12 +99,14 @@
       device = "/dev/sda";
       options = "-a -o on -S on -n standby,q -W 4,50,55 -C 197+ -U 198+ -s (S/../.././03|L/../../6/04)";
     }
+    */
   ];
 
   niri.input = {
   };
 
   sessionVariables = {
+    GC_INITIAL_HEAP_SIZE = "4G";
   };
 
   screen-lock-timeout = 5;
