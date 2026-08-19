@@ -17,6 +17,18 @@
             inherit (userVars.git) email name;
           };
 
+          gpg = {
+            format = "ssh";
+          };
+
+          commit = {
+            gpgsign = true;
+          };
+
+          tag = {
+            gpgsign = true;
+          };
+
           core.editor = userVars.programs.editor;
           init.defaultBranch = "main";
         };
@@ -31,6 +43,12 @@
       gh = {
         enable = true;
 
+        hosts = {
+          "github.com" = {
+            user = userVars.git.name;
+          };
+        };
+
         # Let GitHub CLI act as Git's credential helper
         gitCredentialHelper = {
           enable = true;
@@ -44,7 +62,7 @@
         ];
 
         settings = {
-          git_protocol = "https";
+          git_protocol = "ssh";
           prompt = "enabled";
 
           aliases = {

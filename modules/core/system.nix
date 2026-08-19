@@ -44,7 +44,7 @@ in {
       experimental-features = [
         "nix-command"
         "flakes"
-        # "flake-self-attrs"
+        "flake-self-attrs"
       ];
       extra-platforms = ["aarch64-linux"]; # Allow cross-compilation
       use-xdg-base-directories = true;
