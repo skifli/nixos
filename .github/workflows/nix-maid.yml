@@ -27,14 +27,14 @@ jobs:
       - name: Install Nix & Enable Cache
         uses: DeterminateSystems/determinate-nix-action@main
 
-      - name: Auto-format - Alejandra
-        run: nix run nixpkgs#alejandra -- --exclude "users/programs/browser/zen/profile-default/hidden" .
-
       - name: Auto-remove - Deadnix
         run: nix run nixpkgs#deadnix -- --edit --exclude "users/programs/browser/zen/profile-default/hidden" -- .
 
       - name: Auto-fix - Statix
         run: nix run nixpkgs#statix -- fix --ignore "users/programs/browser/zen/profile-default/hidden" .
+
+      - name: Auto-format - Alejandra
+        run: nix run nixpkgs#alejandra -- --exclude "users/programs/browser/zen/profile-default/hidden" .
 
       - name: Create PR with all the fixes
         uses: peter-evans/create-pull-request@v8

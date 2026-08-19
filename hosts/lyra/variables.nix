@@ -1,4 +1,4 @@
-{
+{pkgs, ...}: {
   # Feature toggles
   # disableX = true;
 
@@ -100,6 +100,26 @@
       options = "-a -o on -S on -n standby,q -W 4,50,55 -C 197+ -U 198+ -s (S/../.././03|L/../../6/04)";
     }
     */
+  ];
+
+  printerDrivers = [
+    (pkgs.writeTextDir "share/cups/model/OKI-MC363-PS.ppd" (builtins.readFile ./assets/OKI-MC363-PS.ppd))
+  ];
+
+  # Default printer is the first printer
+  printers = [
+    {
+      name = "OKI_DATA_CORP_MC363";
+      description = "OKI DATA CORP MC363 Multifunction Color Printer";
+      location = "Office";
+      deviceUri = "usb://OKI%20DATA%20CORP/MC363?serial=AK75045339&interface=1";
+      model = "OKI-MC363-PS.ppd";
+
+      ppdOptions = {
+        PageSize = "A4";
+        Duplex = "DuplexNoTumble"; # Set default 2-sided printing
+      };
+    }
   ];
 
   niri.input = {

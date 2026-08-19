@@ -8,7 +8,7 @@
 let
   commonHostVars = import ./variables.nix {inherit pkgs;};
   hostVarsRaw =
-    import ../${hostname}/variables.nix
+    import ../${hostname}/variables.nix {inherit pkgs;}
     // {
       inherit hostname;
     }; # Merges hostname with the other config, to more seamlessly combine

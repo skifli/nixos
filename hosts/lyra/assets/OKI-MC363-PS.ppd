@@ -1,0 +1,2966 @@
+*PPD-Adobe: "4.3"
+*% ==========================================================
+*% Printer Description File for OKI MC363 PS (Linux)
+*% Copyright 2022 Oki Electric Industry Co., Ltd.
+*% Date: Jan. 12, 2022
+*% Note)
+*%
+*% ==========================================================
+*% GPL $Revision: 1.0 $ $RCSfile: OKI MC363 PS.ppd,v $
+*%
+*% Note)
+*% This PostScript Printer Description(PPD) file is free software; you
+*% can redistribute it and/or modify it under the terms of the GNU
+*% General Public License version 2 or later as published by the Free
+*% Software Foundation.
+*%
+*% In addition to the permissions in the GNU General Public License,
+*% Oki Electric Industry Co., Ltd. gives you unlimited permission to link the
+*% PostScript code fragments herein into your PostScript documents to
+*% form an excutable for enabling printer-specific features, and
+*% distribute those combinations without any restrictions from the use
+*% of this PPD file. (The General Public License restrictions do apply
+*% in other respects; for example, they cover modification of the
+*% file, and distribution when not merged into a PostScript document.)
+*%
+*% This PPD is distributed in the hope that it will be useful, but
+*% WITHOUT ANY WARRANTY; without even the implied warranty of
+*% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+*% General Public License for more details.
+*%
+*% You should have received a copy of the GNU General Public License
+*% along with this PPD; see the file COPYING.
+*%
+*%
+*% ==========================================================
+*FormatVersion: "4.3"
+*FileVersion: "1.1.2.0"
+*LanguageEncoding: ISOLatin1
+*LanguageVersion: English
+*PCFileName: "OKM363W3.PPD"
+*Product: "(MC363)"
+*PSVersion: "(3017) 7"
+*Manufacturer: "Oki"
+*ModelName: "OKI DATA CORP MC363"
+*ShortNickName: "OKI DATA CORP MC363 PS"
+*NickName: "OKI DATA CORP MC363 PS"
+
+*JCLBegin:"<1B>%-12345X<0A>"
+*JCLEnd: "<1B>%-12345X"
+
+*% _____ Options and Constraints _____
+*OpenGroup: InstallableOptions/Options Installed
+
+*OpenUI *OKOptionTray/Available Tray: PickOne
+
+*DefaultOKOptionTray: 0
+*OKOptionTray 0/1: ""
+*OKOptionTray 1/2: ""
+
+*?OKOptionTray: "
+ currentpagedevice /InputAttributes get begin
+ 6 where {pop (4)}{ 5 where {pop (3)}{
+ 2 where {pop (2)}{ 1 where {pop (1)}{
+ 0 where {pop (0)}{(Unknown)}ifelse
+ }ifelse }ifelse
+ }ifelse }ifelse
+ end = flush"
+*End
+
+*CloseUI: *OKOptionTray
+
+*DefaultOKOptionDuplex: True
+*OKOptionDuplex True/Installed: ""
+*?OKOptionDuplex: "
+ currentpagedevice /Duplex known
+ {(True)}{(False)}ifelse = flush"
+*End
+
+*DefaultOKHDD: True
+*OKHDD True/Installed: ""
+*?OKHDD: "
+ false
+ (%disk?%)
+ {
+ currentdevparams dup /Writeable known{
+ /Writeable get {pop true exit}if
+ }{pop}ifelse
+ } 10 string /IODevice resourceforall
+ {(True)}{(False)}ifelse = flush"
+*End
+
+*DefaultInstalledMemory: 1280MB
+*InstalledMemory 1280MB:""
+
+*?InstalledMemory : "
+ currentsystemparams /InstalledRam get
+ 1024 idiv 1024 idiv 20 string cvs print (MB) = flush
+ <</WaitTimeout 5>>setuserparams
+ userdict begin /OLDhandleerror errordict /handleerror get def end
+ errordict /handleerror{
+   systemdict begin $error begin newerror errorname /timeout eq and
+   {/newerror false store end end}{end end //OLDhandleerror exec}ifelse
+ }dup 0 systemdict put bind readonly put
+ userdict /OLDhandleerror undef"
+*End
+
+*CloseGroup: InstallableOptions
+
+*% _____ Device Capabilities _____
+*ColorDevice: True
+*DefaultColorSpace: CMYK
+*LanguageLevel: "3"
+*Protocols: TBCP
+*1284Modes Parallel: Compat Nibble ECP
+*1284DeviceID: "MFG:OKI DATA CORP;MODEL:MC363;COMMAND SET: PJL,PCLXL,PCL,EPSONFX,IBMPPR,POSTSCRIPT,XPS"
+
+*% _____ Memory Configuration(VM Size) _____
+*FreeVM: "1000000000"
+*VMOption 1280MB:"1000000000"
+
+*% _____ Memory Configuration(FontCache Size) _____
+*FCacheSize 1280MB:130000000
+
+*TTRasterizer: Type42
+*?TTRasterizer: "
+ 42 /FontType resourcestatus
+ {pop pop (Type42)}{(No Type42)}ifelse
+ = flush"
+*End
+
+*Password: "()"
+*ExitServer: "
+ count 0 eq {false}{true exch startjob}ifelse
+ not{
+ (WARNING: Cannot modify initial VM.) =
+ (Missing or invalid password.) =
+ (Please contact the author of this software.) = flush quit
+ } if"
+*End
+
+*Reset: "
+ count 0 eq {false}{true exch startjob true}ifelse
+ not{
+ (WARNING: Cannot reset printer.) =
+ (Missing or invalid password.) =
+ (Please contact the author of this software.) = flush
+ }{
+ systemdict /quit get exec
+ (WARNING : Printer Reset Failed.) = flush
+ }ifelse"
+*End
+
+*% _____ Job Patch File _____
+*JobPatchFile 0: "
+
+%%BeginResource: OKI_Driver_Procedure_Patch_Resource 1.0 0
+%-------------------------------------------------
+%% OKI Driver Procedure ver 1.0
+%%    Date: Nov. 01, 2008  Edt: 1
+%-------------------------------------------------
+
+/OK@setpagedevice_sadj where {pop}{
+ /OK@setpagedevice_sadj /setpagedevice load def
+/OK@PageDevice_Install_proc currentpagedevice /Install get def
+<< /Install { mark currentstrokeadjust OK@PageDevice_Install_proc setstrokeadjust cleartomark } >> setpagedevice
+}ifelse
+
+/DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource
+%% numeric of next line is Latest Version of ProcSet minus 1
+ dup /editversion 2 copy known {get exec exch pop 62 lt}{pop pop false}ifelse
+{
+ dup length dict copy begin
+
+%% begin definition
+
+%% end definition
+
+currentdict end
+/DriverOps exch /ProcSet defineresource pop
+
+}{pop}ifelse
+}{pop pop (Failed) print flush}ifelse
+%%EndResource
+
+%%BeginProcSet: OKI_InitLoad_ProcSet 1.0 0
+%-------------------------------------------------
+%% OKI Load Initial DriverOps Proc ver 1.0
+%%    Date: Jan. 9, 2004  Edt: 4
+%-------------------------------------------------
+/DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource dup dup dup
+ /initscreenobo 2 copy known{get exec}{pop pop}ifelse
+ /initimagesmooth 2 copy known{get exec}{pop pop}ifelse
+ /initbkoverprt 2 copy known{get exec}{pop pop}ifelse
+ /initsetstorokeadjust 2 copy known{get exec}{pop pop}ifelse
+}{pop pop}ifelse
+%%EndProcSet
+
+%%BeginProcSet: OKI_Default_Color_Setting 1.1 0
+globaldict /OK@_CustLimitChk true put
+/DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource dup
+ /initdriverops 2 copy known{get exec}{pop pop}ifelse
+ /initalwayprnht 2 copy known{get exec}{pop pop}ifelse
+}{pop pop}ifelse
+%%EndProcSet
+
+"
+*End
+
+*% _____ Duplexer definitions _____
+*OpenUI *Duplex/2-Sided Printing: PickOne
+
+*OrderDependency: 95.0 DocumentSetup *Duplex
+*DefaultDuplex: None
+*Duplex None/Off: "
+ <<
+ /Duplex false /Tumble false /Policies << /Duplex 2 >>
+ >> setpagedevice"
+*End
+
+*Duplex DuplexNoTumble/Long-Edge binding: "
+ <<
+ /Duplex true /Tumble false /Policies << /Duplex 2 >>
+ >> setpagedevice"
+*End
+
+*Duplex DuplexTumble/Short-Edge binding: "
+ <<
+ /Duplex true /Tumble true /Policies << /Duplex 2 >>
+ >> setpagedevice"
+*End
+
+*?Duplex: "
+ currentpagedevice dup /Duplex known{
+ dup /Duplex get{
+ /Tumble get{(DuplexTumble)}{(DuplexNoTumble)}ifelse
+ }{pop (None)}ifelse
+ }{pop (None)}ifelse = flush"
+*End
+
+*CloseUI: *Duplex
+
+*% _____ InputSlot _____
+*OpenUI *InputSlot/Paper Source: PickOne
+
+*OrderDependency: 18.0 DocumentSetup *InputSlot
+*DefaultInputSlot: Default
+
+*InputSlot Default/Default: ""
+
+*InputSlot Front/Multi-Purpose Tray: "
+ /DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource 4 exch /setinputslot get exec
+ }{pop pop}ifelse globaldict /OK@_CustTray 3 put"
+*End
+
+*InputSlot Upper/Tray 1: "
+ /DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource 1 exch /setinputslot get exec
+ }{pop pop}ifelse globaldict /OK@_CustTray 0 put"
+*End
+
+*InputSlot Lower/Tray 2: "
+ /DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource 2 exch /setinputslot get exec
+ }{pop pop}ifelse globaldict /OK@_CustTray 1 put"
+*End
+
+*?InputSlot: "
+ /DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource
+ [
+ (Unknown) (Upper) (Lower) (Tray3) (Front) (Unknown) (Tray4) (Tray5)
+ ] exch /qinputslot get exec
+ }{pop pop (Unknown)}ifelse = flush"
+*End
+
+*CloseUI: *InputSlot
+
+*% _____ Paper Handling _____
+*LandscapeOrientation: Plus90
+*VariablePaperSize: True
+*% Code in this section both selects a tray and sets up a frame buffer.
+*OpenUI *PageSize: PickOne
+*OrderDependency: 50.0 DocumentSetup *PageSize
+*DefaultPageSize: A4
+
+*PageSize A4/A4: "
+ /OK@setpagesize where{ pop 0 OK@setpagesize
+ }{ << /PageSize [595 842] >> setpagedevice
+ }ifelse"
+*End
+
+*PageSize A5/A5: "
+ /OK@setpagesize where{ pop 57 OK@setpagesize
+ }{ << /PageSize [420 595] >> setpagedevice
+ }ifelse"
+*End
+
+*PageSize A6/A6: "
+ /OK@setpagesize where{ pop 20 OK@setpagesize
+ }{ << /PageSize [297 420] >> setpagedevice
+ }ifelse"
+*End
+
+*PageSize B5/B5: "
+ /OK@setpagesize where{ pop 19 OK@setpagesize
+ }{ << /PageSize [516 729] >> setpagedevice
+ }ifelse"
+*End
+
+*PageSize B6/B6: "
+ /OK@setpagesize where{ pop 69 OK@setpagesize
+ }{ << /PageSize [363 516] >> setpagedevice
+ }ifelse"
+*End
+
+*PageSize Letter/Letter: "
+ /OK@setpagesize where{ pop 1 OK@setpagesize
+ }{ << /PageSize [612 792] >> setpagedevice
+ }ifelse"
+*End
+
+*PageSize Legal/Legal: "
+ /OK@setpagesize where{ pop 2 OK@setpagesize
+ }{ << /PageSize [612 1008] >> setpagedevice
+ }ifelse"
+*End
+
+*PageSize OKLegal/Legal13.5: "
+ /OK@setpagesize where{ pop 30 OK@setpagesize
+ }{ << /PageSize [612 972] >> setpagedevice
+ }ifelse"
+*End
+
+*PageSize FanFoldGermanLegal/Legal13: "
+ /OK@setpagesize where{ pop 3 OK@setpagesize
+ }{ << /PageSize [612 936] >> setpagedevice
+ }ifelse"
+*End
+
+*PageSize Executive/Executive: "
+ /OK@setpagesize where{ pop 25 OK@setpagesize
+ }{ << /PageSize [522 756] >> setpagedevice
+ }ifelse"
+*End
+
+*PageSize Postcard/Hagaki: "
+ /OK@setpagesize where{ pop 6 OK@setpagesize
+ }{ << /PageSize [284 419] >> setpagedevice
+ }ifelse"
+*End
+
+*PageSize DoublePostcard/Oufuku Hagaki: "
+ /OK@setpagesize where{ pop 7 OK@setpagesize
+ }{ << /PageSize [568 419] >> setpagedevice
+ }ifelse"
+*End
+
+*PageSize EnvChou3/Nagagata #3: "
+ /OK@setpagesize where{ pop 11 OK@setpagesize
+ }{ << /PageSize [340 666] >> setpagedevice
+ }ifelse"
+*End
+
+*PageSize EnvChou4/Nagagata #4: "
+ /OK@setpagesize where{ pop 12 OK@setpagesize
+ }{ << /PageSize [255 581] >> setpagedevice
+ }ifelse"
+*End
+
+*PageSize EnvYou4/Yougata #4: "
+ /OK@setpagesize where{ pop 13 OK@setpagesize
+ }{ << /PageSize [298 666] >> setpagedevice
+ }ifelse"
+*End
+
+*PageSize EnvDL/DL: "
+ /OK@setpagesize where{ pop 22 OK@setpagesize
+ }{ << /PageSize [312 624] >> setpagedevice
+ }ifelse"
+*End
+
+*PageSize EnvC5/C5: "
+ /OK@setpagesize where{ pop 23 OK@setpagesize
+ }{ << /PageSize [459 649] >> setpagedevice
+ }ifelse"
+*End
+
+*PageSize Env10/Com-10: "
+ /OK@setpagesize where{ pop 24 OK@setpagesize
+ }{ << /PageSize [297 684] >> setpagedevice
+ }ifelse"
+*End
+
+*PageSize Env9/Com-9: "
+ /OK@setpagesize where{ pop 29 OK@setpagesize
+ }{ << /PageSize [279 639] >> setpagedevice
+ }ifelse"
+*End
+
+*PageSize EnvMonarch/Monarch: "
+ /OK@setpagesize where{ pop 21 OK@setpagesize
+ }{ << /PageSize [279 540] >> setpagedevice
+ }ifelse"
+*End
+
+*PageSize 3x5/Index Card 3 x 5in: "
+ /OK@setpagesize where{ pop 40 OK@setpagesize
+ }{ << /PageSize [216 360] >> setpagedevice
+ }ifelse"
+*End
+
+*PageSize 4x6/4 x 6in: "
+ /OK@setpagesize where{ pop 41 OK@setpagesize
+ }{ << /PageSize [288 432] >> setpagedevice
+ }ifelse"
+*End
+
+*PageSize 5x7/5 x 7in: "
+ /OK@setpagesize where{ pop 42 OK@setpagesize
+ }{ << /PageSize [360 504] >> setpagedevice
+ }ifelse"
+*End
+
+*PageSize Statement/Statement: "
+ /OK@setpagesize where{ pop 68 OK@setpagesize
+ }{ << /PageSize [396 612] >> setpagedevice
+ }ifelse"
+*End
+
+*PageSize PRC16K184x260/16K 184 x 260mm: "
+ /OK@setpagesize where{ pop 48 OK@setpagesize
+ }{ << /PageSize [522 737] >> setpagedevice
+ }ifelse"
+*End
+
+*PageSize PRC16K195x270/16K 195 x 270mm: "
+ /OK@setpagesize where{ pop 49 OK@setpagesize
+ }{ << /PageSize [553 765] >> setpagedevice
+ }ifelse"
+*End
+
+*PageSize PRC16K197x273/16K 197 x 273mm: "
+ /OK@setpagesize where{ pop 50 OK@setpagesize
+ }{ << /PageSize [558 774] >> setpagedevice
+ }ifelse"
+*End
+
+*PageSize B6HALF/B6 Half: "
+ /OK@setpagesize where{ pop 55 OK@setpagesize
+ }{ << /PageSize [182 516] >> setpagedevice
+ }ifelse"
+*End
+
+*PageSize 8.5_SQ/8.5"SQ 8.5 x 8.5in: "
+ /OK@setpagesize where{ pop 66 OK@setpagesize
+ }{ << /PageSize [612 612] >> setpagedevice
+ }ifelse"
+*End
+
+*PageSize Folio/Folio 210 x 330mm: "
+ /OK@setpagesize where{ pop 67 OK@setpagesize
+ }{ << /PageSize [595 936] >> setpagedevice
+ }ifelse"
+*End
+
+*?PageSize: "
+ /DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource /qpagesize get exec
+ }{pop pop (Unknown)}ifelse = flush"
+*End
+
+*CloseUI: *PageSize
+
+*OpenUI *PageRegion: PickOne
+*OrderDependency: 55.0 DocumentSetup *PageRegion
+*DefaultPageRegion: A4
+
+*PageRegion A4/A4: "
+ /OK@setpageregion where{ pop 0 OK@setpageregion
+ }{
+  <<
+   /PageSize [595 842]
+   /MediaType globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+  >> setpagedevice
+ }ifelse"
+*End
+
+*PageRegion A5/A5: "
+ /OK@setpageregion where{ pop 57 OK@setpageregion
+ }{
+  <<
+   /PageSize [420 595]
+   /MediaType globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+  >> setpagedevice
+ }ifelse"
+*End
+
+*PageRegion A6/A6: "
+ /OK@setpageregion where{ pop 20 OK@setpageregion
+ }{
+  <<
+   /PageSize [297 420]
+   /MediaType globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+  >> setpagedevice
+ }ifelse"
+*End
+
+*PageRegion B5/B5: "
+ /OK@setpageregion where{ pop 19 OK@setpageregion
+ }{
+  <<
+   /PageSize [516 729]
+   /MediaType globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+  >> setpagedevice
+ }ifelse"
+*End
+
+*PageRegion B6/B6: "
+ /OK@setpageregion where{ pop 69 OK@setpageregion
+ }{
+  <<
+   /PageSize [363 516]
+   /MediaType globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+  >> setpagedevice
+ }ifelse"
+*End
+
+*PageRegion Letter/Letter: "
+ /OK@setpageregion where{ pop 1 OK@setpageregion
+ }{
+  <<
+   /PageSize [612 792]
+   /MediaType globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+  >> setpagedevice
+ }ifelse"
+*End
+
+*PageRegion Legal/Legal: "
+ /OK@setpageregion where{ pop 2 OK@setpageregion
+ }{
+  <<
+   /PageSize [612 1008]
+   /MediaType globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+  >> setpagedevice
+ }ifelse"
+*End
+
+*PageRegion OKLegal/Legal13.5: "
+ /OK@setpageregion where{ pop 30 OK@setpageregion
+ }{
+  <<
+   /PageSize [612 972]
+   /MediaType globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+  >> setpagedevice
+ }ifelse"
+*End
+
+*PageRegion FanFoldGermanLegal/Legal13: "
+ /OK@setpageregion where{ pop 3 OK@setpageregion
+ }{
+  <<
+   /PageSize [612 936]
+   /MediaType globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+  >> setpagedevice
+ }ifelse"
+*End
+
+*PageRegion Executive/Executive: "
+ /OK@setpageregion where{ pop 25 OK@setpageregion
+ }{
+  <<
+   /PageSize [522 756]
+   /MediaType globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+  >> setpagedevice
+ }ifelse"
+*End
+
+*PageRegion Postcard/Hagaki: "
+ /OK@setpageregion where{ pop 6 OK@setpageregion
+ }{
+  <<
+   /PageSize [284 419]
+   /MediaType globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+  >> setpagedevice
+ }ifelse"
+*End
+
+*PageRegion DoublePostcard/Oufuku Hagaki: "
+ /OK@setpageregion where{ pop 7 OK@setpageregion
+ }{
+  <<
+   /PageSize [567 420]
+   /MediaType globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+  >> setpagedevice
+ }ifelse"
+*End
+
+*PageRegion EnvChou3/Nagagata #3: "
+ /OK@setpageregion where{ pop 11 OK@setpageregion
+ }{
+  <<
+   /PageSize [340 666]
+   /MediaType globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+  >> setpagedevice
+ }ifelse"
+*End
+
+*PageRegion EnvChou4/Nagagata #4: "
+ /OK@setpageregion where{ pop 12 OK@setpageregion
+ }{
+  <<
+   /PageSize [255 581]
+   /MediaType globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+  >> setpagedevice
+ }ifelse"
+*End
+
+*PageRegion EnvYou4/Yougata #4: "
+ /OK@setpageregion where{ pop 13 OK@setpageregion
+ }{
+  <<
+   /PageSize [298 666]
+   /MediaType globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+  >> setpagedevice
+ }ifelse"
+*End
+
+*PageRegion EnvDL/DL: "
+ /OK@setpageregion where{ pop 22 OK@setpageregion
+ }{
+  <<
+   /PageSize [312 624]
+   /MediaType globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+  >> setpagedevice
+ }ifelse"
+*End
+
+*PageRegion EnvC5/C5: "
+ /OK@setpageregion where{ pop 23 OK@setpageregion
+ }{
+  <<
+   /PageSize [459 649]
+   /MediaType globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+  >> setpagedevice
+ }ifelse"
+*End
+
+*PageRegion Env10/Com-10: "
+ /OK@setpageregion where{ pop 24 OK@setpageregion
+ }{
+  <<
+   /PageSize [297 684]
+   /MediaType globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+  >> setpagedevice
+ }ifelse"
+*End
+
+*PageRegion Env9/Com-9: "
+ /OK@setpageregion where{ pop 29 OK@setpageregion
+ }{
+  <<
+   /PageSize [279 639]
+   /MediaType globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+  >> setpagedevice
+ }ifelse"
+*End
+
+*PageRegion EnvMonarch/Monarch: "
+ /OK@setpageregion where{ pop 21 OK@setpageregion
+ }{
+  <<
+   /PageSize [279 540]
+   /MediaType globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+  >> setpagedevice
+ }ifelse"
+*End
+
+*PageRegion 3x5/Index Card 3 x 5in: "
+ /OK@setpageregion where{ pop 40 OK@setpageregion
+ }{
+  <<
+   /PageSize [216 360]
+   /MediaType globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+  >> setpagedevice
+ }ifelse"
+*End
+
+*PageRegion 4x6/4 x 6in: "
+ /OK@setpageregion where{ pop 41 OK@setpageregion
+ }{
+  <<
+   /PageSize [288 432]
+   /MediaType globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+  >> setpagedevice
+ }ifelse"
+*End
+
+*PageRegion 5x7/5 x 7in: "
+ /OK@setpageregion where{ pop 42 OK@setpageregion
+ }{
+  <<
+   /PageSize [360 504]
+   /MediaType globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+  >> setpagedevice
+ }ifelse"
+*End
+
+*PageRegion Statement/Statement: "
+ /OK@setpageregion where{ pop 68 OK@setpageregion
+ }{
+  <<
+   /PageSize [396 612]
+   /MediaType globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+  >> setpagedevice
+ }ifelse"
+*End
+
+*PageRegion PRC16K184x260/16K 184 x 260mm: "
+ /OK@setpageregion where{ pop 48 OK@setpageregion
+ }{
+  <<
+   /PageSize [522 737]
+   /MediaType globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+  >> setpagedevice
+ }ifelse"
+*End
+
+*PageRegion PRC16K195x270/16K 195 x 270mm: "
+ /OK@setpageregion where{ pop 49 OK@setpageregion
+ }{
+  <<
+   /PageSize [553 765]
+   /MediaType globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+  >> setpagedevice
+ }ifelse"
+*End
+
+*PageRegion PRC16K197x273/16K 197 x 273mm: "
+ /OK@setpageregion where{ pop 50 OK@setpageregion
+ }{
+  <<
+   /PageSize [558 774]
+   /MediaType globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+  >> setpagedevice
+ }ifelse"
+*End
+
+*PageRegion B6HALF/B6 Half: "
+ /OK@setpageregion where{ pop 55 OK@setpageregion
+ }{
+  <<
+   /PageSize [182 516]
+   /MediaType globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+  >> setpagedevice
+ }ifelse"
+*End
+
+*PageRegion 8.5_SQ/8.5"SQ 8.5 x 8.5in: "
+ /OK@setpageregion where{ pop 66 OK@setpageregion
+ }{
+  <<
+   /PageSize [612 612]
+   /MediaType globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+  >> setpagedevice
+ }ifelse"
+*End
+
+*PageRegion Folio/Folio 210 x 330mm: "
+ /OK@setpageregion where{ pop 67 OK@setpageregion
+ }{
+  <<
+   /PageSize [595 936]
+   /MediaType globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+  >> setpagedevice
+ }ifelse"
+*End
+
+*CloseUI: *PageRegion
+
+*% The following entries provide information about specific paper keywords.
+*DefaultImageableArea: A4
+*ImageableArea A4/A4: "13 13 582 829 "
+*ImageableArea A5/A5: "13 13 407 582 "
+*ImageableArea A6/A6: "13 13 284 407 "
+*ImageableArea B5/B5: "13 13 503 716 "
+*ImageableArea B6/B6: "13 13 350 503 "
+*ImageableArea Letter/Letter: "13 13 599 779 "
+*ImageableArea Legal/Legal: "13 13 599 995 "
+*ImageableArea OKLegal/Legal13.5: "13 13 599 959 "
+*ImageableArea FanFoldGermanLegal/Legal13: "13 13 599 923 "
+*ImageableArea Executive/Executive: "13 13 509 743 "
+*ImageableArea Postcard/Hagaki: "13 13 271 406 "
+*ImageableArea DoublePostcard/Oufuku Hagaki: "13 13 554 407 "
+*ImageableArea EnvChou3/Nagagata #3: "13 13 327 653 "
+*ImageableArea EnvChou4/Nagagata #4: "13 13 242 568 "
+*ImageableArea EnvYou4/Yougata #4: "13 13 285 653 "
+*ImageableArea EnvDL/DL: "13 13 299 611 "
+*ImageableArea EnvC5/C5: "13 13 446 636 "
+*ImageableArea Env10/Com-10: "13 13 284 671 "
+*ImageableArea Env9/Com-9: "13 13 266 626 "
+*ImageableArea EnvMonarch/Monarch: "13 13 266 527 "
+*ImageableArea 3x5/Index Card 3 x 5in: "13 13 203 347 "
+*ImageableArea 4x6/4 x 6in: "13 13 275 419 "
+*ImageableArea 5x7/5 x 7in: "13 13 347 491 "
+*ImageableArea Statement/Statement: "13 13 383 599 "
+*ImageableArea PRC16K184x260/16K 184 x 260mm: "13 13 509 724 "
+*ImageableArea PRC16K195x270/16K 195 x 270mm: "13 13 540 752 "
+*ImageableArea PRC16K197x273/16K 197 x 273mm: "13 13 545 761 "
+*ImageableArea B6HALF/B6 Half: "13 13 169 503 "
+*ImageableArea 8.5_SQ/8.5"SQ 8.5 x 8.5in: "13 13 599 599 "
+*ImageableArea Folio/Folio 210 x 330mm: "13 13 582 923 "
+
+*?ImageableArea: "
+ /cvp {20 string cvs print ( ) print}bind def
+ /upperright {10000 mul floor 10000 div}bind def
+ /lowerleft {10000 mul ceiling 10000 div}bind def
+ newpath clippath pathbbox
+ 4 -2 roll exch 2 {lowerleft cvp}repeat
+ exch 2 {upperright cvp}repeat flush"
+*End
+
+*% These provide the physical dimensions of the paper (by keyword)
+*DefaultPaperDimension: A4
+*PaperDimension A4/A4: "595 842"
+*PaperDimension A5/A5: "420 595"
+*PaperDimension A6/A6: "297 420"
+*PaperDimension B5/B5: "516 729"
+*PaperDimension B6/B6: "363 516"
+*PaperDimension Letter/Letter: "612 792"
+*PaperDimension Legal/Legal: "612 1008"
+*PaperDimension OKLegal/Legal13.5: "612 972"
+*PaperDimension FanFoldGermanLegal/Legal13: "612 936"
+*PaperDimension Executive/Executive: "522 756"
+*PaperDimension Postcard/Hagaki: "284 419"
+*PaperDimension DoublePostcard/Oufuku Hagaki: "567 420"
+*PaperDimension EnvChou3/Nagagata #3: "340 666"
+*PaperDimension EnvChou4/Nagagata #4: "255 581"
+*PaperDimension EnvYou4/Yougata #4: "298 666"
+*PaperDimension EnvDL/DL: "312 624"
+*PaperDimension EnvC5/C5: "459 649"
+*PaperDimension Env10/Com-10: "297 684"
+*PaperDimension Env9/Com-9: "279 639"
+*PaperDimension EnvMonarch/Monarch: "279 540"
+*PaperDimension 3x5/Index Card 3 x 5in: "216 360"
+*PaperDimension 4x6/4 x 6in: "288 432"
+*PaperDimension 5x7/5 x 7in: "360 504"
+*PaperDimension Statement/Statement: "396 612"
+*PaperDimension PRC16K184x260/16K 184 x 260mm: "522 737"
+*PaperDimension PRC16K195x270/16K 195 x 270mm: "553 765"
+*PaperDimension PRC16K197x273/16K 197 x 273mm: "558 774"
+*PaperDimension B6HALF/B6 Half: "182 516"
+*PaperDimension 8.5_SQ/8.5"SQ 8.5 x 8.5in: "612 612"
+*PaperDimension Folio/Folio 210 x 330mm: "595 936"
+
+*%=== Custom Paper Support =================
+*%Orientation and Margin (offsets) values are not utilized
+*MaxMediaWidth: "612.000"
+*MaxMediaHeight: "3745.000"
+*CenterRegistered: False
+*HWMargins: 13 13 13 13
+*NonUIOrderDependency: 60.0 DocumentSetup *CustomPageSize
+*CustomPageSize True: "
+ /DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource /setcustompage get exec
+ }{pop pop}ifelse"
+*End
+
+*LeadingEdge Short: ""
+*LeadingEdge Long: ""
+*DefaultLeadingEdge: Short
+
+*ParamCustomPageSize Width: 1 points 181.000 612.000
+*ParamCustomPageSize Height: 2 points 360.000 3745.000
+*ParamCustomPageSize WidthOffset: 3 points 0 0
+*ParamCustomPageSize HeightOffset: 4 points 0 0
+*ParamCustomPageSize Orientation: 5 int 0 3
+
+*RequiresPageRegion All: True
+
+*OpenGroup: Printing_Option/Job Options
+
+*% _____ Resolution ____________________________________
+*DefaultResolution: 600dpi
+*Resolution 600dpi: ""
+*?Resolution: "
+  save
+    currentpagedevice /HWResolution get
+    0 get
+    (          ) cvs print
+    (dpi)
+    = flush
+  restore
+"
+*End
+
+*% _____ Quality ______
+*OpenUI *OKResolution/Quality: PickOne
+
+*OrderDependency: 65.0 DocumentSetup *OKResolution
+*DefaultOKResolution: NORMAL
+
+*OKResolution GRADATION/ProQ/High Quality: "
+ /DriverOps /ProcSet 2 copy resourcestatus{
+  pop pop findresource
+  dup /headresolution 2 copy known{
+   get exec 600 eq{[600 600]}{[1200 600]}ifelse
+  }{pop pop [600 600]}ifelse
+  600 0 2 256 6 -1 roll /setokresolution get exec
+ }{pop pop}ifelse"
+*End
+
+*OKResolution FINE/Fine/Detail(600x1200): "
+ /DriverOps /ProcSet 2 copy resourcestatus{
+  pop pop findresource 
+  dup /headresolution 2 copy known{
+   get exec 600 eq{[600 1200]}{[1200 1200]}ifelse
+  }{pop pop [600 1200]}ifelse
+  600 0 1 2 6 -1 roll /setokresolution get exec
+ }{pop pop}ifelse"
+*End
+
+*OKResolution NORMAL/Normal (600x600): "
+ /DriverOps /ProcSet 2 copy resourcestatus{
+  pop pop findresource 
+  [600 600] 600 1 0 2 6 -1 roll /setokresolution get exec
+ }{pop pop}ifelse"
+*End
+
+*?OKResolution: "
+ globaldict /OK@_ResMode 2 copy known{
+  get [(NORMAL) (FINE) (GRADATION)] exch get
+ }{(Unknown)}ifelse = flush"
+*End
+
+*CloseUI: *OKResolution
+
+*% _____ Collate: driver UI only _____
+*OpenUI *OKCollate/Collate: Boolean
+
+*OrderDependency: 35.0 DocumentSetup *OKCollate
+*DefaultOKCollate: False
+*OKCollate False/No: " << /Collate false >> setpagedevice"
+*OKCollate True/Yes: "
+ 1 dict begin
+ /@Copies currentpagedevice /NumCopies get def
+ << /Collate false /NumCopies 1 >> setpagedevice
+ << /Collate true /NumCopies @Copies >> setpagedevice
+ end"
+*End
+
+*?OKCollate: "
+ currentpagedevice /Collate 2 copy known{
+ get {(True)}{(False)}ifelse
+ }{pop pop (Unknown)}ifelse = flush"
+*End
+
+*CloseUI: *OKCollate
+
+*% _____ Page rotate _____
+*OpenUI *OKEnvRotate/Page Rotate: Boolean
+*OrderDependency: 190.0 PageSetup *OKEnvRotate
+*DefaultOKEnvRotate: False
+
+*OKEnvRotate False/Normal: "
+ /DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource /pagerotate get exec
+ }{pop pop}ifelse"
+*End
+
+*OKEnvRotate True/Rotate: "
+ globaldict /OK@_pagerotate true put
+ /DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource /pagerotate get exec
+ }{pop pop}ifelse"
+*End
+
+*?OKEnvRotate: "
+ globaldict /OK@_pagerotate 2 copy known{get}{pop pop false}ifelse
+ {(True)}{(False)}ifelse = flush"
+*End
+
+*CloseUI: *OKEnvRotate
+
+*CloseGroup: Printing_Option
+
+*OpenGroup: Image_Option/Image Option
+
+*% _____ Image Smoothing _____
+*OpenUI *OKImageSmoothing/Image Smoothing: Boolean
+*OrderDependency: 161.0 DocumentSetup *OKImageSmoothing
+*DefaultOKImageSmoothing: False
+*OKImageSmoothing True/On: "globaldict /OK@b_ISmooth true put"
+*OKImageSmoothing False/Off: "globaldict /OK@b_ISmooth false put"
+*?OKImageSmoothing: "
+ globaldict /OK@b_ISmooth 2 copy known{get}{pop pop false}ifelse
+ {(True)}{(False)}ifelse = flush"
+*End
+
+*CloseUI: *OKImageSmoothing
+
+*% _____ Trapping _____
+*OpenUI *OKTrapping/Trapping: PickOne
+*OrderDependency: 64.0 DocumentSetup *OKTrapping
+*DefaultOKTrapping: PrinterDefault
+
+*OKTrapping PrinterDefault/Printer Setting: ""
+
+*OKTrapping Off/OFF: "
+/ColorRendering /ProcSet 2 copy resourcestatus{
+ pop pop findresource /setoktrap 2 copy known{
+  get 0 exch exec}{pop pop}ifelse
+ }{pop pop}ifelse"
+*End
+
+*OKTrapping Narrow/Narrow: "
+/ColorRendering /ProcSet 2 copy resourcestatus{
+ pop pop findresource /setoktrap 2 copy known{
+  get 1 exch exec}{pop pop}ifelse
+ }{pop pop}ifelse"
+*End
+
+*OKTrapping Wide/Wide: "
+/ColorRendering /ProcSet 2 copy resourcestatus{
+ pop pop findresource /setoktrap 2 copy known{
+  get 2 exch exec}{pop pop}ifelse
+ }{pop pop}ifelse"
+*End
+
+*?OKTrapping: "
+/ColorRendering /ProcSet 2 copy resourcestatus{
+pop pop findresource  /oktrap get [ (Off) (Narrow)  (Wide) ] exch exec get
+}{pop pop (UnKnown)}ifelse = flush"
+*End
+
+*CloseUI: *OKTrapping
+
+*% _____ Adjust ultra fine line _____
+*OpenUI *OKHairLine/Adjust ultra fine lines: Boolean
+*OrderDependency: 85.0 DocumentSetup *OKHairLine
+*DefaultOKHairLine: True
+*OKHairLine True/Yes: "
+ globaldict /OK@bstrokeadj true put
+ true setstrokeadjust"
+*End
+
+*OKHairLine False/No: "globaldict /OK@bstrokeadj false put"
+
+*?OKHairLine: "
+ globaldict /OK@bstrokeadj 2 copy known{get}{pop pop false}ifelse
+ {(True)}{(False)}ifelse = flush"
+*End
+
+*CloseUI: *OKHairLine
+
+*CloseGroup: Image_Option
+
+*OpenGroup: Color/Color Option
+
+*% _____ OKI Color Control _____
+*OpenUI *OKControl/Color Mode: PickOne
+*OrderDependency: 105.0 DocumentSetup *OKControl
+*DefaultOKControl: Auto
+
+*OKControl Auto/Automatic: "
+ globaldict /OK@ColorMono 2 copy known{pop pop}{0 put}ifelse
+ /DriverOps /ProcSet 2 copy resourcestatus{
+  pop pop findresource
+  globaldict /OK@ColorMono get 1 eq{
+   5 4 false <</SelectHalftone 1>> true 6 -1 roll }{
+   dup dup
+   currentpagedevice /UseCIEColor 2 copy known{get not{
+   dup dup
+   1 exch /setdri_cm get exec 0 exch /setcrd get exec
+   }if}{pop pop}ifelse
+   <</CMYKTransform 1>> exch /setdrinfo get exec
+   0 exch /setdri_bk get exec
+   1 0 false <</SelectColorMode 0 /SelectHalftone 1>> false 6 -1 roll
+  }ifelse
+  /setcolmode 2 copy known{get exec}{7{pop}repeat}ifelse
+ }{pop pop}ifelse"
+*End
+
+*OKControl Office/Office Color: "
+ globaldict /OK@ColorMono 2 copy known{pop pop}{0 put}ifelse
+ /DriverOps /ProcSet 2 copy resourcestatus{
+  pop pop findresource
+  globaldict /OK@ColorMono get 1 eq{
+   5 4 false <</SelectHalftone 1>> true 6 -1 roll }{
+   1 1 false <</SelectColorMode 0 /SelectHalftone 1>> false 6 -1 roll
+   }ifelse
+  /setcolmode 2 copy known{get exec}{7{pop}repeat}ifelse
+ }{pop pop}ifelse"
+*End
+
+*OKControl NoPrCm/No Color Matching: "
+ globaldict /OK@ColorMono 2 copy known{pop pop}{0 put}ifelse
+ /DriverOps /ProcSet 2 copy resourcestatus{
+  pop pop findresource
+  globaldict /OK@ColorMono get 1 eq{
+   5 4 false <</SelectHalftone 1>> true 6 -1 roll }{
+   4 3 false <</SelectColorMode 0 /SelectColorMatching 0 /SelectHalftone 1>>
+   true 6 -1 roll
+   }ifelse
+  /setcolmode 2 copy known{get exec}{7{pop}repeat}ifelse
+ }{pop pop}ifelse"
+*End
+
+*OKControl Gray/Gray Scale Print: "
+ /DriverOps /ProcSet 2 copy resourcestatus{
+  pop pop findresource
+  5 4 false <</SelectHalftone 1>> true 6 -1 roll
+  /setcolmode 2 copy known{get exec}{7{pop}repeat}ifelse
+ }{pop pop}ifelse
+ /DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource dup 1 exch /setprtspeed get exec
+ /unloadscreenobo get exec
+ userdict /setcolorspace 2 copy known {undef}{pop pop}ifelse
+ }{pop pop}ifelse"
+*End
+
+*?OKControl: "
+ globaldict /OK@_Control 2 copy known{
+ get dup 1 ne{
+  [(UnKnown) (Auto) (Office) (NoPrCm) (Gray) ] exch get
+ }{
+  pop currentpagedevice /UseCIEColor 2 copy known{get{(UseCRD)}{(ASIC)}ifelse}{(Unknown)}ifelse
+ }ifelse
+ }{pop pop (UnKnown)}ifelse = flush"
+*End
+
+*CloseUI: *OKControl
+
+*% _____ Used Printer Halftone _____
+*OpenUI *OKAlwaysPrnHT/Always use printer halftone: Boolean
+*OrderDependency: 185.0 DocumentSetup *OKAlwaysPrnHT
+*DefaultOKAlwaysPrnHT: True
+
+*OKAlwaysPrnHT True/On: "
+ /DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource /initalwayprnht get exec
+ globaldict /OK@_AlwaysPrHT true put
+ }{pop pop}ifelse"
+*End
+
+*OKAlwaysPrnHT False/Off: "globaldict /OK@_AlwaysPrHT false put"
+
+*?OKAlwaysPrnHT: "
+globaldict /OK@_AlwaysPrHT 2 copy known
+ {get {(True)}{(False)}ifelse}{pop pop (False)}ifelse = flush"
+*End
+
+*CloseUI: *OKAlwaysPrnHT
+
+*% _____ Black Overprint _____
+*OpenUI *OKOverPrint/Black Overprint: Boolean
+*OrderDependency: 195.0 DocumentSetup *OKOverPrint
+*DefaultOKOverPrint: False
+*OKOverPrint False/Off: "
+ globaldict /OK@_K_OVP false put
+ /ColorRendering /ProcSet 2 copy resourcestatus{
+  pop pop findresource 
+  globaldict /OK@_ColorSelect 2 copy known not { pop pop pop }{
+   get 1 le {1}{0} ifelse exch /setblackpreservation get exec
+ }ifelse
+}{pop pop}ifelse"
+*End
+*OKOverPrint True/On: "
+ globaldict /OK@_K_OVP true put
+ /ColorRendering /ProcSet 2 copy resourcestatus{
+  pop pop findresource 
+  globaldict /OK@_ColorSelect 2 copy known not { pop pop pop }{
+   get 1 le {1}{0} ifelse exch /setblackpreservation get exec
+ }ifelse
+}{pop pop}ifelse"
+*End
+
+*?OKOverPrint: "
+ globaldict /OK@_K_OVP 2 copy known{get}{pop pop false}ifelse
+ {(True)}{(False)}ifelse = flush"
+*End
+
+*CloseUI: *OKOverPrint
+
+*% _____ Toner Save _____
+*OpenUI *OKOutputMode/Toner Saving: PickOne
+
+*OrderDependency: 75.0 DocumentSetup *OKOutputMode
+*DefaultOKOutputMode: PrinterSetting
+*OKOutputMode PrinterSetting/Printer Setting : ""
+
+*OKOutputMode False/Off: "
+<< /PostRenderingEnhance false >> setpagedevice
+0 /DriverOps /ProcSet 2 copy resourcestatus{
+pop pop findresource /settonersavevalue get exec}
+{pop pop}ifelse"
+*End
+
+*OKOutputMode Small/Save Level Low : "
+<< /PostRenderingEnhance true >> setpagedevice
+globaldict /OK@_ResMode 2 copy known { get 1 ge }{pop pop true}ifelse
+{0}{15}ifelse
+/DriverOps /ProcSet 2 copy resourcestatus{
+pop pop findresource /settonersavevalue get exec}
+{pop pop}ifelse"
+*End
+
+*OKOutputMode Intermediate/Save Level Middle : "
+<< /PostRenderingEnhance true >> setpagedevice
+globaldict /OK@_ResMode 2 copy known { get 1 ge }{pop pop true}ifelse
+{0}{35}ifelse
+/DriverOps /ProcSet 2 copy resourcestatus{
+pop pop findresource /settonersavevalue get exec}
+{pop pop}ifelse"
+*End
+
+*OKOutputMode Large/Save Level High : "
+<< /PostRenderingEnhance true >> setpagedevice
+globaldict /OK@_ResMode 2 copy known { get 1 ge }{pop pop true}ifelse
+{0}{50}ifelse
+/DriverOps /ProcSet 2 copy resourcestatus{
+pop pop findresource /settonersavevalue get exec}
+{pop pop}ifelse"
+*End
+
+*?OKOutputMode: "
+ currentpagedevice /PostRenderingEnhance get{(True)}{(False)}ifelse = flush"
+*End
+
+*CloseUI: *OKOutputMode
+
+*% _____ 100% Black _____
+*OpenUI *OKOutputModeBlack/Do not save 100% black toner : Boolean
+*OrderDependency: 76.0 DocumentSetup *OKOutputModeBlack
+*DefaultOKOutputModeBlack: False
+*OKOutputModeBlack False/Off: "
+0 /DriverOps /ProcSet 2 copy resourcestatus{
+pop pop findresource /settonersavetarget get exec}
+{pop pop}ifelse"
+*End
+
+*OKOutputModeBlack True/On : "
+1 /DriverOps /ProcSet 2 copy resourcestatus{
+pop pop findresource /settonersavetarget get exec}
+{pop pop}ifelse"
+*End
+
+*?OKOutputModeBlack: "
+/DriverOps /ProcSet 2 copy resourcestatus{
+pop pop findresource /tonersavetarget get exec
+}{pop pop (UnKnown)}ifelse = flush"
+*End
+
+*CloseUI: *OKOutputModeBlack
+
+*% _____ Screen obo _____
+*OpenUI *OKScreenObo/Use Optimized Gray Scale halftones: Boolean
+*OrderDependency: 62.0 DocumentSetup *OKScreenObo
+*DefaultOKScreenObo: False
+*OKScreenObo True/Yes: "globaldict /OK@bscreenobo true put"
+*OKScreenObo False/No: "globaldict /OK@bscreenobo false put"
+
+*?OKScreenObo: "
+ globaldict /OK@bscreenobo 2 copy known{get}{pop pop false}ifelse
+ {(True)}{(False)}ifelse = flush"
+*End
+
+*CloseUI: *OKScreenObo
+
+*% _____ Color Separation Order _____
+*OpenUI *OKSeparationorder/Separations: PickOne
+*OrderDependency: 102.0 DocumentSetup *OKSeparationorder
+*DefaultOKSeparationorder: OFF
+*OKSeparationorder OFF/Off: " << /Separations false >> setpagedevice"
+*OKSeparationorder CMYK/CMYK: "
+ << /Separations true >> setpagedevice
+ << /SeparationOrder [/Cyan /Magenta /Yellow /Black] >> setpagedevice"
+*End
+
+*OKSeparationorder CMY/CMY: "
+ << /Separations true >> setpagedevice
+ << /SeparationOrder [/Cyan /Magenta /Yellow] >> setpagedevice"
+*End
+
+*OKSeparationorder Cyan/OnlyCyan: "
+ << /Separations true >> setpagedevice
+ << /SeparationOrder [/Cyan] >> setpagedevice"
+*End
+
+*OKSeparationorder Magenta/OnlyMagenta: "
+ << /Separations true >> setpagedevice
+ << /SeparationOrder [/Magenta] >> setpagedevice"
+*End
+
+*OKSeparationorder Yellow/OnlyYellow: "
+ << /Separations true >> setpagedevice
+ << /SeparationOrder [/Yellow] >> setpagedevice"
+*End
+
+*OKSeparationorder Black/OnlyBlack: "
+ << /Separations true >> setpagedevice
+ << /SeparationOrder [/Black] >> setpagedevice"
+*End
+
+*?OKSeparationorder: "
+ /DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource
+ [(OFF) (CMYK) (CMY) (Cyan) (Magenta) (Yellow) (Black)] exch /qseparation get exec
+ }{pop pop (Unknown)}ifelse = flush"
+*End
+
+*CloseUI: *OKSeparationorder
+
+*CloseGroup: Color
+
+*OpenGroup: Color_Office/Office Color
+
+*% _____ Color Rendering Style for ASIC _____
+*% OKColorRenderStyle should be located at the last selection
+*OpenUI *OKColorRenderStyle/Color Setting: PickOne
+
+*OrderDependency: 150.0 DocumentSetup *OKColorRenderStyle
+*DefaultOKColorRenderStyle: Auto
+
+*OKColorRenderStyle Auto/Monitor - Auto: "
+ globaldict /OK@_ColorSelect 2 copy known{ get 1 eq{
+ currentpagedevice /UseCIEColor 2 copy known{get not{
+ /DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource dup 1 exch /setdri_cm get exec 0 exch /setcrd get exec
+ }{pop pop}ifelse
+ }if}{pop pop}ifelse
+ }if }{pop pop}ifelse"
+*End
+
+*OKColorRenderStyle Natural/Monitor - Perceptual: "
+ globaldict /OK@_ColorSelect 2 copy known{ get 1 eq{
+ currentpagedevice /UseCIEColor 2 copy known{get not{
+ /DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource dup 2 exch /setdri_cm get exec 1 exch /setcrd get exec
+ /ColorRendering /ProcSet 2 copy resourcestatus{
+ pop pop findresource dup
+%ccmp_nt_tmp.asc -1
+<00000000437F0000400CCCCD3F800000400CCCCD3F80000040
+0CCCCD3F8000003F23D70A3EA8F5C33E99999A3F19999A3E19
+999A3D75C28F3EA01A373EA872B0000CCCCD00000000FD650B
+11F1180000EF0000000000000000000000000008001220000D
+0000000000000000000000000D0000BDBF000000DCF8000096
+B450633C780000000000004279246C7879402F2364A8AA82B1
+A6AB83634356549FAF95C0C6C0B800481B270047831E322F00
+3E23000000285078A0FBF8F8FDF6F1F8EC3EB0FF973EB78D50
+00000000000000000000000000000000000000000000000000
+0000000000000000000000000000004198000041A0000041AE
+3D713F8000003F30A3D73F800000418000003F800000000000
+000000000000000000419A666641A00000418400003F800000
+3F30A3D73F80000041FE66663F800000417000000000000000
+00000041F000000000058F09C70DA3114C14D418431BA01EEE
+2230256828982BC02EC031A634B837F33B5B3EEE42AE46984A
+AC4EE9534E57D95C8561C767466CE17290784F7E1783E289A7
+8F62950C9A9EA014A54BA9ECAE6BB2C3B6F2BAF8BED4C285C6
+0AC962CC8FCF92D26AD4C2D78BDAB3DE13E19BE53FE8F8ECBF
+F092F46AF847FC24FFFF00001B3B2F6F41DA584E72538DACA7
+B1BE25CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1
+BE25CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE
+25CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE25
+CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE25CF
+BFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE25CFBF
+E58DFFFF00002C6D52E777699AB4BD1CDED5FFFF00002C6D52
+E777699AB4BD1CDED5FFFF00002C6D52E777699AB4BD1CDED5
+FFFF00002C6D52E777699AB4BD1CDED5FFFF00002C6D52E777
+699AB4BD1CDED5FFFF00002C6D52E777699AB4BD1CDED5FFFF
+000000000000000000000000000000003DCCCCCD0000000000
+00000000000000000000000000000000000000000000000000
+00010101007F1020000002040C0700000000> exch /setccmparamnt get exec
+%ccmp_nt_tmp.asc -1
+<00000000437F0000400CCCCD3F800000400CCCCD3F80000040
+0CCCCD3F8000003F23D70A3EA8F5C33E99999A3F19999A3E19
+999A3D75C28F3EA01A373EA872B0000CCCCD00000000FD650B
+11F1180000EF0000000000000000000000000008001220000D
+0000000000000000000000000D0000BDBF000000DCF8000096
+B450633C780000000000004279246C7879402F2364A8AA82B1
+A6AB83634356549FAF95C0C6C0B800481B270047831E322F00
+3E23000000285078A0FBF8F8FDF6F1F8EC3EB0FF973EB78D50
+00000000000000000000000000000000000000000000000000
+0000000000000000000000000000004198000041A0000041AE
+3D713F8000003F30A3D73F800000418000003F800000000000
+000000000000000000419A666641A00000418400003F800000
+3F30A3D73F80000041FE66663F800000417000000000000000
+00000041F000000000058F09C70DA3114C14D418431BA01EEE
+2230256828982BC02EC031A634B837F33B5B3EEE42AE46984A
+AC4EE9534E57D95C8561C767466CE17290784F7E1783E289A7
+8F62950C9A9EA014A54BA9ECAE6BB2C3B6F2BAF8BED4C285C6
+0AC962CC8FCF92D26AD4C2D78BDAB3DE13E19BE53FE8F8ECBF
+F092F46AF847FC24FFFF00001B3B2F6F41DA584E72538DACA7
+B1BE25CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1
+BE25CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE
+25CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE25
+CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE25CF
+BFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE25CFBF
+E58DFFFF00002C6D52E777699AB4BD1CDED5FFFF00002C6D52
+E777699AB4BD1CDED5FFFF00002C6D52E777699AB4BD1CDED5
+FFFF00002C6D52E777699AB4BD1CDED5FFFF00002C6D52E777
+699AB4BD1CDED5FFFF00002C6D52E777699AB4BD1CDED5FFFF
+000000000000000000000000000000003DCCCCCD0000000000
+00000000000000000000000000000000000000000000000000
+00010101007F1020000002040C0700000000> exch /setccmparamnv get exec
+currentpagedevice setpagedevice
+ }{pop pop}ifelse
+ }{pop pop}ifelse
+ }if}{pop pop}ifelse
+ }if}{pop pop}ifelse"
+*End
+
+*OKColorRenderStyle Vivid/Monitor - Vivid: "
+ globaldict /OK@_ColorSelect 2 copy known{ get 1 eq{
+ currentpagedevice /UseCIEColor 2 copy known{get not{
+ /DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource dup 3 exch /setdri_cm get exec 2 exch /setcrd get exec
+ /ColorRendering /ProcSet 2 copy resourcestatus{
+ pop pop findresource dup
+%ccmp_nv_tmp.asc -2
+<00000000437F0000400CCCCD3F800000400CCCCD3F80000040
+0CCCCD3F8000003F23D70A3EA8F5C33E99999A3F19999A3E19
+999A3D75C28F3EA01A373EA872B0000CCCCD00000000FB6500
+10F4650000F300EE0000000000000000000000000012200016
+0000000000000000000000000000000000000000C300E00096
+B450633C78000000000000339B16A147444644404487828880
+878D3A354649444C7A768586868700001E1B231DC8313C3A22
+4923000000285078A0FBF8F8FDF6F1F8EC3EB0FF973EB78D50
+00000000000000000000000000000000000000000000000000
+0000000000000000000000000000004198000041A0000041AE
+3D713F8000003F30A3D73F800000418000003F800000000000
+000000000000000000419A666641A00000418400003F800000
+3F30A3D73F80000041FE66663F800000417000000000000000
+00000041F000000000058F09C70DA3114C14D418431BA01EEE
+2230256828982BC02EC031A634B837F33B5B3EEE42AE46984A
+AC4EE9534E57D95C8561C767466CE17290784F7E1783E289A7
+8F62950C9A9EA014A54BA9ECAE6BB2C3B6F2BAF8BED4C285C6
+0AC962CC8FCF92D26AD4C2D78BDAB3DE13E19BE53FE8F8ECBF
+F092F46AF847FC24FFFF00001B3B2F6F41DA584E72538DACA7
+B1BE25CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1
+BE25CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE
+25CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE25
+CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE25CF
+BFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE25CFBF
+E58DFFFF00002C6D52E777699AB4BD1CDED5FFFF00002C6D52
+E777699AB4BD1CDED5FFFF00002C6D52E777699AB4BD1CDED5
+FFFF00002C6D52E777699AB4BD1CDED5FFFF00002C6D52E777
+699AB4BD1CDED5FFFF00002C6D52E777699AB4BD1CDED5FFFF
+000000000000000000000000000000003DCCCCCD0000000000
+0000000000000000000000000000003F800000000000000000
+00010101017F1020000002040C0700000000> exch /setccmparamnt get exec
+%ccmp_nv_tmp.asc -2
+<00000000437F0000400CCCCD3F800000400CCCCD3F80000040
+0CCCCD3F8000003F23D70A3EA8F5C33E99999A3F19999A3E19
+999A3D75C28F3EA01A373EA872B0000CCCCD00000000FB6500
+10F4650000F300EE0000000000000000000000000012200016
+0000000000000000000000000000000000000000C300E00096
+B450633C78000000000000339B16A147444644404487828880
+878D3A354649444C7A768586868700001E1B231DC8313C3A22
+4923000000285078A0FBF8F8FDF6F1F8EC3EB0FF973EB78D50
+00000000000000000000000000000000000000000000000000
+0000000000000000000000000000004198000041A0000041AE
+3D713F8000003F30A3D73F800000418000003F800000000000
+000000000000000000419A666641A00000418400003F800000
+3F30A3D73F80000041FE66663F800000417000000000000000
+00000041F000000000058F09C70DA3114C14D418431BA01EEE
+2230256828982BC02EC031A634B837F33B5B3EEE42AE46984A
+AC4EE9534E57D95C8561C767466CE17290784F7E1783E289A7
+8F62950C9A9EA014A54BA9ECAE6BB2C3B6F2BAF8BED4C285C6
+0AC962CC8FCF92D26AD4C2D78BDAB3DE13E19BE53FE8F8ECBF
+F092F46AF847FC24FFFF00001B3B2F6F41DA584E72538DACA7
+B1BE25CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1
+BE25CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE
+25CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE25
+CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE25CF
+BFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE25CFBF
+E58DFFFF00002C6D52E777699AB4BD1CDED5FFFF00002C6D52
+E777699AB4BD1CDED5FFFF00002C6D52E777699AB4BD1CDED5
+FFFF00002C6D52E777699AB4BD1CDED5FFFF00002C6D52E777
+699AB4BD1CDED5FFFF00002C6D52E777699AB4BD1CDED5FFFF
+000000000000000000000000000000003DCCCCCD0000000000
+0000000000000000000000000000003F800000000000000000
+00010101017F1020000002040C0700000000> exch /setccmparamnv get exec
+currentpagedevice setpagedevice
+ }{pop pop}ifelse
+ }{pop pop}ifelse
+ }if}{pop pop}ifelse
+ }if}{pop pop}ifelse"
+*End
+
+*OKColorRenderStyle HighBrightness/Monitor - light: "
+ globaldict /OK@_ColorSelect 2 copy known{ get 1 eq{
+ currentpagedevice /UseCIEColor 2 copy known{get not{
+ /DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource dup 5 exch /setdri_cm get exec 3 exch /setcrd get exec
+ /ColorRendering /ProcSet 2 copy resourcestatus{
+ pop pop findresource dup
+%ccmp_nl_tmp.asc -3
+<00000000437F0000400CCCCD3F800000400CCCCD3F80000040
+0CCCCD3F8000003F23D70A3EA8F5C33E99999A3F19999A3E19
+999A3D75C28F3EA01A373EA872B0000CCCCD00000000FD6500
+11EE650000F300EE00000000000000000000000000121F000D
+0000000000000000000000000000133E29200000C8E1C0E096
+B450633C780000000000004683478543444846193188878783
+808E3540494A12197C7F828885843B4F36350000852F263C00
+0023000000285078A0FBF8F8FDF6F1F8EC3EB0FF973EB78D50
+00000000000000000000000000000000000000000000000000
+0000000000000000000000000000004198000041A0000041AE
+3D713F8000003F30A3D73F800000418000003F800000000000
+000000000000000000419A666641A00000418400003F800000
+3F30A3D73F80000041FE66663F800000417000000000000000
+00000041F000000000058F09C70DA3114C14D418431BA01EEE
+2230256828982BC02EC031A634B837F33B5B3EEE42AE46984A
+AC4EE9534E57D95C8561C767466CE17290784F7E1783E289A7
+8F62950C9A9EA014A54BA9ECAE6BB2C3B6F2BAF8BED4C285C6
+0AC962CC8FCF92D26AD4C2D78BDAB3DE13E19BE53FE8F8ECBF
+F092F46AF847FC24FFFF00001B3B2F6F41DA584E72538DACA7
+B1BE25CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1
+BE25CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE
+25CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE25
+CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE25CF
+BFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE25CFBF
+E58DFFFF00002C6D52E777699AB4BD1CDED5FFFF00002C6D52
+E777699AB4BD1CDED5FFFF00002C6D52E777699AB4BD1CDED5
+FFFF00002C6D52E777699AB4BD1CDED5FFFF00002C6D52E777
+699AB4BD1CDED5FFFF00002C6D52E777699AB4BD1CDED5FFFF
+000000000000000000000000000000003DCCCCCD0000000000
+00000000000000000000000000000000000000000000000000
+00010101027F1020000002040C0700000000> exch /setccmparamnt get exec
+%ccmp_nl_tmp.asc -3
+<00000000437F0000400CCCCD3F800000400CCCCD3F80000040
+0CCCCD3F8000003F23D70A3EA8F5C33E99999A3F19999A3E19
+999A3D75C28F3EA01A373EA872B0000CCCCD00000000FD6500
+11EE650000F300EE00000000000000000000000000121F000D
+0000000000000000000000000000133E29200000C8E1C0E096
+B450633C780000000000004683478543444846193188878783
+808E3540494A12197C7F828885843B4F36350000852F263C00
+0023000000285078A0FBF8F8FDF6F1F8EC3EB0FF973EB78D50
+00000000000000000000000000000000000000000000000000
+0000000000000000000000000000004198000041A0000041AE
+3D713F8000003F30A3D73F800000418000003F800000000000
+000000000000000000419A666641A00000418400003F800000
+3F30A3D73F80000041FE66663F800000417000000000000000
+00000041F000000000058F09C70DA3114C14D418431BA01EEE
+2230256828982BC02EC031A634B837F33B5B3EEE42AE46984A
+AC4EE9534E57D95C8561C767466CE17290784F7E1783E289A7
+8F62950C9A9EA014A54BA9ECAE6BB2C3B6F2BAF8BED4C285C6
+0AC962CC8FCF92D26AD4C2D78BDAB3DE13E19BE53FE8F8ECBF
+F092F46AF847FC24FFFF00001B3B2F6F41DA584E72538DACA7
+B1BE25CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1
+BE25CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE
+25CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE25
+CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE25CF
+BFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE25CFBF
+E58DFFFF00002C6D52E777699AB4BD1CDED5FFFF00002C6D52
+E777699AB4BD1CDED5FFFF00002C6D52E777699AB4BD1CDED5
+FFFF00002C6D52E777699AB4BD1CDED5FFFF00002C6D52E777
+699AB4BD1CDED5FFFF00002C6D52E777699AB4BD1CDED5FFFF
+000000000000000000000000000000003DCCCCCD0000000000
+00000000000000000000000000000000000000000000000000
+00010101027F1020000002040C0700000000> exch /setccmparamnv get exec
+currentpagedevice setpagedevice
+ }{pop pop}ifelse
+ }{pop pop}ifelse
+ }if}{pop pop}ifelse
+ }if}{pop pop}ifelse"
+*End
+
+*OKColorRenderStyle DigCam/Adobe RGB: "
+ globaldict /OK@_ColorSelect 2 copy known{ get 1 eq{
+ currentpagedevice /UseCIEColor 2 copy known{get not{
+ /DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource dup 4 exch /setdri_cm get exec 4 exch /setcrd get exec
+ /ColorRendering /ProcSet 2 copy resourcestatus{
+ pop pop findresource dup
+%ccmp_dc_tmp.asc -4
+<00000000437F0000400CCCCD3F800000400CCCCD3F80000040
+0CCCCD3F8000003F2600193EA965D43E6BB4913F3399C43E1F
+A3773D874B843EB0FFFA3EB78C95000CCCCD00000000000000
+00000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000DC96
+B450633C7800000000000033B40EBD424448473D3F82888C85
+7F8C43444648434988858487868B415432343B3AC825334021
+4923000000285078A0FBF8F8FDF6F1F8EC3EB0FF973EB78D50
+00000000000000000000000000000000000000000000000000
+0000000000000000000000000000004198000041A0000041AE
+3D713F8000003F30A3D73F800000418000003F800000000000
+000000000000000000419A666641A00000418400003F800000
+3F30A3D73F80000041FE66663F800000417000000000000000
+00000041F000000000058F09C70DA3114C14D418431BA01EEE
+2230256828982BC02EC031A634B837F33B5B3EEE42AE46984A
+AC4EE9534E57D95C8561C767466CE17290784F7E1783E289A7
+8F62950C9A9EA014A54BA9ECAE6BB2C3B6F2BAF8BED4C285C6
+0AC962CC8FCF92D26AD4C2D78BDAB3DE13E19BE53FE8F8ECBF
+F092F46AF847FC24FFFF00001B3B2F6F41DA584E72538DACA7
+B1BE25CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1
+BE25CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE
+25CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE25
+CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE25CF
+BFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE25CFBF
+E58DFFFF00002C6D52E777699AB4BD1CDED5FFFF00002C6D52
+E777699AB4BD1CDED5FFFF00002C6D52E777699AB4BD1CDED5
+FFFF00002C6D52E777699AB4BD1CDED5FFFF00002C6D52E777
+699AB4BD1CDED5FFFF00002C6D52E777699AB4BD1CDED5FFFF
+000000000000000000000000000000003DCCCCCD0000000000
+0000000000000000000000000000003F800000000000000000
+0001010103801020000002040C0700000000> exch /setccmparamnt get exec
+%ccmp_dc_tmp.asc -4
+<00000000437F0000400CCCCD3F800000400CCCCD3F80000040
+0CCCCD3F8000003F2600193EA965D43E6BB4913F3399C43E1F
+A3773D874B843EB0FFFA3EB78C95000CCCCD00000000000000
+00000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000DC96
+B450633C7800000000000033B40EBD424448473D3F82888C85
+7F8C43444648434988858487868B415432343B3AC825334021
+4923000000285078A0FBF8F8FDF6F1F8EC3EB0FF973EB78D50
+00000000000000000000000000000000000000000000000000
+0000000000000000000000000000004198000041A0000041AE
+3D713F8000003F30A3D73F800000418000003F800000000000
+000000000000000000419A666641A00000418400003F800000
+3F30A3D73F80000041FE66663F800000417000000000000000
+00000041F000000000058F09C70DA3114C14D418431BA01EEE
+2230256828982BC02EC031A634B837F33B5B3EEE42AE46984A
+AC4EE9534E57D95C8561C767466CE17290784F7E1783E289A7
+8F62950C9A9EA014A54BA9ECAE6BB2C3B6F2BAF8BED4C285C6
+0AC962CC8FCF92D26AD4C2D78BDAB3DE13E19BE53FE8F8ECBF
+F092F46AF847FC24FFFF00001B3B2F6F41DA584E72538DACA7
+B1BE25CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1
+BE25CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE
+25CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE25
+CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE25CF
+BFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE25CFBF
+E58DFFFF00002C6D52E777699AB4BD1CDED5FFFF00002C6D52
+E777699AB4BD1CDED5FFFF00002C6D52E777699AB4BD1CDED5
+FFFF00002C6D52E777699AB4BD1CDED5FFFF00002C6D52E777
+699AB4BD1CDED5FFFF00002C6D52E777699AB4BD1CDED5FFFF
+000000000000000000000000000000003DCCCCCD0000000000
+0000000000000000000000000000003F800000000000000000
+0001010103801020000002040C0700000000> exch /setccmparamnv get exec
+currentpagedevice setpagedevice
+ }{pop pop}ifelse
+ }{pop pop}ifelse
+ }if}{pop pop}ifelse
+ }if}{pop pop}ifelse"
+*End
+
+*OKColorRenderStyle sRGB/sRGB: "
+ globaldict /OK@_ColorSelect 2 copy known{ get 1 eq{
+ currentpagedevice /UseCIEColor 2 copy known{get not{
+ /DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource dup 6 exch /setdri_cm get exec 5 exch /setcrd get exec
+ /ColorRendering /ProcSet 2 copy resourcestatus{
+ pop pop findresource dup
+%ccmp_sr_tmp.asc -5
+<00000000437F0000400CCCCD3F800000400CCCCD3F80000040
+0CCCCD3F8000003F23D70A3EA8F5C33E99999A3F19999A3E19
+999A3D75C28F3EA01A373EA872B0000CCCCD00000000000000
+00000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000D796
+B450633C7800000000000032B50EBD424549453C3F83888D86
+7C854345484A424785858684868B3249327A3B38C829343821
+4D23000000285078A0FBF8F8FDF6F1F8EC3EB0FF973EB78D50
+00000000000000000000000000000000000000000000000000
+0000000000000000000000000000004198000041A0000041AE
+3D713F8000003F30A3D73F800000418000003F800000000000
+000000000000000000419A666641A00000418400003F800000
+3F30A3D73F80000041FE66663F800000417000000000000000
+00000041F000000000058F09C70DA3114C14D418431BA01EEE
+2230256828982BC02EC031A634B837F33B5B3EEE42AE46984A
+AC4EE9534E57D95C8561C767466CE17290784F7E1783E289A7
+8F62950C9A9EA014A54BA9ECAE6BB2C3B6F2BAF8BED4C285C6
+0AC962CC8FCF92D26AD4C2D78BDAB3DE13E19BE53FE8F8ECBF
+F092F46AF847FC24FFFF00001B3B2F6F41DA584E72538DACA7
+B1BE25CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1
+BE25CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE
+25CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE25
+CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE25CF
+BFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE25CFBF
+E58DFFFF00002C6D52E777699AB4BD1CDED5FFFF00002C6D52
+E777699AB4BD1CDED5FFFF00002C6D52E777699AB4BD1CDED5
+FFFF00002C6D52E777699AB4BD1CDED5FFFF00002C6D52E777
+699AB4BD1CDED5FFFF00002C6D52E777699AB4BD1CDED5FFFF
+000000000000000000000000000000003DCCCCCD0000000000
+0000000000000000000000000000003F800000000000000000
+0001010104801020000002040C0700000000> exch /setccmparamnt get exec
+%ccmp_sr_tmp.asc -5
+<00000000437F0000400CCCCD3F800000400CCCCD3F80000040
+0CCCCD3F8000003F23D70A3EA8F5C33E99999A3F19999A3E19
+999A3D75C28F3EA01A373EA872B0000CCCCD00000000000000
+00000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000D796
+B450633C7800000000000032B50EBD424549453C3F83888D86
+7C854345484A424785858684868B3249327A3B38C829343821
+4D23000000285078A0FBF8F8FDF6F1F8EC3EB0FF973EB78D50
+00000000000000000000000000000000000000000000000000
+0000000000000000000000000000004198000041A0000041AE
+3D713F8000003F30A3D73F800000418000003F800000000000
+000000000000000000419A666641A00000418400003F800000
+3F30A3D73F80000041FE66663F800000417000000000000000
+00000041F000000000058F09C70DA3114C14D418431BA01EEE
+2230256828982BC02EC031A634B837F33B5B3EEE42AE46984A
+AC4EE9534E57D95C8561C767466CE17290784F7E1783E289A7
+8F62950C9A9EA014A54BA9ECAE6BB2C3B6F2BAF8BED4C285C6
+0AC962CC8FCF92D26AD4C2D78BDAB3DE13E19BE53FE8F8ECBF
+F092F46AF847FC24FFFF00001B3B2F6F41DA584E72538DACA7
+B1BE25CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1
+BE25CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE
+25CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE25
+CFBFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE25CF
+BFE58DFFFF00001B3B2F6F41DA584E72538DACA7B1BE25CFBF
+E58DFFFF00002C6D52E777699AB4BD1CDED5FFFF00002C6D52
+E777699AB4BD1CDED5FFFF00002C6D52E777699AB4BD1CDED5
+FFFF00002C6D52E777699AB4BD1CDED5FFFF00002C6D52E777
+699AB4BD1CDED5FFFF00002C6D52E777699AB4BD1CDED5FFFF
+000000000000000000000000000000003DCCCCCD0000000000
+0000000000000000000000000000003F800000000000000000
+0001010104801020000002040C0700000000> exch /setccmparamnv get exec
+currentpagedevice setpagedevice
+ }{pop pop}ifelse
+ }{pop pop}ifelse
+ }if}{pop pop}ifelse
+ }if}{pop pop}ifelse"
+*End
+
+*?OKColorRenderStyle: "
+ globaldict /OK@_CRD 2 copy known{get}{pop pop 6}ifelse
+ [(Auto) (Natural) (Vivid) (HighBrightness) (DigCam) (sRGB) (UnKnown)]
+ exch get = flush"
+*End
+
+*CloseUI: *OKColorRenderStyle
+
+*% _____ Ink Simulation _____
+*OpenUI *OKTargetColor/Color Simulation: PickOne
+*OrderDependency: 106.0 DocumentSetup *OKTargetColor
+*DefaultOKTargetColor: None
+*OKTargetColor None/None: "
+ globaldict /OK@_ColorSelect 2 copy known{get 1 eq{
+ /DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource <</CMYKTransform 1>> exch /setdrinfo get exec
+ }{pop pop}ifelse
+ }if }{pop pop}ifelse"
+*End
+
+*OKTargetColor InkType3/Japan Color: "
+ globaldict /OK@_ColorSelect 2 copy known{get 1 eq{
+ /DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource <</CMYKTransform 4>> exch /setdrinfo get exec
+ }{pop pop}ifelse
+ }if }{pop pop}ifelse"
+*End
+
+*OKTargetColor InkType2/ISO Coated: "
+ globaldict /OK@_ColorSelect 2 copy known{get 1 eq{
+ /DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource <</CMYKTransform 3>> exch /setdrinfo get exec
+ }{pop pop}ifelse
+ }if }{pop pop}ifelse"
+*End
+
+*OKTargetColor InkType1/SWOP: "
+ globaldict /OK@_ColorSelect 2 copy known{get 1 eq{
+ /DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource <</CMYKTransform 2>> exch /setdrinfo get exec
+ }{pop pop}ifelse
+ }if }{pop pop}ifelse"
+*End
+
+*?OKTargetColor:"
+ currentpagedevice /DeviceRenderingInfo get /CMYKTransform get dup 1000 lt
+{
+ [(UnKnown) (None) (InkType1) (InkType2) (InkType3)
+ (UnKnown) (InkType5) (UnKnown) dup (InkType8)]
+}{
+ 1000 sub [(InkType999) (InkType1000) (InkType1001)]
+}ifelse exch get = flush"
+*End
+
+*CloseUI: *OKTargetColor
+
+*% _____ Color Process Black Office Mode_____
+*OpenUI *OKBlackSubstitution/Black Finish: PickOne
+
+*OrderDependency: 115.0 DocumentSetup *OKBlackSubstitution
+*DefaultOKBlackSubstitution: Auto
+*OKBlackSubstitution Auto/Auto: "
+ globaldict /OK@_ColorSelect 2 copy known{get 1 eq{
+ /DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource 0 exch /setdri_bk get exec
+ }{pop pop}ifelse
+ }if }{pop pop}ifelse"
+*End
+
+*OKBlackSubstitution Glossy/Glossy: "
+ globaldict /OK@_ColorSelect 2 copy known{get 1 eq{
+ /DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource 1 exch /setdri_bk get exec
+ }{pop pop}ifelse
+ }if }{pop pop}ifelse"
+*End
+
+*OKBlackSubstitution Matte/Matte: "
+ globaldict /OK@_ColorSelect 2 copy known{get 1 eq{
+ /DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource 2 exch /setdri_bk get exec
+ }{pop pop}ifelse
+ }if }{pop pop}ifelse"
+*End
+
+*?OKBlackSubstitution:"
+ currentpagedevice /DeviceRenderingInfo get /SelectBlackGeneration get
+ [(Auto) (Glossy) (Matte) (UnKnown)] exch get = flush"
+*End
+
+*CloseUI: *OKBlackSubstitution
+
+*CloseGroup: Color_Office
+
+*OpenGroup: Source/Paper input options
+
+*% _____ Page Size Check _____
+*OpenUI *OKPageSizeCheck/Check paper in any other tray: Boolean
+
+*OrderDependency: 19.0 DocumentSetup *OKPageSizeCheck
+*DefaultOKPageSizeCheck: True
+*OKPageSizeCheck True/On: "
+globaldict /OK@_CustTray 2 copy known
+{get 3 eq not
+{
+ statusdict /setpapersizecheck 2 copy known{
+ get true exch {exec}stopped {pop}if
+ }{pop pop}ifelse
+ /DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource true exch /setpapersizecheckmode get exec
+ }{pop pop}ifelse
+}if
+}
+{pop pop
+ statusdict /setpapersizecheck 2 copy known{
+ get true exch {exec}stopped {pop}if
+ }{pop pop}ifelse
+ /DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource true exch /setpapersizecheckmode get exec
+ }{pop pop}ifelse
+}ifelse"
+*End
+
+*OKPageSizeCheck False/Off: "
+globaldict /OK@_CustTray 2 copy known
+{get 3 eq not
+{
+ statusdict /setpapersizecheck 2 copy known{
+ get false exch {exec}stopped {pop}if
+ }{pop pop}ifelse
+ /DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource false exch /setpapersizecheckmode get exec
+ }{pop pop}ifelse
+}if
+}
+{pop pop
+ statusdict /setpapersizecheck 2 copy known{
+ get false exch {exec}stopped {pop}if
+ }{pop pop}ifelse
+ /DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource false exch /setpapersizecheckmode get exec
+ }{pop pop}ifelse}ifelse"
+*End
+
+*?OKPageSizeCheck: "
+ statusdict /papersizecheck 2 copy known{
+ get {exec}stopped {pop (UnKnown)}{{(True)}{(False)}ifelse}ifelse
+ }{pop pop (UnKnown)}ifelse = flush"
+*End
+
+*CloseUI: *OKPageSizeCheck
+
+*% _____ MPT Size Check _____
+*OpenUI *OKMPTPageSizeCheck/Check paper in the multi-purpose tray: Boolean
+
+*OrderDependency: 20.0 DocumentSetup *OKMPTPageSizeCheck
+*DefaultOKMPTPageSizeCheck: False
+
+*OKMPTPageSizeCheck True/On: "
+globaldict /OK@_CustTray 2 copy known
+{get 3 eq
+{
+ statusdict /setpapersizecheck 2 copy known{
+ get true exch {exec}stopped {pop}if
+ }{pop pop}ifelse
+ /DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource true exch /setpapersizecheckmode get exec
+ }{pop pop}ifelse
+}if
+}
+{pop pop}ifelse"
+*End
+
+*OKMPTPageSizeCheck False/Off: "
+globaldict /OK@_CustTray 2 copy known
+{get 3 eq
+{
+ statusdict /setpapersizecheck 2 copy known{
+ get false exch {exec}stopped {pop}if
+ }{pop pop}ifelse
+ /DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource false exch /setpapersizecheckmode get exec
+ }{pop pop}ifelse
+}if
+}
+{pop pop}ifelse"
+*End
+
+*?OKMPTPageSizeCheck: "
+ statusdict /papersizecheck 2 copy known{
+ get {exec}stopped {pop (UnKnown)}{{(True)}{(False)}ifelse}ifelse
+ }{pop pop (UnKnown)}ifelse = flush"
+*End
+
+*CloseUI: *OKMPTPageSizeCheck
+
+*%=================Media Type============================
+*OpenUI *MediaType/Media Type: PickOne
+
+*OrderDependency: 28.0 DocumentSetup *MediaType
+*DefaultMediaType: Auto
+
+*MediaType Auto/Printer Setting: ""
+
+*MediaType Plain/Plain: "
+ (Plain) true setglobal 20 string copy globaldict /OK@MediaType 3 -1 roll put false setglobal"
+*End
+
+*MediaType Recycled/Recycled: "
+ (Recycled) true setglobal 20 string copy globaldict /OK@MediaType 3 -1 roll put false setglobal"
+*End
+
+*MediaType Letterhead/Letterhead: "
+ (Letterhead) true setglobal 20 string copy globaldict /OK@MediaType 3 -1 roll put false setglobal"
+*End
+
+*MediaType Bond/Bond: "
+ (Bond) true setglobal 20 string copy globaldict /OK@MediaType 3 -1 roll put false setglobal"
+*End
+
+*MediaType Cardstock/Card Stock: "
+ (Cardstock) true setglobal 20 string copy globaldict /OK@MediaType 3 -1 roll put false setglobal"
+*End
+
+*MediaType Rough/Rough: "
+ (Rough) true setglobal 20 string copy globaldict /OK@MediaType 3 -1 roll put false setglobal"
+*End
+
+*MediaType Labels/Labels: "
+ (Labels) true setglobal 20 string copy globaldict /OK@MediaType 3 -1 roll put false setglobal"
+*End
+
+*MediaType Glossy/Glossy: "
+ (Glossy) true setglobal 20 string copy globaldict /OK@MediaType 3 -1 roll put false setglobal"
+*End
+
+*MediaType Envelope/Envelope: "
+ (Envelope) true setglobal 20 string copy globaldict /OK@MediaType 3 -1 roll put false setglobal"
+*End
+
+*?MediaType: "
+ save
+    currentpagedevice /MediaType get
+    dup null eq {pop (Unknown)} if
+    = flush
+ restore
+"
+*End
+
+*CloseUI: *MediaType
+
+*% _____ Media Weight _____
+*% This selection must be later than manual feed selection
+*OpenUI *OKMediaType/Media Weight: PickOne
+
+*OrderDependency: 90.0 DocumentSetup *OKMediaType
+*DefaultOKMediaType: PrinterDefault
+
+*OKMediaType PrinterDefault/Printer Setting: "
+/DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource
+ null globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+ null globaldict /OK@MediaWeight 2 copy known{get}{pop pop null}ifelse
+ false dup 7 -1 roll /custsetpd get exec
+}{pop pop}ifelse"
+*End
+
+*OKMediaType Light/Light (64-74 g/m2): "
+/DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource
+ null globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+ null globaldict /OK@MediaWeight 2 copy known{get}{pop pop 74}ifelse
+ false dup 7 -1 roll /custsetpd get exec
+}{pop pop}ifelse"
+*End
+
+*OKMediaType MediumLight/Medium Light (75-82 g/m2):"
+/DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource
+ null globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+ null globaldict /OK@MediaWeight 2 copy known{get}{pop pop 82}ifelse
+ false dup 7 -1 roll /custsetpd get exec
+}{pop pop}ifelse"
+*End
+
+*OKMediaType Medium/Medium (83-104 g/m2):"
+/DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource
+ null globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+ null globaldict /OK@MediaWeight 2 copy known{get}{pop pop 104}ifelse
+ false dup 7 -1 roll /custsetpd get exec
+}{pop pop}ifelse"
+*End
+
+*OKMediaType Heavy/Heavy (105-120 g/m2): "
+/DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource
+ null globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+ null globaldict /OK@MediaWeight 2 copy known{get}{pop pop 120}ifelse
+ false dup 7 -1 roll /custsetpd get exec
+}{pop pop}ifelse"
+*End
+
+*OKMediaType UltraHeavy1/Ultra Heavy 1 (121-176 g/m2): "
+/DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource
+ null globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+ null globaldict /OK@MediaWeight 2 copy known{get}{pop pop 176}ifelse
+ false dup 7 -1 roll /custsetpd get exec
+}{pop pop}ifelse"
+*End
+
+*OKMediaType UltraHeavy2/Ultra Heavy 2 (177-220 g/m2): "
+/DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource
+ null globaldict /OK@MediaType 2 copy known{get}{pop pop null}ifelse
+ null globaldict /OK@MediaWeight 2 copy known{get}{pop pop 220}ifelse
+ false dup 7 -1 roll /custsetpd get exec
+}{pop pop}ifelse"
+*End
+
+*?OKMediaType: "
+ /DriverOps /ProcSet 2 copy resourcestatus{
+ pop pop findresource
+ [(PrinterDefault) (Light) (MediumLight) (Medium) (Heavy) (UltraHeavy1) (UltraHeavy2) (UltraHeavy3)] exch /qmediatype get exec
+ }{pop pop (Unknown)}ifelse = flush"
+*End
+
+*CloseUI: *OKMediaType
+
+*% _____ InputSlot (Manual Feed)_____
+*OpenUI *OKManualFeed/Multipurpose tray is handled as manual feed: Boolean
+
+*OrderDependency: 91.0 DocumentSetup *OKManualFeed
+*DefaultOKManualFeed: False
+
+*OKManualFeed False/No: " 1 dict dup /ManualFeed false put setpagedevice"
+*OKManualFeed True/Yes: "
+ 1 dict dup /ManualFeed
+ currentpagedevice /InputAttributes get /Priority get 0 get 3 eq
+ dup globaldict /OK@_ManualFeed 3 -1 roll put
+ put setpagedevice"
+*End
+
+*?OKManualFeed: "
+ globaldict /OK@_ManualFeed 2 copy known{get}{pop pop false}ifelse{(True)}{(False)}ifelse = flush"
+*End
+
+*CloseUI: *OKManualFeed
+
+*% _____ Auto Tray Switch _____
+*OpenUI *OKTraySwitch/Tray Switch: Boolean
+
+*OrderDependency: 25.0 DocumentSetup *OKTraySwitch
+*DefaultOKTraySwitch: True
+
+*OKTraySwitch True/On: "1 dict dup /TraySwitch globaldict /OK@_Custom known not put setpagedevice"
+*OKTraySwitch False/Off: "1 dict dup /TraySwitch false put setpagedevice"
+
+*?OKTraySwitch: "
+ currentpagedevice /TraySwitch get{(True)}{(False)}ifelse = flush"
+*End
+
+*CloseUI: *OKTraySwitch
+
+*CloseGroup: Source
+
+*% _____ Halftone Information _____
+*DefaultHalftoneType: 5
+*ScreenFreq: "170.0"
+*ScreenAngle: "45.0"
+*DefaultScreenProc: Dot
+*ScreenProc Dot: "
+ {
+ abs exch abs 2 copy add 1 gt{
+ 1 sub dup mul exch 1 sub dup mul add 1 sub
+ }{
+ dup mul exch dup mul add 1 exch sub
+ }ifelse
+ }"
+*End
+
+*ScreenProc Line: "{pop}"
+*ScreenProc Ellipse: "{dup 5 mul 8 div mul exch dup mul exch add sqrt 1 exch sub}"
+*DefaultTransfer: Null
+*Transfer Null: "{ }"
+*Transfer Null.Inverse: "{1 exch sub}"
+
+*% _____ Font Information _____
+*% _____ PostScript Level3 Fonts Total 253 fonts listed here _____
+*DefaultFont: Courier
+*Font Albertus-ExtraBold: Standard "(001)" Standard ROM
+*Font Albertus-Medium: Standard "(001)" Standard ROM
+*Font AntiqueOlive: Standard "(001)" Standard ROM
+*Font AntiqueOlive-Bold: Standard "(001)" Standard ROM
+*Font AntiqueOlive-Italic: Standard "(001)" Standard ROM
+*Font Arial: Standard "(001)" Standard ROM
+*Font Arial-Bold: Standard "(001)" Standard ROM
+*Font Arial-BoldItalic: Standard "(001)" Standard ROM
+*Font Arial-Italic: Standard "(001)" Standard ROM
+*Font AvantGarde-Book: Standard "(001)" Standard ROM
+*Font AvantGarde-BookOblique: Standard "(001)" Standard ROM
+*Font AvantGarde-Demi: Standard "(001)" Standard ROM
+*Font AvantGarde-DemiOblique: Standard "(001)" Standard ROM
+*Font Bookman-Demi: Standard "(001)" Standard ROM
+*Font Bookman-DemiItalic: Standard "(001)" Standard ROM
+*Font Bookman-Light: Standard "(001)" Standard ROM
+*Font Bookman-LightItalic: Standard "(001)" Standard ROM
+*Font CGOmega: Standard "(001)" Standard ROM
+*Font CGOmega-Bold: Standard "(001)" Standard ROM
+*Font CGOmega-BoldItalic: Standard "(001)" Standard ROM
+*Font CGOmega-Italic: Standard "(001)" Standard ROM
+*Font CGTimes: Standard "(001)" Standard ROM
+*Font CGTimes-Bold: Standard "(001)" Standard ROM
+*Font CGTimes-BoldItalic: Standard "(001)" Standard ROM
+*Font CGTimes-Italic: Standard "(001)" Standard ROM
+*Font Clarendon-Condensed-Bold: Standard "(001)" Standard ROM
+*Font Coronet: Standard "(001)" Standard ROM
+*Font Courier: Standard "(001)" Standard ROM
+*Font Courier-Bold: Standard "(001)" Standard ROM
+*Font Courier-BoldOblique: Standard "(001)" Standard ROM
+*Font CourierHP: Standard "(001)" Standard ROM
+*Font CourierHP-Bold: Standard "(001)" Standard ROM
+*Font CourierHP-BoldItalic: Standard "(001)" Standard ROM
+*Font CourierHP-Italic: Standard "(001)" Standard ROM
+*Font Courier-Oblique: Standard "(001)" Standard ROM
+*Font Garamond-Antiqua: Standard "(001)" Standard ROM
+*Font Garamond-Halbfett: Standard "(001)" Standard ROM
+*Font Garamond-Kursiv: Standard "(001)" Standard ROM
+*Font Garamond-KursivHalbfett: Standard "(001)" Standard ROM
+*Font Helvetica: Standard "(001)" Standard ROM
+*Font Helvetica-Bold: Standard "(001)" Standard ROM
+*Font Helvetica-BoldOblique: Standard "(001)" Standard ROM
+*Font Helvetica-Narrow: Standard "(001)" Standard ROM
+*Font Helvetica-Narrow-Bold: Standard "(001)" Standard ROM
+*Font Helvetica-Narrow-BoldOblique: Standard "(001)" Standard ROM
+*Font Helvetica-Narrow-Oblique: Standard "(001)" Standard ROM
+*Font Helvetica-Oblique: Standard "(001)" Standard ROM
+*Font LetterGothic: Standard "(001)" Standard ROM
+*Font LetterGothic-Bold: Standard "(001)" Standard ROM
+*Font LetterGothic-Italic: Standard "(001)" Standard ROM
+*Font Marigold: Standard "(001)" Standard ROM
+*Font NewCenturySchlbk-Bold: Standard "(001)" Standard ROM
+*Font NewCenturySchlbk-BoldItalic: Standard "(001)" Standard ROM
+*Font NewCenturySchlbk-Italic: Standard "(001)" Standard ROM
+*Font NewCenturySchlbk-Roman: Standard "(001)" Standard ROM
+*Font Palatino-Bold: Standard "(001)" Standard ROM
+*Font Palatino-BoldItalic: Standard "(001)" Standard ROM
+*Font Palatino-Italic: Standard "(001)" Standard ROM
+*Font Palatino-Roman: Standard "(001)" Standard ROM
+*Font Symbol: Special "(001)" Special ROM
+*Font SymbolMT: Standard "(001)" Standard ROM
+*Font Times-Bold: Standard "(001)" Standard ROM
+*Font Times-BoldItalic: Standard "(001)" Standard ROM
+*Font Times-Italic: Standard "(001)" Standard ROM
+*Font TimesNewRoman: Standard "(001)" Standard ROM
+*Font TimesNewRoman-Bold: Standard "(001)" Standard ROM
+*Font TimesNewRoman-BoldItalic: Standard "(001)" Standard ROM
+*Font TimesNewRoman-Italic: Standard "(001)" Standard ROM
+*Font Times-Roman: Standard "(001)" Standard ROM
+*Font Univers-Bold: Standard "(001)" Standard ROM
+*Font Univers-BoldItalic: Standard "(001)" Standard ROM
+*Font Univers-Condensed-Bold: Standard "(001)" Standard ROM
+*Font Univers-Condensed-BoldItalic: Standard "(001)" Standard ROM
+*Font Univers-Condensed-Medium: Standard "(001)" Standard ROM
+*Font Univers-Condensed-MediumItalic: Standard "(001)" Standard ROM
+*Font Univers-Medium: Standard "(001)" Standard ROM
+*Font Univers-MediumItalic: Standard "(001)" Standard ROM
+*Font Wingdings-Regular: Special "(001)" Special ROM
+*Font ZapfChancery-MediumItalic: Standard "(001)" Standard ROM
+*Font ZapfDingbats: Special "(001)" Special ROM
+*?FontQuery: "
+ save
+   { count 1 gt
+      { exch dup 127 string cvs (/) print print (:) print
+        /Font resourcestatus {pop pop (Yes)} {(No)} ifelse =
+      } { exit } ifelse
+   } bind loop
+   (*) = flush
+ restore
+"
+*End
+
+*?FontList: "
+save
+  (*) {cvn ==} 128 string /Font resourceforall
+  (*) = flush
+restore
+"
+*End
+
+*% === UIConstraints ===
+*UIConstraints: *Duplex *MediaType Envelope
+*UIConstraints: *Duplex *MediaType Glossy
+*UIConstraints: *Duplex *MediaType Labels
+*UIConstraints: *Duplex *OKMediaType UltraHeavy2
+*UIConstraints: *Duplex *PageRegion 3x5
+*UIConstraints: *Duplex *PageRegion 4x6
+*UIConstraints: *Duplex *PageRegion 5x7
+*UIConstraints: *Duplex *PageRegion A6
+*UIConstraints: *Duplex *PageRegion B6
+*UIConstraints: *Duplex *PageRegion B6HALF
+*UIConstraints: *Duplex *PageRegion DoublePostcard
+*UIConstraints: *Duplex *PageRegion Env10
+*UIConstraints: *Duplex *PageRegion Env9
+*UIConstraints: *Duplex *PageRegion EnvC5
+*UIConstraints: *Duplex *PageRegion EnvChou3
+*UIConstraints: *Duplex *PageRegion EnvChou4
+*UIConstraints: *Duplex *PageRegion EnvDL
+*UIConstraints: *Duplex *PageRegion EnvMonarch
+*UIConstraints: *Duplex *PageRegion EnvYou4
+*UIConstraints: *Duplex *PageRegion Postcard
+*UIConstraints: *Duplex *PageRegion Statement
+*UIConstraints: *Duplex *PageSize 3x5
+*UIConstraints: *Duplex *PageSize 4x6
+*UIConstraints: *Duplex *PageSize 5x7
+*UIConstraints: *Duplex *PageSize A6
+*UIConstraints: *Duplex *PageSize B6
+*UIConstraints: *Duplex *PageSize B6HALF
+*UIConstraints: *Duplex *PageSize DoublePostcard
+*UIConstraints: *Duplex *PageSize Env10
+*UIConstraints: *Duplex *PageSize Env9
+*UIConstraints: *Duplex *PageSize EnvC5
+*UIConstraints: *Duplex *PageSize EnvChou3
+*UIConstraints: *Duplex *PageSize EnvChou4
+*UIConstraints: *Duplex *PageSize EnvDL
+*UIConstraints: *Duplex *PageSize EnvMonarch
+*UIConstraints: *Duplex *PageSize EnvYou4
+*UIConstraints: *Duplex *PageSize Postcard
+*UIConstraints: *Duplex *PageSize Statement
+*UIConstraints: *InputSlot Lower *MediaType Envelope
+*UIConstraints: *InputSlot Lower *MediaType Labels
+*UIConstraints: *InputSlot Lower *OKMediaType UltraHeavy2
+*UIConstraints: *InputSlot Lower *OKOptionTray 0
+*UIConstraints: *InputSlot Lower *PageRegion 3x5
+*UIConstraints: *InputSlot Lower *PageRegion 4x6
+*UIConstraints: *InputSlot Lower *PageRegion 5x7
+*UIConstraints: *InputSlot Lower *PageRegion A6
+*UIConstraints: *InputSlot Lower *PageRegion B6
+*UIConstraints: *InputSlot Lower *PageRegion B6HALF
+*UIConstraints: *InputSlot Lower *PageRegion DoublePostcard
+*UIConstraints: *InputSlot Lower *PageRegion Env10
+*UIConstraints: *InputSlot Lower *PageRegion Env9
+*UIConstraints: *InputSlot Lower *PageRegion EnvC5
+*UIConstraints: *InputSlot Lower *PageRegion EnvChou3
+*UIConstraints: *InputSlot Lower *PageRegion EnvChou4
+*UIConstraints: *InputSlot Lower *PageRegion EnvDL
+*UIConstraints: *InputSlot Lower *PageRegion EnvMonarch
+*UIConstraints: *InputSlot Lower *PageRegion EnvYou4
+*UIConstraints: *InputSlot Lower *PageRegion Postcard
+*UIConstraints: *InputSlot Lower *PageRegion Statement
+*UIConstraints: *InputSlot Lower *PageSize 3x5
+*UIConstraints: *InputSlot Lower *PageSize 4x6
+*UIConstraints: *InputSlot Lower *PageSize 5x7
+*UIConstraints: *InputSlot Lower *PageSize A6
+*UIConstraints: *InputSlot Lower *PageSize B6
+*UIConstraints: *InputSlot Lower *PageSize B6HALF
+*UIConstraints: *InputSlot Lower *PageSize DoublePostcard
+*UIConstraints: *InputSlot Lower *PageSize Env10
+*UIConstraints: *InputSlot Lower *PageSize Env9
+*UIConstraints: *InputSlot Lower *PageSize EnvC5
+*UIConstraints: *InputSlot Lower *PageSize EnvChou3
+*UIConstraints: *InputSlot Lower *PageSize EnvChou4
+*UIConstraints: *InputSlot Lower *PageSize EnvDL
+*UIConstraints: *InputSlot Lower *PageSize EnvMonarch
+*UIConstraints: *InputSlot Lower *PageSize EnvYou4
+*UIConstraints: *InputSlot Lower *PageSize Postcard
+*UIConstraints: *InputSlot Lower *PageSize Statement
+*UIConstraints: *InputSlot Upper *MediaType Envelope
+*UIConstraints: *InputSlot Upper *MediaType Labels
+*UIConstraints: *InputSlot Upper *OKMediaType UltraHeavy2
+*UIConstraints: *InputSlot Upper *PageRegion 3x5
+*UIConstraints: *InputSlot Upper *PageRegion 4x6
+*UIConstraints: *InputSlot Upper *PageRegion 5x7
+*UIConstraints: *InputSlot Upper *PageRegion B6HALF
+*UIConstraints: *InputSlot Upper *PageRegion DoublePostcard
+*UIConstraints: *InputSlot Upper *PageRegion Env10
+*UIConstraints: *InputSlot Upper *PageRegion Env9
+*UIConstraints: *InputSlot Upper *PageRegion EnvC5
+*UIConstraints: *InputSlot Upper *PageRegion EnvChou3
+*UIConstraints: *InputSlot Upper *PageRegion EnvChou4
+*UIConstraints: *InputSlot Upper *PageRegion EnvDL
+*UIConstraints: *InputSlot Upper *PageRegion EnvMonarch
+*UIConstraints: *InputSlot Upper *PageRegion EnvYou4
+*UIConstraints: *InputSlot Upper *PageSize 3x5
+*UIConstraints: *InputSlot Upper *PageSize 4x6
+*UIConstraints: *InputSlot Upper *PageSize 5x7
+*UIConstraints: *InputSlot Upper *PageSize B6HALF
+*UIConstraints: *InputSlot Upper *PageSize DoublePostcard
+*UIConstraints: *InputSlot Upper *PageSize Env10
+*UIConstraints: *InputSlot Upper *PageSize Env9
+*UIConstraints: *InputSlot Upper *PageSize EnvC5
+*UIConstraints: *InputSlot Upper *PageSize EnvChou3
+*UIConstraints: *InputSlot Upper *PageSize EnvChou4
+*UIConstraints: *InputSlot Upper *PageSize EnvDL
+*UIConstraints: *InputSlot Upper *PageSize EnvMonarch
+*UIConstraints: *InputSlot Upper *PageSize EnvYou4
+*UIConstraints: *MediaType Bond *PageRegion DoublePostcard
+*UIConstraints: *MediaType Bond *PageRegion Env10
+*UIConstraints: *MediaType Bond *PageRegion Env9
+*UIConstraints: *MediaType Bond *PageRegion EnvC5
+*UIConstraints: *MediaType Bond *PageRegion EnvChou3
+*UIConstraints: *MediaType Bond *PageRegion EnvChou4
+*UIConstraints: *MediaType Bond *PageRegion EnvDL
+*UIConstraints: *MediaType Bond *PageRegion EnvMonarch
+*UIConstraints: *MediaType Bond *PageRegion EnvYou4
+*UIConstraints: *MediaType Bond *PageRegion Postcard
+*UIConstraints: *MediaType Bond *PageSize DoublePostcard
+*UIConstraints: *MediaType Bond *PageSize Env10
+*UIConstraints: *MediaType Bond *PageSize Env9
+*UIConstraints: *MediaType Bond *PageSize EnvC5
+*UIConstraints: *MediaType Bond *PageSize EnvChou3
+*UIConstraints: *MediaType Bond *PageSize EnvChou4
+*UIConstraints: *MediaType Bond *PageSize EnvDL
+*UIConstraints: *MediaType Bond *PageSize EnvMonarch
+*UIConstraints: *MediaType Bond *PageSize EnvYou4
+*UIConstraints: *MediaType Bond *PageSize Postcard
+*UIConstraints: *MediaType Cardstock *PageRegion DoublePostcard
+*UIConstraints: *MediaType Cardstock *PageRegion Env10
+*UIConstraints: *MediaType Cardstock *PageRegion Env9
+*UIConstraints: *MediaType Cardstock *PageRegion EnvC5
+*UIConstraints: *MediaType Cardstock *PageRegion EnvChou3
+*UIConstraints: *MediaType Cardstock *PageRegion EnvChou4
+*UIConstraints: *MediaType Cardstock *PageRegion EnvDL
+*UIConstraints: *MediaType Cardstock *PageRegion EnvMonarch
+*UIConstraints: *MediaType Cardstock *PageRegion EnvYou4
+*UIConstraints: *MediaType Cardstock *PageRegion Postcard
+*UIConstraints: *MediaType Cardstock *PageSize DoublePostcard
+*UIConstraints: *MediaType Cardstock *PageSize Env10
+*UIConstraints: *MediaType Cardstock *PageSize Env9
+*UIConstraints: *MediaType Cardstock *PageSize EnvC5
+*UIConstraints: *MediaType Cardstock *PageSize EnvChou3
+*UIConstraints: *MediaType Cardstock *PageSize EnvChou4
+*UIConstraints: *MediaType Cardstock *PageSize EnvDL
+*UIConstraints: *MediaType Cardstock *PageSize EnvMonarch
+*UIConstraints: *MediaType Cardstock *PageSize EnvYou4
+*UIConstraints: *MediaType Cardstock *PageSize Postcard
+*UIConstraints: *MediaType Envelope *Duplex
+*UIConstraints: *MediaType Envelope *InputSlot Lower
+*UIConstraints: *MediaType Envelope *InputSlot Upper
+*UIConstraints: *MediaType Envelope *PageRegion DoublePostcard
+*UIConstraints: *MediaType Envelope *PageRegion Env10
+*UIConstraints: *MediaType Envelope *PageRegion Env9
+*UIConstraints: *MediaType Envelope *PageRegion EnvC5
+*UIConstraints: *MediaType Envelope *PageRegion EnvChou3
+*UIConstraints: *MediaType Envelope *PageRegion EnvChou4
+*UIConstraints: *MediaType Envelope *PageRegion EnvDL
+*UIConstraints: *MediaType Envelope *PageRegion EnvMonarch
+*UIConstraints: *MediaType Envelope *PageRegion EnvYou4
+*UIConstraints: *MediaType Envelope *PageRegion Postcard
+*UIConstraints: *MediaType Envelope *PageSize DoublePostcard
+*UIConstraints: *MediaType Envelope *PageSize Env10
+*UIConstraints: *MediaType Envelope *PageSize Env9
+*UIConstraints: *MediaType Envelope *PageSize EnvC5
+*UIConstraints: *MediaType Envelope *PageSize EnvChou3
+*UIConstraints: *MediaType Envelope *PageSize EnvChou4
+*UIConstraints: *MediaType Envelope *PageSize EnvDL
+*UIConstraints: *MediaType Envelope *PageSize EnvMonarch
+*UIConstraints: *MediaType Envelope *PageSize EnvYou4
+*UIConstraints: *MediaType Envelope *PageSize Postcard
+*UIConstraints: *MediaType Glossy *Duplex
+*UIConstraints: *MediaType Glossy *PageRegion DoublePostcard
+*UIConstraints: *MediaType Glossy *PageRegion Env10
+*UIConstraints: *MediaType Glossy *PageRegion Env9
+*UIConstraints: *MediaType Glossy *PageRegion EnvC5
+*UIConstraints: *MediaType Glossy *PageRegion EnvChou3
+*UIConstraints: *MediaType Glossy *PageRegion EnvChou4
+*UIConstraints: *MediaType Glossy *PageRegion EnvDL
+*UIConstraints: *MediaType Glossy *PageRegion EnvMonarch
+*UIConstraints: *MediaType Glossy *PageRegion EnvYou4
+*UIConstraints: *MediaType Glossy *PageRegion Postcard
+*UIConstraints: *MediaType Glossy *PageSize DoublePostcard
+*UIConstraints: *MediaType Glossy *PageSize Env10
+*UIConstraints: *MediaType Glossy *PageSize Env9
+*UIConstraints: *MediaType Glossy *PageSize EnvC5
+*UIConstraints: *MediaType Glossy *PageSize EnvChou3
+*UIConstraints: *MediaType Glossy *PageSize EnvChou4
+*UIConstraints: *MediaType Glossy *PageSize EnvDL
+*UIConstraints: *MediaType Glossy *PageSize EnvMonarch
+*UIConstraints: *MediaType Glossy *PageSize EnvYou4
+*UIConstraints: *MediaType Glossy *PageSize Postcard
+*UIConstraints: *MediaType Labels *Duplex
+*UIConstraints: *MediaType Labels *InputSlot Lower
+*UIConstraints: *MediaType Labels *InputSlot Upper
+*UIConstraints: *MediaType Labels *PageRegion DoublePostcard
+*UIConstraints: *MediaType Labels *PageRegion Env10
+*UIConstraints: *MediaType Labels *PageRegion Env9
+*UIConstraints: *MediaType Labels *PageRegion EnvC5
+*UIConstraints: *MediaType Labels *PageRegion EnvChou3
+*UIConstraints: *MediaType Labels *PageRegion EnvChou4
+*UIConstraints: *MediaType Labels *PageRegion EnvDL
+*UIConstraints: *MediaType Labels *PageRegion EnvMonarch
+*UIConstraints: *MediaType Labels *PageRegion EnvYou4
+*UIConstraints: *MediaType Labels *PageRegion Postcard
+*UIConstraints: *MediaType Labels *PageSize DoublePostcard
+*UIConstraints: *MediaType Labels *PageSize Env10
+*UIConstraints: *MediaType Labels *PageSize Env9
+*UIConstraints: *MediaType Labels *PageSize EnvC5
+*UIConstraints: *MediaType Labels *PageSize EnvChou3
+*UIConstraints: *MediaType Labels *PageSize EnvChou4
+*UIConstraints: *MediaType Labels *PageSize EnvDL
+*UIConstraints: *MediaType Labels *PageSize EnvMonarch
+*UIConstraints: *MediaType Labels *PageSize EnvYou4
+*UIConstraints: *MediaType Labels *PageSize Postcard
+*UIConstraints: *MediaType Letterhead *PageRegion DoublePostcard
+*UIConstraints: *MediaType Letterhead *PageRegion Env10
+*UIConstraints: *MediaType Letterhead *PageRegion Env9
+*UIConstraints: *MediaType Letterhead *PageRegion EnvC5
+*UIConstraints: *MediaType Letterhead *PageRegion EnvChou3
+*UIConstraints: *MediaType Letterhead *PageRegion EnvChou4
+*UIConstraints: *MediaType Letterhead *PageRegion EnvDL
+*UIConstraints: *MediaType Letterhead *PageRegion EnvMonarch
+*UIConstraints: *MediaType Letterhead *PageRegion EnvYou4
+*UIConstraints: *MediaType Letterhead *PageRegion Postcard
+*UIConstraints: *MediaType Letterhead *PageSize DoublePostcard
+*UIConstraints: *MediaType Letterhead *PageSize Env10
+*UIConstraints: *MediaType Letterhead *PageSize Env9
+*UIConstraints: *MediaType Letterhead *PageSize EnvC5
+*UIConstraints: *MediaType Letterhead *PageSize EnvChou3
+*UIConstraints: *MediaType Letterhead *PageSize EnvChou4
+*UIConstraints: *MediaType Letterhead *PageSize EnvDL
+*UIConstraints: *MediaType Letterhead *PageSize EnvMonarch
+*UIConstraints: *MediaType Letterhead *PageSize EnvYou4
+*UIConstraints: *MediaType Letterhead *PageSize Postcard
+*UIConstraints: *MediaType Plain *PageRegion DoublePostcard
+*UIConstraints: *MediaType Plain *PageRegion Env10
+*UIConstraints: *MediaType Plain *PageRegion Env9
+*UIConstraints: *MediaType Plain *PageRegion EnvC5
+*UIConstraints: *MediaType Plain *PageRegion EnvChou3
+*UIConstraints: *MediaType Plain *PageRegion EnvChou4
+*UIConstraints: *MediaType Plain *PageRegion EnvDL
+*UIConstraints: *MediaType Plain *PageRegion EnvMonarch
+*UIConstraints: *MediaType Plain *PageRegion EnvYou4
+*UIConstraints: *MediaType Plain *PageRegion Postcard
+*UIConstraints: *MediaType Plain *PageSize DoublePostcard
+*UIConstraints: *MediaType Plain *PageSize Env10
+*UIConstraints: *MediaType Plain *PageSize Env9
+*UIConstraints: *MediaType Plain *PageSize EnvC5
+*UIConstraints: *MediaType Plain *PageSize EnvChou3
+*UIConstraints: *MediaType Plain *PageSize EnvChou4
+*UIConstraints: *MediaType Plain *PageSize EnvDL
+*UIConstraints: *MediaType Plain *PageSize EnvMonarch
+*UIConstraints: *MediaType Plain *PageSize EnvYou4
+*UIConstraints: *MediaType Plain *PageSize Postcard
+*UIConstraints: *MediaType Recycled *PageRegion DoublePostcard
+*UIConstraints: *MediaType Recycled *PageRegion Env10
+*UIConstraints: *MediaType Recycled *PageRegion Env9
+*UIConstraints: *MediaType Recycled *PageRegion EnvC5
+*UIConstraints: *MediaType Recycled *PageRegion EnvChou3
+*UIConstraints: *MediaType Recycled *PageRegion EnvChou4
+*UIConstraints: *MediaType Recycled *PageRegion EnvDL
+*UIConstraints: *MediaType Recycled *PageRegion EnvMonarch
+*UIConstraints: *MediaType Recycled *PageRegion EnvYou4
+*UIConstraints: *MediaType Recycled *PageRegion Postcard
+*UIConstraints: *MediaType Recycled *PageSize DoublePostcard
+*UIConstraints: *MediaType Recycled *PageSize Env10
+*UIConstraints: *MediaType Recycled *PageSize Env9
+*UIConstraints: *MediaType Recycled *PageSize EnvC5
+*UIConstraints: *MediaType Recycled *PageSize EnvChou3
+*UIConstraints: *MediaType Recycled *PageSize EnvChou4
+*UIConstraints: *MediaType Recycled *PageSize EnvDL
+*UIConstraints: *MediaType Recycled *PageSize EnvMonarch
+*UIConstraints: *MediaType Recycled *PageSize EnvYou4
+*UIConstraints: *MediaType Recycled *PageSize Postcard
+*UIConstraints: *MediaType Rough *PageRegion DoublePostcard
+*UIConstraints: *MediaType Rough *PageRegion Env10
+*UIConstraints: *MediaType Rough *PageRegion Env9
+*UIConstraints: *MediaType Rough *PageRegion EnvC5
+*UIConstraints: *MediaType Rough *PageRegion EnvChou3
+*UIConstraints: *MediaType Rough *PageRegion EnvChou4
+*UIConstraints: *MediaType Rough *PageRegion EnvDL
+*UIConstraints: *MediaType Rough *PageRegion EnvMonarch
+*UIConstraints: *MediaType Rough *PageRegion EnvYou4
+*UIConstraints: *MediaType Rough *PageRegion Postcard
+*UIConstraints: *MediaType Rough *PageSize DoublePostcard
+*UIConstraints: *MediaType Rough *PageSize Env10
+*UIConstraints: *MediaType Rough *PageSize Env9
+*UIConstraints: *MediaType Rough *PageSize EnvC5
+*UIConstraints: *MediaType Rough *PageSize EnvChou3
+*UIConstraints: *MediaType Rough *PageSize EnvChou4
+*UIConstraints: *MediaType Rough *PageSize EnvDL
+*UIConstraints: *MediaType Rough *PageSize EnvMonarch
+*UIConstraints: *MediaType Rough *PageSize EnvYou4
+*UIConstraints: *MediaType Rough *PageSize Postcard
+*UIConstraints: *OKControl Gray *OKSeparationorder Black
+*UIConstraints: *OKControl Gray *OKSeparationorder CMY
+*UIConstraints: *OKControl Gray *OKSeparationorder CMYK
+*UIConstraints: *OKControl Gray *OKSeparationorder Cyan
+*UIConstraints: *OKControl Gray *OKSeparationorder Magenta
+*UIConstraints: *OKControl Gray *OKSeparationorder Yellow
+*UIConstraints: *OKMediaType Heavy *PageRegion DoublePostcard
+*UIConstraints: *OKMediaType Heavy *PageRegion Postcard
+*UIConstraints: *OKMediaType Heavy *PageSize DoublePostcard
+*UIConstraints: *OKMediaType Heavy *PageSize Postcard
+*UIConstraints: *OKMediaType Light *PageRegion DoublePostcard
+*UIConstraints: *OKMediaType Light *PageRegion Postcard
+*UIConstraints: *OKMediaType Light *PageSize DoublePostcard
+*UIConstraints: *OKMediaType Light *PageSize Postcard
+*UIConstraints: *OKMediaType Medium *PageRegion DoublePostcard
+*UIConstraints: *OKMediaType Medium *PageRegion Postcard
+*UIConstraints: *OKMediaType Medium *PageSize DoublePostcard
+*UIConstraints: *OKMediaType Medium *PageSize Postcard
+*UIConstraints: *OKMediaType MediumLight *PageRegion DoublePostcard
+*UIConstraints: *OKMediaType MediumLight *PageRegion Postcard
+*UIConstraints: *OKMediaType MediumLight *PageSize DoublePostcard
+*UIConstraints: *OKMediaType MediumLight *PageSize Postcard
+*UIConstraints: *OKMediaType UltraHeavy1 *PageRegion DoublePostcard
+*UIConstraints: *OKMediaType UltraHeavy1 *PageRegion Postcard
+*UIConstraints: *OKMediaType UltraHeavy1 *PageSize DoublePostcard
+*UIConstraints: *OKMediaType UltraHeavy1 *PageSize Postcard
+*UIConstraints: *OKMediaType UltraHeavy2 *Duplex
+*UIConstraints: *OKMediaType UltraHeavy2 *InputSlot Lower
+*UIConstraints: *OKMediaType UltraHeavy2 *InputSlot Upper
+*UIConstraints: *OKMediaType UltraHeavy2 *PageRegion DoublePostcard
+*UIConstraints: *OKMediaType UltraHeavy2 *PageRegion Postcard
+*UIConstraints: *OKMediaType UltraHeavy2 *PageSize DoublePostcard
+*UIConstraints: *OKMediaType UltraHeavy2 *PageSize Postcard
+*UIConstraints: *OKOptionTray 0 *InputSlot Lower
+*UIConstraints: *OKSeparationorder Black *OKControl Gray
+*UIConstraints: *OKSeparationorder CMY *OKControl Gray
+*UIConstraints: *OKSeparationorder CMYK *OKControl Gray
+*UIConstraints: *OKSeparationorder Cyan *OKControl Gray
+*UIConstraints: *OKSeparationorder Magenta *OKControl Gray
+*UIConstraints: *OKSeparationorder Yellow *OKControl Gray
+*UIConstraints: *PageRegion 3x5 *Duplex
+*UIConstraints: *PageRegion 3x5 *InputSlot Lower
+*UIConstraints: *PageRegion 3x5 *InputSlot Upper
+*UIConstraints: *PageRegion 4x6 *Duplex
+*UIConstraints: *PageRegion 4x6 *InputSlot Lower
+*UIConstraints: *PageRegion 4x6 *InputSlot Upper
+*UIConstraints: *PageRegion 5x7 *Duplex
+*UIConstraints: *PageRegion 5x7 *InputSlot Lower
+*UIConstraints: *PageRegion 5x7 *InputSlot Upper
+*UIConstraints: *PageRegion A6 *Duplex
+*UIConstraints: *PageRegion A6 *InputSlot Lower
+*UIConstraints: *PageRegion B6 *Duplex
+*UIConstraints: *PageRegion B6 *InputSlot Lower
+*UIConstraints: *PageRegion B6HALF *Duplex
+*UIConstraints: *PageRegion B6HALF *InputSlot Lower
+*UIConstraints: *PageRegion B6HALF *InputSlot Upper
+*UIConstraints: *PageRegion DoublePostcard *Duplex
+*UIConstraints: *PageRegion DoublePostcard *InputSlot Lower
+*UIConstraints: *PageRegion DoublePostcard *InputSlot Upper
+*UIConstraints: *PageRegion DoublePostcard *MediaType Bond
+*UIConstraints: *PageRegion DoublePostcard *MediaType Cardstock
+*UIConstraints: *PageRegion DoublePostcard *MediaType Envelope
+*UIConstraints: *PageRegion DoublePostcard *MediaType Glossy
+*UIConstraints: *PageRegion DoublePostcard *MediaType Labels
+*UIConstraints: *PageRegion DoublePostcard *MediaType Letterhead
+*UIConstraints: *PageRegion DoublePostcard *MediaType Plain
+*UIConstraints: *PageRegion DoublePostcard *MediaType Recycled
+*UIConstraints: *PageRegion DoublePostcard *MediaType Rough
+*UIConstraints: *PageRegion DoublePostcard *OKMediaType Heavy
+*UIConstraints: *PageRegion DoublePostcard *OKMediaType Light
+*UIConstraints: *PageRegion DoublePostcard *OKMediaType Medium
+*UIConstraints: *PageRegion DoublePostcard *OKMediaType MediumLight
+*UIConstraints: *PageRegion DoublePostcard *OKMediaType UltraHeavy1
+*UIConstraints: *PageRegion DoublePostcard *OKMediaType UltraHeavy2
+*UIConstraints: *PageRegion Env10 *Duplex
+*UIConstraints: *PageRegion Env10 *InputSlot Lower
+*UIConstraints: *PageRegion Env10 *InputSlot Upper
+*UIConstraints: *PageRegion Env10 *MediaType Bond
+*UIConstraints: *PageRegion Env10 *MediaType Cardstock
+*UIConstraints: *PageRegion Env10 *MediaType Envelope
+*UIConstraints: *PageRegion Env10 *MediaType Glossy
+*UIConstraints: *PageRegion Env10 *MediaType Labels
+*UIConstraints: *PageRegion Env10 *MediaType Letterhead
+*UIConstraints: *PageRegion Env10 *MediaType Plain
+*UIConstraints: *PageRegion Env10 *MediaType Recycled
+*UIConstraints: *PageRegion Env10 *MediaType Rough
+*UIConstraints: *PageRegion Env9 *Duplex
+*UIConstraints: *PageRegion Env9 *InputSlot Lower
+*UIConstraints: *PageRegion Env9 *InputSlot Upper
+*UIConstraints: *PageRegion Env9 *MediaType Bond
+*UIConstraints: *PageRegion Env9 *MediaType Cardstock
+*UIConstraints: *PageRegion Env9 *MediaType Envelope
+*UIConstraints: *PageRegion Env9 *MediaType Glossy
+*UIConstraints: *PageRegion Env9 *MediaType Labels
+*UIConstraints: *PageRegion Env9 *MediaType Letterhead
+*UIConstraints: *PageRegion Env9 *MediaType Plain
+*UIConstraints: *PageRegion Env9 *MediaType Recycled
+*UIConstraints: *PageRegion Env9 *MediaType Rough
+*UIConstraints: *PageRegion EnvC5 *Duplex
+*UIConstraints: *PageRegion EnvC5 *InputSlot Lower
+*UIConstraints: *PageRegion EnvC5 *InputSlot Upper
+*UIConstraints: *PageRegion EnvC5 *MediaType Bond
+*UIConstraints: *PageRegion EnvC5 *MediaType Cardstock
+*UIConstraints: *PageRegion EnvC5 *MediaType Envelope
+*UIConstraints: *PageRegion EnvC5 *MediaType Glossy
+*UIConstraints: *PageRegion EnvC5 *MediaType Labels
+*UIConstraints: *PageRegion EnvC5 *MediaType Letterhead
+*UIConstraints: *PageRegion EnvC5 *MediaType Plain
+*UIConstraints: *PageRegion EnvC5 *MediaType Recycled
+*UIConstraints: *PageRegion EnvC5 *MediaType Rough
+*UIConstraints: *PageRegion EnvChou3 *Duplex
+*UIConstraints: *PageRegion EnvChou3 *InputSlot Lower
+*UIConstraints: *PageRegion EnvChou3 *InputSlot Upper
+*UIConstraints: *PageRegion EnvChou3 *MediaType Bond
+*UIConstraints: *PageRegion EnvChou3 *MediaType Cardstock
+*UIConstraints: *PageRegion EnvChou3 *MediaType Envelope
+*UIConstraints: *PageRegion EnvChou3 *MediaType Glossy
+*UIConstraints: *PageRegion EnvChou3 *MediaType Labels
+*UIConstraints: *PageRegion EnvChou3 *MediaType Letterhead
+*UIConstraints: *PageRegion EnvChou3 *MediaType Plain
+*UIConstraints: *PageRegion EnvChou3 *MediaType Recycled
+*UIConstraints: *PageRegion EnvChou3 *MediaType Rough
+*UIConstraints: *PageRegion EnvChou4 *Duplex
+*UIConstraints: *PageRegion EnvChou4 *InputSlot Lower
+*UIConstraints: *PageRegion EnvChou4 *InputSlot Upper
+*UIConstraints: *PageRegion EnvChou4 *MediaType Bond
+*UIConstraints: *PageRegion EnvChou4 *MediaType Cardstock
+*UIConstraints: *PageRegion EnvChou4 *MediaType Envelope
+*UIConstraints: *PageRegion EnvChou4 *MediaType Glossy
+*UIConstraints: *PageRegion EnvChou4 *MediaType Labels
+*UIConstraints: *PageRegion EnvChou4 *MediaType Letterhead
+*UIConstraints: *PageRegion EnvChou4 *MediaType Plain
+*UIConstraints: *PageRegion EnvChou4 *MediaType Recycled
+*UIConstraints: *PageRegion EnvChou4 *MediaType Rough
+*UIConstraints: *PageRegion EnvDL *Duplex
+*UIConstraints: *PageRegion EnvDL *InputSlot Lower
+*UIConstraints: *PageRegion EnvDL *InputSlot Upper
+*UIConstraints: *PageRegion EnvDL *MediaType Bond
+*UIConstraints: *PageRegion EnvDL *MediaType Cardstock
+*UIConstraints: *PageRegion EnvDL *MediaType Envelope
+*UIConstraints: *PageRegion EnvDL *MediaType Glossy
+*UIConstraints: *PageRegion EnvDL *MediaType Labels
+*UIConstraints: *PageRegion EnvDL *MediaType Letterhead
+*UIConstraints: *PageRegion EnvDL *MediaType Plain
+*UIConstraints: *PageRegion EnvDL *MediaType Recycled
+*UIConstraints: *PageRegion EnvDL *MediaType Rough
+*UIConstraints: *PageRegion EnvMonarch *Duplex
+*UIConstraints: *PageRegion EnvMonarch *InputSlot Lower
+*UIConstraints: *PageRegion EnvMonarch *InputSlot Upper
+*UIConstraints: *PageRegion EnvMonarch *MediaType Bond
+*UIConstraints: *PageRegion EnvMonarch *MediaType Cardstock
+*UIConstraints: *PageRegion EnvMonarch *MediaType Envelope
+*UIConstraints: *PageRegion EnvMonarch *MediaType Glossy
+*UIConstraints: *PageRegion EnvMonarch *MediaType Labels
+*UIConstraints: *PageRegion EnvMonarch *MediaType Letterhead
+*UIConstraints: *PageRegion EnvMonarch *MediaType Plain
+*UIConstraints: *PageRegion EnvMonarch *MediaType Recycled
+*UIConstraints: *PageRegion EnvMonarch *MediaType Rough
+*UIConstraints: *PageRegion EnvYou4 *Duplex
+*UIConstraints: *PageRegion EnvYou4 *InputSlot Lower
+*UIConstraints: *PageRegion EnvYou4 *InputSlot Upper
+*UIConstraints: *PageRegion EnvYou4 *MediaType Bond
+*UIConstraints: *PageRegion EnvYou4 *MediaType Cardstock
+*UIConstraints: *PageRegion EnvYou4 *MediaType Envelope
+*UIConstraints: *PageRegion EnvYou4 *MediaType Glossy
+*UIConstraints: *PageRegion EnvYou4 *MediaType Labels
+*UIConstraints: *PageRegion EnvYou4 *MediaType Letterhead
+*UIConstraints: *PageRegion EnvYou4 *MediaType Plain
+*UIConstraints: *PageRegion EnvYou4 *MediaType Recycled
+*UIConstraints: *PageRegion EnvYou4 *MediaType Rough
+*UIConstraints: *PageRegion Postcard *Duplex
+*UIConstraints: *PageRegion Postcard *InputSlot Lower
+*UIConstraints: *PageRegion Postcard *MediaType Bond
+*UIConstraints: *PageRegion Postcard *MediaType Cardstock
+*UIConstraints: *PageRegion Postcard *MediaType Envelope
+*UIConstraints: *PageRegion Postcard *MediaType Glossy
+*UIConstraints: *PageRegion Postcard *MediaType Labels
+*UIConstraints: *PageRegion Postcard *MediaType Letterhead
+*UIConstraints: *PageRegion Postcard *MediaType Plain
+*UIConstraints: *PageRegion Postcard *MediaType Recycled
+*UIConstraints: *PageRegion Postcard *MediaType Rough
+*UIConstraints: *PageRegion Postcard *OKMediaType Heavy
+*UIConstraints: *PageRegion Postcard *OKMediaType Light
+*UIConstraints: *PageRegion Postcard *OKMediaType Medium
+*UIConstraints: *PageRegion Postcard *OKMediaType MediumLight
+*UIConstraints: *PageRegion Postcard *OKMediaType UltraHeavy1
+*UIConstraints: *PageRegion Postcard *OKMediaType UltraHeavy2
+*UIConstraints: *PageRegion Statement *Duplex
+*UIConstraints: *PageRegion Statement *InputSlot Lower
+*UIConstraints: *PageSize 3x5 *Duplex
+*UIConstraints: *PageSize 3x5 *InputSlot Lower
+*UIConstraints: *PageSize 3x5 *InputSlot Upper
+*UIConstraints: *PageSize 4x6 *Duplex
+*UIConstraints: *PageSize 4x6 *InputSlot Lower
+*UIConstraints: *PageSize 4x6 *InputSlot Upper
+*UIConstraints: *PageSize 5x7 *Duplex
+*UIConstraints: *PageSize 5x7 *InputSlot Lower
+*UIConstraints: *PageSize 5x7 *InputSlot Upper
+*UIConstraints: *PageSize A6 *Duplex
+*UIConstraints: *PageSize A6 *InputSlot Lower
+*UIConstraints: *PageSize B6 *Duplex
+*UIConstraints: *PageSize B6 *InputSlot Lower
+*UIConstraints: *PageSize B6HALF *Duplex
+*UIConstraints: *PageSize B6HALF *InputSlot Lower
+*UIConstraints: *PageSize B6HALF *InputSlot Upper
+*UIConstraints: *PageSize DoublePostcard *Duplex
+*UIConstraints: *PageSize DoublePostcard *InputSlot Lower
+*UIConstraints: *PageSize DoublePostcard *InputSlot Upper
+*UIConstraints: *PageSize DoublePostcard *MediaType Bond
+*UIConstraints: *PageSize DoublePostcard *MediaType Cardstock
+*UIConstraints: *PageSize DoublePostcard *MediaType Envelope
+*UIConstraints: *PageSize DoublePostcard *MediaType Glossy
+*UIConstraints: *PageSize DoublePostcard *MediaType Labels
+*UIConstraints: *PageSize DoublePostcard *MediaType Letterhead
+*UIConstraints: *PageSize DoublePostcard *MediaType Plain
+*UIConstraints: *PageSize DoublePostcard *MediaType Recycled
+*UIConstraints: *PageSize DoublePostcard *MediaType Rough
+*UIConstraints: *PageSize DoublePostcard *OKMediaType Heavy
+*UIConstraints: *PageSize DoublePostcard *OKMediaType Light
+*UIConstraints: *PageSize DoublePostcard *OKMediaType Medium
+*UIConstraints: *PageSize DoublePostcard *OKMediaType MediumLight
+*UIConstraints: *PageSize DoublePostcard *OKMediaType UltraHeavy1
+*UIConstraints: *PageSize DoublePostcard *OKMediaType UltraHeavy2
+*UIConstraints: *PageSize Env10 *Duplex
+*UIConstraints: *PageSize Env10 *InputSlot Lower
+*UIConstraints: *PageSize Env10 *InputSlot Upper
+*UIConstraints: *PageSize Env10 *MediaType Bond
+*UIConstraints: *PageSize Env10 *MediaType Cardstock
+*UIConstraints: *PageSize Env10 *MediaType Envelope
+*UIConstraints: *PageSize Env10 *MediaType Glossy
+*UIConstraints: *PageSize Env10 *MediaType Labels
+*UIConstraints: *PageSize Env10 *MediaType Letterhead
+*UIConstraints: *PageSize Env10 *MediaType Plain
+*UIConstraints: *PageSize Env10 *MediaType Recycled
+*UIConstraints: *PageSize Env10 *MediaType Rough
+*UIConstraints: *PageSize Env9 *Duplex
+*UIConstraints: *PageSize Env9 *InputSlot Lower
+*UIConstraints: *PageSize Env9 *InputSlot Upper
+*UIConstraints: *PageSize Env9 *MediaType Bond
+*UIConstraints: *PageSize Env9 *MediaType Cardstock
+*UIConstraints: *PageSize Env9 *MediaType Envelope
+*UIConstraints: *PageSize Env9 *MediaType Glossy
+*UIConstraints: *PageSize Env9 *MediaType Labels
+*UIConstraints: *PageSize Env9 *MediaType Letterhead
+*UIConstraints: *PageSize Env9 *MediaType Plain
+*UIConstraints: *PageSize Env9 *MediaType Recycled
+*UIConstraints: *PageSize Env9 *MediaType Rough
+*UIConstraints: *PageSize EnvC5 *Duplex
+*UIConstraints: *PageSize EnvC5 *InputSlot Lower
+*UIConstraints: *PageSize EnvC5 *InputSlot Upper
+*UIConstraints: *PageSize EnvC5 *MediaType Bond
+*UIConstraints: *PageSize EnvC5 *MediaType Cardstock
+*UIConstraints: *PageSize EnvC5 *MediaType Envelope
+*UIConstraints: *PageSize EnvC5 *MediaType Glossy
+*UIConstraints: *PageSize EnvC5 *MediaType Labels
+*UIConstraints: *PageSize EnvC5 *MediaType Letterhead
+*UIConstraints: *PageSize EnvC5 *MediaType Plain
+*UIConstraints: *PageSize EnvC5 *MediaType Recycled
+*UIConstraints: *PageSize EnvC5 *MediaType Rough
+*UIConstraints: *PageSize EnvChou3 *Duplex
+*UIConstraints: *PageSize EnvChou3 *InputSlot Lower
+*UIConstraints: *PageSize EnvChou3 *InputSlot Upper
+*UIConstraints: *PageSize EnvChou3 *MediaType Bond
+*UIConstraints: *PageSize EnvChou3 *MediaType Cardstock
+*UIConstraints: *PageSize EnvChou3 *MediaType Envelope
+*UIConstraints: *PageSize EnvChou3 *MediaType Glossy
+*UIConstraints: *PageSize EnvChou3 *MediaType Labels
+*UIConstraints: *PageSize EnvChou3 *MediaType Letterhead
+*UIConstraints: *PageSize EnvChou3 *MediaType Plain
+*UIConstraints: *PageSize EnvChou3 *MediaType Recycled
+*UIConstraints: *PageSize EnvChou3 *MediaType Rough
+*UIConstraints: *PageSize EnvChou4 *Duplex
+*UIConstraints: *PageSize EnvChou4 *InputSlot Lower
+*UIConstraints: *PageSize EnvChou4 *InputSlot Upper
+*UIConstraints: *PageSize EnvChou4 *MediaType Bond
+*UIConstraints: *PageSize EnvChou4 *MediaType Cardstock
+*UIConstraints: *PageSize EnvChou4 *MediaType Envelope
+*UIConstraints: *PageSize EnvChou4 *MediaType Glossy
+*UIConstraints: *PageSize EnvChou4 *MediaType Labels
+*UIConstraints: *PageSize EnvChou4 *MediaType Letterhead
+*UIConstraints: *PageSize EnvChou4 *MediaType Plain
+*UIConstraints: *PageSize EnvChou4 *MediaType Recycled
+*UIConstraints: *PageSize EnvChou4 *MediaType Rough
+*UIConstraints: *PageSize EnvDL *Duplex
+*UIConstraints: *PageSize EnvDL *InputSlot Lower
+*UIConstraints: *PageSize EnvDL *InputSlot Upper
+*UIConstraints: *PageSize EnvDL *MediaType Bond
+*UIConstraints: *PageSize EnvDL *MediaType Cardstock
+*UIConstraints: *PageSize EnvDL *MediaType Envelope
+*UIConstraints: *PageSize EnvDL *MediaType Glossy
+*UIConstraints: *PageSize EnvDL *MediaType Labels
+*UIConstraints: *PageSize EnvDL *MediaType Letterhead
+*UIConstraints: *PageSize EnvDL *MediaType Plain
+*UIConstraints: *PageSize EnvDL *MediaType Recycled
+*UIConstraints: *PageSize EnvDL *MediaType Rough
+*UIConstraints: *PageSize EnvMonarch *Duplex
+*UIConstraints: *PageSize EnvMonarch *InputSlot Lower
+*UIConstraints: *PageSize EnvMonarch *InputSlot Upper
+*UIConstraints: *PageSize EnvMonarch *MediaType Bond
+*UIConstraints: *PageSize EnvMonarch *MediaType Cardstock
+*UIConstraints: *PageSize EnvMonarch *MediaType Envelope
+*UIConstraints: *PageSize EnvMonarch *MediaType Glossy
+*UIConstraints: *PageSize EnvMonarch *MediaType Labels
+*UIConstraints: *PageSize EnvMonarch *MediaType Letterhead
+*UIConstraints: *PageSize EnvMonarch *MediaType Plain
+*UIConstraints: *PageSize EnvMonarch *MediaType Recycled
+*UIConstraints: *PageSize EnvMonarch *MediaType Rough
+*UIConstraints: *PageSize EnvYou4 *Duplex
+*UIConstraints: *PageSize EnvYou4 *InputSlot Lower
+*UIConstraints: *PageSize EnvYou4 *InputSlot Upper
+*UIConstraints: *PageSize EnvYou4 *MediaType Bond
+*UIConstraints: *PageSize EnvYou4 *MediaType Cardstock
+*UIConstraints: *PageSize EnvYou4 *MediaType Envelope
+*UIConstraints: *PageSize EnvYou4 *MediaType Glossy
+*UIConstraints: *PageSize EnvYou4 *MediaType Labels
+*UIConstraints: *PageSize EnvYou4 *MediaType Letterhead
+*UIConstraints: *PageSize EnvYou4 *MediaType Plain
+*UIConstraints: *PageSize EnvYou4 *MediaType Recycled
+*UIConstraints: *PageSize EnvYou4 *MediaType Rough
+*UIConstraints: *PageSize Postcard *Duplex
+*UIConstraints: *PageSize Postcard *InputSlot Lower
+*UIConstraints: *PageSize Postcard *MediaType Bond
+*UIConstraints: *PageSize Postcard *MediaType Cardstock
+*UIConstraints: *PageSize Postcard *MediaType Envelope
+*UIConstraints: *PageSize Postcard *MediaType Glossy
+*UIConstraints: *PageSize Postcard *MediaType Labels
+*UIConstraints: *PageSize Postcard *MediaType Letterhead
+*UIConstraints: *PageSize Postcard *MediaType Plain
+*UIConstraints: *PageSize Postcard *MediaType Recycled
+*UIConstraints: *PageSize Postcard *MediaType Rough
+*UIConstraints: *PageSize Postcard *OKMediaType Heavy
+*UIConstraints: *PageSize Postcard *OKMediaType Light
+*UIConstraints: *PageSize Postcard *OKMediaType Medium
+*UIConstraints: *PageSize Postcard *OKMediaType MediumLight
+*UIConstraints: *PageSize Postcard *OKMediaType UltraHeavy1
+*UIConstraints: *PageSize Postcard *OKMediaType UltraHeavy2
+*UIConstraints: *PageSize Statement *Duplex
+*UIConstraints: *PageSize Statement *InputSlot Lower
+
+*% Printer Messages _____
+*Message: "%%[ exitserver: permanent state may be changed ]%%"
+*Message: "%%[ Flushing: rest of job (to end-of-file) will be ignored ]%%"
+*Message: "\FontName\ not found, using Courier"
+*% Status (format: %%[ status: <Message from the list below> ] %%)
+*Status: "idle"
+*Status: "busy"
+*Status: "waiting"
+*Status: "PrinterError: toner low"
+*Status: "PrinterError: toner sensor error"
+*Status: "PrinterError: image drum life"
+*Status: "PrinterError: fuser life"
+*Status: "PrinterError: belt life"
+*Status: "PrinterError: HDD trouble"
+*Status: "PrinterError: file system full"
+*Status: "PrinterError: disk full"
+*Status: "PrinterError: memory overflow"
+*Status: "PrinterError: waiting for manual feed"
+*Status: "PrinterError: either paper empty, or no tray installed"
+*Status: "PrinterError: stacker full error"
+*Status: "PrinterError: cover open"
+*Status: "PrinterError: toner empty error"
+*Status: "PrinterError: paper size error"
+*Status: "PrinterError: hopping error"
+*Status: "PrinterError: paper feed jam"
+*Status: "PrinterError: paper exit jam"
+*Status: "PrinterError: paper duplex feed jam"
+*Status: "PrinterError: paper duplex input jam"
+*Status: "PrinterError: drum missing"
+*Status: "PrinterError: belt unit not installed"
+*Status: "PrinterError: fuser unit not installed"
+*Status: "PrinterError: toner mixing mode"
+*Status: "PrinterError: balance error"
+*Status: "PrinterError: calibration error"
+*Status: "PrinterError: density error"
+*Status: "PrinterError: gammer error"
+*Status: "PrinterError: process control off"
+*Status: "PrinterError: printer engine life"
+*Status: "PrinterError: oil roller not installed"
+*Status: "PrinterError: oil roller life"
+*Status: "PrinterError: waste toner full"
+*Status: "PrinterError: waste toner near full"
+*Status: "PrinterError: waste toner sensor full"
+
+*% Input Sources (format: %%[ status: <stat>; source: <one of these> ]%% )
+*Source: "Parallel"
+*Source: "EtherTalk"
+*Source: "HSP"
+*Source: "USB"
+*PrinterError: "toner low"
+*PrinterError: "toner sensor error"
+*PrinterError: "image drum life"
+*PrinterError: "fuser life"
+*PrinterError: "belt life"
+*PrinterError: "HDD trouble"
+*PrinterError: "file system full"
+*PrinterError: "disk full"
+*PrinterError: "memory overflow"
+*PrinterError: "waiting for manual feed"
+*PrinterError: "either paper empty, or no tray installed"
+*PrinterError: "stacker full error"
+*PrinterError: "cover open"
+*PrinterError: "toner empty error"
+*PrinterError: "paper size error"
+*PrinterError: "hopping error"
+*PrinterError: "paper feed jam"
+*PrinterError: "paper exit jam"
+*PrinterError: "paper duplex feed jam"
+*PrinterError: "paper duplex input jam"
+*PrinterError: "drum missing"
+*PrinterError: "belt unit not installed"
+*PrinterError: "fuser unit not installed"
+*PrinterError: "toner mixing mode"
+*PrinterError: "balance error"
+*PrinterError: "calibration error"
+*PrinterError: "density error"
+*PrinterError: "gammer error"
+*PrinterError: "process control off"
+*PrinterError: "printer engine life"
+*PrinterError: "oil roller not installed"
+*PrinterError: "oil roller life"
+*PrinterError: "waste toner full"
+*PrinterError: "waste toner near full"
+*PrinterError: "waste toner sensor full"
+
+*% _____ Color Separation Information _____
+*DefaultColorSep: ProcessBlack.170lpi.600dpi/170 lpi / 600 dpi
+
+*% For 170 lpi / 600 dpi =============================== (Multilevel or 600 dpi)
+
+*ColorSepScreenAngle ProcessBlack.170lpi.600dpi/170 lpi / 600 dpi: "45"
+*ColorSepScreenAngle CustomColor.170lpi.600dpi/170 lpi / 600 dpi: "45"
+*ColorSepScreenAngle ProcessCyan.170lpi.600dpi/170 lpi / 600 dpi: "20"
+*ColorSepScreenAngle ProcessMagenta.170lpi.600dpi/170 lpi / 600 dpi: "160"
+*ColorSepScreenAngle ProcessYellow.170lpi.600dpi/170 lpi / 600 dpi: "45"
+
+*ColorSepScreenFreq ProcessBlack.170lpi.600dpi/170 lpi / 600 dpi: "170"
+*ColorSepScreenFreq CustomColor.170lpi.600dpi/170 lpi / 600 dpi: "170"
+*ColorSepScreenFreq ProcessCyan.170lpi.600dpi/170 lpi / 600 dpi: "170"
+*ColorSepScreenFreq ProcessMagenta.170lpi.600dpi/170 lpi / 600 dpi: "170"
+*ColorSepScreenFreq ProcessYellow.170lpi.600dpi/170 lpi / 600 dpi: "210"
+
+*% For 180 lpi / 1200 dpi ===============================
+
+*ColorSepScreenAngle ProcessBlack.180lpi.1200dpi/180 lpi / 1200 dpi: "90"
+*ColorSepScreenAngle CustomColor.180lpi.1200dpi/180 lpi / 1200 dpi: "90"
+*ColorSepScreenAngle ProcessCyan.180lpi.1200dpi/180 lpi / 1200 dpi: "54"
+*ColorSepScreenAngle ProcessMagenta.180lpi.1200dpi/180 lpi / 1200 dpi: "125"
+*ColorSepScreenAngle ProcessYellow.180lpi.1200dpi/180 lpi / 1200 dpi: "30"
+
+*ColorSepScreenFreq ProcessBlack.180lpi.1200dpi/180 lpi / 1200 dpi: "200"
+*ColorSepScreenFreq CustomColor.180lpi.1200dpi/180 lpi / 1200 dpi: "200"
+*ColorSepScreenFreq ProcessCyan.180lpi.1200dpi/180 lpi / 1200 dpi: "170"
+*ColorSepScreenFreq ProcessMagenta.180lpi.1200dpi/180 lpi / 1200 dpi: "170"
+*ColorSepScreenFreq ProcessYellow.180lpi.1200dpi/180 lpi / 1200 dpi: "170"
+

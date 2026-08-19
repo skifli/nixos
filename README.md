@@ -70,8 +70,8 @@ I have a workflow setup under [`nix-build.yml`](.github/workflows/nix-build.yml)
 My configuration also uses some other GitHub Actions located in [`.github/workflows/`](.github/workflows/):
 
 - [`flake-checker.yml`](.github/workflows/flake-checker.yml): Runs weekly checks on `flake.lock` health.
-- [`nix-build.yml`](.github/workflows/nix-build.yml): As aforementioned, this builds the `lyra` system (for both light and dark theme specialisations), and pushes the results directly to Cachix and pins the latest two revisions.
-- [`nix-maid.yml`](.github/workflows/nix-maid.yml): Automatically runs [`statix`](https://github.com/molybdenumsoftware/statix), [`deadnix`](https://github.com/astro/deadnix), and [`alejandra`](https://github.com/kamadorueda/alejandra) on pushes/PRs, automatically opening a PR with the changes.
+- [`nix-build.yml`](.github/workflows/nix-build.yml): As aforementioned, this builds the `lyra` system (for both light and dark theme specialisations), pushes the results directly to Cachix, and pins the latest two revisions.
+- [`nix-maid.yml`](.github/workflows/nix-maid.yml): Runs [`statix`](https://github.com/molybdenumsoftware/statix), [`deadnix`](https://github.com/astro/deadnix), and [`alejandra`](https://github.com/kamadorueda/alejandra) on pushes/PRs, automatically opening a PR with the changes.
 - [`update-lockfile.yml`](.github/workflows/update-lockfile.yml): Scheduled weekly run (Sundays at 00:00) that automatically updates `flake.lock` and opens an automated PR.
 - [`dependabot.yml`](.github/dependabot.yml): Make sure the GitHub Actions dependencies are up to date, weekly.
 
@@ -164,7 +164,7 @@ Configured in [`users/programs/compositor/niri/binds.nix`](users/programs/compos
 <details>
 <summary>App toggles (through find-or-make.sh)</summary>
 
-These shortcuts will focus the application if already open, launch it if closed, or switch back to the previous window if already focused (last one as per niri settings):
+The app toggle shortcuts will focus the application if already open, launch it if closed, or switch back to the previous window if the target is already focused (last one as per niri settings):
 
 | Keybinding              | Application                                                                           |
 | :---------------------- | :------------------------------------------------------------------------------------ |
