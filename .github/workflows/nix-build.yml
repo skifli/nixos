@@ -30,6 +30,7 @@ jobs:
         run: |
           mkdir -p "hosts/${{ matrix.host }}"
           printf '%s\n' "$HARDWARE_CONFIG" > "hosts/${{ matrix.host }}/hardware-configuration.nix"
+          git add -f "hosts/${{ matrix.host }}/hardware-configuration.nix"
 
       - name: Set up Swap Space
         uses: pierotofy/set-swap-space@master
