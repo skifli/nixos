@@ -239,8 +239,6 @@ in {
 
   environment.sessionVariables = {
     GTK_THEME = lib.mkDefault commonHostVars.theme.gtk.lightName;
-    QT_QPA_PLATFORMTHEME = commonHostVars.theme.qt.platformTheme;
-    QT_STYLE_OVERRIDE = commonHostVars.theme.qt.style;
 
     # DAY THEME CONFIGURATION OUTSIDE THE SPECIALISATIONS ENDS HERE
 
