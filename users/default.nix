@@ -123,7 +123,7 @@ in {
               nask = "nh os switch path:. --ask --accept-flake-config -H ${hostVars.hostname}"; # Shows diff & prompts before switching
               nvm = "nh os build-vm path:. --accept-flake-config -H ${hostVars.hostname}"; # Build & run in VM
 
-              nfc = "nix flake check --no-build";
+              nfc = "nix flake check path:. --no-build";
 
               # Maintenance
               ncl = "nh clean all --keep 5"; # Removes old generations, keeps 5
