@@ -32,6 +32,9 @@ let
   4. THEN create and edit the encrypted files - e.g., `agenix -e secrets/ami/rdp-pifi-linux.age`
   */
 in {
+  # Per host secrets
+  "secrets/lyra/wifi.env.age".publicKeys = [lyra ami];
+
   # Per-user secrets (filenames match secrets/<user>/<name>.age)
   "secrets/ami/hashedPasswordFile.age".publicKeys = all;
   "secrets/ami/github-credentials.age".publicKeys = all;

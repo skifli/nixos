@@ -1,4 +1,13 @@
-{hostVars, ...}: {
+{
+  config,
+  hostVars,
+  lib,
+  pkgs,
+  ...
+}: let
+  wifiSecretKey = "${hostVars.hostname}-wifi.env";
+  hasWifiSecret = builtins.hasAttr wifiSecretKey config.age.secrets;
+in {
   networking = {
     hostName = hostVars.hostname;
 
@@ -47,5 +56,30 @@
   services.resolved = {
     enable = true;
     # It auto sets settings.Resolve.DNS to config.networking.nameservers
+  };
+
+  systemd.services.iwd-wifi-provision = lib.mkIf hasWifiSecret {
+    description = "Provision iwd Wi-Fi credentials";
+    wantedBy = ["iwd.service"];
+    before = ["iwd.service"];
+
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = pkgs.writeShellScript "provision-iwd-wifi" ''
+        set -eu
+        source "${config.age.secrets.${wifiSecretKey}.path}"
+
+        mkdir -p /var/lib/iwd
+        chmod 700 /var/lib/iwd
+
+        TARGET="/var/lib/iwd/''${WIFI_SSID}.psk"
+
+        if [ ! -f "$TARGET" ] || ! grep -q "Passphrase=''${WIFI_PASS}" "$TARGET"; then
+          printf '[Security]\nPassphrase=%s\n' "$WIFI_PASS" > "$TARGET"
+          chmod 600 "$TARGET"
+        fi
+      '';
+    };
   };
 }

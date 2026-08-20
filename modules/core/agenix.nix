@@ -1,4 +1,5 @@
 {
+  hostVars,
   inputs,
   lib,
   usersVars,
@@ -7,6 +8,21 @@
   # Location for encrypted secrets tracked in git.
   # Create these with `agenix -e`.
   secretsDir = ../../secrets;
+
+  # Helper for defining a per-host system secret if the encrypted file exists.
+  mkHostSecret = hostname: name: extra: let
+    file = secretsDir + "/${hostname}/${name}.age";
+  in
+    lib.mkIf (builtins.pathExists file) {
+      "${hostname}-${name}" =
+        {
+          inherit file;
+          owner = "root";
+          group = "root";
+          mode = "0400";
+        }
+        // extra;
+    };
 
   # Helper for defining a per-user secret if the encrypted file exists.
   mkUserSecret = username: name: extra: let
@@ -22,6 +38,11 @@
         }
         // extra;
     };
+
+  mkHostSecrets = hostname:
+    lib.mkMerge [
+      (mkHostSecret hostname "wifi.env" {})
+    ];
 
   mkUserSecrets = username: _userVars:
     lib.mkMerge [
@@ -65,7 +86,10 @@
 in {
   imports = [inputs.agenix.nixosModules.default];
 
-  age.secrets = lib.mkMerge (lib.mapAttrsToList mkUserSecrets usersVars);
+  age.secrets = lib.mkMerge (
+    (lib.mapAttrsToList mkUserSecrets usersVars)
+    ++ [(mkHostSecrets hostVars.hostname)]
+  );
 
   systemd.tmpfiles.rules = lib.flatten (lib.mapAttrsToList mkTmpfilesForUser usersVars);
 }
