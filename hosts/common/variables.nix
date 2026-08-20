@@ -48,7 +48,8 @@
     };
 
     qt = {
-      platform = "qt5ct";
+      platformTheme = "kde";
+      style = "breeze";
     };
   };
   shellAliases = {};

@@ -92,6 +92,48 @@
 
   applyDconfDefault = lib.mapAttrsRecursive (_: lib.mkDefault);
   applyDconfForce = lib.mapAttrsRecursive (_: lib.mkForce);
+
+  kdeglobalsBase = ''
+    TerminalApplication=${userVars.programs.terminal}
+    TerminalService=${
+      if userVars.programs.terminal == "ghostty"
+      then "com.mitchellh.ghostty"
+      else userVars.programs.terminal
+    }.desktop
+
+    [KFileDialog Settings]
+    Allow Expansion=true
+    Automatically select filename extension=true
+    Breadcrumb Navigation=true
+    Decoration position=2
+    Show Full Path=true
+    Show Inline Previews=true
+    Show Preview=true
+    Show Speedbar=true
+    Show hidden files=true
+    Sort by=Name
+    Sort directories first=true
+    Sort hidden files last=false
+    Sort reversed=false
+    Speedbar Width=156
+    View Style=DetailTree
+
+    [PreviewSettings]
+    EnableRemoteFolderThumbnail=true
+    MaximumRemoteSize=104857600
+  '';
+
+  kdeglobalsLight = ''
+    [General]
+    ColorScheme=BreezeLight
+    ${kdeglobalsBase}
+  '';
+
+  kdeglobalsDark = ''
+    [General]
+    ColorScheme=BreezeDark
+    ${kdeglobalsBase}
+  '';
 in {
   environment.systemPackages = with pkgs; [
     # For debugging
@@ -99,10 +141,11 @@ in {
   ];
 
   # Enable Qt styling and set the platform theme platform
-  qt = {
-    enable = true;
-    platformTheme = commonHostVars.theme.qt.platform; # Automatically sets QT_QPA_PLATFORMTHEME which without means Dolphin in dark mode is funky with black text on a black bg...
-  };
+  qt =
+    {
+      enable = true;
+    }
+    // commonHostVars.theme.qt;
 
   home-manager.users.${userVars.username} = {lib, ...}: {
     # Force auto-theme-check to restart after every HM activation/rebuild because it didn't before and since we always rebuild into light if we don't do this this can cause some theme mismatches.
@@ -162,6 +205,8 @@ in {
     # Apply mkDefault for baseline so it layers nicely under Stylix
     gtk = {enable = true;} // (applyGtkDefault lightGtkConfigRaw);
     dconf.settings = applyDconfDefault lightDconfRaw;
+
+    xdg.configFile."kdeglobals".text = lib.mkDefault kdeglobalsLight;
 
     stylix = {
       enable = true;
@@ -233,6 +278,8 @@ in {
         gtk = applyGtkForce lightGtkConfigRaw;
         dconf.settings = applyDconfForce lightDconfRaw;
 
+        xdg.configFile."kdeglobals".text = lib.mkForce kdeglobalsLight;
+
         stylix = {
           base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.light}.yaml";
           cursor.name = commonHostVars.cursor.light.name;
@@ -251,6 +298,8 @@ in {
       home-manager.users.${userVars.username} = {
         gtk = applyGtkForce darkGtkConfigRaw;
         dconf.settings = applyDconfForce darkDconfRaw;
+
+        xdg.configFile."kdeglobals".text = lib.mkForce kdeglobalsDark;
 
         stylix = {
           base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.dark}.yaml";

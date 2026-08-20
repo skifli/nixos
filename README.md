@@ -1,11 +1,11 @@
 # nixOS - An indubitably splendiferous configuration
 
-![NixOS](https://img.shields.io/badge/NixOS-26.05-blue?logo=nixos) ![Flakes](https://img.shields.io/badge/Flakes-enabled-blue) ![Wayland](https://img.shields.io/badge/Wayland-Niri-purple) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Open Source Love svg2](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/)
+![NixOS](https://img.shields.io/badge/NixOS-26.05-blue?logo=nixos) ![Flakes](https://img.shields.io/badge/Flakes-enabled-blue) ![Wayland](https://img.shields.io/badge/Wayland-Niri-purple) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 - [nixOS - An indubitably splendiferous configuration](#nixos---an-indubitably-splendiferous-configuration)
   - [Hosts](#hosts)
   - [Users](#users)
-  - [Cachix](#cachix)
+  - [Cachix](#cachix-)
   - [GitHub workflows](#github-workflows)
   - [Keyboard-centric workflow](#keyboard-centric-workflow)
     - [The navigation layers](#the-navigation-layers)
@@ -45,9 +45,9 @@ This is the configuration that started my NixOS journey, and it has stayed with 
 > [!NOTE]
 > The main host in this repository is `lyra`.
 
-| Hostname | Hardware          | Architecture   | GPU           | Notes                                              |
-| -------- | ----------------- | -------------- | ------------- | -------------------------------------------------- |
-| `lyra`   | Lenovo V530-15ICR | `x86_64-linux` | Intel UHD 630 | Two monitors, 16GB RAM, CachyOS kernel, NVMe root. |
+| Hostname | Architecture   | Graphics | Notes           |
+| -------- | -------------- | -------- | --------------- |
+| `lyra`   | `x86_64-linux` | Intel    | CachyOS kernel. |
 
 ## Users
 
@@ -56,7 +56,7 @@ This is the configuration that started my NixOS journey, and it has stayed with 
 | `ami`    | Mah user               | `zsh`         | Niri + Wayle + Vicinae + Ghostty + Zen Browser |
 | `rescue` | In case of kaboom user | `bash`        | Fallback system user so none                   |
 
-## Cachix
+## Cachix [![Build & cache](https://github.com/skifli/nixos/actions/workflows/nix-build.yml/badge.svg)](https://github.com/skifli/nixos/actions/workflows/nix-build.yml)
 
 > [!IMPORTANT]
 > "Users have a free 5 GB limit for open source projects and 20 Cachix Deploy agents." - [Cachix Pricing](https://www.cachix.org/pricing).
@@ -230,7 +230,7 @@ Configured in [`users/programs/terminal-shell/zsh/initContent.sh`](users/program
 
 I use `nh` nearly all the time instead of raw `nixos-rebuild` commands:
 
-| Alias   | Command / Action                               | Usage                                                  |
+| Alias   | Command(s)                                     | Usage                                                  |
 | :------ | :--------------------------------------------- | :----------------------------------------------------- |
 | `nsw`   | `nh os switch`                                 | Normal switch for daily config changes                 |
 | `nup`   | `nh os switch --update`                        | Updates all flake inputs and switches at once          |
@@ -239,6 +239,7 @@ I use `nh` nearly all the time instead of raw `nixos-rebuild` commands:
 | `ndry`  | `nh os switch --dry`                           | Dry run with inbuilt nvd package diff                  |
 | `nask`  | `nh os switch --ask`                           | Shows visual package diff and prompts before switching |
 | `nvm`   | `nh os build-vm`                               | QEMU sandbox build to test bigger changes              |
+| `nfc`   | `nix flake check --no-build`                   | Tests the flake syntax without building                |
 | `ncl`   | `nh clean all --keep 5`                        | Garbage collects old generations while keeping 5 safe  |
 | `znsw`  | `z nixos && git pull && nh os switch`          | Syncs repo changes and switches                        |
 | `znup`  | `z nixos && git pull && nh os switch -u`       | Syncs repo changes, updates flake inputs, and switches |

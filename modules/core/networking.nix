@@ -1,8 +1,16 @@
 {hostVars, ...}: {
   networking = {
     hostName = hostVars.hostname;
+
+    wireless = {
+      enable = false;
+      iwd.enable = true; # Use iwd not wpa_supplicant
+    };
+
     networkmanager = {
       enable = true;
+      wifi.backend = "iwd";
+
       # Reduce connect timeout for faster failure recovery
       connectionConfig = {
         "connection.auth-retries" = 2;
@@ -18,7 +26,6 @@
       "1.0.0.1" # Cloudflare secondary
     ];
 
-    # Disable IPv6 temporarily to speed up DNS in IPv4-only environments
     enableIPv6 = true;
 
     /*

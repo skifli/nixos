@@ -29,6 +29,14 @@ fi
 
 ID="floating-term-$$-$(date +%s%N)"
 
+HAS_TITLE=false
+for arg in "$@"; do
+  if [[ "$arg" == "--title" ]] || [[ "$arg" == --title=* ]]; then
+    HAS_TITLE=true
+    break
+  fi
+done
+
 case "$TERM_CMD" in
   ghostty)
     ghostty +new-window --title="$ID" "$@" &
@@ -47,6 +55,10 @@ for i in $(seq 1 $TIMEOUT); do
 done
 
 if [ -z "$WINDOW_ID" ]; then
+  if [ "$HAS_TITLE" = true ]; then
+    exit 0 # Assume due to custom title it's not found.
+  fi
+
   notify-send -e -a nirius -i "/home/${USER}/.local/share/misc/niri-icon.svg" -u critical -t 5000 "Error" "Timed out waiting for floating window $ID"
   exit 1
 fi

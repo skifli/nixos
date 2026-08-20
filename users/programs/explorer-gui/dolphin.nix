@@ -31,7 +31,10 @@
         kdePackages.dolphin
         kdePackages.dolphin-plugins
 
+        kdePackages.breeze
         kdePackages.breeze-icons # For sidebar icons iirc
+
+        kdePackages.plasma-workspace # plasma-apply-colorscheme, among others
 
         kdePackages.qtsvg # Support for svg icons
         kdePackages.kio # Below ig, custom though
@@ -80,9 +83,6 @@
         RemotePlugins=imagethumbnail,jpegthumbnail,directorythumbnail,ffmpegthumbs,exethumbnail,comicbookthumbnail,officeMarcothumbnail
         RemotePreviewSizeLimit=104857600
         UseDefaultRemotePreviewSizeLimit=false
-
-        [UiSettings]
-        ColorScheme=default
         EOF
       '';
     };
@@ -97,36 +97,5 @@
       "application/x-tar" = ["org.kde.ark.desktop"];
       # "application/x-gnome-saved-search" = [ "dolphin.desktop" ];
     };
-
-    xdg.configFile."kdeglobals".text = ''
-      [KFileDialog Settings]
-      Allow Expansion=true
-      Automatically select filename extension=true
-      Breadcrumb Navigation=true
-      Decoration position=2
-      Show Full Path=true
-      Show Inline Previews=true
-      Show Preview=true
-      Show Speedbar=true
-      Show hidden files=true
-      Sort by=Name
-      Sort directories first=true
-      Sort hidden files last=false
-      Sort reversed=false
-      Speedbar Width=156
-      View Style=DetailTree
-
-      [PreviewSettings]
-      EnableRemoteFolderThumbnail=true
-      MaximumRemoteSize=104857600
-
-      [General]
-      TerminalApplication=${userVars.programs.terminal}
-      TerminalService=${
-        if userVars.programs.terminal == "ghostty"
-        then "com.mitchellh.ghostty"
-        else userVars.programs.terminal
-      }.desktop
-    '';
   };
 }

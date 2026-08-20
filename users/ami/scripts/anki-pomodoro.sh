@@ -35,10 +35,10 @@ dismiss_notif() {
 cleanup() {
     set_dnd "off"
     rm -f "$STATE_FILE"
-    
+
     dismiss_notif "$FOCUS_NOTIF_ID"
     dismiss_notif "$BREAK_NOTIF_ID"
-    
+
     stty echo cbreak
     printf "\e[?25h"
 }
@@ -56,7 +56,7 @@ while true; do
     echo ""
     echo "Press ENTER to start 25-minute focus session (or 'u' to undo, 'q' to quit)..."
     echo ""
-    
+
     dismiss_notif "$BREAK_NOTIF_ID"
     BREAK_NOTIF_ID=0
 
