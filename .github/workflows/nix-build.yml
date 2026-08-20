@@ -4,8 +4,18 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-lyra:
+  build:
+    name: Build (${{ matrix.host }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - host: lyra
+            hardware_secret: HARDWARE_CONFIG_LYRA
+          # - host: pifi
+          #   hardware_secret: HARDWARE_CONFIG_PIFI
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -13,6 +23,13 @@ jobs:
           token: ${{ secrets.GH_PAT }}
           submodules: recursive
           fetch-depth: 0
+
+      - name: Restore hardware configuration
+        env:
+          HARDWARE_CONFIG: ${{ secrets[matrix.hardware_secret] }}
+        run: |
+          mkdir -p "hosts/${{ matrix.host }}"
+          printf '%s\n' "$HARDWARE_CONFIG" > "hosts/${{ matrix.host }}/hardware-configuration.nix"
 
       - name: Set up Swap Space
         uses: pierotofy/set-swap-space@master
@@ -34,9 +51,9 @@ jobs:
           name: "skifli-nixos"
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
 
-      - name: Build nixOS system (lyra)
+      - name: Build NixOS system (${{ matrix.host }})
         run: |
-          LIGHT_PATH=$(nix build .?submodules=1#nixosConfigurations.lyra.config.system.build.toplevel \
+          LIGHT_PATH=$(nix build ".?submodules=1#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" \
             --accept-flake-config \
             --max-jobs 1 \
             --no-link \
@@ -44,8 +61,8 @@ jobs:
 
           DARK_PATH=$(readlink -f "$LIGHT_PATH/specialisation/dark")
 
-          echo "LIGHT_PATH=$LIGHT_PATH" >> $GITHUB_ENV
-          echo "DARK_PATH=$DARK_PATH" >> $GITHUB_ENV
+          echo "LIGHT_PATH=$LIGHT_PATH" >> "$GITHUB_ENV"
+          echo "DARK_PATH=$DARK_PATH" >> "$GITHUB_ENV"
 
       - name: Pin builds on Cachix
         if: github.ref == 'refs/heads/main'
@@ -54,5 +71,5 @@ jobs:
           cachix push skifli-nixos "$LIGHT_PATH" "$DARK_PATH"
 
           # Pin both to 2 latest revisions
-          cachix pin skifli-nixos lyra-light "$LIGHT_PATH" --keep-revisions 2
-          cachix pin skifli-nixos lyra-dark "$DARK_PATH" --keep-revisions 2
+          cachix pin skifli-nixos "${{ matrix.host }}-light" "$LIGHT_PATH" --keep-revisions 2
+          cachix pin skifli-nixos "${{ matrix.host }}-dark" "$DARK_PATH" --keep-revisions 2
