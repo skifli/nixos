@@ -31,10 +31,7 @@
         kdePackages.dolphin
         kdePackages.dolphin-plugins
 
-        kdePackages.breeze
         kdePackages.breeze-icons # For sidebar icons iirc
-
-        kdePackages.plasma-workspace # plasma-apply-colorscheme, among others
 
         kdePackages.qtsvg # Support for svg icons
         kdePackages.kio # Below ig, custom though

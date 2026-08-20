@@ -14,7 +14,7 @@
       };
 
       shellAliases = {
-        ov = "ov -X --QuitSmall";
+        ov = "ov -X --quit-if-one-screen";
       };
     };
 

@@ -1,4 +1,5 @@
 {
+  lib,
   pkgs,
   userVars,
   ...
@@ -127,6 +128,11 @@
         ui_font_weight = 400.0;
         buffer_line_height = "standard";
         buffer_font_size = 12.0;
+        theme = lib.mkForce {
+          mode = "system";
+          light = "One Light";
+          dark = "One Dark";
+        };
 
         # Panels & Layouts
         tabs = {

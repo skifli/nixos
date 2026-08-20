@@ -11,14 +11,11 @@ in {
   networking = {
     hostName = hostVars.hostname;
 
-    wireless = {
-      enable = false;
-      iwd.enable = true; # Use iwd not wpa_supplicant
-    };
+    wireless.iwd.enable = false; # Uses iwd not wpa_supplicant
 
     networkmanager = {
       enable = true;
-      wifi.backend = "iwd";
+      wifi.backend = "wpa_supplicant";
 
       # Reduce connect timeout for faster failure recovery
       connectionConfig = {
@@ -26,6 +23,38 @@ in {
       };
       # Use systemd-resolved for better DNS caching
       dns = "systemd-resolved";
+
+      ensureProfiles = lib.mkIf hasWifiSecret {
+        environmentFiles = [
+          config.age.secrets.${wifiSecretKey}.path
+        ];
+        profiles = {
+          "wifi-1" = {
+            connection = {
+              id = "$WIFI_SSID";
+              type = "wifi";
+              autoconnect = true;
+            };
+            wifi = {
+              mode = "infrastructure";
+              ssid = "$WIFI_SSID";
+            };
+            wifi-security = {
+              auth-alg = "open";
+              key-mgmt = "wpa-psk";
+              psk = "$WIFI_PASS";
+            };
+            ipv4 = {
+              method = "auto";
+            };
+            ipv6 = {
+              addr-gen-mode = "default";
+              method = "auto";
+            };
+            proxy = {};
+          };
+        };
+      };
     };
 
     # Better DNS resolution with fallbacks (reduces startup delays)
@@ -56,30 +85,5 @@ in {
   services.resolved = {
     enable = true;
     # It auto sets settings.Resolve.DNS to config.networking.nameservers
-  };
-
-  systemd.services.iwd-wifi-provision = lib.mkIf hasWifiSecret {
-    description = "Provision iwd Wi-Fi credentials";
-    wantedBy = ["iwd.service"];
-    before = ["iwd.service"];
-
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-      ExecStart = pkgs.writeShellScript "provision-iwd-wifi" ''
-        set -eu
-        source "${config.age.secrets.${wifiSecretKey}.path}"
-
-        mkdir -p /var/lib/iwd
-        chmod 700 /var/lib/iwd
-
-        TARGET="/var/lib/iwd/''${WIFI_SSID}.psk"
-
-        if [ ! -f "$TARGET" ] || ! grep -q "Passphrase=''${WIFI_PASS}" "$TARGET"; then
-          printf '[Security]\nPassphrase=%s\n' "$WIFI_PASS" > "$TARGET"
-          chmod 600 "$TARGET"
-        fi
-      '';
-    };
   };
 }

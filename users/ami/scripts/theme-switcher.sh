@@ -24,13 +24,7 @@ if [ -x "$SWITCH_BIN" ]; then
     sudo "$SWITCH_BIN" test
 
     # Broadcast live theme change to running Qt/KDE windows
-    if [ "$TARGET" = "dark" ]; then
-        plasma-apply-colorscheme BreezeDark 2>/dev/null || true
-        dbus-send --type=signal /KGlobalSettings org.kde.KGlobalSettings.notifyChange int32:0 int32:0 2>/dev/null || true
-    else
-        plasma-apply-colorscheme BreezeLight 2>/dev/null || true
-        dbus-send --type=signal /KGlobalSettings org.kde.KGlobalSettings.notifyChange int32:0 int32:0 2>/dev/null || true
-    fi
+    dbus-send --type=signal /KGlobalSettings org.kde.KGlobalSettings.notifyChange int32:0 int32:0 2>/dev/null || true
 
     # Niri workspace layout refresh transitions
     # niri msg action do-screen-transition -d 1000 2>/dev/null || true

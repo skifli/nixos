@@ -122,22 +122,12 @@
     EnableRemoteFolderThumbnail=true
     MaximumRemoteSize=104857600
   '';
-
-  kdeglobalsLight = ''
-    [General]
-    ColorScheme=BreezeLight
-    ${kdeglobalsBase}
-  '';
-
-  kdeglobalsDark = ''
-    [General]
-    ColorScheme=BreezeDark
-    ${kdeglobalsBase}
-  '';
 in {
   environment.systemPackages = with pkgs; [
     # For debugging
     glib
+
+    kdePackages.breeze
   ];
 
   # Enable Qt styling and set the platform theme platform
@@ -156,6 +146,7 @@ in {
     systemd.user.services.auto-theme-check = {
       Unit = {
         Description = "Solar position watcher and theme switcher daemon";
+        X-SwitchMethod = "keep-old"; # Preven sd-switch in HM from restaring this service
       };
       Service = {
         Type = "simple";
@@ -200,13 +191,19 @@ in {
       };
     };
 
+    xdg.dataFile."color-schemes/BreezeDark.colors".source = "${pkgs.kdePackages.breeze}/share/color-schemes/BreezeDark.colors";
+    xdg.dataFile."color-schemes/BreezeLight.colors".source = "${pkgs.kdePackages.breeze}/share/color-schemes/BreezeLight.colors";
+
     # DAY THEME CONFIGURATION OUTSIDE THE SPECIALISATIONS STARTS HERE
 
     # Apply mkDefault for baseline so it layers nicely under Stylix
     gtk = {enable = true;} // (applyGtkDefault lightGtkConfigRaw);
     dconf.settings = applyDconfDefault lightDconfRaw;
 
-    xdg.configFile."kdeglobals".text = lib.mkDefault kdeglobalsLight;
+    xdg.configFile."kdeglobals".text = lib.mkDefault ''
+      ${builtins.readFile "${pkgs.kdePackages.breeze}/share/color-schemes/BreezeLight.colors"}
+      ${kdeglobalsBase}
+    '';
 
     stylix = {
       enable = true;
@@ -242,6 +239,8 @@ in {
 
   environment.sessionVariables = {
     GTK_THEME = lib.mkDefault commonHostVars.theme.gtk.lightName;
+    QT_QPA_PLATFORMTHEME = commonHostVars.theme.qt.platformTheme;
+    QT_STYLE_OVERRIDE = commonHostVars.theme.qt.style;
 
     # DAY THEME CONFIGURATION OUTSIDE THE SPECIALISATIONS ENDS HERE
 
@@ -273,12 +272,22 @@ in {
 
   # Specialisations generate nested configurations under /run/current-system/specialisation
   specialisation = {
-    light.configuration = {pkgs, ...}: {
-      home-manager.users.${userVars.username} = {
+    light.configuration = {
+      lib,
+      pkgs,
+      ...
+    }: {
+      home-manager.users.${userVars.username} = {lib, ...}: {
+        # Disable restart trigger when switching into this specialisation
+        home.activation.triggerThemeCheck = lib.mkForce (lib.hm.dag.entryAfter ["reloadSystemd"] ":");
+
         gtk = applyGtkForce lightGtkConfigRaw;
         dconf.settings = applyDconfForce lightDconfRaw;
 
-        xdg.configFile."kdeglobals".text = lib.mkForce kdeglobalsLight;
+        xdg.configFile."kdeglobals".text = lib.mkForce ''
+          ${builtins.readFile "${pkgs.kdePackages.breeze}/share/color-schemes/BreezeLight.colors"}
+          ${kdeglobalsBase}
+        '';
 
         stylix = {
           base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.light}.yaml";
@@ -294,12 +303,22 @@ in {
       };
     };
 
-    dark.configuration = {pkgs, ...}: {
-      home-manager.users.${userVars.username} = {
+    dark.configuration = {
+      lib,
+      pkgs,
+      ...
+    }: {
+      home-manager.users.${userVars.username} = {lib, ...}: {
+        # Disable restart trigger when switching into this specialisation
+        home.activation.triggerThemeCheck = lib.mkForce (lib.hm.dag.entryAfter ["reloadSystemd"] ":");
+
         gtk = applyGtkForce darkGtkConfigRaw;
         dconf.settings = applyDconfForce darkDconfRaw;
 
-        xdg.configFile."kdeglobals".text = lib.mkForce kdeglobalsDark;
+        xdg.configFile."kdeglobals".text = lib.mkForce ''
+          ${builtins.readFile "${pkgs.kdePackages.breeze}/share/color-schemes/BreezeDark.colors"}
+          ${kdeglobalsBase}
+        '';
 
         stylix = {
           base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.dark}.yaml";

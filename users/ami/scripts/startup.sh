@@ -36,7 +36,6 @@ start_and_manage() {
 is_any_keyring_locked() {
     local l_login l_def
     l_login=$(busctl --user get-property org.freedesktop.secrets /org/freedesktop/secrets/collection/login org.freedesktop.Secret.Collection Locked 2>/dev/null | awk '{print $2}')
-
     l_def=$(busctl --user get-property org.freedesktop.secrets /org/freedesktop/secrets/collection/Default_5fkeyring org.freedesktop.Secret.Collection Locked 2>/dev/null | awk '{print $2}')
     [ "$l_login" = "true" ] || [ "$l_def" = "true" ]
 }
@@ -54,7 +53,7 @@ notify-send -e -a "gcr-prompter" -i "$HOME/.local/share/misc/Seahorse_icon_hicol
             break
         fi
 
-        busctl --user call org.freedesktop.secrets /org/freedesktop/secrets org.freedesktop.Secret.Service Unlock ao 2 "/org/freedesktop/secrets/collection/login" "/org/freedesktop/secrets/collection/Default_5fkeyring" </dev/null >/tmp/secret-tool.log 2>&1 & # Redirects stdout to a log file not dev/null, but stdin is dev/null
+        secret-tool search --all --unlock xdg:schema org.freedesktop.Secret.Generic </dev/null >/tmp/secret-tool.log 2>&1 & # Redirects stdout to a log file not dev/null, but stdin is dev/null
         SECRET_PID=$!
 
         # Polls lock status every second for up to 25 seconds
