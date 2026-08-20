@@ -47,6 +47,6 @@ in {
     };
   };
 
-  # PAM service for swaylock unlock authentication
+  # Work around to https://github.com/NixOS/nixpkgs/issues/143365
   security.pam.services.swaylock = {};
 }
