@@ -8,9 +8,8 @@
   screen-lock-timeout = hostVars.screen-lock-timeout * minutes;
   screen-blank-timeout = hostVars.screen-blank-timeout * minutes;
 
-  loginctl = "${pkgs.systemd}/bin/loginctl lock-session";
   niri-bin = "${pkgs.niri}/bin/niri"; # IPC stuff so fine
-  swaylock = "${pkgs.swaylock-effects}/bin/swaylock -f -i /home/${userVars.username}/.local/share/wallpaper --effect-blur 7x5 --fade-in 0.2";
+  swaylock = "${pkgs.swaylock}/bin/swaylock -f -i /home/${userVars.username}/.local/share/wallpaper-blurred";
 
   display = status: "${niri-bin} msg action power-${status}-monitors";
 in {
@@ -23,25 +22,31 @@ in {
       enable = true;
 
       timeouts = [
+        # 1. Lock screen(s)
+        {
+          timeout = screen-lock-timeout;
+          command = swaylock;
+        }
+
+        # 2. Turn off monitor(s) while locked
         {
           timeout = screen-blank-timeout;
           command = display "off";
-        }
-        {
-          timeout = screen-blank-timeout + screen-lock-timeout;
-          command = loginctl;
+          resumeCommand = display "on";
         }
       ];
+
       events = {
         lock = swaylock;
-        "before-sleep" = (display "off") + ";" + swaylock;
-        "after-resume" = display "on";
+
+        before-sleep = "${swaylock}; ${display "off"}";
+        after-resume = display "on";
       };
 
       systemdTargets = ["graphical-session.target"];
     };
   };
 
-  # Work around to https://github.com/NixOS/nixpkgs/issues/143365
+  # PAM service for swaylock unlock authentication
   security.pam.services.swaylock = {};
 }

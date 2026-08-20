@@ -16,7 +16,6 @@ in {
     users.${userVars.username} = {
       imports = [
         inputs.niri-nix.homeModules.default
-        inputs.niri-nix.homeModules.stylix
       ];
 
       # Import the default configuration from the sub-folder

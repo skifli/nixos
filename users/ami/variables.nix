@@ -11,7 +11,7 @@
     lib.imap0 (idx: outputName: {
       match._props = {
         app-id._raw = ''r#"(?i)io\.github\.slgobinath\.SafeEyes"#'';
-        title._raw = ''r#"(?i)SafeEyes-${builtins.toString idx}"#'';
+        title._raw = ''r#"(?i)SafeEyes-${toString idx}"#'';
       };
       open-on-output = outputName;
       open-focused = true;
@@ -369,6 +369,26 @@ in rec {
       "ydotool"
     ];
   };
+
+  stylixTargetsWhitelist = with programs; [
+    # Programs defined above
+    terminal
+    "helix" # != programs.editor
+    "zed" # != programs.visual
+    explorer-tui
+    launcher
+    prompt
+
+    # Misc
+    "lazygit"
+    "btop"
+    "mpv"
+    "fzf"
+    "bat"
+    "vivid"
+    "swaylock"
+    "nixos-icons"
+  ];
 
   sessionVariables = {};
 

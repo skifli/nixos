@@ -130,7 +130,7 @@
   };
 
   screen-lock-timeout = 5;
-  screen-blank-timeout = 15;
+  screen-blank-timeout = 10;
 
   # Localisation
   consoleKeymap = "uk"; # TTY keymap

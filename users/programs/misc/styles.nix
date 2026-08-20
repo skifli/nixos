@@ -1,5 +1,6 @@
 {
   commonHostVars,
+  config,
   hostVars,
   lib,
   pkgs,
@@ -14,6 +15,15 @@
   12/08/2026@21:45 - The latter makes Zen Browser have like accessibility highlights and stuff which are of course useful to those who need it but I realised it's from this (tested it and confirmed) so I'm disabling this setting for good... hopefully somehow Anytype just... follows the rest of my system??? :sob:
   13/08/2026@13:31 - Finally fixed for good - Anytype switches to system theme when it changes without a restart! I THINK (not 100% sure) it was linked to this commit - https://github.com/skifli/nixos/commit/4ec0c216570e677e6ec6d5a4d1d1d083e7dceb2a. Specifically, setting `org.freedesktop.impl.portal.Settings` to just `gtk`. At least this charade is all over now, phew!
   13/08/2026@22:22 - It broke again but after a rebuild with ADW_DISABLE_PORTAL=1 it works again??? I didn't know before, I definitely don't know now. Just, if I restart my PC tomorrow, and it's switched - I'll be a happy blob of existence. Anyway this hurts my brain, goodnight :sob:.
+  */
+  /*
+  FOR THE BELOW REASON, IN THE RAW GTK CONFIGS, gtk4.theme IS SET TO NULL
+    trace: evaluation warning: The default value of gtk.gtk4.theme has changed from config.gtk.theme to null.
+    You are currently using the legacy default (config.gtk.theme) because home.stateVersion is less than "26.05".
+    To silence this warning and keep legacy behavior, set:
+    gtk.gtk4.theme = config.gtk.theme;
+    To adopt the new default behavior, set:
+    gtk.gtk4.theme = null;
   */
   lightGtkConfigRaw = {
     iconTheme.name = commonHostVars.icons.light;
@@ -78,6 +88,7 @@
     };
     gtk3.extraConfig = lib.mapAttrs (_: lib.mkDefault) cfg.gtk3.extraConfig;
     gtk4.extraConfig = lib.mapAttrs (_: lib.mkDefault) cfg.gtk4.extraConfig;
+    gtk4.theme = lib.mkDefault null;
   };
 
   applyGtkForce = cfg: {
@@ -88,6 +99,7 @@
     };
     gtk3.extraConfig = lib.mapAttrs (_: lib.mkForce) cfg.gtk3.extraConfig;
     gtk4.extraConfig = lib.mapAttrs (_: lib.mkForce) cfg.gtk4.extraConfig;
+    gtk4.theme = lib.mkForce null;
   };
 
   applyDconfDefault = lib.mapAttrsRecursive (_: lib.mkDefault);
@@ -122,12 +134,14 @@
     EnableRemoteFolderThumbnail=true
     MaximumRemoteSize=104857600
   '';
+
+  qtThemeStyleCapitalised = lib.toSentenceCase commonHostVars.theme.qt.style;
 in {
   environment.systemPackages = with pkgs; [
     # For debugging
     glib
 
-    kdePackages.breeze
+    kdePackages.${commonHostVars.theme.qt.style}
   ];
 
   # Enable Qt styling and set the platform theme platform
@@ -191,21 +205,61 @@ in {
       };
     };
 
-    xdg.dataFile."color-schemes/BreezeDark.colors".source = "${pkgs.kdePackages.breeze}/share/color-schemes/BreezeDark.colors";
-    xdg.dataFile."color-schemes/BreezeLight.colors".source = "${pkgs.kdePackages.breeze}/share/color-schemes/BreezeLight.colors";
+    # I don't think this is needed anymore but just in case...
+    xdg.dataFile."color-schemes/${qtThemeStyleCapitalised}Dark.colors".source = "${pkgs.kdePackages.${commonHostVars.theme.qt.style}}/share/color-schemes/${qtThemeStyleCapitalised}Dark.colors";
+    xdg.dataFile."color-schemes/${qtThemeStyleCapitalised}Light.colors".source = "${pkgs.kdePackages.${commonHostVars.theme.qt.style}}/share/color-schemes/${qtThemeStyleCapitalised}Light.colors";
 
     # DAY THEME CONFIGURATION OUTSIDE THE SPECIALISATIONS STARTS HERE
 
-    # Apply mkDefault for baseline so it layers nicely under Stylix
-    gtk = {enable = true;} // (applyGtkDefault lightGtkConfigRaw);
-    dconf.settings = applyDconfDefault lightDconfRaw;
+    gtk =
+      {
+        enable = true;
+
+        # THIS SECTION IS NOT PART OF DAY THEME CONFIGURATION OUTSIDE THE SPECIALISATIONS
+        # DAY THEME CONFIGURATION OUTSIDE THE SPECIALISATIONS PAUSE
+        font = {
+          name = commonHostVars.fonts.sansSerif.name;
+          size = commonHostVars.fonts.sizes.applications;
+          package = commonHostVars.fonts.sansSerif.package;
+        }; # Have to manually do this and the below config because the Stylix gtk/gnome/qt targets are disabled so as not to break automatic theme switching, etc.
+      }
+      # DAY THEME CONFIGURATION OUTSIDE THE SPECIALISATIONS RESUME
+      // (applyGtkDefault lightGtkConfigRaw);
+    dconf.settings = lib.mkMerge [
+      (applyDconfDefault lightDconfRaw)
+      # THIS SECTION IS NOT PART OF DAY THEME CONFIGURATION OUTSIDE THE SPECIALISATIONS
+      # DAY THEME CONFIGURATION OUTSIDE THE SPECIALISATIONS PAUSE
+      {
+        "org/gnome/desktop/interface" = {
+          font-name = "${commonHostVars.fonts.sansSerif.name} ${toString commonHostVars.fonts.sizes.applications}";
+          document-font-name = "${commonHostVars.fonts.sansSerif.name} ${toString commonHostVars.fonts.sizes.applications}";
+          monospace-font-name = "${commonHostVars.fonts.monospace.name} ${toString commonHostVars.fonts.sizes.terminal}";
+
+          cursor-size = commonHostVars.cursor.size;
+          cursor-theme = config.home-manager.users.${userVars.username}.stylix.cursor.name; # Dynamically follow based on dark / light specialisation without having to rewrite this itself!
+        };
+      }
+      # DAY THEME CONFIGURATION OUTSIDE THE SPECIALISATIONS RESUME
+    ];
 
     xdg.configFile."kdeglobals".text = lib.mkDefault ''
-      ${builtins.readFile "${pkgs.kdePackages.breeze}/share/color-schemes/BreezeLight.colors"}
+      ${builtins.readFile "${pkgs.kdePackages.${commonHostVars.theme.qt.style}}/share/color-schemes/${qtThemeStyleCapitalised}Light.colors"}
       ${kdeglobalsBase}
     '';
 
     stylix = {
+      # THIS SECTION IS NOT PART OF DAY THEME CONFIGURATION OUTSIDE THE SPECIALISATIONS
+      # DAY THEME CONFIGURATION OUTSIDE THE SPECIALISATIONS PAUSE
+      autoEnable = false;
+      targets = lib.genAttrs (userVars.stylixTargetsWhitelist
+        ++ [
+          "fontconfig"
+          "font-packages"
+        ]) (_name: {
+        enable = true;
+      });
+
+      # DAY THEME CONFIGURATION OUTSIDE THE SPECIALISATIONS RESUME
       enable = true;
       inherit (commonHostVars) fonts; # There is no stylix.fonts.enable so this is fine!
 
@@ -229,8 +283,6 @@ in {
       };
 
       base16Scheme = lib.mkDefault "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.light}.yaml";
-
-      # Setting gtk/gnome/qt targets broke stuff so do NOT do that!
     };
   };
 
@@ -283,7 +335,7 @@ in {
         dconf.settings = applyDconfForce lightDconfRaw;
 
         xdg.configFile."kdeglobals".text = lib.mkForce ''
-          ${builtins.readFile "${pkgs.kdePackages.breeze}/share/color-schemes/BreezeLight.colors"}
+          ${builtins.readFile "${pkgs.kdePackages.${commonHostVars.theme.qt.style}}/share/color-schemes/${qtThemeStyleCapitalised}Light.colors"}
           ${kdeglobalsBase}
         '';
 
@@ -314,7 +366,7 @@ in {
         dconf.settings = applyDconfForce darkDconfRaw;
 
         xdg.configFile."kdeglobals".text = lib.mkForce ''
-          ${builtins.readFile "${pkgs.kdePackages.breeze}/share/color-schemes/BreezeDark.colors"}
+          ${builtins.readFile "${pkgs.kdePackages.${commonHostVars.theme.qt.style}}/share/color-schemes/${qtThemeStyleCapitalised}Dark.colors"}
           ${kdeglobalsBase}
         '';
 

@@ -120,8 +120,6 @@ in {
   */
 
   home-manager.users.${userVars.username} = {
-    stylix.targets.anki.enable = false;
-
     programs.anki = {
       enable = true;
       addons = with pkgs; [

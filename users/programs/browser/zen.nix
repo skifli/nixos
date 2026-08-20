@@ -16,8 +16,6 @@ in {
     users.${userVars.username} = _: {
       home.packages = with pkgs; [kdePackages.kdialog speechd];
 
-      stylix.targets.zen-browser.enable = false;
-
       programs.zen-browser = {
         enable = true;
 
