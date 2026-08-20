@@ -2,7 +2,6 @@
   config,
   hostVars,
   lib,
-  pkgs,
   ...
 }: let
   wifiSecretKey = "${hostVars.hostname}-wifi.env";
