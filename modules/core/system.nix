@@ -86,6 +86,9 @@ in {
         extraArgs = "--keep-since 7d --keep 10"; # Keep any generation used within the last 7 days, and keep the last 10 generations no matter what
       };
     };
+    git.config.safe.directory = [
+      "/home/${primaryUser}/nixos"
+    ];
     nix-ld.enable = true; # Run unpatched dynamic binaries on NixOS.
   };
 

@@ -13,7 +13,6 @@
         "_netdev"
         "nofail"
         "auto"
-        "x-systemd.automount"
         "x-systemd.after=network-online.target"
         "x-systemd.requires=network-online.target"
         "x-systemd.idle-timeout=600"

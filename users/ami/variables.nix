@@ -398,6 +398,7 @@ in rec {
         Description = "Check for due todo reminders";
         PartOf = ["graphical-session.target"];
         After = ["graphical-session.target"];
+        X-SwitchMethod = "keep-old"; # Preven sd-switch in HM from restaring this service
       };
 
       Service = {
@@ -411,6 +412,7 @@ in rec {
         Description = "Check and show startup todo reminders";
         PartOf = ["graphical-session.target"];
         After = ["graphical-session.target"];
+        X-SwitchMethod = "keep-old"; # Preven sd-switch in HM from restaring this service
       };
       Service = {
         Type = "oneshot";
@@ -455,6 +457,7 @@ in rec {
     todo-checker = {
       Unit = {
         Description = "Timer for todo reminder checker";
+        X-SwitchMethod = "keep-old"; # Preven sd-switch in HM from restaring this service
       };
       Timer = {
         OnBootSec = "1m";

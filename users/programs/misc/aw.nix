@@ -66,7 +66,7 @@
     };
   };
 
-  pyEnv = pkgs.python313.withPackages (
+  pyEnv = pkgs.python313.withPackages ( # Iirc something required Python 3.13 specifically but I may be wrong / that might be Anki's use of python313 instead...
     ps:
       with ps; [
         aw-client
@@ -296,6 +296,12 @@ in {
       ExecStart = "${pkgs.socat}/bin/socat TCP-LISTEN:5600,fork,reuseaddr,bind=127.0.0.1 TCP:pifi:5600";
       Restart = "always";
       RestartSec = "5s";
+
+      DynamicUser = true;
+      CapabilityBoundingSet = "";
+      ProtectSystem = "strict";
+      ProtectHome = true;
+      NoNewPrivileges = true;
     };
   };
 }

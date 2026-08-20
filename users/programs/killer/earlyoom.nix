@@ -52,4 +52,6 @@
         ]
       );
   };
+
+  systemd.oomd.enable = false; # To disable conflicts
 }

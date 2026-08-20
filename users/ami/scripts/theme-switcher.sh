@@ -14,10 +14,27 @@ if [ -z "$TARGET" ]; then
     notify-send -e -a "nixOS" -i "/home/${USER}/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 5000 "Theme Switcher" "Switching to $TARGET mode..."
 fi
 
-SWITCH_BIN="/run/booted-system/specialisation/$TARGET/bin/switch-to-configuration"
-if [ ! -x "$SWITCH_BIN" ]; then
-    SWITCH_BIN="/run/current-system/specialisation/$TARGET/bin/switch-to-configuration"
-fi
+# Locate the right switcher from the system profile.
+#
+# /run/current-system changes when you enter a specialisation, so it
+# cannot reliably be used to find the parent/light configuration.
+#
+# /nix/var/nix/profiles/system always represents the currently selected
+# system generation, and its specialisation directory stays the same
+# when switching between specialisations.
+case "$TARGET" in
+    dark)
+        SWITCH_BIN="/nix/var/nix/profiles/system/specialisation/dark/bin/switch-to-configuration"
+        ;;
+    light)
+        SWITCH_BIN="/nix/var/nix/profiles/system/bin/switch-to-configuration"
+        ;;
+    *)
+        notify-send -a "nixOS" -i "/home/${USER}/.local/share/misc/nix-snowflake-rainbow.svg" \
+            -u normal -t 5000 "Theme Switcher" "Invalid target: $TARGET"
+        exit 1
+        ;;
+esac
 
 if [ -x "$SWITCH_BIN" ]; then
     # Note: Changed from 'switch' to 'test' to not add to history to save a buncha clutter
@@ -28,5 +45,6 @@ if [ -x "$SWITCH_BIN" ]; then
     # Got annoyed at the screen transition being a bit haphazard and yeah...
     notify-send -e -a "nixOS" -i "/home/${USER}/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 5000 "Theme Switcher" "Switched to $TARGET mode"
 else
-    notify-send -a "nixOS" -i "/home/${USER}/.local/share/misc/nix-snowflake-rainbow.svg" -u normal -t 5000 "Theme Switcher" "Specialisation $TARGET not found"
+    notify-send -a "nixOS" -i "/home/${USER}/.local/share/misc/nix-snowflake-rainbow.svg" -u normal -t 5000 "Theme Switcher" "Switcher for $TARGET not found: $SWITCH_BIN"
+    exit 1
 fi

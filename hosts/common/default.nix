@@ -79,12 +79,6 @@ in {
     (lib.mkIf hostVars.optimiseBoot {
       # Don't wait to be online to start, can cause a oh you're now online notification after boot but tis fine!
       systemd.services.NetworkManager-wait-online.enable = false;
-      networking.dhcpcd = {
-        # Don’t wait for IPs at boot
-        wait = "background";
-        # (Optional) Skip duplicate-IP ARP checks for home LANs
-        extraConfig = "noarp";
-      };
     })
 
     # https://github.com/NixOS/nixpkgs/blob/2fb006b87f04c4d3bdf08cfdbc7fab9c13d94a15/nixos/modules/services/system/nix-daemon.nix

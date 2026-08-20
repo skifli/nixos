@@ -321,38 +321,8 @@ in {
   */
 
   # Specialisations generate nested configurations under /run/current-system/specialisation
+  # The base system is light mode, so we only need a specialisation for dark mode.
   specialisation = {
-    light.configuration = {
-      lib,
-      pkgs,
-      ...
-    }: {
-      home-manager.users.${userVars.username} = {lib, ...}: {
-        # Disable restart trigger when switching into this specialisation
-        home.activation.triggerThemeCheck = lib.mkForce (lib.hm.dag.entryAfter ["reloadSystemd"] ":");
-
-        gtk = applyGtkForce lightGtkConfigRaw;
-        dconf.settings = applyDconfForce lightDconfRaw;
-
-        xdg.configFile."kdeglobals".text = lib.mkForce ''
-          ${builtins.readFile "${pkgs.kdePackages.${commonHostVars.theme.qt.style}}/share/color-schemes/${qtThemeStyleCapitalised}Light.colors"}
-          ${kdeglobalsBase}
-        '';
-
-        stylix = {
-          base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.light}.yaml";
-          cursor.name = commonHostVars.cursor.light.name;
-        };
-      };
-
-      system.nixos.tags = lib.mkForce ["light"];
-      environment.etc."specialisation".text = lib.mkForce "light";
-
-      environment.sessionVariables = {
-        GTK_THEME = lib.mkForce commonHostVars.theme.gtk.lightName;
-      };
-    };
-
     dark.configuration = {
       lib,
       pkgs,
@@ -385,17 +355,23 @@ in {
     };
   };
 
-  # Grant NOPASSWD access for the user to trigger the compiled specialisation switchers
+  # Grant NOPASSWD access for the user to trigger both root (light) and specialisation (dark) switchers
   security.sudo.extraRules = [
     {
       users = [userVars.username];
-      commands = lib.concatMap (
-        sys:
-          map (mode: {
-            command = "/run/${sys}/specialisation/${mode}/bin/switch-to-configuration";
-            options = ["NOPASSWD"];
-          }) ["dark" "light"]
-      ) ["booted-system" "current-system"];
+      commands = [
+        # Switch to base system (light mode)
+        {
+          command = "/nix/var/nix/profiles/system/bin/switch-to-configuration";
+          options = ["NOPASSWD"];
+        }
+
+        # Switch to dark specialisation
+        {
+          command = "/nix/var/nix/profiles/system/specialisation/dark/bin/switch-to-configuration";
+          options = ["NOPASSWD"];
+        }
+      ];
     }
   ];
 

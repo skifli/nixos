@@ -73,6 +73,9 @@ in
           #  - CVE-2023-47282
           #  - CVE-2023-48368
         ];
+        extraPackages32 = with pkgs.driversi686Linux; [
+          intel-media-driver
+        ];
       };
     };
   }
