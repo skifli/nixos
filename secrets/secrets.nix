@@ -13,19 +13,11 @@ let
   - Add more recipients if you want multiple machines/users to decrypt.
   */
   # Raspberry Pi / pifi
-  pifi = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOhF6vPHavSoFf/TiQI8fc4rHsplwe7ucGFhX5g/oaMY root@raspberrypi";
-
   # Desktop / lyra
   lyra = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILLoR4r2C+luZVCcMqfbhKx23YS3MAnZTxgMZzUXoRkl root@lyra";
 
   # Personal key
   ami = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM00chXNLX0Mdss+qEVuYmoIDVgJNY2AqyGIEgn0Z48I ami@lyra";
-
-  all = [
-    pifi
-    lyra
-    ami
-  ];
 
   # The lyra host must be able to decrypt these during activation.
   # ami is included so the personal key can edit/re-encrypt them.
