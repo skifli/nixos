@@ -106,6 +106,7 @@
   applyDconfForce = lib.mapAttrsRecursive (_: lib.mkForce);
 
   kdeglobalsBase = ''
+    [General]
     TerminalApplication=${userVars.programs.terminal}
     TerminalService=${
       if userVars.programs.terminal == "ghostty"
