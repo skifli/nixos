@@ -155,7 +155,8 @@ in {
   home-manager.users.${userVars.username} = {lib, ...}: {
     # Force auto-theme-check to restart after every HM activation/rebuild because it didn't before and since we always rebuild into light if we don't do this this can cause some theme mismatches.
     home.activation.triggerThemeCheck = lib.hm.dag.entryAfter ["reloadSystemd"] ''
-      run ${pkgs.systemd}/bin/systemd-run \ # Only run when we have access to proper env vars for systemctl
+      # Only run when we have access to proper env vars for systemctl
+      run ${pkgs.systemd}/bin/systemd-run \
         --quiet \
         --collect \
         --machine=${userVars.username}@.host \
@@ -293,7 +294,6 @@ in {
   };
 
   system.nixos.tags = lib.mkDefault ["light"];
-  environment.etc."specialisation".text = lib.mkDefault "light";
 
   environment.sessionVariables = {
     GTK_THEME = lib.mkDefault commonHostVars.theme.gtk.lightName;

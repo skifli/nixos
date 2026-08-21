@@ -4,8 +4,7 @@ set -euo pipefail
 TARGET="${1:-}"
 
 if [ -z "$TARGET" ]; then
-    CURRENT_TAG=$(cat /etc/specialisation 2>/dev/null || echo "light")
-    if [ "$CURRENT_TAG" = "light" ]; then
+    if [[ "$(readlink -f /run/current-system)" == *"-light-"* ]]; then
         TARGET="dark"
     else
         TARGET="light"

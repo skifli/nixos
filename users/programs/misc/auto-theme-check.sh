@@ -29,7 +29,11 @@ while true; do
     continue
   fi
 
-  CURRENT_TAG=$(cat /etc/specialisation 2>/dev/null || echo "light")
+if [[ "$(readlink -f /run/current-system)" == *"-light-"* ]]; then
+    CURRENT_TAG="light"
+else
+    CURRENT_TAG="dark"
+fi
 
   if [ "$WANTED" != "$CURRENT_TAG" ]; then
     echo "Theme mismatch detected. Switching to $WANTED mode."
