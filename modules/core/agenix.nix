@@ -78,6 +78,18 @@
       })
     ];
 
+  rescuePasswordSecret =
+    lib.mkIf
+    (builtins.pathExists (secretsDir + "/rescue/hashedPasswordFile.age"))
+    {
+      "rescue-hashedPasswordFile" = {
+        file = secretsDir + "/rescue/hashedPasswordFile.age";
+        owner = "rescue";
+        group = "users";
+        mode = "0400";
+      };
+    };
+
   mkTmpfilesForUser = username: _userVars: [
     "d /home/${username}/.config 0700 ${username} users -"
     "d /home/${username}/.config/gh 0700 ${username} users -"
@@ -89,6 +101,10 @@ in {
   age.secrets = lib.mkMerge (
     (lib.mapAttrsToList mkUserSecrets usersVars)
     ++ [(mkHostSecrets hostVars.hostname)]
+    ++ [
+      (mkHostSecrets hostVars.hostname)
+      rescuePasswordSecret
+    ]
   );
 
   systemd.tmpfiles.rules = lib.flatten (lib.mapAttrsToList mkTmpfilesForUser usersVars);

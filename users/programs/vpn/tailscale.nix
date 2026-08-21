@@ -66,4 +66,26 @@
         fi
     '';
   };
+
+  systemd.targets.tailscale-online = {
+    description = "Tailscale network online";
+    wants = ["tailscaled.service"];
+    after = ["tailscaled.service"];
+    wantedBy = ["multi-user.target"];
+  };
+
+  # Wait for the tailscale0 interface to exist and have an IP
+  systemd.services.tailscale-online-wait = {
+    description = "Wait for Tailscale Interface";
+    before = ["tailscale-online.target"];
+    wantedBy = ["tailscale-online.target"];
+    after = ["tailscaled.service"];
+
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      # Checks every second up to 60s for the tailscale0 interface to get an IP address
+      ExecStart = "${pkgs.bash}/bin/bash -c 'for i in {1..60}; do if ${pkgs.iproute2}/bin/ip addr show dev tailscale0 2>/dev/null | grep -q \"inet \"; then exit 0; fi; sleep 1; done; echo \"Tailscale timed out\"; exit 1'";
+    };
+  };
 }

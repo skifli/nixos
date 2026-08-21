@@ -53,5 +53,5 @@
       );
   };
 
-  systemd.oomd.enable = false; # To disable conflicts
+  systemd.oomd.enable = false; # To disable conflicts with earlyoom
 }

@@ -34,6 +34,14 @@
         ];
     }
     // passwordAttrs;
+
+  rescuePasswordAttrs =
+    lib.optionalAttrs
+    (builtins.hasAttr "rescue-hashedPasswordFile" config.age.secrets)
+    {
+      hashedPasswordFile =
+        config.age.secrets."rescue-hashedPasswordFile".path;
+    };
 in {
   security.sudo = {
     enable = true;
@@ -64,10 +72,11 @@ in {
     users =
       (builtins.mapAttrs (username: userVars: mkUserConfig username userVars) usersVars)
       // {
-        rescue = {
-          isNormalUser = true;
-          initialHashedPassword = "$6$w5rJGlUIrUUpdCv5$15XHwpco.PFtpg7gOUL7OoXQ34UWG9E2OTXaoRsg1k6wbky6ieG4sANsLZp9HWr/PQsslUH8HQDnZwj5QYMl./"; # `rescue`
-        };
+        rescue =
+          {
+            isNormalUser = true;
+          }
+          // rescuePasswordAttrs;
       };
   };
 

@@ -311,7 +311,7 @@ in rec {
   };
 
   bar = {
-    output = "DP-1";
+    output = builtins.elemAt hostVars.orderedOutputs 1;
   };
 
   programs = {

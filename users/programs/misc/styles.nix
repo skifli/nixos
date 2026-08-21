@@ -154,7 +154,12 @@ in {
   home-manager.users.${userVars.username} = {lib, ...}: {
     # Force auto-theme-check to restart after every HM activation/rebuild because it didn't before and since we always rebuild into light if we don't do this this can cause some theme mismatches.
     home.activation.triggerThemeCheck = lib.hm.dag.entryAfter ["reloadSystemd"] ''
-      run ${pkgs.systemd}/bin/systemctl --user restart auto-theme-check.service
+      run ${pkgs.systemd}/bin/systemd-run \ # Only run when we have access to proper env vars for systemctl
+        --quiet \
+        --collect \
+        --machine=${userVars.username}@.host \
+        --user \
+        ${pkgs.systemd}/bin/systemctl restart auto-theme-check.service
     '';
 
     systemd.user.services.auto-theme-check = {

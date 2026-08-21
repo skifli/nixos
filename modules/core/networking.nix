@@ -11,6 +11,7 @@ in {
     hostName = hostVars.hostname;
 
     wireless.iwd.enable = false; # Uses iwd not wpa_supplicant
+    nftables.enable = true; # To use the newer nftables instead
 
     networkmanager = {
       enable = true;
@@ -56,7 +57,7 @@ in {
       };
     };
 
-    # Better DNS resolution with fallbacks (reduces startup delays)
+    # Better DNS resolution with fallbacks
     nameservers = [
       "1.1.1.1" # Cloudflare (fast)
       "9.9.9.9" # Quad9
@@ -65,7 +66,6 @@ in {
 
     enableIPv6 = true;
 
-    /*
     firewall = {
       enable = true;
       allowedTCPPorts = [
@@ -78,7 +78,6 @@ in {
         0 # Custom application port
       ];
     };
-    */
   };
 
   services.resolved = {

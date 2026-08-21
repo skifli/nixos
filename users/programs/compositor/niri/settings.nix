@@ -22,7 +22,8 @@
     }
     // (pkgs.lib.optionalAttrs (hostVars.outputs.${name}.focus-at-startup or false) {
       focus-at-startup = [];
-    })) (builtins.attrNames hostVars.outputs);
+    }))
+  hostVars.orderedOutputs;
 
   workspaces = map (name: {
     _args = [name];

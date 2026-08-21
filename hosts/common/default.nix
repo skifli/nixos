@@ -85,20 +85,22 @@ in {
     (lib.mkIf hostVars.optimiseBuilds {
       # Make it so user stuff is a way higher priority than nix builds, meaning the system stays snappy when compiling!
       systemd = {
-        slices."nix-daemon".sliceConfig = {
-          ManagedOOMMemoryPressure = "auto"; # Rely on earlyoom
-        };
+        # Commented out because we rely on earlyoom
+        # slices."nix-daemon".sliceConfig = {
+        #   ManagedOOMMemoryPressure = "auto";
+        # };
+        # NOTE - The limits on CPU usage, etc, have been disabled below because they aren't really needed anymore.
         services = {
           nixos-upgrade.serviceConfig = {
             CPUWeight = "20"; # Defaults to 100 for all processes. Lower value means lower priority. This is a arbitrary weight integer.
-            CPUQuota = "85%"; # Absolute limit on how much CPU time is granted even if nothing else is going on. This is a percent value.
+            # CPUQuota = "85%"; # Absolute limit on how much CPU time is granted even if nothing else is going on. This is a percent value.
             IOWeight = "20"; # IOWeight is much the same as CPUWeight.
             Slice = "nix-daemon.slice";
             OOMScoreAdjust = 1000; # If a kernel-level OOM event does occur anyway, strongly prefer killing nix-daemon child processes
           };
           nix-daemon.serviceConfig = {
             CPUWeight = "20";
-            CPUQuota = "70%"; # Lowered slightly from 85% to reserve headroom
+            # CPUQuota = "70%"; # Lowered slightly from 85% to reserve headroom
             IOWeight = "10"; # Keep lower than default 100
             Slice = "nix-daemon.slice";
             OOMScoreAdjust = 1000;
@@ -108,7 +110,7 @@ in {
       };
       nix = {
         daemonCPUSchedPolicy = lib.mkForce "batch";
-        daemonIOSchedClass = lib.mkForce "idle"; # The idle policy may greatly improve responsiveness of a system performing expensive builds.
+        # daemonIOSchedClass = lib.mkForce "idle"; # The idle policy may greatly improve responsiveness of a system performing expensive builds.
         daemonIOSchedPriority = lib.mkForce 7; # N/A: With "idle", priorities are not used in scheduling decisions. Range 0 (high) to 7 (low). Default 4.
       };
     })

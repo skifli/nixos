@@ -27,15 +27,12 @@ in {
     };
     */
 
-    /*
-    # Disabled because it just takes too long and yeah, if I get a better system maybe then though!
     # Periodic optimisation of the nix store
     optimise = {
       automatic = true;
       dates = ["weekly"];
       persistent = true; # Catch up on missed runs
     };
-    */
 
     # Enable flakes + nix-command
     settings = {

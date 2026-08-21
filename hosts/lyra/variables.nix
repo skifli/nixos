@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{pkgs, ...}: rec {
   # Feature toggles
   # disableX = true;
 
@@ -27,6 +27,7 @@
     ../../modules/core/security.nix
     ../../modules/core/services.nix
     ../../modules/core/smartd.nix
+    ../../modules/core/snapper.nix
     ../../modules/core/system.nix
     ../../modules/core/users.nix
     ../../modules/core/zram.nix
@@ -42,9 +43,9 @@
   # Hardware configuration
   videoDriver = "intel"; # Empty to import none.
 
-  # TODO - FIX: A lot of assumptions are made based on there only being 2 monitors right now...
+  # TODO - FIX: The compositor configuration supports arbitrary outputs.
+  # HOWEVER, a bunch of scripts, etc., intentionally assume at least two ordered outputs.
   outputs = {
-    # WARNING: Must manually update new attrs in users/programs/compositor/niri/settings.nix
     "DP-1" = {
       mode = "1440x900@59.89";
       scale = 1.0;
@@ -121,6 +122,38 @@
       };
     }
   ];
+
+  snapper.configs = {
+    root = {
+      SUBVOLUME = "/";
+      FSTYPE = "btrfs";
+      ALLOW_USERS = enabledUsers;
+
+      TIMELINE_CREATE = true;
+      TIMELINE_CLEANUP = true;
+
+      TIMELINE_LIMIT_HOURLY = 6;
+      TIMELINE_LIMIT_DAILY = 7;
+      TIMELINE_LIMIT_WEEKLY = 4;
+      TIMELINE_LIMIT_MONTHLY = 3;
+      TIMELINE_LIMIT_YEARLY = 0;
+    };
+
+    home = {
+      SUBVOLUME = "/home";
+      FSTYPE = "btrfs";
+      ALLOW_USERS = enabledUsers;
+
+      TIMELINE_CREATE = true;
+      TIMELINE_CLEANUP = true;
+
+      TIMELINE_LIMIT_HOURLY = 12; # Keeps 12 hours of active file revisions
+      TIMELINE_LIMIT_DAILY = 7; # Keeps daily backups for a week
+      TIMELINE_LIMIT_WEEKLY = 4; # Keeps weekly snapshots for a month
+      TIMELINE_LIMIT_MONTHLY = 3; # Keeps monthly snapshots for a quarter
+      TIMELINE_LIMIT_YEARLY = 0;
+    };
+  };
 
   niri.input = {
   };
