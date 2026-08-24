@@ -11,6 +11,16 @@
       open-maximized = true;
     })
     userVars.programs.browsers;
+
+  unimportantStatusWindow = {
+    open-focused = false;
+    open-floating = true;
+    default-floating-position._props = {
+      x = 10;
+      y = 10;
+      relative-to = "top-left"; # bottom is a tad problematic if the window is e.g., taller than usual etc
+    };
+  };
 in
   [
     # Give floating windows a shadow
@@ -45,17 +55,17 @@ in
       # By default, new floating windows open at the center of the screen, and windows from the tiling layout open close to their visual screen position.
     }
     # Gets the usually centered status window away and not focus it
-    {
-      match._props.title._raw = ''r#"(?i)(Deleting|Copying|Moving|Progress Dialogue)"#'';
-      match._props.app-id._raw = ''r#"(?i)org.kde.dolphin"#'';
-      open-focused = false;
-      open-floating = true; # Why did it once open not floating...
-      default-floating-position._props = {
-        x = 10;
-        y = 10;
-        relative-to = "top-left"; # bottom is a tad problematic if the window is e.g., taller than usual etc
-      };
-    }
+    ({
+        match._props.title._raw = ''r#"(?i)(Deleting|Copying|Moving|Progress Dialogue)"#'';
+        match._props.app-id._raw = ''r#"(?i)org.kde.dolphin"#'';
+      }
+      // unimportantStatusWindow)
+    # Same for KDEConnect
+    ({
+        match._props.title._raw = ''r#"(?i)(Receiving files|Sending to)"#'';
+        match._props.app-id._raw = ''r#"(?i)org.kde.kdeconnect.daemon"#'';
+      }
+      // unimportantStatusWindow)
     # Gets the actually useful requiring-interaction window focused
     {
       match._props.title._raw = ''r#"(?i)Already Exists — Dolphin"#'';

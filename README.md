@@ -326,7 +326,7 @@ More are available (that I've added myself to the code but not the below concise
 
 | Key in `userVars.programs` | Available values        | Upstream                                                                            |
 | -------------------------- | ----------------------- | ----------------------------------------------------------------------------------- |
-| `browsers` (list)          | `zen-beta`, `browseros` | [Zen Browser](https://zen-browser.app/), [BrowserOS](https://browseros.com/)        |
+| `browsers` (list)          | `zen-beta`              | [Zen Browser](https://zen-browser.app/), [BrowserOS](https://browseros.com/)        |
 | `editor`                   | `hx`                    | [Helix](https://helix-editor.com/)                                                  |
 | `ergonomics`               | `safeeyes`              | [Safe Eyes](https://slgobinath.github.io/SafeEyes/)                                 |
 | `explorer-gui`             | `dolphin`, `nemo`       | [Dolphin](https://apps.kde.org/dolphin/), [Nemo](https://github.com/linuxmint/nemo) |

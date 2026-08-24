@@ -176,6 +176,18 @@ in rec {
           open-maximized = true;
         }
 
+        {
+          match._props.app-id._raw = ''r#"(?i)anki"#'';
+          match._props.title._raw = ''r#"(?i)Study Deck"#'';
+          open-floating = true;
+          default-column-width = {
+            proportion = 0.75;
+          };
+          default-window-height = {
+            proportion = 0.75;
+          };
+        }
+
         # Anytype - maximize
         {
           match._props.title._raw = ''r#"(?i)anytype"#'';
@@ -330,7 +342,6 @@ in rec {
     # Kinda core apps
     browsers = [
       "zen-beta"
-      "browseros"
     ];
     editor = "hx";
     ergonomics = "safeeyes";

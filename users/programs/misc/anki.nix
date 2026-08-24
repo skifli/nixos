@@ -113,24 +113,20 @@
   });
   */
 in {
-  /*
   nixpkgs.overlays = [
     inputs.anki-mcp.overlays.default
   ];
-  */
 
   home-manager.users.${userVars.username} = {
     programs.anki = {
       enable = true;
       addons = with pkgs; [
         inputs.anki-seara.packages."x86_64-linux".default # I :3 you https://github.com/rodrada/seara
-        /*
         (ankiAddons.anki-mcp-server.withConfig {
           config = {
             http_host = "0.0.0.0";
           };
         })
-        */
         (fsrs4anki-helper.withConfig {
           config = {
             easy_dates = [];
@@ -328,7 +324,7 @@ in {
 
   networking.firewall = rec {
     allowedUDPPorts = [
-      # 3141 # AnkiMCP
+      3141 # AnkiMCP
       8765 # AnkiConnect
     ];
 
