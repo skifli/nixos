@@ -377,6 +377,7 @@ in rec {
       "steam"
       "styles"
       "typst"
+      "wl-clip-persist"
       "ydotool"
     ];
   };
