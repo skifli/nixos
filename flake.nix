@@ -96,7 +96,7 @@
     };
 
     affinity-nix.url = "github:mrshmllow/affinity-nix";
-    anki-mcp.url = "github:ankimcp/anki-mcp-server-addon";
+    # anki-mcp.url = "github:ankimcp/anki-mcp-server-addon";
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     # concord.url = "github:chojs23/concord";
     # lan-mouse.url = "github:feschber/lan-mouse";

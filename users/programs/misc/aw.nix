@@ -104,9 +104,9 @@ in {
 
   home-manager.users.${userVars.username} = {
     xdg.configFile."activitywatch/aw-notify/config.toml".text = ''
-      hourly_checkins = true
-      new_day_greetings = true
-      server_monitoring = true
+      hourly_checkins = false
+      new_day_greetings = false
+      server_monitoring = false
 
       [[alerts]]
       category = "Programming"
