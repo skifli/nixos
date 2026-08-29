@@ -292,7 +292,6 @@ in
     programs =
       common.programs
       // {
-        desktop-shell = "wayle";
         ergonomics = "safeeyes";
         other =
           common.programs.other
