@@ -291,7 +291,7 @@ EMOJI="${SELECTED%% *}"
 echo -e "$SELECTED\t$(date +%s)" >> "$HISTORY_FILE"
 
 PREV_CLIP=$(wl-paste -n 2>/dev/null || true)
-echo -n "$EMOJI" | wl-copy
+echo -n "$EMOJI" | wl-copy --sensitive # Sensitive as a work-around so for those who support it, it won't be on history! Yay!
 
 sleep 0.05
 
