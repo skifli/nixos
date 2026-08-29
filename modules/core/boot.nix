@@ -1,7 +1,12 @@
-{pkgs, ...}: {
+{
+  hostVars,
+  lib,
+  pkgs,
+  ...
+}: {
   boot = {
-    # Allow cross-compilation
-    binfmt.emulatedSystems = [
+    # Allow cross-compilation (only on x86_64 emulating aarch64)
+    binfmt.emulatedSystems = lib.optionals (pkgs.stdenv.hostPlatform.system == "x86_64-linux") [
       "aarch64-linux"
     ];
 
