@@ -12,6 +12,7 @@ jobs:
       matrix:
         include:
           - host: lyra
+          - host: fydetab
           # - host: pifi
 
     steps:

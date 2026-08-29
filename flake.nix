@@ -132,6 +132,13 @@
             inputs.chaotic.nixosModules.nyx-cache
             inputs.chaotic.nixosModules.nyx-overlay
             inputs.chaotic.nixosModules.nyx-registry
+
+            # For GH Actions building!
+            ({lib, ...}:
+              lib.mkIf (system == "aarch64-linux") {
+                nixpkgs.buildPlatform = "x86_64-linux";
+                nixpkgs.crossSystem = "aarch64-linux";
+              })
           ];
           # Attribute set of extra arguments passed to Nix module functions
           specialArgs = {
