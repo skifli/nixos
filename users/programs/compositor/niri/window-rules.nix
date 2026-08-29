@@ -56,7 +56,7 @@ in
     }
     # Gets the usually centered status window away and not focus it
     ({
-        match._props.title._raw = ''r#"(?i)(Deleting|Copying|Moving|Progress Dialogue)"#'';
+        match._props.title._raw = ''r#"(?i)(Deleting|Copying|Moving|Progress Dialogue|Compressing)"#'';
         match._props.app-id._raw = ''r#"(?i)org.kde.dolphin"#'';
       }
       // unimportantStatusWindow)
