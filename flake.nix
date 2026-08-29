@@ -99,6 +99,7 @@
     # anki-mcp.url = "github:ankimcp/anki-mcp-server-addon";
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     # concord.url = "github:chojs23/concord";
+    fyde-nix.url = "github:NixOnFyde/fyde-nix"; # For local development: fyde-nix.url = "path:.store/fyde-nix";
     # lan-mouse.url = "github:feschber/lan-mouse";
     vicinae.url = "github:vicinaehq/vicinae"; # Following nixpkgs makes cache miss
     vicinae-extensions.url = "github:vicinaehq/extensions";
@@ -142,6 +143,10 @@
     hosts = {
       lyra = {
         system = "x86_64-linux";
+        builder = mkHost;
+      };
+      fydetab = {
+        system = "aarch64-linux";
         builder = mkHost;
       };
     };

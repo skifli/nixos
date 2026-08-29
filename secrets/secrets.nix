@@ -13,24 +13,33 @@ let
   - Add more recipients if you want multiple machines/users to decrypt.
   */
   # Raspberry Pi / pifi
-  pifi = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOhF6vPHavSoFf/TiQI8fc4rHsplwe7ucGFhX5g/oaMY root@raspberrypi";
-
+  # pifi = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOhF6vPHavSoFf/TiQI8fc4rHsplwe7ucGFhX5g/oaMY root@raspberrypi";
   # Desktop / lyra
   lyra = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILLoR4r2C+luZVCcMqfbhKx23YS3MAnZTxgMZzUXoRkl root@lyra";
 
   # Personal key
   ami = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM00chXNLX0Mdss+qEVuYmoIDVgJNY2AqyGIEgn0Z48I ami@lyra";
+  fynix = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPLjuhLizbbD7biJR6CBnal8duh68uFkC5u78uxEa02Z fynix@fydetab";
 
+  /*
   all = [
     pifi
     lyra
     ami
   ];
+  */
 
   # The lyra host must be able to decrypt these during activation.
   # ami is included so the personal key can edit/re-encrypt them.
   amiOnLyra = [
     lyra
+    ami
+  ];
+
+  # The fydetab host must be able to decrypt these during activation.
+  # ami is included so the personal key can edit/re-encrypt them.
+  amiOnFydetab = [
+    fynix
     ami
   ];
 
@@ -49,6 +58,7 @@ let
 in {
   # Per host secrets (filenames match secrets/<host>/<name>.age)
   "secrets/lyra/wifi.env.age".publicKeys = [lyra ami];
+  "secrets/fydetab/wifi.env.age".publicKeys = [fynix ami];
 
   # Per-user secrets (filenames match secrets/<user>/<name>.age)
   "secrets/ami/hashedPasswordFile.age".publicKeys = amiOnLyra;
@@ -62,6 +72,18 @@ in {
   "secrets/ami/rdp-pifi-win.age".publicKeys = amiOnLyra;
   "secrets/ami/vnc-oracle.age".publicKeys = amiOnLyra;
   "secrets/ami/oracle-vnc-key.age".publicKeys = amiOnLyra;
+
+  "secrets/fynix/hashedPasswordFile.age".publicKeys = amiOnFydetab;
+  "secrets/fynix/github-credentials.age".publicKeys = amiOnFydetab;
+  "secrets/fynix/github-pat.age".publicKeys = amiOnFydetab;
+  "secrets/fynix/gh-hosts.yml.age".publicKeys = amiOnFydetab;
+  "secrets/fynix/anki-keyFile.age".publicKeys = amiOnFydetab;
+  "secrets/fynix/anki-usernameFile.age".publicKeys = amiOnFydetab;
+  "secrets/fynix/cachix.dhall.age".publicKeys = amiOnFydetab;
+  "secrets/fynix/rdp-pifi-linux.age".publicKeys = amiOnFydetab;
+  "secrets/fynix/rdp-pifi-win.age".publicKeys = amiOnFydetab;
+  "secrets/fynix/vnc-oracle.age".publicKeys = amiOnFydetab;
+  "secrets/fynix/oracle-vnc-key.age".publicKeys = amiOnFydetab;
 
   # Misc secrets
   "secrets/rescue/hashedPasswordFile.age".publicKeys = rescueRecipients;

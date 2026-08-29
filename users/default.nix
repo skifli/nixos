@@ -141,30 +141,57 @@ in {
           inherit username;
           homeDirectory = "/home/${username}";
 
-          file.".local/share/wallpaper" = let
-            asset = ./${username}/assets/wallpapers/${userVars.wallpaper};
+          file = let
+            mergedScripts = pkgs.symlinkJoin {
+              name = "${userVars.username}-scripts";
+              paths = [
+                ./common/scripts
+                ./${userVars.username}/scripts
+              ];
+            };
+            mergedAssets = pkgs.symlinkJoin {
+              name = "${userVars.username}-assets-misc";
+              paths = [
+                ./common/assets/misc
+                ./${userVars.username}/assets/misc
+              ];
+            };
+            wallpaperAsset = ./${username}/assets/wallpapers/${userVars.wallpaper};
+            wallpaperBlurredAsset = ./${username}/assets/wallpapers/${userVars.wallpaper}-blurred;
           in
-            pkgs.lib.mkIf (builtins.pathExists asset) {
-              source = asset;
+            {
+              ".local/bin" = {
+                source = mergedScripts;
+                executable = true;
+              };
+
+              ".local/share/misc" = {
+                source = mergedAssets;
+              };
+            }
+            // pkgs.lib.optionalAttrs (builtins.pathExists wallpaperAsset) {
+              ".local/share/wallpaper" = {
+                source = wallpaperAsset;
+              };
+            }
+            // pkgs.lib.optionalAttrs (builtins.pathExists wallpaperBlurredAsset) {
+              ".local/share/wallpaper-blurred" = {
+                source = wallpaperBlurredAsset;
+              };
             };
 
-          file.".local/share/wallpaper-blurred" = let
-            blurredAsset = ./${username}/assets/wallpapers/${userVars.wallpaper}-blurred;
-          in
-            pkgs.lib.mkIf (builtins.pathExists blurredAsset) {
-              source = blurredAsset;
-            };
+          activation.linkSharedState = pkgs.lib.mkAfter ''
+            # Shared state using NFS: symlink ~/Documents/custom-scripts to a via NFS sharedStateDir
+            #
+            if [ -n "${userVars.sharedStateDir}" ]; then
+              mkdir -p "${userVars.sharedStateDir}"
 
-          file = {
-            ".local/bin" = {
-              source = ./${userVars.username}/scripts;
-              executable = true; # For scripts!
-            };
-
-            ".local/share/misc" = {
-              source = ./${userVars.username}/assets/misc;
-            };
-          };
+              if [ -d "${userVars.sharedStateDir}" ] && [ ! -L "$HOME/Documents/custom-scripts" ] && [ ! -d "$HOME/Documents/custom-scripts" ]; then
+                mkdir -p "$HOME/Documents"
+                ln -sf "${userVars.sharedStateDir}" "$HOME/Documents/custom-scripts"
+              fi
+            fi
+          '';
 
           stateVersion = "25.05"; # DO NOT CHANGE!
         };

@@ -5,7 +5,7 @@
   pkgs,
   ...
 }: let
-  allUsers = ["ami"];
+  allUsers = ["ami" "fynix"];
 
   # Filter the usernames to keep only allowed ones for this host
   filteredUsers = lib.filter (name: builtins.elem name hostVars.enabledUsers) allUsers;
