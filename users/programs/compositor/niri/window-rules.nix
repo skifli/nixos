@@ -62,7 +62,7 @@ in
       // unimportantStatusWindow)
     # Same for KDEConnect
     ({
-        match._props.title._raw = ''r#"(?i)(Receiving files|Sending to)"#'';
+        match._props.title._raw = ''r#"(?i)(Receiving file|Sending to)"#'';
         match._props.app-id._raw = ''r#"(?i)org.kde.kdeconnect.daemon"#'';
       }
       // unimportantStatusWindow)

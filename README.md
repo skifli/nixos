@@ -308,6 +308,7 @@ The majority of these are bound to Niri keybinds, or are user systemd services:
 <details>
 <summary>General scripts</summary>
 
+- [`emoji-picker.sh`](users/ami/emoji-picker.sh): A simple Fuzzel UI for quickly inserting a selected emoji into any application, using clipboard manipulation.
 - [`todo.sh`](users/ami/scripts/todo.sh): A TODO and reminder manager using [`fuzzel`](https://codeberg.org/dnkl/fuzzel). It supports relative and absolute timestamps, on-boot reminders, and overdue tracking. It uses a systemd timer (`--check`) for periodic desktop notifications.
 - [`anki-pomodoro.sh`](users/ami/scripts/anki-pomodoro.sh): A 25/5 Pomodoro timer using [`termdown`](https://github.com/trehn/termdown). It automatically toggles DND mode using [`wayle`](https://github.com/wayle-shell/wayle) during focus rounds and un-mutes during breaks.
 - [`record.sh`](users/ami/scripts/record.sh): A custom [`gpu-screen-recorder`](https://git.dec05eba.com/gpu-screen-recorder/about/) wrapper with region ([slurp](https://github.com/emersion/slurp)), portal, or monitor capture, and audio options. It includes a post-recording menu to compress with FFmpeg (H.265), copy to clipboard, delete, and / or open the folder.

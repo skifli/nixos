@@ -38,6 +38,8 @@
       # siyuan
       swayimg # Used in some scripts (e.g., view-clipboard-image.sh)
       termdown
+      wtype # Added for keystroke / paste simulation
+      wl-clipboard # Used in some scripts (e.g., emoji-picker.sh)
       zstd # Short for Zstandard, this is a fast lossless compression algorithm, targeting real-time compression scenarios at zlib-level compression ratio
 
       mpv

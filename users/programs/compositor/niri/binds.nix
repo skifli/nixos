@@ -1055,6 +1055,14 @@
     };
     spawn = ["waynav"];
   };
+  # Windows-style emoji picker
+  "Mod+Apostrophe" = {
+    _props = {
+      hotkey-overlay-title = "Emoji picker";
+      allow-inhibiting = false;
+    };
+    spawn = ["/home/${userVars.username}/.local/bin/emoji-picker.sh"];
+  };
 
   # Preset layout scripts
   "Mod+Ctrl+1" = {

@@ -29,9 +29,9 @@ connect_rdp() {
         /cert:ignore \
         +clipboard \
         +dynamic-resolution \
-        -grab-keyboard \
+        +grab-keyboard \
         /auto-reconnect \
-        /auto-reconnect-max-retries:20 \
+        /auto-reconnect-max-retries:50 \
         "$@" <<< "$pass"
     # The kbd ones don't even seem to work but WHATEVER :sob: had to do some stuff to the servers to make them default to the right layout ;-;
 }
