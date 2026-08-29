@@ -14,6 +14,7 @@
       "https://cache.forall.systems"
       "https://nyx-cache.chaotic.cx/"
       "https://niri-nix.cachix.org"
+      "https://fyde-nix.cachix.org"
     ];
 
     extra-trusted-public-keys = [
@@ -28,6 +29,7 @@
       "cache.forall.systems:5PmD7QO4MSF8YgyRZtkSGXRDo96H3bybIf2SsQh8ScI="
       "nyx-cache.chaotic.cx:dJxTrgMC3V3cFfyIiBQDQorG6k1LsqurH/srpMSq7qk="
       "niri-nix.cachix.org-1:SvFtqpDcf7Sm1SMJdby1/+Y+6f3Yt3/3PMcSTKPJNJ0="
+      "fyde-nix.cachix.org-1:rlgYccagNG7hZhxBe7mzebJ9AlHzfqPZTmeyR1VuQoA="
     ];
   };
 
