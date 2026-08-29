@@ -29,9 +29,12 @@
 
   outputs = {
     "DSI-1" = {
-      mode = "1200x2000@59.999024";
-      scale = 1.25;
-      transform = "flipped";
+      mode = "2560x1600@59.999024";
+      scale = 1;
+      position = {
+        x = 0;
+        y = 0;
+      };
       focus-at-startup = true;
     };
   };
