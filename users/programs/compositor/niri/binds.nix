@@ -1048,6 +1048,13 @@
     };
     spawn = ["/home/${userVars.username}/.local/bin/todo.sh"];
   };
+  "Mod+Semicolon" = {
+    _props = {
+      hotkey-overlay-title = "Grid mouse navigator";
+      allow-inhibiting = false;
+    };
+    spawn = ["waynav"];
+  };
 
   # Preset layout scripts
   "Mod+Ctrl+1" = {

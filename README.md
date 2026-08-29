@@ -10,6 +10,7 @@
   - [Keyboard-centric workflow](#keyboard-centric-workflow)
     - [The navigation layers](#the-navigation-layers)
     - [Kanata usage](#kanata-usage)
+    - [Waynav usage](#waynav-usage)
     - [Niri usage](#niri-usage)
     - [Nirius usage](#nirius-usage)
     - [Shell and clipboard scripts](#shell-and-clipboard-scripts)
@@ -83,9 +84,10 @@ A major goal of this config is being able to control as close as possible to eve
 
 1. **Window & workspace level**: Controlled via [Niri](https://github.com/YaLTeR/niri) (`Mod + H/J/K/L` and arrow keys).
 2. **Standard GUI applications without Vim keys**: Controlled via [Kanata](https://github.com/jtroo/kanata) mouse emulation (`Space` held + `E/S/D/F` for movement, `J/K/M` for clicks).
-3. **Web browser navigation**: Controlled in [Zen Browser](https://zen-browser.app/) via the [Vimium-FF](https://addons.mozilla.org/en-GB/firefox/addon/vimium-ff/) extension (`f`, `F`, `d`, `u`, `gg`, `G`).
-4. **Files, shell, and clipboard**: Via [Ghostty](https://ghostty.org/), [Yazi](https://yazi-rs.github.io/), and custom shell commands (`copyl`, `blammo`, `$blammo_in`).
-5. **Global search and launching**: Handled via [Vicinae](https://vicinae.com/) (`Mod + D`), [Fuzzel](https://codeberg.org/dnkl/fuzzel), and custom layout scripts.
+3. **Screen grid**: Controlled via [waynav](https://github.com/kovetskiy/waynav) (`Mod + ;` followed by quadrant keys `Q/W/A/S` and `Space` to click).
+4. **Web browser navigation**: Controlled in [Zen Browser](https://zen-browser.app/) via the [Vimium-FF](https://addons.mozilla.org/en-GB/firefox/addon/vimium-ff/) extension (`f`, `F`, `d`, `u`, `gg`, `G`).
+5. **Files, shell, and clipboard**: Via [Ghostty](https://ghostty.org/), [Yazi](https://yazi-rs.github.io/), and custom shell commands (`copyl`, `blammo`, `$blammo_in`).
+6. **Global search and launching**: Handled via [Vicinae](https://vicinae.com/) (`Mod + D`), [Fuzzel](https://codeberg.org/dnkl/fuzzel), and custom layout scripts.
 
 ### Kanata usage
 
@@ -107,6 +109,26 @@ Configured in [`users/programs/keyboard/kanata.nix`](users/programs/keyboard/kan
   - `W` / `R`: Scroll left / Scroll right.
   - `L`: Hold for slow precision mode (movement set to 1px micro-steps).
   - `U` / `P`: Zoom in / Zoom out (`Ctrl+=` / `Ctrl+-` macros).
+
+### Waynav usage
+
+Configured in [`users/programs/misc/waynav.nix`](users/programs/misc/waynav.nix).
+
+Press **`Mod + ;`** (Super + Semicolon) to spawn a fullscreen overlay on the focused monitor:
+
+| Key / Keybinding      | Action                         | Description                                                            |
+| :-------------------- | :----------------------------- | :--------------------------------------------------------------------- |
+| `Mod + ;`             | **Activate waynav**            | Spawns the fullscreen 2 by 2 overlay on the active output.             |
+| `Q` / `W`             | **Top-left / Top-right**       | Bisects the current target region into the upper quadrants.            |
+| `A` / `S`             | **Bottom-left / Bottom-right** | Bisects the current target region into the lower quadrants.            |
+| `G`                   | **3×3 grid mode**              | Splits the active region into a 3 by 3 grid for finer selection.       |
+| `H` / `J` / `K` / `L` | **Vim nudge**                  | Micro-adjusts the target region left / down / up / right.              |
+| `Space` / `Return`    | **Left click & exit**          | Warps the cursor to the target center, left-clicks, and closes waynav. |
+| `D`                   | **Double click & exit**        | Warps and performs a double-click before exiting.                      |
+| `R`                   | **Right click & exit**         | Warps and performs a right-click before exiting.                       |
+| `M`                   | **Middle click & exit**        | Warps and performs a middle-click (e.g. to open links in new tabs).    |
+| `Backspace`           | **History back**               | Reverts the last bisection step.                                       |
+| `Escape` / `;`        | **Dismiss**                    | Closes the overlay immediately without clicking or warping.            |
 
 ### Niri usage
 
@@ -171,6 +193,7 @@ The app toggle shortcuts will focus the application if already open, launch it i
 | `Mod + D`               | Vicinae launcher                                                                      |
 | `Mod + Return`          | Ghostty terminal                                                                      |
 | `Mod + Shift + Return`  | Centered floating terminal ([`floating-term.sh`](users/ami/scripts/floating-term.sh)) |
+| `Mod + ;`               | Grid-based mouse navigator and warper ([`waynav`](users/programs/misc/waynav.nix))    |
 | `Mod + F`               | Dolphin file manager                                                                  |
 | `Mod + Shift + F`       | Yazi file manager                                                                     |
 | `Mod + V`               | Zed editor (`zeditor`)                                                                |
@@ -324,20 +347,20 @@ More are available (that I've added myself to the code but not the below concise
 <details>
 <summary>Apps and tools</summary>
 
-| Key in `userVars.programs` | Available values        | Upstream                                                                            |
-| -------------------------- | ----------------------- | ----------------------------------------------------------------------------------- |
-| `browsers` (list)          | `zen-beta`              | [Zen Browser](https://zen-browser.app/), [BrowserOS](https://browseros.com/)        |
-| `editor`                   | `hx`                    | [Helix](https://helix-editor.com/)                                                  |
-| `ergonomics`               | `safeeyes`              | [Safe Eyes](https://slgobinath.github.io/SafeEyes/)                                 |
-| `explorer-gui`             | `dolphin`, `nemo`       | [Dolphin](https://apps.kde.org/dolphin/), [Nemo](https://github.com/linuxmint/nemo) |
-| `explorer-tui`             | `yazi`                  | [Yazi](https://yazi-rs.github.io/)                                                  |
-| `network-mounts`           | `nfs`                   | NFS remote mount automation                                                         |
-| `pager`                    | `ov`                    | [ov](https://noborus.github.io/ov/)                                                 |
-| `partition-manager`        | `kde`                   | [KDE Partition Manager](https://apps.kde.org/partitionmanager/)                     |
-| `remote-desktop`           | `freerdp`, `remmina`    | [FreeRDP](https://www.freerdp.com/), [Remmina](https://remmina.org/)                |
-| `screen-recorder`          | `gpu-screen-recorder`   | [GPU Screen Recorder](https://git.dec05eba.com/gpu-screen-recorder/about/)          |
-| `system-monitor`           | `missioncenter`         | [Mission Center](https://missioncenter.io/)                                         |
-| `vpn`                      | `tailscale`             | [Tailscale](https://tailscale.com/)                                                 |
+| Key in `userVars.programs` | Available values      | Upstream                                                                            |
+| -------------------------- | --------------------- | ----------------------------------------------------------------------------------- |
+| `browsers` (list)          | `zen-beta`            | [Zen Browser](https://zen-browser.app/), [BrowserOS](https://browseros.com/)        |
+| `editor`                   | `hx`                  | [Helix](https://helix-editor.com/)                                                  |
+| `ergonomics`               | `safeeyes`            | [Safe Eyes](https://slgobinath.github.io/SafeEyes/)                                 |
+| `explorer-gui`             | `dolphin`, `nemo`     | [Dolphin](https://apps.kde.org/dolphin/), [Nemo](https://github.com/linuxmint/nemo) |
+| `explorer-tui`             | `yazi`                | [Yazi](https://yazi-rs.github.io/)                                                  |
+| `network-mounts`           | `nfs`                 | NFS remote mount automation                                                         |
+| `pager`                    | `ov`                  | [ov](https://noborus.github.io/ov/)                                                 |
+| `partition-manager`        | `kde`                 | [KDE Partition Manager](https://apps.kde.org/partitionmanager/)                     |
+| `remote-desktop`           | `freerdp`, `remmina`  | [FreeRDP](https://www.freerdp.com/), [Remmina](https://remmina.org/)                |
+| `screen-recorder`          | `gpu-screen-recorder` | [GPU Screen Recorder](https://git.dec05eba.com/gpu-screen-recorder/about/)          |
+| `system-monitor`           | `missioncenter`       | [Mission Center](https://missioncenter.io/)                                         |
+| `vpn`                      | `tailscale`           | [Tailscale](https://tailscale.com/)                                                 |
 
 </details>
 
@@ -370,6 +393,8 @@ These modules are under `users/programs/misc/` and can be enabled by adding thei
 - `steam` - Steam with Proton-GE & GameMode support.
 - `styles` - System-wide base16 theming, GTK/Qt synchronization, & daemon for the auto theme switching!
 - `typst` - Fast markup-based typesetting system.
+- `waynav` - Wayland-native grid bisector and pointer navigation tool.
+- `wl-clip-persist` - Persistent clipboard - prevents copied text loss on app close.
 - `ydotool` - Wayland-compatible CLI for automated inputs.
 
 </details>
