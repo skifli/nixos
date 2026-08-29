@@ -293,6 +293,7 @@ in
       common.programs
       // {
         ergonomics = "safeeyes";
+        idler = "swayidle";
         other =
           common.programs.other
           ++ [
