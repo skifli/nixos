@@ -14,7 +14,7 @@
 
   enabledImports = [
     ../../modules/core/audio.nix
-    ../../modules/core/boot.nix
+    # boot.nix not imported — fyde-nix handles boot for fydetab
     ../../modules/core/fonts.nix
     ../../modules/core/locale.nix
     ../../modules/core/networking.nix
