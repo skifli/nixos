@@ -19,6 +19,7 @@
     editor = "hx";
     explorer-tui = "yazi";
     explorer-gui = "dolphin";
+    idler = "swayidle";
     keyboard = "kanata";
     launcher = "vicinae";
     network-mounts = "nfs";
