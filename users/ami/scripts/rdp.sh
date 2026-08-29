@@ -17,20 +17,23 @@ connect_rdp() {
     fi
 
     # FreeRDP allows setting the title, but not TigerVNC. This leads me to a problem where that means I have to have multiple matches in the window-rules but then it also makes my custom scripts more annoying because I have to take into account both of those types. So, my extremely elegant solution is to just... make FreeRDP look like TigerVNC :sob:. Welp, at least it works ;).
-    printf "%s\n" "$pass" | sdl-freerdp /from-stdin:force \
+    sdl-freerdp /from-stdin:force \
         /v:"$host" \
         /u:"$user" \
         /d:"" \
         /t:"TigerVNC" \
         /kbd:layout:"$kbd" \
         /kbd:lang:"$kbd" \
-        /kbd:remap:0x5b=0x0 \
+        /kbd:remap:0x015b=0x0 \
         /drive:home,"$HOME" \
         /cert:ignore \
         +clipboard \
         +dynamic-resolution \
-        +grab-keyboard \
-        "$@" # The kbd ones don't even seem to work but WHATEVER :sob: had to do some stuff to the servers to make them default to the right layout ;-;
+        -grab-keyboard \
+        /auto-reconnect \
+        /auto-reconnect-max-retries:20 \
+        "$@" <<< "$pass"
+    # The kbd ones don't even seem to work but WHATEVER :sob: had to do some stuff to the servers to make them default to the right layout ;-;
 }
 
 connect_oracle_vnc() {
@@ -55,7 +58,7 @@ connect_oracle_vnc() {
     ssh -f -i "$key_file" -L "$port:127.0.0.1:$port" "$user@$host" sleep 10 # Keeps the tunnel open just long enough for the local vncviewer to make a connection. Once closed, the SSH tunnel will automatically clean itself up and exit.
 
     notify-send -e -a VNCViewer -i "/home/${USER}/.local/share/misc/663376.png" -u low "VNC Connection" "Launching VNC viewer"
-    
+
     vncviewer "127.0.0.1:$port" "$@"
 }
 

@@ -20,4 +20,5 @@
   "664c54f9-d97d-410b-a479-23dd8a08a628" # Better Tab Indicators
   # "bc25808c-a012-4c0d-ad9a-aa86be616019" # sleek border
   # "cb5efa80-f1e1-43ce-8c0b-fece8462d225" # Container Halo
+  "fd24f832-a2e6-4ce9-8b19-7aa888eb7f8e" # Quietify
 ]
