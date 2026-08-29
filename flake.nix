@@ -62,6 +62,12 @@
     };
     */
 
+    fyde-nix = {
+      url = "github:NixOnFyde/fyde-nix";
+      inputs.vicinae.follows = "vicinae";
+      inputs.home-manager.follows = "home-manager";
+    };
+
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -101,7 +107,6 @@
     # anki-mcp.url = "github:ankimcp/anki-mcp-server-addon";
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     # concord.url = "github:chojs23/concord";
-    fyde-nix.url = "github:NixOnFyde/fyde-nix"; # For local development: fyde-nix.url = "path:.store/fyde-nix";
     # lan-mouse.url = "github:feschber/lan-mouse";
     vicinae.url = "github:vicinaehq/vicinae"; # Following nixpkgs makes cache miss
     vicinae-extensions.url = "github:vicinaehq/extensions";

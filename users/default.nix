@@ -45,7 +45,8 @@ in {
     # extraSpecialArgs = { inherit commonHostVars hostVars; }; # Home manager WHY do you use this ;-;
 
     sharedModules = lib.optionals (hostVars.hostname == "fydetab") [
-      inputs.fyde-nix.homeManagerModules.default
+      (inputs.fyde-nix + "/modules/fydetab-duo/shell/home/wayle.nix")
+      (inputs.fyde-nix + "/modules/fydetab-duo/shell/home/swayidle.nix")
     ];
 
     users =
