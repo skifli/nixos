@@ -106,6 +106,6 @@ in {
     # copySystemConfiguration = true;
     # NOT SUPPORTED WITH FLAKES
 
-    stateVersion = "25.05"; # Do not change!
+    stateVersion = hostVars.stateVersion;
   };
 }

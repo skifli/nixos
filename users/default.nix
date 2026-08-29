@@ -2,6 +2,7 @@
   commonHostVars,
   hostVars,
   inputs,
+  lib,
   pkgs,
   usersVars,
   ...
@@ -42,6 +43,10 @@ in {
     useGlobalPkgs = true; # Stylix HM module sets nixpkgs overlays; avoid warnings by letting HM manage its own pkgs. However now set to true for speed heehee
     useUserPackages = true; # Make packages not available system-wide, instead in ~/.nix-profile
     # extraSpecialArgs = { inherit commonHostVars hostVars; }; # Home manager WHY do you use this ;-;
+
+    sharedModules = lib.optionals (hostVars.hostname == "fydetab") [
+      inputs.fyde-nix.homeManagerModules.default
+    ];
 
     users =
       builtins.mapAttrs (username: userVars: {
@@ -193,7 +198,7 @@ in {
             fi
           '';
 
-          stateVersion = "25.05"; # DO NOT CHANGE!
+          stateVersion = hostVars.stateVersion;
         };
       })
       usersVars; # For each user

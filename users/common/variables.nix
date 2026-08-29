@@ -8,7 +8,6 @@
 }: let
   programs = {
     compositor = "niri";
-    desktop-shell = "wayle";
     display-server = "wayland";
     idler = "swayidle";
     killer = "earlyoom";

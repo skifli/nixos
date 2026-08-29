@@ -2,6 +2,8 @@
   # Feature toggles
   # disableX = true;
 
+  stateVersion = "25.05";
+
   optimiseBoot = true;
   optimiseBuilds = true;
   optimiseForHdd = false;
