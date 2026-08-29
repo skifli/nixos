@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+TERMINAL="${1:-}"
+
 TARGET_WIN=$(niri msg --json focused-window 2>/dev/null || echo "{}")
+TARGET_ID=$(echo "$TARGET_WIN" | jq -r '.id // empty')
 TARGET_APP_ID=$(echo "$TARGET_WIN" | jq -r '.app_id // ""' | tr '[:upper:]' '[:lower:]')
 TARGET_TITLE=$(echo "$TARGET_WIN" | jq -r '.title // ""' | tr '[:upper:]' '[:lower:]')
 
 STATE_DIR="$HOME/.local/state/emoji-picker"
-CACHE_DIR="$HOME/.cache/emoji-picker"
-mkdir -p "$STATE_DIR" "$CACHE_DIR"
+mkdir -p "$STATE_DIR"
 
 HISTORY_FILE="$STATE_DIR/history.tsv"
 touch "$HISTORY_FILE"
@@ -290,24 +292,44 @@ EMOJI="${SELECTED%% *}"
 
 echo -e "$SELECTED\t$(date +%s)" >> "$HISTORY_FILE"
 
+# Sensitive as a work-around so for those who support it, it won't be on history! Yay!
 PREV_CLIP=$(wl-paste -n 2>/dev/null || true)
-echo -n "$EMOJI" | wl-copy --sensitive # Sensitive as a work-around so for those who support it, it won't be on history! Yay!
+PREV_PRIMARY=$(wl-paste -p -n 2>/dev/null || true)
 
+echo -n "$EMOJI" | wl-copy --sensitive
+echo -n "$EMOJI" | wl-copy -p --sensitive
+
+# Wait ONLY until the target window is focused (max 100ms timeout)
+if [ -n "$TARGET_ID" ]; then
+    for _ in {1..20}; do
+        CUR_ID=$(niri msg --json focused-window 2>/dev/null | jq -r '.id // empty')
+
+        [ "$CUR_ID" = "$TARGET_ID" ] && break
+        sleep 0.005
+    done
+fi
+
+# Allow layer-shell unmap to finish and the client surface to receive keyboard focus
 sleep 0.05
 
 # If the target is a terminal, use Ctrl+Shift+V; otherwise, use standard Ctrl+V
-if [[ "$TARGET_APP_ID" =~ (ghostty|kitty|foot|alacritty|wezterm|xterm|terminal|term) ]] || [[ "$TARGET_TITLE" =~ (ghostty|terminal|alacritty) ]]; then
+if [[ -n ${TERMINAL:-} ]] && [[ $TARGET_APP_ID == *"$TERMINAL"* || $TARGET_TITLE == *"$TERMINAL"* ]]; then
     wtype -M ctrl -M shift -k v -m shift -m ctrl
 else
     wtype -M ctrl -k v -m ctrl
 fi
 
-# Restore previous clipboard contents
 (
-    sleep 0.08
+    sleep 0.25
     if [ -n "$PREV_CLIP" ]; then
         echo -n "$PREV_CLIP" | wl-copy
     else
         wl-copy --clear 2>/dev/null || true
+    fi
+
+    if [ -n "$PREV_PRIMARY" ]; then
+        echo -n "$PREV_PRIMARY" | wl-copy -p
+    else
+        wl-copy -p --clear 2>/dev/null || true
     fi
 ) & disown

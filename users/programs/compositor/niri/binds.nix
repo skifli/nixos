@@ -1061,7 +1061,7 @@
       hotkey-overlay-title = "Emoji picker";
       allow-inhibiting = false;
     };
-    spawn = ["/home/${userVars.username}/.local/bin/emoji-picker.sh"];
+    spawn = ["/home/${userVars.username}/.local/bin/emoji-picker.sh" userVars.programs.terminal];
   };
 
   # Preset layout scripts
