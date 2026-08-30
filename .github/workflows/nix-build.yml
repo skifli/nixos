@@ -6,14 +6,17 @@ on:
 jobs:
   build:
     name: Build (${{ matrix.host }})
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.runner }}
     strategy:
       fail-fast: false
       matrix:
         include:
           - host: lyra
+            runner: ubuntu-latest # Intel x86_64 runner
           - host: fydetab
+            runner: ubuntu-24.04-arm # Native ARM64 runner
           # - host: pifi
+          #   runner: ubuntu-24.04-arm
 
     steps:
       - name: Checkout repository
@@ -32,10 +35,6 @@ jobs:
 
       - name: Install Nix
         uses: DeterminateSystems/determinate-nix-action@main
-        with:
-          extra-conf: |
-            max-jobs = 1
-            cores = 2
 
       - name: Detect target system
         id: system
@@ -45,18 +44,6 @@ jobs:
           echo "system=$SYSTEM" >> "$GITHUB_OUTPUT"
           echo "is_aarch64=$IS_AARCH64" >> "$GITHUB_OUTPUT"
           echo "Target system: $SYSTEM (aarch64: $IS_AARCH64)"
-
-      - name: Set up QEMU
-        if: steps.system.outputs.is_aarch64 == 'true'
-        run: |
-          for i in $(seq 1 12); do
-            if sudo apt-get update -q && sudo apt-get install -y -q qemu-user-static binfmt-support; then
-              break
-            fi
-            echo "apt-get failed (attempt $i/12), waiting 10s..."
-            sleep 10
-          done
-          sudo update-binfmts --enable qemu-aarch64
 
       - name: Setup Cachix
         uses: cachix/cachix-action@v17
@@ -71,24 +58,30 @@ jobs:
             EXTRA_PLATFORMS="--option extra-platforms aarch64-linux"
           fi
 
-          LIGHT_PATH=$(nix build ".?submodules=1#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" \
+          # watch-exec streams packages live to Cachix as they compile
+          LIGHT_PATH=$(cachix watch-exec skifli-nixos -- nix build ".?submodules=1#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" \
             --accept-flake-config \
-            --max-jobs 1 \
             --no-link \
             --print-out-paths \
             $EXTRA_PLATFORMS)
 
-          DARK_PATH=$(readlink -f "$LIGHT_PATH/specialisation/dark")
-
           echo "LIGHT_PATH=$LIGHT_PATH" >> "$GITHUB_ENV"
-          echo "DARK_PATH=$DARK_PATH" >> "$GITHUB_ENV"
+
+          if [ -d "$LIGHT_PATH/specialisation/dark" ]; then
+            DARK_PATH=$(readlink -f "$LIGHT_PATH/specialisation/dark")
+            echo "DARK_PATH=$DARK_PATH" >> "$GITHUB_ENV"
+          fi
 
       - name: Pin builds on Cachix
         if: github.ref == 'refs/heads/main'
         run: |
-          # Push both closures to ensure they are on Cachix
-          cachix push skifli-nixos "$LIGHT_PATH" "$DARK_PATH"
+          cachix push skifli-nixos "$LIGHT_PATH"
+          if [ -n "$DARK_PATH" ]; then
+            cachix push skifli-nixos "$DARK_PATH"
+          fi
 
           # Pin both to 2 latest revisions
           cachix pin skifli-nixos "${{ matrix.host }}-light" "$LIGHT_PATH" --keep-revisions 2
-          cachix pin skifli-nixos "${{ matrix.host }}-dark" "$DARK_PATH" --keep-revisions 2
+          if [ -n "$DARK_PATH" ]; then
+            cachix pin skifli-nixos "${{ matrix.host }}-dark" "$DARK_PATH" --keep-revisions 2
+          fi
