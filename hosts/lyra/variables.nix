@@ -21,6 +21,7 @@
     ../../modules/core/audio.nix
     ../../modules/core/boot.nix
     ../../modules/core/btrfs.nix
+    ../../modules/core/chaotic.nix
     ../../modules/core/fonts.nix
     ../../modules/core/gaming.nix
     ../../modules/core/locale.nix

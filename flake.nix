@@ -128,16 +128,6 @@
           modules = [
             ./hosts/${hostname}/configuration.nix
             ./lix.nix
-            # Below is specifically with stable nixOS - inputs.chaotic.nixosModules.default is IMPORTANT for UNstable - but irrelevant to me
-            inputs.chaotic.nixosModules.nyx-cache
-            inputs.chaotic.nixosModules.nyx-overlay
-            inputs.chaotic.nixosModules.nyx-registry
-
-            # For GH Actions building!
-            ({lib, ...}:
-              lib.mkIf (system == "aarch64-linux") {
-                nixpkgs.buildPlatform = "x86_64-linux";
-              })
           ];
           # Attribute set of extra arguments passed to Nix module functions
           specialArgs = {

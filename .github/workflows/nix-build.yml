@@ -23,10 +23,25 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
+      - name: Detect target system
+        id: system
+        run: |
+          SYSTEM=$(nix eval ".?submodules=1#nixosConfigurations.${{ matrix.host }}.config.nixpkgs.hostPlatform.system" --raw)
+          IS_AARCH64=$( [ "$SYSTEM" = "aarch64-linux" ] && echo "true" || echo "false" )
+          echo "system=$SYSTEM" >> "$GITHUB_OUTPUT"
+          echo "is_aarch64=$IS_AARCH64" >> "$GITHUB_OUTPUT"
+          echo "Target system: $SYSTEM (aarch64: $IS_AARCH64)"
+
       - name: Set up Swap Space
         uses: pierotofy/set-swap-space@master
         with:
           swap-size-gb: 10
+
+      - name: Set up QEMU
+        if: steps.system.outputs.is_aarch64 == 'true'
+        uses: docker/setup-qemu-action@v4
+        with:
+          platforms: arm64
 
       - uses: wimpysworld/nothing-but-nix@main
 
@@ -36,6 +51,7 @@ jobs:
           extra-conf: |
             max-jobs = 1
             cores = 2
+            ${{ steps.system.outputs.is_aarch64 == 'true' && format('extra-platforms = {0}', steps.system.outputs.system) || '' }}
 
       - name: Setup Cachix
         uses: cachix/cachix-action@v17
