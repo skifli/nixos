@@ -53,14 +53,10 @@ jobs:
             if sudo apt-get update -q && sudo apt-get install -y -q qemu-user-static binfmt-support; then
               break
             fi
-
             echo "apt-get failed (attempt $i/12), waiting 10s..."
-
             sleep 10
           done
           sudo update-binfmts --enable qemu-aarch64
-          echo "extra-platforms = aarch64-linux" | sudo tee -a /etc/nix/nix.conf
-          sudo systemctl restart nix-daemon
 
       - name: Setup Cachix
         uses: cachix/cachix-action@v17
@@ -70,11 +66,17 @@ jobs:
 
       - name: Build NixOS system (${{ matrix.host }})
         run: |
+          EXTRA_PLATFORMS=""
+          if [ "${{ steps.system.outputs.is_aarch64 }}" = "true" ]; then
+            EXTRA_PLATFORMS="--option extra-platforms aarch64-linux"
+          fi
+
           LIGHT_PATH=$(nix build ".?submodules=1#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" \
             --accept-flake-config \
             --max-jobs 1 \
             --no-link \
-            --print-out-paths)
+            --print-out-paths \
+            $EXTRA_PLATFORMS)
 
           DARK_PATH=$(readlink -f "$LIGHT_PATH/specialisation/dark")
 
