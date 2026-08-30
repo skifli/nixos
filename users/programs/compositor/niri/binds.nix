@@ -934,10 +934,14 @@
       "sh"
       "-c"
       ''
-        ${if builtins.length hostVars.orderedOutputs > 1 then ''
-        is-second-monitor-focused || focus-second-monitor # Only if it is NOT focused
-        is-workspace-focused '${builtins.elemAt hostVars.orderedOutputs 1}' 3 || niri msg action focus-workspace 3 # Again, only if it is NOT focused
-        '' else ""}
+        ${
+          if builtins.length hostVars.orderedOutputs > 1
+          then ''
+            is-second-monitor-focused || focus-second-monitor # Only if it is NOT focused
+            is-workspace-focused '${builtins.elemAt hostVars.orderedOutputs 1}' 3 || niri msg action focus-workspace 3 # Again, only if it is NOT focused
+          ''
+          else ""
+        }
         /home/${userVars.username}/.local/bin/rdp.sh
       ''
     ];

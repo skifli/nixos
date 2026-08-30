@@ -1,4 +1,4 @@
-{pkgs, ...}: rec {
+{...}: rec {
   stateVersion = "26.05";
 
   optimiseBoot = true;
