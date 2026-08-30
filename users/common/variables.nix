@@ -45,6 +45,7 @@
       "typst"
       "waynav"
       "wl-clip-persist"
+      "wshowkeys"
       "ydotool"
     ];
   };

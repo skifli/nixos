@@ -91,6 +91,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     }; # System wide theming
 
+    wshowkeys = {
+      url = "github:DreamMaoMao/wshowkeys";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     /*
     winapps = {
       url = "github:winapps-org/winapps";

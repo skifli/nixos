@@ -701,7 +701,7 @@
   };
   "Shift+Print" = {
     _props = {
-      hotkey-overlay-title = "Screenshot window";
+      hotkey-overlay-title = null;
       allow-inhibiting = false;
     };
     screenshot-window = [];
@@ -776,7 +776,7 @@
   # NIRIUS - SCRATCHPAD
   "Mod+P" = {
     _props = {
-      hotkey-overlay-title = "Toggle scratchpad";
+      hotkey-overlay-title = null;
       allow-inhibiting = false;
     };
     spawn = [
@@ -825,7 +825,7 @@
   # NIRIUS - FOLLOW MODE
   "Mod+Ctrl+F" = {
     _props = {
-      hotkey-overlay-title = "Toggle follow-mode";
+      hotkey-overlay-title = null;
       allow-inhibiting = false;
     };
     spawn = [
@@ -912,7 +912,7 @@
   };
   "Mod+Alt+O" = {
     _props = {
-      hotkey-overlay-title = "Spawn focused output info script";
+      hotkey-overlay-title = null;
       allow-inhibiting = false;
     };
     spawn = ["/home/${userVars.username}/.local/bin/focused-output-info.sh"];
@@ -926,7 +926,7 @@
   };
   "Mod+Alt+R" = {
     _props = {
-      hotkey-overlay-title = "Spawn RDP script";
+      hotkey-overlay-title = null;
       allow-inhibiting = false;
       repeat = false;
     };
@@ -963,7 +963,7 @@
   };
   "Mod+Alt+N" = {
     _props = {
-      hotkey-overlay-title = "Prepare for and execute a nixOS-rebuild switch";
+      hotkey-overlay-title = null;
       allow-inhibiting = false;
     };
     spawn = [
@@ -990,7 +990,7 @@
   };
   "Mod+Alt+V" = {
     _props = {
-      hotkey-overlay-title = "Preview clipboard image";
+      hotkey-overlay-title = null;
       allow-inhibiting = false;
     };
     spawn = ["/home/${userVars.username}/.local/bin/view-clipboard-image.sh"];
@@ -1001,6 +1001,13 @@
       allow-inhibiting = false;
     };
     spawn = ["/home/${userVars.username}/.local/bin/autoclicker.sh"];
+  };
+  "Mod+Alt+K" = {
+    _props = {
+      hotkey-overlay-title = "Toggle keystroke overlay";
+      allow-inhibiting = false;
+    };
+    spawn = ["toggle-wshowkeys"];
   };
 
   # MISC & SCRIPTS
@@ -1073,7 +1080,7 @@
   # Preset layout scripts
   "Mod+Ctrl+1" = {
     _props = {
-      hotkey-overlay-title = "Run layout preset scripts 1(-4)";
+      hotkey-overlay-title = null;
       allow-inhibiting = false;
     };
     spawn = ["/home/${userVars.username}/.local/bin/1-niri.sh"];

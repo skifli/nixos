@@ -212,6 +212,7 @@ The app toggle shortcuts will focus the application if already open, launch it i
 | `Mod + Q`               | Close focused window                                                                  |
 | `Mod + Shift + Q`       | Force kill current window (`killcurrent`)                                             |
 | `Mod + Ctrl + Q`        | Interactive click-to-kill window (`killclick`)                                        |
+| `Mod + Alt + K`         | Toggle on-screen keystroke overlay ([`wshowkeys`](users/programs/misc/wshowkeys.nix)) |
 
 </details>
 
@@ -399,6 +400,7 @@ These modules are under `users/programs/misc/` and can be enabled by adding thei
 - `typst` - Fast markup-based typesetting system.
 - `waynav` - Wayland-native grid bisector and pointer navigation tool.
 - `wl-clip-persist` - Persistent clipboard - prevents copied text loss on app close.
+- `wshowkeys` - On-screen keystroke, modifier, and mouse click visualizer for Wayland.
 - `ydotool` - Wayland-compatible CLI for automated inputs.
 
 </details>
