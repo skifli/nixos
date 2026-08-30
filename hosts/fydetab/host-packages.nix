@@ -7,5 +7,8 @@
     gst_all_1.gst-plugins-bad
     gst_all_1.gst-plugins-ugly
     libpulseaudio
+
+    # Wayle @fyde-nix uses these
+    papirus-icon-theme
   ];
 }

@@ -390,7 +390,7 @@ lib.mkIf (hostVars.hostname != "fydetab") {
         };
         wallpaper = {
           engine-enabled = false;
-          # Disabled because I need to do some custom awww stuff
+          # Disabled because awww manages the main and overview wallpapers
 
           monitors =
             pkgs.lib.mapAttrsToList (monitorName: _: {

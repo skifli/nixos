@@ -50,9 +50,19 @@
     "8" = {open-on-output = "DSI-1";};
   };
 
-  niri.input = {
+  niri = {
+    hot-corners = {
+      top-left = [];
+    };
+
+    input = {
     touch.map-to-output = "DSI-1";
     tablet.map-to-output = "DSI-1";
+    touchpad = {
+      tap = true;
+      natural-scroll = true;
+    };
+    };
   };
 
   sessionVariables = {
