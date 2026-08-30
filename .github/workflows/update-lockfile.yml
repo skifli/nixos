@@ -20,6 +20,10 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
+      - name: Configure global Git auth
+        run: |
+          git config --global url."https://${{ secrets.GH_PAT }}@github.com/".insteadOf "https://github.com/"
+
       - name: Install Nix
         uses: DeterminateSystems/determinate-nix-action@main
 
@@ -29,7 +33,7 @@ jobs:
           NIX_CONFIG: "access-tokens = github.com=${{ secrets.GH_PAT }}"
         with:
           token: ${{ secrets.GH_PAT }}
-          pr-title: "chore(flake.lock): update"
+          pr-title: "Bump flake.lock"
           pr-assignees: "skifli"
           pr-labels: |
             dependencies
