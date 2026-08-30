@@ -58,8 +58,8 @@ in {
 
       # Quadrant selection
       q cell-select 1,warp
-      w cell-select 2,warp
-      a cell-select 3,warp
+      a cell-select 2,warp
+      w cell-select 3,warp
       s cell-select 4,warp
 
       # 3x3 grid mode (press g to split current cell into 3x3)
