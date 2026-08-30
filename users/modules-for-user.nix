@@ -30,6 +30,7 @@
 
   all =
     [
+      ./common/user-packages.nix
       ./${userVars.username}/user-packages.nix
     ]
     ++ lib.optional userVars.git.enabled ./programs/misc/git.nix
