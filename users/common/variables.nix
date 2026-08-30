@@ -1,7 +1,5 @@
 {
   commonHostVars,
-  hostVars,
-  lib,
   pkgs,
   username,
   ...
