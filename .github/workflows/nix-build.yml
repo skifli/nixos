@@ -48,13 +48,9 @@ jobs:
 
       - name: Set up QEMU
         if: steps.system.outputs.is_aarch64 == 'true'
-        uses: docker/setup-qemu-action@v4
-        with:
-          platforms: arm64
-
-      - name: Enable extra platforms
-        if: steps.system.outputs.is_aarch64 == 'true'
         run: |
+          sudo apt-get update && sudo apt-get install -y qemu-user-static binfmt-support
+          sudo update-binfmts --enable qemu-aarch64
           echo "extra-platforms = aarch64-linux" >> ~/.config/nix/nix.conf
           sudo systemctl restart nix-daemon
 
