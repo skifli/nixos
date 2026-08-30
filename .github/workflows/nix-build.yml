@@ -7,6 +7,8 @@ jobs:
   build:
     name: Build (${{ matrix.host }})
     runs-on: ${{ matrix.runner }}
+    env:
+      CACHIX_PUSH_FILTER: "(-base-prefix-[123]$|Affinity-20x64\\.exe$|-affinity-extracted-sources$)"
     strategy:
       fail-fast: false
       matrix:
@@ -50,6 +52,7 @@ jobs:
         with:
           name: "skifli-nixos"
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
+          pushFilter: "${{ env.CACHIX_PUSH_FILTER }}"
 
       - name: Build NixOS system (${{ matrix.host }})
         run: |
@@ -58,8 +61,7 @@ jobs:
             EXTRA_PLATFORMS="--option extra-platforms aarch64-linux"
           fi
 
-          # watch-exec streams packages live to Cachix as they compile
-          LIGHT_PATH=$(cachix watch-exec skifli-nixos -- nix build ".?submodules=1#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" \
+          LIGHT_PATH=$(nix build ".?submodules=1#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" \
             --accept-flake-config \
             --no-link \
             --print-out-paths \
@@ -72,13 +74,17 @@ jobs:
             echo "DARK_PATH=$DARK_PATH" >> "$GITHUB_ENV"
           fi
 
-      - name: Pin builds on Cachix
+      - name: Push and pin builds on Cachix
         if: github.ref == 'refs/heads/main'
         run: |
-          cachix push skifli-nixos "$LIGHT_PATH"
+          PATHS_TO_PUSH="$LIGHT_PATH"
           if [ -n "$DARK_PATH" ]; then
-            cachix push skifli-nixos "$DARK_PATH"
+            PATHS_TO_PUSH="$PATHS_TO_PUSH $DARK_PATH"
           fi
+
+          nix-store -qR $PATHS_TO_PUSH \
+            | grep -v -E "$CACHIX_PUSH_FILTER" \
+            | cachix push skifli-nixos
 
           # Pin both to 2 latest revisions
           cachix pin skifli-nixos "${{ matrix.host }}-light" "$LIGHT_PATH" --keep-revisions 2
