@@ -25,7 +25,10 @@ jobs:
 
       - name: Update flake.lock
         uses: DeterminateSystems/update-flake-lock@main
+        env:
+          NIX_CONFIG: "access-tokens = github.com=${{ secrets.GH_PAT }}"
         with:
+          token: ${{ secrets.GH_PAT }}
           pr-title: "chore(flake.lock): update"
           pr-assignees: "skifli"
           pr-labels: |
