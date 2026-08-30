@@ -2,7 +2,7 @@ name: "Flake.lock: update Nix dependencies"
 
 on:
   schedule:
-    - cron: '0 0 * * 0' # Runs weekly on Sunday at 00:00
+    - cron: "0 0 * * 0" # Runs weekly on Sunday at 00:00
   workflow_dispatch: # Allows manual triggering from GitHub UI
 
 jobs:
