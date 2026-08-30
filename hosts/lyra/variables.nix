@@ -158,7 +158,8 @@
     };
   };
 
-  niri.input = {
+  niri = {
+    gestures.hot-corners.off = [];
   };
 
   sessionVariables = {

@@ -81,8 +81,6 @@ in {
     saturation = 1.0;
   };
 
-  gestures.hot-corners.off = [];
-
   # Animation settings (empty list [] = parameterless KDL flag/node)
   animations = {
     config-notification-open-close = [];

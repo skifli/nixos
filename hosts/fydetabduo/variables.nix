@@ -51,8 +51,10 @@
   };
 
   niri = {
-    hot-corners = {
-      top-left = [];
+    gestures = {
+      hot-corners = {
+        top-left = [];
+      };
     };
 
     input = {
