@@ -62,7 +62,7 @@ let
 in {
   # Per host secrets (filenames match secrets/<host>/<name>.age)
   "secrets/lyra/wifi.env.age".publicKeys = [lyra ami];
-  "secrets/fydetab/wifi.env.age".publicKeys = [fynix ami];
+  "secrets/fydetabduo/wifi.env.age".publicKeys = [fynix ami];
 
   # Per-user secrets (filenames match secrets/<user>/<name>.age)
   "secrets/ami/hashedPasswordFile.age".publicKeys = amiOnLyra;

@@ -15,7 +15,7 @@ jobs:
         include:
           - host: lyra
             runner: ubuntu-latest # Intel x86_64 runner
-          - host: fydetab
+          - host: fydetabduo
             runner: ubuntu-24.04-arm # Native ARM64 runner
           # - host: pifi
           #   runner: ubuntu-24.04-arm
