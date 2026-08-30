@@ -18,9 +18,8 @@
         "x-systemd.after=tailscale-online.target"
         "x-systemd.requires=tailscale-online.target"
         "x-systemd.idle-timeout=600"
-        "x-systemd.mount-timeout=10s"
-        "x-systemd.device-timeout=10s"
-        "vers=4.2"
+        "x-systemd.mount-timeout=30s"
+        "x-systemd.device-timeout=30s"
       ]
       ++ (share.options or []);
   };
