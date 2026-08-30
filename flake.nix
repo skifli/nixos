@@ -153,7 +153,7 @@
         system = "x86_64-linux";
         builder = mkHost;
       };
-      fydetab = {
+      fydetabduo = {
         system = "aarch64-linux";
         builder = mkHost;
       };

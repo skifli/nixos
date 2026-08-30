@@ -139,7 +139,7 @@ in
     };
 
     kanata.keyboards = {
-      fydetab = {
+      fydetabduo = {
         devices = [];
         extraDefCfg = "process-unmapped-keys yes";
 

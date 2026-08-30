@@ -24,7 +24,7 @@ in {
       # Use systemd-resolved for better DNS caching
       dns = "systemd-resolved";
 
-      ensureProfiles = lib.mkIf hasWifiSecret {
+      ensureProfiles = lib.mkIf (hasWifiSecret && hostVars.useDeclarativeWifi) {
         environmentFiles = [
           config.age.secrets.${wifiSecretKey}.path
         ];

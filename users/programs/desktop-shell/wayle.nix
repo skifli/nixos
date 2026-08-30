@@ -5,7 +5,7 @@
   userVars,
   ...
 }:
-lib.mkIf (hostVars.hostname != "fydetab") {
+lib.mkIf (hostVars.hostname != "fydetabduo") {
   environment.systemPackages = with pkgs; [
     awww # Was getting this error - `could not apply wallpaper from config change, error: neither awww nor swww found in PATH, monitor: *`
   ];

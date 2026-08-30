@@ -14,7 +14,7 @@
 
   display = status: "${niri-bin} msg action power-${status}-monitors";
 in
-  lib.mkIf (hostVars.hostname != "fydetab") {
+  lib.mkIf (hostVars.hostname != "fydetabduo") {
     home-manager.users.${userVars.username} = {
       home.shellAliases = {
         inherit swaylock; # Fancy by default!

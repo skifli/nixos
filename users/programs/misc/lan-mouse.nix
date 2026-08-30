@@ -24,7 +24,7 @@
           clients = [
             {
               position = "bottom";
-              hostname = "fydetab";
+              hostname = "fydetabduo";
               activate_on_startup = true;
             }
           ];

@@ -16,10 +16,11 @@ let
   # pifi = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOhF6vPHavSoFf/TiQI8fc4rHsplwe7ucGFhX5g/oaMY root@raspberrypi";
   # Desktop / lyra
   lyra = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILLoR4r2C+luZVCcMqfbhKx23YS3MAnZTxgMZzUXoRkl root@lyra";
+  fydetabduo = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILwL7OhSQvPTMKrGl9cpBP4ILaGq4LWQPGvcFSxfMEKf root@fydetabduo";
 
   # Personal key
   ami = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM00chXNLX0Mdss+qEVuYmoIDVgJNY2AqyGIEgn0Z48I ami@lyra";
-  fynix = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPLjuhLizbbD7biJR6CBnal8duh68uFkC5u78uxEa02Z fynix@fydetab";
+  fynix = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPLjuhLizbbD7biJR6CBnal8duh68uFkC5u78uxEa02Z fynix@fydetabduo";
 
   /*
   all = [
@@ -36,17 +37,20 @@ let
     ami
   ];
 
-  # The fydetab host must be able to decrypt these during activation.
-  # ami is included so the personal key can edit/re-encrypt them.
-  amiOnFydetab = [
+  # The fydetabduo host must be able to decrypt these during activation.
+  # fynix is included so the personal key can edit/re-encrypt them.
+  fynixOnFydetabduo = [
+    fydetabduo
     fynix
-    ami
   ];
 
-  # Rescue password is only needed on lyra, and ami for administration.
+  # Rescue password is only needed on lyra and fydetab, and ami and fynix for administration.
   rescueRecipients = [
     lyra
+    fydetabduo
+
     ami
+    fynix
   ];
   /*
   HOW TO USE:
@@ -73,17 +77,17 @@ in {
   "secrets/ami/vnc-oracle.age".publicKeys = amiOnLyra;
   "secrets/ami/oracle-vnc-key.age".publicKeys = amiOnLyra;
 
-  "secrets/fynix/hashedPasswordFile.age".publicKeys = amiOnFydetab;
-  "secrets/fynix/github-credentials.age".publicKeys = amiOnFydetab;
-  "secrets/fynix/github-pat.age".publicKeys = amiOnFydetab;
-  "secrets/fynix/gh-hosts.yml.age".publicKeys = amiOnFydetab;
-  "secrets/fynix/anki-keyFile.age".publicKeys = amiOnFydetab;
-  "secrets/fynix/anki-usernameFile.age".publicKeys = amiOnFydetab;
-  "secrets/fynix/cachix.dhall.age".publicKeys = amiOnFydetab;
-  "secrets/fynix/rdp-pifi-linux.age".publicKeys = amiOnFydetab;
-  "secrets/fynix/rdp-pifi-win.age".publicKeys = amiOnFydetab;
-  "secrets/fynix/vnc-oracle.age".publicKeys = amiOnFydetab;
-  "secrets/fynix/oracle-vnc-key.age".publicKeys = amiOnFydetab;
+  "secrets/fynix/hashedPasswordFile.age".publicKeys = fynixOnFydetabduo;
+  "secrets/fynix/github-credentials.age".publicKeys = fynixOnFydetabduo;
+  "secrets/fynix/github-pat.age".publicKeys = fynixOnFydetabduo;
+  "secrets/fynix/gh-hosts.yml.age".publicKeys = fynixOnFydetabduo;
+  "secrets/fynix/anki-keyFile.age".publicKeys = fynixOnFydetabduo;
+  "secrets/fynix/anki-usernameFile.age".publicKeys = fynixOnFydetabduo;
+  "secrets/fynix/cachix.dhall.age".publicKeys = fynixOnFydetabduo;
+  "secrets/fynix/rdp-pifi-linux.age".publicKeys = fynixOnFydetabduo;
+  "secrets/fynix/rdp-pifi-win.age".publicKeys = fynixOnFydetabduo;
+  "secrets/fynix/vnc-oracle.age".publicKeys = fynixOnFydetabduo;
+  "secrets/fynix/oracle-vnc-key.age".publicKeys = fynixOnFydetabduo;
 
   # Misc secrets
   "secrets/rescue/hashedPasswordFile.age".publicKeys = rescueRecipients;

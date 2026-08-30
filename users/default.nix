@@ -44,7 +44,7 @@ in {
     useUserPackages = true; # Make packages not available system-wide, instead in ~/.nix-profile
     # extraSpecialArgs = { inherit commonHostVars hostVars; }; # Home manager WHY do you use this ;-;
 
-    sharedModules = lib.optionals (hostVars.hostname == "fydetab") [
+    sharedModules = lib.optionals (hostVars.hostname == "fydetabduo") [
       (inputs.fyde-nix + "/modules/fydetab-duo/shell/home/wayle.nix")
       (inputs.fyde-nix + "/modules/fydetab-duo/shell/home/swayidle.nix")
     ];
@@ -188,11 +188,10 @@ in {
 
           activation.linkSharedState = pkgs.lib.mkAfter ''
             # Shared state using NFS: symlink ~/Documents/custom-scripts to a via NFS sharedStateDir
-            #
-            if [ -n "${userVars.sharedStateDir}" ]; then
-              mkdir -p "${userVars.sharedStateDir}"
+            # Tis optional however: do not make HM fail when the NFS mount is offline.
 
-              if [ -d "${userVars.sharedStateDir}" ] && [ ! -L "$HOME/Documents/custom-scripts" ] && [ ! -d "$HOME/Documents/custom-scripts" ]; then
+            if [ -n "${userVars.sharedStateDir}" ] && [ -d "${userVars.sharedStateDir}" ]; then
+              if [ ! -L "$HOME/Documents/custom-scripts" ] && [ ! -d "$HOME/Documents/custom-scripts" ]; then
                 mkdir -p "$HOME/Documents"
                 ln -sf "${userVars.sharedStateDir}" "$HOME/Documents/custom-scripts"
               fi

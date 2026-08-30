@@ -14,7 +14,7 @@
 
   enabledImports = [
     ../../modules/core/audio.nix
-    # boot.nix not imported — fyde-nix handles boot for fydetab
+    # boot.nix not imported — fyde-nix handles boot for fydetabduo
     ../../modules/core/fonts.nix
     ../../modules/core/locale.nix
     ../../modules/core/networking.nix
@@ -85,4 +85,6 @@
 
   timezone = "Europe/London";
   location = "London+England";
+
+  useDeclarativeWifi = false;
 }
