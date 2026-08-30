@@ -51,7 +51,7 @@ jobs:
         run: |
           sudo apt-get update && sudo apt-get install -y qemu-user-static binfmt-support
           sudo update-binfmts --enable qemu-aarch64
-          echo "extra-platforms = aarch64-linux" >> ~/.config/nix/nix.conf
+          echo "extra-platforms = aarch64-linux" | sudo tee -a /etc/nix/nix.conf
           sudo systemctl restart nix-daemon
 
       - name: Setup Cachix
