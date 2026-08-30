@@ -49,6 +49,11 @@ jobs:
       - name: Set up QEMU
         if: steps.system.outputs.is_aarch64 == 'true'
         run: |
+          while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do
+            echo "Waiting for dpkg lock..."
+            sleep 5
+          done
+
           sudo apt-get update && sudo apt-get install -y qemu-user-static binfmt-support
           sudo update-binfmts --enable qemu-aarch64
           echo "extra-platforms = aarch64-linux" | sudo tee -a /etc/nix/nix.conf
