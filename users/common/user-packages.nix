@@ -11,7 +11,19 @@
       cameractrls-gtk4
       doxx
       evince # Document viewer
+
+      /*
+         Not needed anymore?
+      (pkgs.ferdium.overrideAttrs (oldAttrs: {
+        postFixup = (oldAttrs.postFixup or "") + ''
+          wrapProgram $out/bin/ferdium \
+            --add-flags "--ozone-platform=wayland" \
+            --add-flags "--enable-features=WaylandWindowDecorations,UseOzonePlatform,WebRTCPipeWireCapturer"
+        '';
+      }))
+      */
       ferdium
+
       fira-code
       haruna # Media player
       imagemagick # mogrify EXIF
