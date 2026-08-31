@@ -260,16 +260,16 @@ in
 
           (deflayer mouse
             _    _    _    _    _    _    _    _    _    _    _    _    _    _
-            _    lmet (mwheel-left 20 60) (movemouse-accel-up 5 210 1 9) (mwheel-right 20 60) lalt _    @zmin (mwheel-down 30 60) (mwheel-up 30 60) @zmout _    _
-            _    lsft (movemouse-accel-left 5 210 1 9) (movemouse-accel-down 5 210 1 9) (movemouse-accel-right 5 210 1 9) lctl _    mlft mrgt (layer-toggle mouse-slow) _    _    _
+            _    lmet (mwheel-left 20 60) (movemouse-accel-up 10 900 1 5) (mwheel-right 20 60) lalt _    @zmin (mwheel-down 30 60) (mwheel-up 30 60) @zmout _    _
+            _    lsft (movemouse-accel-left 10 900 1 5) (movemouse-accel-down 10 900 1 5) (movemouse-accel-right 10 900 1 5) lctl _    mlft mrgt (layer-toggle mouse-slow) _    _    _
             _    _    _    _    _    _    _    @ntog mmid pgup pgdn _    _
             _    _    _              _              _    _    _
           )
 
           (deflayer mouse-lock
             _    _    _    _    _    _    _    _    _    _    _    _    _    _
-            _    lmet (mwheel-left 20 60) (movemouse-accel-up 5 210 1 9) (mwheel-right 20 60) lalt _    @zmin (mwheel-down 30 60) (mwheel-up 30 60) @zmout _    _
-            _    lsft (movemouse-accel-left 5 210 1 9) (movemouse-accel-down 5 210 1 9) (movemouse-accel-right 5 210 1 9) lctl _    mlft mrgt (layer-toggle mouse-slow) _    _    _
+            _    lmet (mwheel-left 20 60) (movemouse-accel-up 10 900 1 5) (mwheel-right 20 60) lalt _    @zmin (mwheel-down 30 60) (mwheel-up 30 60) @zmout _    _
+            _    lsft (movemouse-accel-left 10 900 1 5) (movemouse-accel-down 10 900 1 5) (movemouse-accel-right 10 900 1 5) lctl _    mlft mrgt (layer-toggle mouse-slow) _    _    _
             _    _    _    _    _    _    _    @nunlock mmid pgup pgdn _    _
             _    _    _              _              _    _    _
           )
