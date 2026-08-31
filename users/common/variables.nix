@@ -73,7 +73,7 @@ in {
       {
         mountPoint = "/mnt/Remote-Storage";
         server = "pifi";
-        remotePath = "/media/ami/Remote Storage";
+        remotePath = "/media/ami/Remote-Storage";
       }
     ];
   };
