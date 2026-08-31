@@ -5,16 +5,19 @@
 }: let
   nfsShares = userVars.networkMounts.nfsShares or [];
 
-  mkNfsMount = share: {
-    # The actual device path remains the same
-    device = "${share.server}:${share.remotePath}";
+  mkNfsMount = share: let
+    sanitizedServer = builtins.replaceStrings [" "] [""] share.server;
+
+    # Escape spaces in the remote path for compatibility (\040)
+    escapedPath = builtins.replaceStrings [" "] ["\\040"] share.remotePath;
+  in {
+    device = "${sanitizedServer}:${escapedPath}";
     fsType = "nfs";
     options =
       [
         "_netdev"
         "nofail"
         "auto"
-        # Swapped network-online.target for tailscale target
         "x-systemd.after=tailscale-online.target"
         "x-systemd.requires=tailscale-online.target"
         "x-systemd.idle-timeout=600"
