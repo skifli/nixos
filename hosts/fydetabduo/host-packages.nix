@@ -8,7 +8,8 @@
     gst_all_1.gst-plugins-ugly
     libpulseaudio
 
-    # Wayle @fyde-nix uses these
+    # Wayle @fyde-nix uses these symbolic icons and its JetBrains Mono font.
     papirus-icon-theme
+    jetbrains-mono
   ];
 }

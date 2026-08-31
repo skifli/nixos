@@ -20,15 +20,15 @@
       sensors.autoRotate = true;
       tabletMode.enable = true;
       modem.enable = true;
-    };
-  };
 
-  hardware.fydetabduo.shell = {
-    enable = false;
+      shell = {
+        enable = false;
 
-    power.autoProfile = {
-      enable = true;
-      forcePerformanceOnAC = true;
+        power.autoProfile = {
+          enable = true;
+          forcePerformanceOnAC = true;
+        };
+      };
     };
   };
 

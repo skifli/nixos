@@ -54,16 +54,23 @@
     };
 
     home.activation.setKTailctlConfig = lib.hm.dag.entryAfter ["writeBoundary"] ''
-        TARGET_FILE="$HOME/.config/KTailctlrc"
-        mkdir -p "$(dirname "$TARGET_FILE")"
+      TARGET_FILE="$HOME/.config/KTailctlrc"
+      mkdir -p "$(dirname "$TARGET_FILE")"
 
-        if [ ! -f "$TARGET_FILE" ]; then
-          cat << 'EOF' > "$TARGET_FILE"
-      [Interface]
-      peerFilter=
-      startMinimized=true
-      EOF
-        fi
+      if [ ! -f "$TARGET_FILE" ]; then
+        cat << 'EOF' > "$TARGET_FILE"
+[Interface]
+peerFilter=
+startMinimized=true
+EOF
+      elif ! ${pkgs.gnugrep}/bin/grep -q '^startMinimized=' "$TARGET_FILE"; then
+        printf '%s\\n' 'startMinimized=true' >> "$TARGET_FILE"
+      else
+        ${pkgs.gnused}/bin/sed -i 's/^startMinimized=.*/startMinimized=true/' "$TARGET_FILE"
+      fi
+
+      # KTailctl reads this file only at startup.
+      systemctl --user try-restart ktailctl.service 2>/dev/null || true
     '';
   };
 

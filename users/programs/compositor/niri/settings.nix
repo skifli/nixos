@@ -117,4 +117,6 @@ in {
       };
     };
   };
+
+  gestures = hostVars.niri.gestures;
 }

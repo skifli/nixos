@@ -56,7 +56,7 @@ in {
 
   # NFS-backed shared state: todo.json, task-scheduler, etc.
   # Both hosts see the same list since it's shared across users too.
-  sharedStateDir = "/mnt/Remote Storage/custom-scripts";
+  sharedStateDir = "/mnt/Remote-Storage/custom-scripts";
 
   networkMounts = {
     nfsShares = [
@@ -71,7 +71,7 @@ in {
         remotePath = "/media/ami/Main";
       }
       {
-        mountPoint = "/mnt/Remote Storage";
+        mountPoint = "/mnt/Remote-Storage";
         server = "pifi";
         remotePath = "/media/ami/Remote Storage";
       }
