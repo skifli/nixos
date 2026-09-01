@@ -20,12 +20,12 @@ done
 
 if [ "$MODE" = "uri" ]; then
     # Pasteable as file attachment in other apps.
-    printf "%s\n" "${URIS[@]}" | wl-copy -t text/uri-list
+    printf "%s\r\n" "${URIS[@]}" | wl-copy -t text/uri-list
     TYPE_MSG="URI link(s)"
 else
     # Plain text string (file:///home/...)
     printf "%s\n" "${URIS[@]}" | wl-copy
-    TYPE_MSG="file:// URL"
+    TYPE_MSG="file:// URL(s)"
 fi
 
 COUNT="${#URIS[@]}"
