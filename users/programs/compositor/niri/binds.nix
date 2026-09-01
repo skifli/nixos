@@ -1032,6 +1032,13 @@
     };
     spawn = ["sunsetr" "stop"];
   };
+  "Mod+Ctrl+V" = {
+    _props = {
+      hotkey-overlay-title = "Paste all clipboard files one by one";
+      allow-inhibiting = false;
+    };
+    spawn = ["/home/${userVars.username}/.local/bin/paste-sequence.sh"];
+  };
   "Mod+Z" = {
     _props = {
       hotkey-overlay-title = null;
