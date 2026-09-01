@@ -1,15 +1,3 @@
-# Axlefublr da goat: Copy file path as Wayland URI list
-copyl() {
-  if [ -n "$1" ]; then
-    local abs_path
-    abs_path=$(realpath "$1")
-    echo -n "file://$abs_path" | "${WL_COPY_BIN}" -t text/uri-list
-    notify-send -e -a nixos -i "/home/${USER}/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 2500 "Clipboard" "Copied URI to clipboard: file://$abs_path"
-  else
-    echo "Usage: copyl <file>"
-  fi
-}
-
 # Axlefublr da goat: Read file selection buffer
 blammo() {
   if [ -f /tmp/blammo ]; then

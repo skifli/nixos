@@ -319,6 +319,7 @@ in {
       [ -n "$input" ] && ${pkgs.qrencode}/bin/qrencode -o - "$input" | ${pkgs.wl-clipboard}/bin/wl-copy -t image/png && ${pkgs.libnotify}/bin/notify-send -a "QR Gen" -u low -t 2000 "QR Code Generated" "Image copied to clipboard"
     '';
 
+    "copyl" = builtins.readFile ./scripts/copyl.sh;
     "schedule" = builtins.readFile ./scripts/schedule.sh;
     "smart-rebuild" = builtins.readFile ./scripts/smart-rebuild.sh;
 
