@@ -304,7 +304,7 @@ in
           ];
       };
 
-    stylixTargetsWhitelist = common.stylixTargetsWhitelist ++ [ programs.terminal ];
+    stylixTargetsWhitelist = common.stylixTargetsWhitelist ++ [programs.terminal];
 
     shellScripts =
       common.shellScripts

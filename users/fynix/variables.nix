@@ -206,7 +206,7 @@ in
     programs =
       common.programs
       // {
-        login-manager = "regreet";
+        login-manager = "tuigreet";
         terminal = "foot";
       };
 
