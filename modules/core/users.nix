@@ -4,6 +4,8 @@
   usersVars,
   ...
 }: let
+  usernameList = builtins.attrNames usersVars;
+
   # Helper function to create user configuration from userVars
   mkUserConfig = username: userVars: let
     ageName = "${username}-hashedPasswordFile";
@@ -11,10 +13,11 @@
       if builtins.hasAttr ageName config.age.secrets
       then config.age.secrets.${ageName}.path
       else null;
+    passwordAttrs = lib.optionalAttrs (passwordSource != null) {hashedPasswordFile = passwordSource;};
 
-    passwordAttrs = lib.optionalAttrs (passwordSource != null) {
-      hashedPasswordFile = passwordSource;
-    };
+    userIndex = lib.lists.indexOf username usernameList;
+
+    uidAttr = {uid = 1000 + userIndex;};
   in
     {
       isNormalUser = true;
@@ -33,7 +36,7 @@
           "wheel"
         ];
     }
-    // passwordAttrs;
+    // passwordAttrs // uidAttr;
 
   rescuePasswordAttrs =
     lib.optionalAttrs
@@ -48,7 +51,7 @@ in {
     wheelNeedsPassword = true; # Normal sudo still asks for password
     extraRules = [
       {
-        users = builtins.attrNames usersVars;
+        users = usernameList;
         commands = [
           {
             command = "/run/current-system/sw/bin/nixos-rebuild";
@@ -66,7 +69,6 @@ in {
       }
     ];
   };
-
   users = {
     mutableUsers = true; # Allow commands to change user configurations
     users =
@@ -80,6 +82,6 @@ in {
       };
   };
 
-  nix.settings.allowed-users = builtins.attrNames usersVars; # Users allowed to connect to the Nix daemon
-  nix.settings.trusted-users = builtins.attrNames usersVars; # Users allowed to change system-level settings, add arbitrary binary caches, etc.,
+  nix.settings.allowed-users = usernameList; # Users allowed to connect to the Nix daemon
+  nix.settings.trusted-users = usernameList; # Users allowed to change system-level settings, add arbitrary binary caches, etc.,
 }
