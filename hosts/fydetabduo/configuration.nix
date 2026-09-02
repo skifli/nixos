@@ -1,6 +1,7 @@
 {
   hostname,
   inputs,
+  pkgs,
   ...
 }: {
   _module.args = {inherit hostname;};
@@ -43,5 +44,40 @@
 
   systemd.tmpfiles.rules = [
     "d /home/fynix/.cache 0755 fynix users -"
+    "d /tmp/.X11-unix 1777 root root -"
   ];
+
+  # Custom stuff FROM fyde-nix
+  systemd.services.fydetab-opengl-link = {
+    description = "Ensure /run/opengl-driver points at Mesa";
+    wantedBy = ["graphical.target"];
+    before = ["greetd.service"];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = pkgs.writeShellScript "fydetab-opengl-link" ''
+        ln -sfn ${pkgs.mesa} /run/opengl-driver
+      '';
+    };
+  };
+
+  environment.sessionVariables = {
+    __EGL_VENDOR_LIBRARY_DIRS = "/run/opengl-driver/share/glvnd/egl_vendor.d";
+    # GTK4 dmabuf textures render black on Mesa panfrost
+    GDK_DISABLE = "dmabuf";
+  };
+
+  # Re-trigger udev for input devices before greetd starts so logind
+  # assigns the touchscreen/stylus to the greeter session immediately
+  systemd.services.fydetab-input-trigger = {
+    description = "Re-trigger udev for input devices before greeter";
+    wantedBy = ["greetd.service"];
+    before = ["greetd.service"];
+    after = ["systemd-udevd.service"];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.systemd}/bin/udevadm trigger --subsystem-match=input";
+      ExecStartPost = "${pkgs.systemd}/bin/udevadm settle";
+    };
+  };
 }
