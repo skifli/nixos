@@ -15,7 +15,7 @@
       else null;
     passwordAttrs = lib.optionalAttrs (passwordSource != null) {hashedPasswordFile = passwordSource;};
 
-    userIndex = lib.lists.indexOf username usernameList;
+    userIndex = lib.lists.findFirstIndex (x: x == username) null usernameList;
 
     uidAttr = {uid = 1000 + userIndex;};
   in
