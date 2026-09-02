@@ -56,7 +56,7 @@ This is the configuration that started my NixOS journey, and it has stayed with 
 | Username | Description            | Default Shell | Desktop Environment                            |
 | -------- | ---------------------- | ------------- | ---------------------------------------------- |
 | `ami`    | Mah user               | `zsh`         | Niri + Wayle + Vicinae + Ghostty + Zen Browser |
-| `fynix`  | FydeTab Duo user       | `zsh`         | Niri + Wayle + Vicinae + Ghostty + Zen Browser |
+| `fynix`  | FydeTab Duo user       | `zsh`         | Niri + Wayle + Vicinae + Foot + Zen Browser    |
 | `rescue` | In case of kaboom user | `bash`        | Fallback system user so none                   |
 
 ## Cachix [![Build & cache](https://github.com/skifli/nixos/actions/workflows/nix-build.yml/badge.svg)](https://github.com/skifli/nixos/actions/workflows/nix-build.yml)

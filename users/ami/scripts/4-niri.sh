@@ -2,6 +2,8 @@
 
 source "${BASH_SOURCE%/*}/niri_helpers.sh"
 
+TERMINAL="${TERMINAL:-ghostty}"
+
 notify-send -e -a niri -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 "Anki configuration" "Restoring window positions"
 
 # Send distractions to the nirius scratchpad
@@ -20,7 +22,8 @@ send_to_scratchpad "app_id" "org.kde.dolphin"
 if is_in_scratchpad "title" "Anki Pomodoro"; then
     restore_from_scratchpad "title" "Anki Pomodoro"
 else
-    ensure_window_exists "com.mitchellh.ghostty" "Anki Pomodoro" "${BASH_SOURCE%/*}/floating-term.sh ghostty -w 50% -h 30% --title='Anki Pomodoro' -e ${BASH_SOURCE%/*}/anki-pomodoro.sh" "com.mitchellh.ghostty" "Anki Pomodoro"
+    # Ghostty specific but I only use Ghostty on this host so is fine!
+    ensure_window_exists "com.mitchellh.ghostty" "Anki Pomodoro" "${BASH_SOURCE%/*}/floating-term.sh ${TERMINAL} -w 50% -h 30% --title='Anki Pomodoro' -e ${BASH_SOURCE%/*}/anki-pomodoro.sh" "com.mitchellh.ghostty" "Anki Pomodoro"
 fi
 
 # 1st Monitor

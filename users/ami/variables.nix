@@ -22,7 +22,7 @@
     hostVars.orderedOutputs;
 in
   common
-  // {
+  // rec {
     extraGroups = [
       "input" # Needed for Activity Watch / ActivityWatch / AW / aw (just so if I ever search it comes up in any form lol)
     ];
@@ -293,6 +293,8 @@ in
       common.programs
       // {
         ergonomics = "safeeyes";
+        login-manager = "greetd";
+        terminal = "ghostty";
         other =
           common.programs.other
           ++ [
@@ -301,6 +303,10 @@ in
             "steam"
           ];
       };
+
+    stylixTargetsWhitelist = with programs; [
+      terminal
+    ];
 
     shellScripts =
       common.shellScripts

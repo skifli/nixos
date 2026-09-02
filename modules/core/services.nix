@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  lib,
+  pkgs,
+  ...
+}: {
   # Services to start
   services = {
     fstrim.enable = true; # Auto SSD trimming of no longer used blocks
@@ -11,7 +15,7 @@
     # agenix expects SSH host keys to exist for decryption identities.
     # Enabling openssh ensures host keys are managed on NixOS.
     openssh = {
-      enable = true;
+      enable = lib.mkDefault true;
       openFirewall = false;
     };
 

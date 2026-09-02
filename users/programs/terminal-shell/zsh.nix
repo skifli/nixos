@@ -35,7 +35,7 @@ in {
       ];
     };
 
-    xdg.terminal-exec.settings.default = ["ghostty.desktop"];
+    xdg.terminal-exec.settings.default = ["${userVars.programs.terminal}.desktop"];
 
     programs = {
       pay-respects = {

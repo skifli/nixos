@@ -11,39 +11,6 @@ lib.mkIf (hostVars.hostname != "fydetabduo") {
   ];
 
   home-manager.users.${userVars.username} = {
-    # Systemd services managing the main and overview wallpaper daemons
-    systemd.user.services.awww-main = {
-      Unit = {
-        Description = "awww wallpaper daemon (default namespace)";
-        PartOf = ["graphical-session.target"];
-        After = ["graphical-session.target"];
-      };
-      Service = {
-        Type = "simple";
-        ExecStart = "${pkgs.awww}/bin/awww-daemon";
-        ExecStartPost = "${pkgs.bash}/bin/bash -c 'for i in {1..50}; do ${pkgs.awww}/bin/awww img %h/.local/share/wallpaper 2>/dev/null && exit 0 || sleep 0.1; done'";
-        Restart = "on-failure";
-        RestartSec = "2s";
-      };
-      Install.WantedBy = ["graphical-session.target"];
-    };
-
-    systemd.user.services.awww-overview = {
-      Unit = {
-        Description = "awww wallpaper daemon (overview blurred namespace)";
-        PartOf = ["graphical-session.target"];
-        After = ["graphical-session.target"];
-      };
-      Service = {
-        Type = "simple";
-        ExecStart = "${pkgs.awww}/bin/awww-daemon --namespace overview";
-        ExecStartPost = "${pkgs.bash}/bin/bash -c 'for i in {1..50}; do ${pkgs.awww}/bin/awww img --namespace overview %h/.local/share/wallpaper-blurred 2>/dev/null && exit 0 || sleep 0.1; done'";
-        Restart = "on-failure";
-        RestartSec = "2s";
-      };
-      Install.WantedBy = ["graphical-session.target"];
-    };
-
     services.wayle = {
       enable = true;
       autoInstallDependencies = true;

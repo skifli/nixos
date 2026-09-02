@@ -19,7 +19,7 @@
       enable = true;
       settings = {
         default_session = session;
-        initial_session = session;
+        # initial_session = session;
       };
     };
 

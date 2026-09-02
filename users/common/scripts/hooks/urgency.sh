@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+TERMINAL="${TERMINAL:-ghostty}"
+
 ICON_ARGS=()
 if [[ -f "${NIRI_ICON_PATH:-}" ]]; then
     ICON_ARGS=(-i "$NIRI_ICON_PATH")
@@ -37,7 +39,7 @@ urgency_hook() {
                 app="${app:-Application}"
                 title="${title:-ID $id}"
 
-                if [[ ! -f "$NIRI_STATE_DIR/win_${id}" && ! "${app,,}" =~ ghostty ]]; then
+                if [[ ! -f "$NIRI_STATE_DIR/win_${id}" && ! "${app,,}" =~ ${TERMINAL,,} ]]; then
                     local notif_id
                     notif_id=$(notify-send -p -e -a "niri" "${ICON_ARGS[@]}" -u critical -t 0 "Urgent window" "$app: $title" 2>/dev/null || true)
                     if [[ -n "$notif_id" ]]; then

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Defaults
-TERMINAL="ghostty"
+TERMINAL="${TERMINAL:-ghostty}"
 SHELL_BIN="$SHELL"
 HOSTNAME="$(hostname)"
 POST_ACTION="shell"

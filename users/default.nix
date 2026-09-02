@@ -44,11 +44,6 @@ in {
     useUserPackages = true; # Make packages not available system-wide, instead in ~/.nix-profile
     # extraSpecialArgs = { inherit commonHostVars hostVars; }; # Home manager WHY do you use this ;-;
 
-    sharedModules = lib.optionals (hostVars.hostname == "fydetabduo") [
-      (inputs.fyde-nix + "/modules/fydetab-duo/shell/home/wayle.nix")
-      (inputs.fyde-nix + "/modules/fydetab-duo/shell/home/swayidle.nix")
-    ];
-
     users =
       builtins.mapAttrs (username: userVars: {
         programs.home-manager.enable = true; # Let Home Manager install and manage itself.
@@ -110,7 +105,7 @@ in {
               BROWSER = pkgs.lib.mkForce primaryBrowser;
               EDITOR = userVars.programs.editor;
               # SHELL = userVars.programs.terminal-shell; # - This and below commented out because can cause problems in SSH
-              # TERM = userVars.programs.terminal;
+              TERMINAL = userVars.programs.terminal;
               VISUAL = userVars.programs.visual;
             }
             // userVars.sessionVariables;

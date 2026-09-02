@@ -9,7 +9,7 @@
   common = import ../common/variables.nix {inherit commonHostVars hostVars lib pkgs username;};
 in
   common
-  // {
+  // rec {
     extraGroups = [
       "input"
     ];
@@ -203,7 +203,16 @@ in
       output = "DSI-1";
     };
 
-    programs = common.programs;
+    programs =
+      common.programs
+      // {
+        login-manager = "regreet";
+        terminal = "foot";
+      };
+
+    stylixTargetsWhitelist = with programs; [
+      terminal
+    ];
 
     shellScripts =
       common.shellScripts

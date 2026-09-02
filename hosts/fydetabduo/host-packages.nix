@@ -1,15 +1,26 @@
 {pkgs, ...}: {
   environment.systemPackages = with pkgs; [
-    ffmpeg-full
-    gst_all_1.gst-libav
-    gst_all_1.gst-plugins-base
-    gst_all_1.gst-plugins-good
-    gst_all_1.gst-plugins-bad
-    gst_all_1.gst-plugins-ugly
-    libpulseaudio
+    # fyde-nix fydetab-specific
+    fydetab-update
+    fydetab-wallpaper
 
-    # Wayle @fyde-nix uses these symbolic icons and its JetBrains Mono font.
-    papirus-icon-theme
+    # Tablet essentials (cherry-picked from shell/packages.nix)
+    brightnessctl
+    iio-sensor-proxy
+    grim
+    slurp
+    wl-clipboard
+    swaylock-effects
+    wlopm
+    usb-modeswitch
+
+    # Hardware debug
+    rkdeveloptool
+
+    # Fonts (from shell/packages.nix)
     jetbrains-mono
+    noto-fonts
+    noto-fonts-color-emoji
+    nerd-fonts.symbols-only
   ];
 }

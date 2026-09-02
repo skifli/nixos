@@ -8,29 +8,40 @@
   imports = [
     ../common/default.nix
 
-    # Full module (hardware + shell options, but shell is disabled)
-    inputs.fyde-nix.nixosModules.fydetabduo
+    # All hardware features
+    inputs.fyde-nix.nixosModules.fydetabduo-hardware
+
+    # Shell sub-modules: power management + fydetab-update package
+    # (shell.enable = false skips labwc/compositor stuff)
+    inputs.fyde-nix.nixosModules.shell
   ];
 
-  hardware = {
-    fydetabduo = {
-      enable = true;
+  hardware.fydetabduo = {
+    enable = true;
 
-      landscape.enable = true;
-      sensors.autoRotate = true;
-      tabletMode.enable = true;
-      modem.enable = true;
+    sensors.autoRotate = true;
+    tabletMode.enable = true;
+    modem.enable = true;
+    npu.enable = true;
 
-      shell = {
-        enable = false;
+    installer-tools.enable = true;
 
-        power.autoProfile = {
-          enable = true;
-          forcePerformanceOnAC = true;
-        };
+    shell = {
+      enable = false;
+
+      packages.enable = false; # Cherry-picked in host-packages.nix instead
+      power.autoProfile = {
+        enable = true;
+        forcePerformanceOnAC = true;
       };
     };
   };
 
   boot.loader.fydetabduo.enable = true;
+
+  services.openssh.enable = false; # Use Tailscale instead!
+
+  systemd.tmpfiles.rules = [
+    "d /home/fynix/.cache 0755 fynix users -"
+  ];
 }

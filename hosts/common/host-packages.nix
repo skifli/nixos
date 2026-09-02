@@ -19,5 +19,15 @@
     android-tools # Provides adb/fastboot (ensure adb available system-wide)
 
     fbcat # Allows taking screenshots of a TTY
+
+    # WAS IN LYRA? MOVED HERE!
+    ffmpeg-full
+    # Ensure GStreamer plugins are present
+    gst_all_1.gst-libav # Provides H.265/HEVC support
+    gst_all_1.gst-plugins-base
+    gst_all_1.gst-plugins-good
+    gst_all_1.gst-plugins-bad
+    gst_all_1.gst-plugins-ugly
+    libpulseaudio # FIREFOX REQUIRES
   ];
 }
