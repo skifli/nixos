@@ -110,7 +110,7 @@ stop_recording() {
 
             ffmpeg -i "$RAW_FILE" -vcodec libx265 -crf 26 -preset fast -acodec aac -b:a 128k "$COMPRESSED_FILE" -y
 
-            echo -n "file://$COMPRESSED_FILE" | wl-copy -t text/uri-list
+            echo -n "file://$COMPRESSED_FILE" | wl-copy --sensitive -t text/uri-list
 
             if [[ "${ACTION_CHOICE,,}" == *delete* ]]; then
                 rm -f "$RAW_FILE"
@@ -134,8 +134,8 @@ stop_recording() {
             notify-send -e -a "gpu-screen-recorder" -i "/home/${USER}/.local/share/misc/68747470733a2f2f64656330356562612e636f6d2f696d616765732f6770755f73637265656e5f7265636f726465725f6c6f676f5f736d616c6c2e706e67.png" -u normal \
                 "Recording saved" "File saved to:\n$FINAL_FILE"
             ;;
-        *copy*|*) 
-            echo -n "file://$FINAL_FILE" | wl-copy -t text/uri-list
+        *copy*|*)
+            echo -n "file://$FINAL_FILE" | wl-copy --sensitive -t text/uri-list
 
             notify-send -e -a "gpu-screen-recorder" -i "/home/${USER}/.local/share/misc/68747470733a2f2f64656330356562612e636f6d2f696d616765732f6770755f73637265656e5f7265636f726465725f6c6f676f5f736d616c6c2e706e67.png" -u normal \
                 "Recording saved" "File path copied to clipboard:\n$FINAL_FILE"

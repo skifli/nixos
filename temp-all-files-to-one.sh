@@ -1,3 +1,3 @@
 ./all-files-to-one-file.sh
-wl-copy < output.txt
+wl-copy --sensitive < output.txt
 rm output.txt

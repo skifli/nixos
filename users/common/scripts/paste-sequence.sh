@@ -41,12 +41,12 @@ for uri in "${VALID_URIS[@]}"; do
     # Simulate Ctrl+V
     wtype -M ctrl -k v -m ctrl
 
-    #  Wait for it to do file stuff before the next paste
+    # Wait for it to do file stuff before the next paste
     sleep "$DELAY"
     ((INDEX++))
 done
 
 # Restore the full list to the clipboard when finished
-printf "%s\r\n" "${VALID_URIS[@]}" | wl-copy -t text/uri-list
+printf "%s\r\n" "${VALID_URIS[@]}" | wl-copy --sensitive -t text/uri-list
 
 notify-send -e -a "Paste sequence" -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 "Success!" "Attached $TOTAL files!"

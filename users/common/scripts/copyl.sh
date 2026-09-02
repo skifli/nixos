@@ -29,7 +29,7 @@ if [ "$MODE" = "content" ]; then
             cat "$f"
             echo ""
         done
-    } | wl-copy
+    } | wl-copy --sensitive
     notify-send -e -a "Clipboard" -i "$HOME/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 2000 "Copied" "Content of $LABEL"
     exit 0
 fi
@@ -45,11 +45,11 @@ printf "%s\n" "${URIS[@]}" > /tmp/copyl-queue.txt
 
 if [ "$MODE" = "uri" ]; then
     # Pasteable as file attachment in other apps.
-    printf "%s\r\n" "${URIS[@]}" | wl-copy -t text/uri-list
+    printf "%s\r\n" "${URIS[@]}" | wl-copy --sensitive -t text/uri-list
     TYPE_MSG="URI link(s)"
 else
     # Plain text string (file:///home/...)
-    printf "%s\n" "${URIS[@]}" | wl-copy
+    printf "%s\n" "${URIS[@]}" | wl-copy --sensitive
     TYPE_MSG="file:// URL(s)"
 fi
 
