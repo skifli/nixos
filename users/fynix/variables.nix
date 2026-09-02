@@ -210,9 +210,7 @@ in
         terminal = "foot";
       };
 
-    stylixTargetsWhitelist = with programs; [
-      terminal
-    ];
+    stylixTargetsWhitelist = common.stylixTargetsWhitelist ++ [programs.terminal];
 
     shellScripts =
       common.shellScripts
