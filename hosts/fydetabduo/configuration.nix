@@ -39,7 +39,7 @@
 
   boot.loader.fydetabduo.enable = true;
 
-  services.openssh.enable = false; # Use Tailscale instead!
+  services.openssh.enable = true; # Use Tailscale instead! But needed for Agenix...
 
   systemd.tmpfiles.rules = [
     "d /home/fynix/.cache 0755 fynix users -"
