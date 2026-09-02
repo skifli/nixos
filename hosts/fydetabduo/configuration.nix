@@ -40,6 +40,15 @@
 
   boot.loader.fydetabduo.enable = true;
 
+  # HERE BEGINS STUFF FROM FYDE-NIX WE HAD TO COPY OVER DUE TO NOT USING ALL THEIR FILES ETC
+
+  systemd.services."serial-getty@ttyFIQ0".enable = false;
+
+  networking.networkmanager.wifi = {
+    macAddress = "permanent";
+    scanRandMacAddress = false;
+  };
+
   services.openssh.enable = true; # Use Tailscale instead! But needed for Agenix...
 
   systemd.tmpfiles.rules = [
@@ -47,7 +56,6 @@
     "d /tmp/.X11-unix 1777 root root -"
   ];
 
-  # Custom stuff FROM fyde-nix
   systemd.services.fydetab-opengl-link = {
     description = "Ensure /run/opengl-driver points at Mesa";
     wantedBy = ["graphical.target"];
