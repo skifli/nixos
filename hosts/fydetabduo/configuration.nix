@@ -31,9 +31,12 @@
       enable = false;
 
       packages.enable = false; # Cherry-picked in host-packages.nix instead
-      power.autoProfile = {
-        enable = true;
-        forcePerformanceOnAC = true;
+      power = {
+        enable = true; # Needed because shell.enable = false disables it
+        autoProfile = {
+          enable = true;
+          forcePerformanceOnAC = true;
+        };
       };
     };
   };
@@ -42,7 +45,11 @@
 
   # HERE BEGINS STUFF FROM FYDE-NIX WE HAD TO COPY OVER DUE TO NOT USING ALL THEIR FILES ETC
 
+  hardware.graphics.enable = true;
+
   systemd.services."serial-getty@ttyFIQ0".enable = false;
+
+  systemd.sockets.dbus.wantedBy = ["sockets.target"];
 
   networking.networkmanager.wifi = {
     macAddress = "permanent";
@@ -88,4 +95,6 @@
       ExecStartPost = "${pkgs.systemd}/bin/udevadm settle";
     };
   };
+
+  systemd.services.accounts-daemon.after = ["systemd-logind.service"];
 }
