@@ -15,7 +15,7 @@
         main = {
           # High-DPI handling
           dpi-aware = "yes";
-          font = "${commonHostVars.fonts.monospace.name}:size=${commonHostVars.fonts.sizes.terminal},monospace:size=${commonHostVars.fonts.sizes.terminal}";
+          font = "${commonHostVars.fonts.monospace.name}:size=${toString commonHostVars.fonts.sizes.terminal},monospace:size=${toString commonHostVars.fonts.sizes.terminal}";
 
           # Ghostty-style window padding (X x Y in pixels)
           pad = "14x14";
