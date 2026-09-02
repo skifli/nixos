@@ -16,7 +16,7 @@ let
   # pifi = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOhF6vPHavSoFf/TiQI8fc4rHsplwe7ucGFhX5g/oaMY root@raspberrypi";
   # Desktop / lyra
   lyra = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILLoR4r2C+luZVCcMqfbhKx23YS3MAnZTxgMZzUXoRkl root@lyra";
-  fydetabduo = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILwL7OhSQvPTMKrGl9cpBP4ILaGq4LWQPGvcFSxfMEKf root@fydetabduo";
+  fydetabduo = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMU8pSmOB4dBX3JwGcgMCmmxVc/iwewNXH9JofEUA+8G root@fydetabduo";
 
   # Personal key
   ami = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM00chXNLX0Mdss+qEVuYmoIDVgJNY2AqyGIEgn0Z48I ami@lyra";
