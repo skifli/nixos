@@ -13,6 +13,18 @@
     displayManager.autoLogin.enable = false;
   };
 
+  # THANKS SM https://github.com/sjcobb2022/nixos-config/blob/main/hosts/common/optional/greetd.nix
+  systemd.services.greetd.serviceConfig = {
+    Type = "idle";
+    StandardInput = "tty";
+    StandardOutput = "tty";
+    StandardError = "journal"; # Without this errors will spam on screen
+    # Without these bootlogs will spam on screen
+    TTYReset = true;
+    TTYVHangup = true;
+    TTYVTDisallocate = true;
+  };
+
   security.pam.services.greetd.enableGnomeKeyring = true;
   security.pam.services.swaylock = {};
 
