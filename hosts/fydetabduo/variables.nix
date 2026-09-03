@@ -23,6 +23,8 @@
     ../../modules/core/system.nix
     ../../modules/core/users.nix
     ../../modules/core/zram.nix
+
+    ../../modules/programs/cloudflare-warp.nix
   ];
 
   enabledUsers = ["fynix"];
