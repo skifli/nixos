@@ -86,5 +86,5 @@
   timezone = "Europe/London";
   location = "London+England";
 
-  useDeclarativeWifi = false;
+  declarativeWifi = 2;
 }

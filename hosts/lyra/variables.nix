@@ -184,5 +184,5 @@
   timezone = "Europe/London"; # Your timezone
   location = "London+England";
 
-  useDeclarativeWifi = true;
+  declarativeWifi = 1;
 }
