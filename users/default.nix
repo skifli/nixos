@@ -2,7 +2,6 @@
   commonHostVars,
   hostVars,
   inputs,
-  lib,
   pkgs,
   usersVars,
   ...
