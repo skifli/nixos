@@ -35,14 +35,16 @@ in {
     # a regular file containing the calibration-matrix for the current orientation.
     xdg.configFile."niri/input-override.kdl" = {
       text = ''
-        touch {
-          map-to-output "DSI-1"
-          calibration-matrix 0.0 -1.0 1.0 1.0 0.0 0.0
-        }
+        input {
+          touch {
+            map-to-output "DSI-1"
+            calibration-matrix 0.0 -1.0 1.0 1.0 0.0 0.0
+          }
 
-        tablet {
-          map-to-output "DSI-1"
-          calibration-matrix 0.0 -1.0 1.0 1.0 0.0 0.0
+          tablet {
+            map-to-output "DSI-1"
+            calibration-matrix 0.0 -1.0 1.0 1.0 0.0 0.0
+          }
         }
       '';
     };
@@ -83,14 +85,16 @@ in {
                     write_override() {
                       local cal="$1"
                       cat > "$OVERRIDE" <<ENDOFKDL
-          touch {
-            map-to-output "DSI-1"
-            calibration-matrix $cal
-          }
+          input {
+            touch {
+              map-to-output "DSI-1"
+              calibration-matrix $cal
+            }
 
-          tablet {
-            map-to-output "DSI-1"
-            calibration-matrix $cal
+            tablet {
+              map-to-output "DSI-1"
+              calibration-matrix $cal
+            }
           }
           ENDOFKDL
                     }
