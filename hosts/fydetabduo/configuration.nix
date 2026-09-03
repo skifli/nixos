@@ -57,14 +57,16 @@ in {
 
   systemd.sockets.dbus.wantedBy = ["sockets.target"];
 
-  networking.networkmanager.wifi = {
-    macAddress = "permanent";
-    scanRandMacAddress = false;
-    # Overrides the shared lib.mkDefault in modules/core/networking.nix.
-    backend = "iwd";
-  };
+  networking = {
+    networkmanager.wifi = {
+      macAddress = "permanent";
+      scanRandMacAddress = false;
+      # Overrides the shared lib.mkDefault in modules/core/networking.nix.
+      backend = "iwd";
+    };
 
-  networking.wireless.iwd.enable = true;
+    wireless.iwd.enable = true;
+  };
 
   services.openssh.enable = true; # Use Tailscale instead! But needed for Agenix...
 
