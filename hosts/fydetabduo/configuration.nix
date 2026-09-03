@@ -46,9 +46,6 @@ in {
 
   boot.loader.fydetabduo.enable = true;
 
-  # Large console font so the tuigreet greeter text is readable on the VT
-  console.font = "ter-u28n";
-
   # HERE BEGINS STUFF FROM FYDE-NIX WE HAD TO COPY OVER DUE TO NOT USING ALL THEIR FILES ETC
 
   hardware.graphics.enable = true;
@@ -61,11 +58,7 @@ in {
     networkmanager.wifi = {
       macAddress = "permanent";
       scanRandMacAddress = false;
-      # Overrides the shared lib.mkDefault in modules/core/networking.nix.
-      backend = "iwd";
     };
-
-    wireless.iwd.enable = true;
   };
 
   services.openssh.enable = true; # Use Tailscale instead! But needed for Agenix...
