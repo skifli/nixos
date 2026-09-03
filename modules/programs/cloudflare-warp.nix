@@ -1,8 +1,8 @@
 {pkgs, ...}: {
   services.cloudflare-warp.enable = true;
 
-  systemd.user.packages = [pkgs.cloudflare-warp];
-  systemd.user.targets.graphical-session.wants = ["warp-taskbar.service"];
+  systemd.packages = [pkgs.cloudflare-warp];
+  systemd.user.services.warp-taskbar.wantedBy = ["graphical-session.target"];
 
   environment.shellAliases = {
     w-on = "warp-cli connect";
