@@ -49,7 +49,7 @@ notify-send -e -a nixOS \
     end_time=\$(date +%s.%N)
     duration=\$(echo \"scale=2; \$end_time - \$start_time\" | bc)
     log_date=\$(date '+%Y-%m-%d %H:%M:%S')
-    echo \"[\$log_date] switch execution time: \$duration seconds\" >> '$HOME/Documents/custom-scripts/nixos_rebuild.log'
+    echo \"[\$log_date] [$HOSTNAME] switch execution time: \$duration seconds\" >> '$HOME/Documents/custom-scripts/nixos_rebuild.log'
 
     case '$POST_ACTION' in
       reboot)
