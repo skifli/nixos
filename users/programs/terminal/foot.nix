@@ -11,10 +11,7 @@
       server.enable = true;
 
       settings = {
-        main = {
-          # URL detection (open on click / hover)
-          underline-url = "yes";
-        };
+        main = {};
 
         cursor = {
           style = "beam";
@@ -33,8 +30,6 @@
           font-increase = "Control+plus Control+equal";
           font-decrease = "Control+minus";
           font-reset = "Control+0";
-          spawn-terminal = "Control+Shift+n";
-          new-window = "Control+Shift+Return";
         };
 
         url = {

@@ -10,12 +10,12 @@ in {
   networking = {
     hostName = hostVars.hostname;
 
-    wireless.iwd.enable = false; # Uses iwd not wpa_supplicant
+    wireless.iwd.enable = lib.mkDefault false; # iwd toggled per-host (see hosts/*)
     nftables.enable = true; # To use the newer nftables instead
 
     networkmanager = {
       enable = true;
-      wifi.backend = "wpa_supplicant";
+      wifi.backend = lib.mkDefault "wpa_supplicant";
 
       # Reduce connect timeout for faster failure recovery
       connectionConfig = {

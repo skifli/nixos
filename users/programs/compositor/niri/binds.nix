@@ -773,6 +773,22 @@
     spawn = ["wayle" "media" "previous"];
   };
 
+  # BRIGHTNESS KEYS
+  "XF86MonBrightnessUp" = {
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
+    spawn = ["brightnessctl" "s" "+5%"];
+  };
+  "XF86MonBrightnessDown" = {
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
+    spawn = ["brightnessctl" "s" "5%-"];
+  };
+
   # NIRIUS - SCRATCHPAD
   "Mod+P" = {
     _props = {

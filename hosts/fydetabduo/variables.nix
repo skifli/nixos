@@ -58,8 +58,6 @@
     };
 
     input = {
-      touch.map-to-output = "DSI-1";
-      tablet.map-to-output = "DSI-1";
       touchpad = {
         tap = [];
         natural-scroll = [];

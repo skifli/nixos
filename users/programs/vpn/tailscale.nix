@@ -54,31 +54,36 @@
     };
 
     home.activation.setKTailctlConfig = lib.hm.dag.entryAfter ["writeBoundary"] ''
-      TARGET_FILE="$HOME/.config/KTailctlrc"
-      mkdir -p "$(dirname "$TARGET_FILE")"
+            TARGET_FILE="$HOME/.config/KTailctlrc"
+            mkdir -p "$(dirname "$TARGET_FILE")"
 
-      if [ ! -f "$TARGET_FILE" ]; then
-        cat << 'EOF' > "$TARGET_FILE"
-[Interface]
-peerFilter=
-startMinimized=true
-EOF
-      elif ! ${pkgs.gnugrep}/bin/grep -q '^startMinimized=' "$TARGET_FILE"; then
-        printf '%s\\n' 'startMinimized=true' >> "$TARGET_FILE"
-      else
-        ${pkgs.gnused}/bin/sed -i 's/^startMinimized=.*/startMinimized=true/' "$TARGET_FILE"
-      fi
+            if [ ! -f "$TARGET_FILE" ]; then
+              cat << 'EOF' > "$TARGET_FILE"
+      [Interface]
+      peerFilter=
+      startMinimized=true
+      EOF
+            elif ! ${pkgs.gnugrep}/bin/grep -q '^startMinimized=' "$TARGET_FILE"; then
+              printf '%s\\n' 'startMinimized=true' >> "$TARGET_FILE"
+            else
+              ${pkgs.gnused}/bin/sed -i 's/^startMinimized=.*/startMinimized=true/' "$TARGET_FILE"
+            fi
 
-      # KTailctl reads this file only at startup.
-      systemctl --user try-restart ktailctl.service 2>/dev/null || true
+            # KTailctl reads this file only at startup.
+            systemctl --user try-restart ktailctl.service 2>/dev/null || true
     '';
   };
 
+  # Tailscale online target. NOT added into the boot sequence chain: on
+  # networks where Tailscale is blocked/reachable-late/doesn't work, the
+  # wait service would otherwise block multi-user/graphical.target for up
+  # to 60s and delay niri. Units that do need Tailscale should instead
+  # declare `after = ["tailscale-online.target"]` / `wants` it themselves
+  # instead of relying on it being part of boot.
   systemd.targets.tailscale-online = {
     description = "Tailscale network online";
     wants = ["tailscaled.service"];
     after = ["tailscaled.service"];
-    wantedBy = ["multi-user.target"];
   };
 
   # Wait for the tailscale0 interface to exist and have an IP

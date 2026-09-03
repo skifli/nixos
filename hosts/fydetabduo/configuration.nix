@@ -1,9 +1,12 @@
 {
   hostname,
   inputs,
+  hostVars,
   pkgs,
   ...
-}: {
+}: let
+  primaryUser = builtins.head hostVars.enabledUsers;
+in {
   _module.args = {inherit hostname;};
 
   imports = [
@@ -20,7 +23,7 @@
   hardware.fydetabduo = {
     enable = true;
 
-    sensors.autoRotate = true;
+    sensors.autoRotate = false; # Replaced by niri-specific rotation daemon (see below)
     tabletMode.enable = true;
     modem.enable = true;
     npu.enable = true;
@@ -43,6 +46,9 @@
 
   boot.loader.fydetabduo.enable = true;
 
+  # Large console font so the tuigreet greeter text is readable on the VT
+  console.font = "ter-u28n";
+
   # HERE BEGINS STUFF FROM FYDE-NIX WE HAD TO COPY OVER DUE TO NOT USING ALL THEIR FILES ETC
 
   hardware.graphics.enable = true;
@@ -54,12 +60,16 @@
   networking.networkmanager.wifi = {
     macAddress = "permanent";
     scanRandMacAddress = false;
+    # Overrides the shared lib.mkDefault in modules/core/networking.nix.
+    backend = "iwd";
   };
+
+  networking.wireless.iwd.enable = true;
 
   services.openssh.enable = true; # Use Tailscale instead! But needed for Agenix...
 
   systemd.tmpfiles.rules = [
-    "d /home/fynix/.cache 0755 fynix users -"
+    "d /home/${primaryUser}/.cache 0755 ${primaryUser} users -"
     "d /tmp/.X11-unix 1777 root root -"
   ];
 

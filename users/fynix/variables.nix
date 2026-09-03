@@ -15,7 +15,12 @@ in
     ];
 
     niri = {
-      spawn-sh-at-startup = "$HOME/.local/bin/startup.sh";
+      # Startup apps are launched by the `apps-startup` systemd user service
+      # (see user-packages.nix) instead of niri's spawn-sh-at-startup. The niri
+      # config read races a slow first-login home-manager activation, so niri
+      # perchance starts with a stale config and never spawns the apps. Set to a
+      # nothing burger so this field stays a valid string (null breaks config stuff).
+      spawn-sh-at-startup = "true";
 
       binds = {
         "Mod+Shift+A" = {

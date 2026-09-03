@@ -184,13 +184,35 @@ in {
           activation.linkSharedState = pkgs.lib.mkAfter ''
             # Shared state using NFS: symlink ~/Documents/custom-scripts to a via NFS sharedStateDir
             # Tis optional however: do not make HM fail when the NFS mount is offline.
-
-            if [ -n "${userVars.sharedStateDir}" ] && [ -d "${userVars.sharedStateDir}" ]; then
-              if [ ! -L "$HOME/Documents/custom-scripts" ] && [ ! -d "$HOME/Documents/custom-scripts" ]; then
-                mkdir -p "$HOME/Documents"
-                ln -sf "${userVars.sharedStateDir}" "$HOME/Documents/custom-scripts"
-              fi
+            if [ -z "${userVars.sharedStateDir}" ]; then
+              exit 0
             fi
+
+            target="$HOME/Documents/custom-scripts"
+            share="${userVars.sharedStateDir}"
+
+            # Poll for the NFS share to appear (mount race on boot).
+            attempts=0
+            while [ ! -d "$share" ] && [ "$attempts" -lt 40 ]; do
+              sleep 0.5
+              attempts=$((attempts + 1))
+            done
+
+            [ -d "$share" ] || exit 0 # mount still offline; skip (optional)
+
+            mkdir -p "$HOME/Documents"
+
+            # Already a correct symlink? Nothing to do.
+            [ -L "$target" ] && [ "$(readlink "$target")" = "$share" ] && exit 0
+
+            # Stale real dir (leftover before this custom script existed):
+            # back it up rather than deleting, then link. Only if the share is
+            # already populated though.
+            if [ -d "$target" ] && [ ! -L "$target" ]; then
+              mv "$target" "$target.bak" 2>/dev/null || rm -rf "$target"
+            fi
+
+            ln -sf "$share" "$target"
           '';
 
           stateVersion = hostVars.stateVersion;
