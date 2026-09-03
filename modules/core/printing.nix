@@ -47,7 +47,7 @@
     kdePackages.skanpage # KDE
   ];
 
-  users.users = lib.genAttrs hostVars.enabledUsers (username: {
+  users.users = lib.genAttrs hostVars.enabledUsers (_username: {
     extraGroups = ["lp" "scanner"];
   });
 }
