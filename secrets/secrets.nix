@@ -64,6 +64,7 @@ in
   # Per host secrets (filenames match secrets/<host>/<name>.age)
   "secrets/lyra/wifi.env.age".publicKeys = amiOnLyra;
   "secrets/fydetabduo/wifi.env.age".publicKeys = fynixOnFydetabduo;
+  "secrets/fydetabduo/warp-prefixes.env.age".publicKeys = fynixOnFydetabduo;
 
   # Per-user secrets (filenames match secrets/<user>/<name>.age)
   "secrets/ami/hashedPasswordFile.age".publicKeys = amiOnLyra;

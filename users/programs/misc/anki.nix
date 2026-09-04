@@ -1,4 +1,5 @@
 {
+  config,
   inputs,
   pkgs,
   userVars,
@@ -316,10 +317,10 @@ in
       profiles."User 1".sync = {
         autoSync = true;
         autoSyncMediaMinutes = 60;
-        keyFile = "/home/${userVars.username}/.config/anki-keyFile";
+        keyFile = config.age.secrets."${userVars.username}-anki-keyFile".path;
         networkTimeout = 5;
         syncMedia = true;
-        usernameFile = "/home/${userVars.username}/.config/anki-usernameFile";
+        usernameFile = config.age.secrets."${userVars.username}-anki-usernameFile".path;
       };
       minimalistMode = true;
       theme = "followSystem";

@@ -46,6 +46,7 @@ let
     hostname:
     lib.mkMerge [
       (mkHostSecret hostname "wifi.env" { })
+      (mkHostSecret hostname "warp-prefixes.env" { })
     ];
 
   mkUserSecrets =
@@ -57,18 +58,12 @@ let
       (mkUserSecret username "github-credentials" {
         path = "/home/${username}/.git-credentials";
       })
-      (mkUserSecret username "github-pat" {
-        path = "/home/${username}/.github-pat";
-      })
+      (mkUserSecret username "github-pat" { })
       (mkUserSecret username "gh-hosts.yml" {
         path = "/home/${username}/.config/gh/hosts.yml";
       })
-      (mkUserSecret username "anki-keyFile" {
-        path = "/home/${username}/.config/anki-keyFile";
-      })
-      (mkUserSecret username "anki-usernameFile" {
-        path = "/home/${username}/.config/anki-usernameFile";
-      })
+      (mkUserSecret username "anki-keyFile" { })
+      (mkUserSecret username "anki-usernameFile" { })
 
       # --- Remote Desktop / VNC Secrets ---
       (mkUserSecret username "rdp-pifi-linux" { })
