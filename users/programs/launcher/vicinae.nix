@@ -109,7 +109,9 @@
           {
             "id": "snp-7e0f1c8d3a2b",
             "name": "GitHub PAT",
-            "data": { "text": "{shell code=\"cat ${config.age.secrets."${userVars.username}-github-pat".path}\"}" },
+            "data": { "text": "{shell code=\"cat ${
+              config.age.secrets."${userVars.username}-github-pat".path
+            }\"}" },
             "createdAt": 1783761415,
             "expansion": { "keyword": "!pat", "apps": [], "word": false }
           }
