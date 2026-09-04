@@ -42,7 +42,9 @@ in
       Type = "oneshot";
       RemainAfterExit = false;
       TimeoutStartSec = 30;
-      Environment = "WARP_PREFIXES_FILE=${config.age.secrets."${hostVars.hostname}-warp-prefixes".path}";
+      Environment = "WARP_PREFIXES_FILE=${
+        config.age.secrets."${hostVars.hostname}-warp-prefixes.env".path
+      }";
       ExecStart = pkgs.writeShellScript "warp-ensure" ''
         set -euo pipefail
 
