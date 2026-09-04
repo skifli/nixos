@@ -31,7 +31,10 @@ in
       "network-online.target"
       "warp-svc.service"
     ];
-    wants = [ "warp-svc.service" ];
+    wants = [
+      "network-online.target"
+      "warp-svc.service"
+    ];
     path = with pkgs; [
       networkmanager
       cloudflare-warp
@@ -63,7 +66,7 @@ in
         # connected yet (optimiseBoot disables NetworkManager-wait-online).
         SSID=""
         for i in {1..120}; do
-          SSID="$(nmcli -t -f 802-11-wireless.ssid connection show --active 2>/dev/null | tail -1)"
+          SSID="$(nmcli -t -f NAME connection show --active 2>/dev/null | tail -1)"
           if [ -n "$SSID" ]; then
             break
           fi
