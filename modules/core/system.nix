@@ -3,9 +3,11 @@
   hostVars,
   pkgs,
   ...
-}: let
+}:
+let
   primaryUser = builtins.head hostVars.enabledUsers; # Dynamically gets "ami" (or whichever user is enabled for this host)
-in {
+in
+{
   environment.systemPackages = with pkgs; [
     git # Great insinuating tool
     wget # Downloader
@@ -17,20 +19,20 @@ in {
 
   nix = {
     /*
-       Disable as it is now handled by nh down below
-    # Automatic garbage collection weekly
-    gc = {
-      automatic = false;
-      dates = "weekly";
-      options = "--delete-older-than 30d";
-      persistent = true; # Catch up on missed runs
-    };
+         Disable as it is now handled by nh down below
+      # Automatic garbage collection weekly
+      gc = {
+        automatic = false;
+        dates = "weekly";
+        options = "--delete-older-than 30d";
+        persistent = true; # Catch up on missed runs
+      };
     */
 
     # Periodic optimisation of the nix store
     optimise = {
       automatic = true;
-      dates = ["weekly"];
+      dates = [ "weekly" ];
       persistent = true; # Catch up on missed runs
     };
 
@@ -43,7 +45,7 @@ in {
         "flakes"
         "flake-self-attrs"
       ];
-      extra-platforms = ["aarch64-linux"]; # Allow cross-compilation
+      extra-platforms = [ "aarch64-linux" ]; # Allow cross-compilation
       use-xdg-base-directories = true;
 
       # Better build caching to reduce kworker load
@@ -56,8 +58,8 @@ in {
     };
 
     /*
-    https://discourse.nixos.org/t/lix-mismatch-in-feature-name-compared-to-nix/59879
-    Had something probably similar with flake-self-attrs
+      https://discourse.nixos.org/t/lix-mismatch-in-feature-name-compared-to-nix/59879
+      Had something probably similar with flake-self-attrs
     */
     extraOptions = ''
       experimental-features = nix-command flakes flake-self-attrs
@@ -96,7 +98,7 @@ in {
       allowReboot = false;
       operation = "boot"; # Only change on boot
       flake = "path:/home/${primaryUser}/nixos#${hostname}"; # Assumes config in /home/${primaryUser}/nixos
-      flags = [];
+      flags = [ ];
       persistent = true; # Catch up on missed runs
     };
 

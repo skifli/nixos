@@ -2,7 +2,8 @@
   pkgs,
   userVars,
   ...
-}: {
+}:
+{
   home-manager.users.${userVars.username} = {
     home.packages = with pkgs; [
       # davinci-resolve # This was removed due to the builders not already having it and rebuilding was taking forever

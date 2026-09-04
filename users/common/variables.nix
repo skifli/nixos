@@ -3,7 +3,8 @@
   pkgs,
   username,
   ...
-}: let
+}:
+let
   programs = {
     compositor = "niri";
     desktop-shell = "wayle";
@@ -49,7 +50,8 @@
       "ydotool"
     ];
   };
-in {
+in
+{
   inherit programs;
 
   wallpaper = "Berries.JPG";
@@ -110,14 +112,14 @@ in {
     "nixos-icons"
   ];
 
-  sessionVariables = {};
+  sessionVariables = { };
 
   systemdServices = {
     todo-checker = {
       Unit = {
         Description = "Check for due todo reminders";
-        PartOf = ["graphical-session.target"];
-        After = ["graphical-session.target"];
+        PartOf = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
         X-SwitchMethod = "keep-old";
       };
 
@@ -130,8 +132,8 @@ in {
     todo-startup = {
       Unit = {
         Description = "Check and show startup todo reminders";
-        PartOf = ["graphical-session.target"];
-        After = ["graphical-session.target"];
+        PartOf = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
         X-SwitchMethod = "keep-old";
       };
       Service = {
@@ -139,14 +141,14 @@ in {
         ExecStart = "/home/${username}/.local/bin/todo.sh --startup";
         ExecStartPre = "${pkgs.coreutils}/bin/sleep 10";
       };
-      Install.WantedBy = ["graphical-session.target"];
+      Install.WantedBy = [ "graphical-session.target" ];
     };
 
     niri-streamer = {
       Unit = {
         Description = "Niri event streamer";
-        PartOf = ["graphical-session.target"];
-        After = ["graphical-session.target"];
+        PartOf = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
       };
       Service = {
         Type = "simple";
@@ -154,14 +156,14 @@ in {
         Restart = "always";
         RestartSec = "2s";
       };
-      Install.WantedBy = ["graphical-session.target"];
+      Install.WantedBy = [ "graphical-session.target" ];
     };
 
     task-receiver = {
       Unit = {
         Description = "Task scheduler receiver daemon";
-        PartOf = ["graphical-session.target"];
-        After = ["graphical-session.target"];
+        PartOf = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
       };
       Service = {
         Type = "simple";
@@ -169,15 +171,15 @@ in {
         Restart = "always";
         RestartSec = "2s";
       };
-      Install.WantedBy = ["graphical-session.target"];
+      Install.WantedBy = [ "graphical-session.target" ];
     };
 
     # Systemd services managing the main and overview wallpaper daemons
     awww-main = {
       Unit = {
         Description = "awww wallpaper daemon (default namespace)";
-        PartOf = ["graphical-session.target"];
-        After = ["graphical-session.target"];
+        PartOf = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
       };
       Service = {
         Type = "simple";
@@ -186,14 +188,14 @@ in {
         Restart = "on-failure";
         RestartSec = "2s";
       };
-      Install.WantedBy = ["graphical-session.target"];
+      Install.WantedBy = [ "graphical-session.target" ];
     };
 
     awww-overview = {
       Unit = {
         Description = "awww wallpaper daemon (overview blurred namespace)";
-        PartOf = ["graphical-session.target"];
-        After = ["graphical-session.target"];
+        PartOf = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
       };
       Service = {
         Type = "simple";
@@ -202,7 +204,7 @@ in {
         Restart = "on-failure";
         RestartSec = "2s";
       };
-      Install.WantedBy = ["graphical-session.target"];
+      Install.WantedBy = [ "graphical-session.target" ];
     };
   };
 
@@ -216,7 +218,7 @@ in {
         OnBootSec = "1m";
         OnUnitActiveSec = "1m";
       };
-      Install.WantedBy = ["timers.target"];
+      Install.WantedBy = [ "timers.target" ];
     };
   };
 
@@ -355,6 +357,7 @@ in {
     "schedule" = builtins.readFile ./scripts/schedule.sh;
     "smart-rebuild" = builtins.readFile ./scripts/smart-rebuild.sh;
 
-    "is-workspace-focused" = "niri msg focused-output | grep -q \"$1\" && niri msg workspaces | grep -A 10 \"$1\" | grep \"^\\s*\\*\" | grep -q \" $2 \"";
+    "is-workspace-focused" =
+      "niri msg focused-output | grep -q \"$1\" && niri msg workspaces | grep -A 10 \"$1\" | grep \"^\\s*\\*\" | grep -q \" $2 \"";
   };
 }

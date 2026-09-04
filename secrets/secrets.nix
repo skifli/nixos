@@ -1,16 +1,16 @@
 let
   /*
-  Public keys (recipients) that can decrypt secrets.
+    Public keys (recipients) that can decrypt secrets.
 
-  How to get a key:
-  - For a NixOS host identity (recommended for this repo):
-    `sudo cat /etc/ssh/ssh_host_ed25519_key.pub`
+    How to get a key:
+    - For a NixOS host identity (recommended for this repo):
+      `sudo cat /etc/ssh/ssh_host_ed25519_key.pub`
 
-    Then paste the `ssh-ed25519 ...` line below.
+      Then paste the `ssh-ed25519 ...` line below.
 
-  Notes:
-  - This file contains only public keys; it is safe to commit.
-  - Add more recipients if you want multiple machines/users to decrypt.
+    Notes:
+    - This file contains only public keys; it is safe to commit.
+    - Add more recipients if you want multiple machines/users to decrypt.
   */
   # Raspberry Pi / pifi
   # pifi = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOhF6vPHavSoFf/TiQI8fc4rHsplwe7ucGFhX5g/oaMY root@raspberrypi";
@@ -23,11 +23,11 @@ let
   fynix = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPLjuhLizbbD7biJR6CBnal8duh68uFkC5u78uxEa02Z fynix@fydetabduo";
 
   /*
-  all = [
-    pifi
-    lyra
-    ami
-  ];
+    all = [
+      pifi
+      lyra
+      ami
+    ];
   */
 
   # The lyra host must be able to decrypt these during activation.
@@ -53,13 +53,14 @@ let
     fynix
   ];
   /*
-  HOW TO USE:
-  1. Run `export RULES="$PWD/secrets/secrets.nix"` in the ROOT of this repository (`nixos`)
-  2. Add secret entries to `secrets/secrets.nix` FIRST (ahoy).
-  3. Register secrets in `modules/core/agenix.nix` SECOND.
-  4. THEN create and edit the encrypted files - e.g., `agenix -e secrets/ami/rdp-pifi-linux.age`
+    HOW TO USE:
+    1. Run `export RULES="$PWD/secrets/secrets.nix"` in the ROOT of this repository (`nixos`)
+    2. Add secret entries to `secrets/secrets.nix` FIRST (ahoy).
+    3. Register secrets in `modules/core/agenix.nix` SECOND.
+    4. THEN create and edit the encrypted files - e.g., `agenix -e secrets/ami/rdp-pifi-linux.age`
   */
-in {
+in
+{
   # Per host secrets (filenames match secrets/<host>/<name>.age)
   "secrets/lyra/wifi.env.age".publicKeys = amiOnLyra;
   "secrets/fydetabduo/wifi.env.age".publicKeys = fynixOnFydetabduo;

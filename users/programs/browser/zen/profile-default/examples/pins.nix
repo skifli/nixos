@@ -26,18 +26,20 @@ let
 
   folderIds = builtins.mapAttrs (_: spec: spec.id) folderSpecs;
 
-  mkFolder = spec:
+  mkFolder =
+    spec:
     {
-      inherit (spec) id position workspace container;
+      inherit (spec)
+        id
+        position
+        workspace
+        container
+        ;
       isGroup = true;
       isFolderCollapsed = true;
       editedTitle = true;
     }
-    // (
-      if spec ? parent
-      then {folderParentId = folderIds.${spec.parent};}
-      else {}
-    );
+    // (if spec ? parent then { folderParentId = folderIds.${spec.parent}; } else { });
 
   folders = builtins.mapAttrs (_: mkFolder) folderSpecs;
 
@@ -150,25 +152,30 @@ let
     };
   };
 
-  mkPin = spec:
+  mkPin =
+    spec:
     {
-      inherit (spec) id position url container workspace;
+      inherit (spec)
+        id
+        position
+        url
+        container
+        workspace
+        ;
     }
     // (
-      if spec ? folder
-      then {
-        folderParentId = folderIds.${spec.folder};
-      }
-      else {}
+      if spec ? folder then
+        {
+          folderParentId = folderIds.${spec.folder};
+        }
+      else
+        { }
     )
-    // (
-      if spec ? isEssential
-      then {inherit (spec) isEssential;}
-      else {}
-    );
+    // (if spec ? isEssential then { inherit (spec) isEssential; } else { });
 
   pins = builtins.mapAttrs (_: mkPin) pinSpecs;
-in {
+in
+{
   # Folders
   "Pinned Folder" = folders.pinnedFolder;
   "Pinned Sub Folder" = folders.pinnedSubFolder;

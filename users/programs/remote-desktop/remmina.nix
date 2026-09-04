@@ -3,7 +3,8 @@
   pkgs,
   userVars,
   ...
-}: let
+}:
+let
   # Map standard Linux keyboard layouts to Remmina's RDP LCID decimal codes
   rdpLayoutMap = {
     "gb" = "809";
@@ -13,14 +14,15 @@
 
   # Look up hostVars.keyboardLayout
   rdpCode = rdpLayoutMap.${hostVars.keyboardLayout};
-in {
-  home-manager.users.${userVars.username} = {lib, ...}: {
+in
+{
+  home-manager.users.${userVars.username} = { lib, ... }: {
     home = {
       packages = with pkgs; [
         remmina
       ];
 
-      activation.setRemminaKeyboard = lib.hm.dag.entryAfter ["writeBoundary"] ''
+      activation.setRemminaKeyboard = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         TARGET_FILE="$HOME/.config/remmina/remmina.pref"
         mkdir -p "$(dirname "$TARGET_FILE")"
 

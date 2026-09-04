@@ -1,4 +1,4 @@
-{userVars, ...}: [
+{ userVars, ... }: [
   # Place overview (blurred) background within backdrop
   {
     match._props.namespace = "^awww-daemonoverview$";
@@ -12,12 +12,12 @@
     opacity = 0.9; # Makes it a bit nice
   }
   /*
-  Overlay layer:
-    Surface:
-      Namespace: "launcher"
-      Keyboard interactivity: exclusive
+    Overlay layer:
+      Surface:
+        Namespace: "launcher"
+        Keyboard interactivity: exclusive
 
-  This is for FUZZEL
+    This is for FUZZEL
   */
   {
     match._props = {

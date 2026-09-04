@@ -9,7 +9,8 @@
 # workspace uuid — declare it here without braces, exactly like `pins.workspace`.
 let
   spaces = import ./spaces.nix;
-in {
+in
+{
   # Link previews / external opens with no matching rule land here.
   defaultExternalRoute = "most-recent-space";
 
@@ -31,14 +32,13 @@ in {
 # required; `matchType` defaults to "contains" and `id` defaults to the
 # attribute name (namespaced per space, so equal names don't collide).
 /*
-spaces = {
-  "Example" = {
-    id = exampleID;
+  spaces = {
+    "Example" = {
+      id = exampleID;
 
-    routes."Example Route" = {
-      reference = "example.com"; # matchType = "contains" (default)
+      routes."Example Route" = {
+        reference = "example.com"; # matchType = "contains" (default)
+      };
     };
   };
-};
 */
-

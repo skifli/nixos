@@ -2,7 +2,8 @@
   pkgs,
   userVars,
   ...
-}: let
+}:
+let
   awWatcherUtilizationSrc = pkgs.fetchFromGitHub {
     owner = "Alwinator";
     repo = "aw-watcher-utilization";
@@ -51,8 +52,11 @@
       hash = "sha256-v3+wwKPrw20jUgxsy1JdBA1T++E4H+iiZ+aUNeOGHEA=";
     };
 
-    nativeBuildInputs = with pkgs; [pkg-config];
-    buildInputs = with pkgs; [openssl libxkbcommon];
+    nativeBuildInputs = with pkgs; [ pkg-config ];
+    buildInputs = with pkgs; [
+      openssl
+      libxkbcommon
+    ];
     doCheck = false;
     cargoHash = "sha256-4s0/fjtnX7YtTICW0mnthmw5Jb7Z+f5kr79H10F3I+8=";
 
@@ -60,43 +64,44 @@
       description = "Activity and idle watchers";
       homepage = "https://github.com/2e3s/awatcher";
       license = pkgs.lib.licenses.mpl20;
-      maintainers = [];
+      maintainers = [ ];
       mainProgram = "awatcher";
       platforms = pkgs.lib.platforms.linux;
     };
   };
 
-  pyEnv = pkgs.python313.withPackages ( # Iirc something required Python 3.13 specifically but I may be wrong / that might be Anki's use of python313 instead...
-    ps:
-      with ps; [
-        aw-client
-        aw-core
-        psutil
+  pyEnv = pkgs.python313.withPackages (
+    # Iirc something required Python 3.13 specifically but I may be wrong / that might be Anki's use of python313 instead...
+    ps: with ps; [
+      aw-client
+      aw-core
+      psutil
 
-        (ps.buildPythonPackage rec {
-          pname = "aw-watcher-netstatus";
-          version = "1.0.1";
+      (ps.buildPythonPackage rec {
+        pname = "aw-watcher-netstatus";
+        version = "1.0.1";
 
-          src = ps.fetchPypi {
-            pname = "aw_watcher_netstatus";
-            inherit version;
-            sha256 = "sha256-3STAWussghCzqyR9OCYZf8oNi113QCerQJq3GZOwBoc=";
-          };
+        src = ps.fetchPypi {
+          pname = "aw_watcher_netstatus";
+          inherit version;
+          sha256 = "sha256-3STAWussghCzqyR9OCYZf8oNi113QCerQJq3GZOwBoc=";
+        };
 
-          pyproject = true;
+        pyproject = true;
 
-          build-system = with ps; [
-            poetry-core
-          ];
+        build-system = with ps; [
+          poetry-core
+        ];
 
-          propagatedBuildInputs = with ps; [
-            aw-client
-            aw-core
-          ];
-        })
-      ]
+        propagatedBuildInputs = with ps; [
+          aw-client
+          aw-core
+        ];
+      })
+    ]
   );
-in {
+in
+{
   environment.systemPackages = with pkgs; [
     evtest
     libinput
@@ -180,7 +185,7 @@ in {
         "awatcher" = {
           Unit = {
             Description = "ActivityWatch unified watcher (awatcher)";
-            After = ["graphical-session.target"];
+            After = [ "graphical-session.target" ];
           };
 
           Service = {
@@ -191,13 +196,15 @@ in {
             RestartSec = 3;
           };
 
-          Install = {WantedBy = ["default.target"];};
+          Install = {
+            WantedBy = [ "default.target" ];
+          };
         };
 
         "aw-notify" = {
           Unit = {
             Description = "ActivityWatch Notify (Rust)";
-            After = ["graphical-session.target"];
+            After = [ "graphical-session.target" ];
           };
 
           Service = {
@@ -207,13 +214,15 @@ in {
             RestartSec = 3;
           };
 
-          Install = {WantedBy = ["default.target"];};
+          Install = {
+            WantedBy = [ "default.target" ];
+          };
         };
 
         "aw-watcher-input" = {
           Unit = {
             Description = "ActivityWatch Input Watcher";
-            After = ["graphical-session.target"];
+            After = [ "graphical-session.target" ];
           };
 
           Service = {
@@ -228,18 +237,24 @@ in {
             RestartSec = 3;
             Environment = [
               "PATH=${
-                pkgs.lib.makeBinPath [pkgs.poetry pkgs.libinput pkgs.evtest]
+                pkgs.lib.makeBinPath [
+                  pkgs.poetry
+                  pkgs.libinput
+                  pkgs.evtest
+                ]
               }"
             ];
           };
 
-          Install = {WantedBy = ["default.target"];};
+          Install = {
+            WantedBy = [ "default.target" ];
+          };
         };
 
         "aw-watcher-netstatus" = {
           Unit = {
             Description = "ActivityWatch Netstatus Watcher";
-            After = ["graphical-session.target"];
+            After = [ "graphical-session.target" ];
           };
 
           Service = {
@@ -249,36 +264,42 @@ in {
             RestartSec = 3;
           };
 
-          Install = {WantedBy = ["default.target"];};
+          Install = {
+            WantedBy = [ "default.target" ];
+          };
         };
 
         "aw-watcher-utilization" = {
           Unit = {
             Description = "ActivityWatch Utilization Watcher";
-            After = ["graphical-session.target"];
+            After = [ "graphical-session.target" ];
           };
 
           Service = {
             Type = "simple";
 
-            ExecStart = let
-              script = pkgs.writeShellScript "aw-utilization" ''
-                              exec ${pyEnv}/bin/python - <<'EOF'
-                import sys
-                sys.path.insert(0, "${awWatcherUtilizationSrc}")
+            ExecStart =
+              let
+                script = pkgs.writeShellScript "aw-utilization" ''
+                                exec ${pyEnv}/bin/python - <<'EOF'
+                  import sys
+                  sys.path.insert(0, "${awWatcherUtilizationSrc}")
 
-                from aw_watcher_utilization.watcher import UtilizationWatcher
+                  from aw_watcher_utilization.watcher import UtilizationWatcher
 
-                UtilizationWatcher().run()
-                EOF
-              '';
-            in "${script}";
+                  UtilizationWatcher().run()
+                  EOF
+                '';
+              in
+              "${script}";
 
             Restart = "always";
             RestartSec = 3;
           };
 
-          Install = {WantedBy = ["default.target"];};
+          Install = {
+            WantedBy = [ "default.target" ];
+          };
         };
       };
     };
@@ -290,7 +311,7 @@ in {
       "network.target"
       "tailscaled.service"
     ];
-    wantedBy = ["multi-user.target"];
+    wantedBy = [ "multi-user.target" ];
 
     serviceConfig = {
       ExecStart = "${pkgs.socat}/bin/socat TCP-LISTEN:5600,fork,reuseaddr,bind=127.0.0.1 TCP:pifi:5600";

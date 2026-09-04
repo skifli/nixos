@@ -2,26 +2,30 @@
   pkgs,
   userVars,
   ...
-}: {
+}:
+{
   services = {
-    greetd = let
-      session = {
-        command =
-          "${pkgs.uwsm}/bin/uwsm start "
-          + (
-            if userVars.programs.compositor == "niri"
-            then "${pkgs.niri}/bin/niri-session"
-            else "${pkgs.${userVars.programs.compositor}}/bin/${userVars.programs.compositor}"
-          );
-        user = userVars.username;
+    greetd =
+      let
+        session = {
+          command =
+            "${pkgs.uwsm}/bin/uwsm start "
+            + (
+              if userVars.programs.compositor == "niri" then
+                "${pkgs.niri}/bin/niri-session"
+              else
+                "${pkgs.${userVars.programs.compositor}}/bin/${userVars.programs.compositor}"
+            );
+          user = userVars.username;
+        };
+      in
+      {
+        enable = true;
+        settings = {
+          default_session = session;
+          # initial_session = session;
+        };
       };
-    in {
-      enable = true;
-      settings = {
-        default_session = session;
-        # initial_session = session;
-      };
-    };
 
     # Unlocks the GPG keyring automatically on login
     # security.pam.services.greetd.enableGnomeKeyring = true;

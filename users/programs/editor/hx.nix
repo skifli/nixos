@@ -1,4 +1,4 @@
-{userVars, ...}: {
+{ userVars, ... }: {
   home-manager.users.${userVars.username} = {
     xdg.mimeApps.defaultApplications = {
       "text/plain" = "Helix.desktop"; # Unformatted text

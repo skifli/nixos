@@ -5,7 +5,8 @@
   pkgs,
   pkgsUnstable,
   ...
-}: let
+}:
+let
   shell-preload = pkgs.writeShellScript "shell-preload" ''
     set -u
     zsh_bin="$1"
@@ -14,7 +15,8 @@
       [ -f "$lib" ] && ${pkgs.coreutils}/bin/dd if="$lib" of=/dev/null bs=1M status=none 2>/dev/null
     done
   '';
-in {
+in
+{
   home-manager.sharedModules = [
     inputs.fyde-nix.homeManagerModules.wayle
     inputs.fyde-nix.homeManagerModules.swayidle
@@ -22,6 +24,25 @@ in {
 
   home-manager.users.${userVars.username} = {
     services.wayle.settings.wallpaper.engine-enabled = lib.mkForce false;
+
+    # Override auto-rotate module to use niri-rotate instead of rot8
+    # (upstream fyde-nix wayle.nix references rot8 which doesn't exist on niri)
+    services.wayle.settings.modules.custom = lib.mkAfter [
+      {
+        id = "auto-rotate";
+        command = ''systemctl --user is-active niri-rotate >/dev/null 2>&1 && printf '{"state":"On"}' || printf '{"state":"Off"}' '';
+        left-click = ''
+          if systemctl --user is-active niri-rotate >/dev/null 2>&1; then
+            systemctl --user stop niri-rotate
+            notify-send -a wayle -u low -t 2500 "Auto-rotate" "Auto-rotate disabling..."
+          else
+            systemctl --user start niri-rotate
+            notify-send -a wayle -u low -t 2500 "Auto-rotate" "Auto-rotate enabling..."
+          fi
+        '';
+        on-action = ''systemctl --user is-active niri-rotate >/dev/null 2>&1 && printf '{"state":"On"}' || printf '{"state":"Off"}' '';
+      }
+    ];
 
     # Include an input override file that the rotation daemon updates
     # with the correct touch/tablet calibration-matrix for the current orientation.
@@ -37,13 +58,12 @@ in {
       text = ''
         input {
           touch {
-            map-to-output "DSI-1"
-            calibration-matrix 0.0 -1.0 1.0 1.0 0.0 0.0
+            calibration-matrix 0.0 -1.0 1.0 1.0 0.0 0.0;
+            map-to-output "DSI-1";
           }
 
           tablet {
-            map-to-output "DSI-1"
-            calibration-matrix 0.0 -1.0 1.0 1.0 0.0 0.0
+            map-to-output "DSI-1";
           }
         }
       '';
@@ -58,96 +78,98 @@ in {
     systemd.user.services.niri-rotate = {
       Unit = {
         Description = "niri-native auto-rotation daemon";
-        PartOf = ["graphical-session.target"];
-        After = ["graphical-session.target"];
+        PartOf = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
       };
       Service = {
         Type = "simple";
         Restart = "on-failure";
         RestartSec = "2";
-        Environment = "PATH=${pkgs.lib.makeBinPath [
-          pkgs.coreutils
-          pkgs.gnugrep
-          pkgs.niri
-          pkgs.iio-sensor-proxy
-        ]}:/run/current-system/sw/bin:/etc/profiles/per-user/${userVars.username}/bin";
+        Environment = "PATH=${
+          pkgs.lib.makeBinPath [
+            pkgs.coreutils
+            pkgs.gnugrep
+            pkgs.niri
+            pkgs.iio-sensor-proxy
+          ]
+        }:/run/current-system/sw/bin:/etc/profiles/per-user/${userVars.username}/bin";
         ExecStart = pkgs.writeShellScript "niri-rotate" ''
-                    set -euo pipefail
+                              set -euo pipefail
 
-                    OVERRIDE="$HOME/.config/niri/input-override.kdl"
-                    MONITOR_SENSOR="${pkgs.iio-sensor-proxy}/bin/monitor-sensor"
+                              MONITOR_SENSOR="${pkgs.iio-sensor-proxy}/bin/monitor-sensor"
 
-                    # If the file is an HM symlink, break it so we can write normally
-                    if [ -L "$OVERRIDE" ]; then
-                      cp --remove-destination "$(readlink -f "$OVERRIDE")" "$OVERRIDE"
-                    fi
+                              # Find the niri socket (PID changes on restart)
+                              find_niri_socket() {
+                                for f in "$XDG_RUNTIME_DIR"/niri.wayland-*.sock; do
+                                  [ -S "$f" ] && { NIRI_SOCKET="$f"; export NIRI_SOCKET; return 0; }
+                                done
+                                return 1
+                              }
 
-                    write_override() {
-                      local cal="$1"
-                      cat > "$OVERRIDE" <<ENDOFKDL
+                              find_niri_socket || { echo "niri-rotate: no niri socket found"; exit 1; }
+
+                              get_transform() {
+                                case "$1" in
+                                  *normal*)   echo 0 ;;
+                                  *left-up*)  echo 1 ;;
+                                  *inverted*) echo 2 ;;
+                                  *right-up*) echo 3 ;;
+                                  *)          return 1 ;;
+                                esac
+                              }
+
+                              # niri 26.04 does NOT apply the output transform to
+                              # map-to-output'd touch/tablet. We therefore write the
+                              # matching calibration-matrix for each orientation.
+                              # Matrices use normalised [0,1] touch coords:
+                              #   new_x = a*x + b*y + c,  new_y = d*x + e*y + f
+                              get_calibration() {
+                                case "$1" in
+                                  0) echo "1.0 0.0 0.0 0.0 1.0 0.0" ;;          # portrait (identity)
+                                  1) echo "0.0 1.0 0.0 -1.0 0.0 1.0" ;;         # 90° CCW
+                                  2) echo "-1.0 0.0 1.0 0.0 -1.0 1.0" ;;        # 180°
+                                  3) echo "0.0 -1.0 1.0 1.0 0.0 0.0" ;;         # 270° CCW (default landscape)
+                                  *) return 1 ;;
+                                esac
+                              }
+
+                              write_input_override() {
+                                local matrix="$1"
+                                rm -f "$HOME/.config/niri/input-override.kdl"
+                                cat > "$HOME/.config/niri/input-override.kdl" <<OVERRIDE
           input {
             touch {
-              map-to-output "DSI-1"
-              calibration-matrix $cal
+              calibration-matrix ''${matrix};
+              map-to-output "DSI-1";
             }
-
             tablet {
-              map-to-output "DSI-1"
-              calibration-matrix $cal
+              map-to-output "DSI-1";
             }
           }
-          ENDOFKDL
-                    }
+          OVERRIDE
+                              }
 
-                    # The panel is natively portrait: touch X:0-1599 Y:0-2559
-                    # niri transform values: normal=0, 90cw=1, 180=2, 270cw=3
-                    get_transform_and_cal() {
-                      case "$1" in
-                        *normal*)
-                          CAL="1.0 0.0 0.0 0.0 1.0 0.0"
-                          TRANSFORM=0
-                          ;;
-                        *left-up*)
-                          # Tablet held landscape, left side up -> 90° CW
-                          CAL="0.0 -1.0 1.0 1.0 0.0 0.0"
-                          TRANSFORM=1
-                          ;;
-                        *inverted*)
-                          # Upside down -> 180°
-                          CAL="-1.0 0.0 1.0 0.0 -1.0 1.0"
-                          TRANSFORM=2
-                          ;;
-                        *right-up*)
-                          # Tablet held landscape, right side up -> 270° CW (default)
-                          CAL="0.0 1.0 0.0 -1.0 0.0 1.0"
-                          TRANSFORM=3
-                          ;;
-                        *)
-                          return 1
-                          ;;
-                      esac
-                    }
+                              echo "niri-rotate: starting monitor-sensor (socket=$NIRI_SOCKET)..."
 
-                    echo "niri-rotate: starting monitor-sensor..."
+                              $MONITOR_SENSOR 2>/dev/null | while IFS= read -r line; do
+                                orientation=$(echo "$line" | grep -ioP 'orientation:\s*\K[a-z-]+' || true)
+                                if [ -z "$orientation" ]; then
+                                  continue
+                                fi
 
-                    $MONITOR_SENSOR 2>/dev/null | while IFS= read -r line; do
-                      orientation=$(echo "$line" | grep -oP 'Orientation:\s*\K\S+' || true)
-                      if [ -z "$orientation" ]; then
-                        continue
-                      fi
+                                TRANSFORM=$(get_transform "$orientation") || continue
+                                MATRIX=$(get_calibration "$TRANSFORM") || continue
+                                write_input_override "$MATRIX"
+                                niri msg output DSI-1 transform "$TRANSFORM" 2>/dev/null || true
+                                niri msg action load-config-file 2>/dev/null || true
+                                echo "niri-rotate: orientation=$orientation transform=$TRANSFORM matrix=$MATRIX"
+                              done
 
-                      if get_transform_and_cal "$orientation"; then
-                        niri msg output DSI-1 transform "$TRANSFORM" 2>/dev/null || true
-                        write_override "$CAL"
-                        echo "niri-rotate: orientation=$orientation transform=$TRANSFORM"
-                      fi
-                    done
-
-                    echo "niri-rotate: monitor-sensor exited, restarting..."
-                    exit 1
+                              echo "niri-rotate: monitor-sensor exited, restarting..."
+                              exit 1
         '';
       };
-      Install.WantedBy = ["graphical-session.target"];
+      Install.WantedBy = [ "graphical-session.target" ];
     };
 
     # Launch startup apps via a user service rather than niri's
@@ -158,38 +180,40 @@ in {
     systemd.user.services.apps-startup = {
       Unit = {
         Description = "Launch ${userVars.username} startup applications";
-        PartOf = ["graphical-session.target"];
-        After = ["graphical-session.target"];
+        PartOf = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
       };
       Service = {
         Type = "oneshot";
         RemainAfterExit = true;
-        Environment = "PATH=${pkgs.lib.makeBinPath [
-          pkgs.bash
-          pkgs.jq
-          pkgs.niri
-          pkgs.libnotify
-          pkgsUnstable.nirius
-          pkgs.libsecret
-          pkgs.systemd
-        ]}:/run/current-system/sw/bin:/etc/profiles/per-user/${userVars.username}/bin";
+        Environment = "PATH=${
+          pkgs.lib.makeBinPath [
+            pkgs.bash
+            pkgs.jq
+            pkgs.niri
+            pkgs.libnotify
+            pkgsUnstable.nirius
+            pkgs.libsecret
+            pkgs.systemd
+          ]
+        }:/run/current-system/sw/bin:/etc/profiles/per-user/${userVars.username}/bin";
         ExecStart = "${pkgs.bash}/bin/bash /home/${userVars.username}/.local/bin/startup.sh";
       };
-      Install.WantedBy = ["graphical-session.target"];
+      Install.WantedBy = [ "graphical-session.target" ];
     };
 
     systemd.user.services.shell-preload = {
       Unit = {
         Description = "Warm shell page cache";
-        PartOf = ["graphical-session.target"];
-        After = ["graphical-session.target"];
+        PartOf = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
       };
       Service = {
         Type = "oneshot";
         RemainAfterExit = true;
         ExecStart = "${shell-preload} /etc/profiles/per-user/${userVars.username}/bin/zsh";
       };
-      Install.WantedBy = ["graphical-session.target"];
+      Install.WantedBy = [ "graphical-session.target" ];
     };
   };
 }

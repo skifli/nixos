@@ -2,7 +2,8 @@
   pkgs,
   userVars,
   ...
-}: {
+}:
+{
   home-manager.users.${userVars.username} = {
     programs.foot = {
       enable = true;
@@ -11,7 +12,7 @@
       server.enable = true;
 
       settings = {
-        main = {};
+        main = { };
 
         cursor = {
           style = "beam";

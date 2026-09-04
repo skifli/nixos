@@ -3,7 +3,8 @@
   pkgs,
   userVars,
   ...
-}: {
+}:
+{
   nixpkgs.overlays = [
     inputs.affinity-nix.overlays.default
   ];

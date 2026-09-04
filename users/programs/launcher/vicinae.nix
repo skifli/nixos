@@ -5,7 +5,8 @@
   pkgs,
   userVars,
   ...
-}: {
+}:
+{
   imports = [
     inputs.vicinae.nixosModules.default
   ];
@@ -13,7 +14,7 @@
   programs.vicinae.input-server.enable = true; # Needed for snippets
 
   home-manager = {
-    sharedModules = [inputs.vicinae.homeManagerModules.default];
+    sharedModules = [ inputs.vicinae.homeManagerModules.default ];
 
     users.${userVars.username} = {
       home.packages = with pkgs; [
@@ -202,9 +203,7 @@
             "@knoopx/store.vicinae.firefox" = {
               preferences = {
                 profile_dir =
-                  if builtins.elem "zen-beta" userVars.programs.browsers
-                  then ".config/zen"
-                  else ".mozilla/firefox";
+                  if builtins.elem "zen-beta" userVars.programs.browsers then ".config/zen" else ".mozilla/firefox";
               };
 
               entrypoints = {
@@ -337,16 +336,14 @@
               };
               preferences = {
                 autoIndexing = true;
-                excludedIndexingPaths = [];
-                indexingPaths =
-                  map (share: share.mountPoint) userVars.networkMounts.nfsShares
-                  ++ [
-                    "/home/${userVars.username}/Downloads"
-                    "/home/${userVars.username}/Documents"
-                    "/home/${userVars.username}/Pictures"
-                    "/home/${userVars.username}/Videos"
-                    "/home/${userVars.username}/nixos"
-                  ];
+                excludedIndexingPaths = [ ];
+                indexingPaths = map (share: share.mountPoint) userVars.networkMounts.nfsShares ++ [
+                  "/home/${userVars.username}/Downloads"
+                  "/home/${userVars.username}/Documents"
+                  "/home/${userVars.username}/Pictures"
+                  "/home/${userVars.username}/Videos"
+                  "/home/${userVars.username}/nixos"
+                ];
               };
             };
 

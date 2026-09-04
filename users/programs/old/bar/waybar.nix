@@ -4,7 +4,8 @@
   pkgs,
   userVars,
   ...
-}: {
+}:
+{
   home-manager.users.${userVars.username} = {
     home.packages = with pkgs; [
       font-awesome
@@ -14,7 +15,7 @@
       enable = true;
       systemd = {
         enable = true;
-        targets = ["graphical-session.target"];
+        targets = [ "graphical-session.target" ];
       };
 
       style = ''

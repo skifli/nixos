@@ -2,7 +2,8 @@
   hostVars,
   pkgs,
   ...
-}: {
+}:
+{
   # Set Wayland-friendly environment variables
   environment.sessionVariables = {
     ELECTRON_OZONE_PLATFORM_HINT = "auto";
@@ -38,9 +39,9 @@
     # Start the agent as a graphical user service
     user.services.polkit-kde-agent-1 = {
       description = "polkit-kde-agent-1";
-      wantedBy = ["graphical-session.target"];
-      wants = ["graphical-session.target"];
-      after = ["graphical-session.target"];
+      wantedBy = [ "graphical-session.target" ];
+      wants = [ "graphical-session.target" ];
+      after = [ "graphical-session.target" ];
       serviceConfig = {
         Type = "simple";
         ExecStart = "${pkgs.kdePackages.polkit-kde-agent-1}/libexec/polkit-kde-authentication-agent-1";

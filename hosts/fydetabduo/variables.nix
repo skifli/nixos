@@ -1,4 +1,4 @@
-{...}: rec {
+{ ... }: rec {
   stateVersion = "26.05";
 
   optimiseBoot = true;
@@ -27,7 +27,7 @@
     ../../modules/programs/cloudflare-warp.nix
   ];
 
-  enabledUsers = ["fynix"];
+  enabledUsers = [ "fynix" ];
 
   outputs = {
     "DSI-1" = {
@@ -42,27 +42,43 @@
   };
 
   workspaces = {
-    "1" = {open-on-output = "DSI-1";};
-    "2" = {open-on-output = "DSI-1";};
-    "3" = {open-on-output = "DSI-1";};
-    "4" = {open-on-output = "DSI-1";};
-    "5" = {open-on-output = "DSI-1";};
-    "6" = {open-on-output = "DSI-1";};
-    "7" = {open-on-output = "DSI-1";};
-    "8" = {open-on-output = "DSI-1";};
+    "1" = {
+      open-on-output = "DSI-1";
+    };
+    "2" = {
+      open-on-output = "DSI-1";
+    };
+    "3" = {
+      open-on-output = "DSI-1";
+    };
+    "4" = {
+      open-on-output = "DSI-1";
+    };
+    "5" = {
+      open-on-output = "DSI-1";
+    };
+    "6" = {
+      open-on-output = "DSI-1";
+    };
+    "7" = {
+      open-on-output = "DSI-1";
+    };
+    "8" = {
+      open-on-output = "DSI-1";
+    };
   };
 
   niri = {
     gestures = {
       hot-corners = {
-        top-left = [];
+        top-left = [ ];
       };
     };
 
     input = {
       touchpad = {
-        tap = [];
-        natural-scroll = [];
+        tap = [ ];
+        natural-scroll = [ ];
       };
     };
   };

@@ -1,23 +1,20 @@
-{hostVars, ...}:
+{ hostVars, ... }:
 # Extension policy wiring for zen-browser-flake.
 # Learn more:
 # https://github.com/0xc000022070/zen-browser-flake/tree/b6b1e625e4aa049b59930611fc20790c0ccbc840?tab=readme-ov-file#extensions
 let
   mkAmoXpiUrl = amoSlug: "https://addons.mozilla.org/firefox/downloads/latest/${amoSlug}/latest.xpi";
 
-  mkForceInstalled = {
-    amoSlug,
-    pinned ? false,
-  }:
+  mkForceInstalled =
+    {
+      amoSlug,
+      pinned ? false,
+    }:
     {
       install_url = mkAmoXpiUrl amoSlug;
       installation_mode = "force_installed";
     }
-    // (
-      if pinned
-      then {default_area = "navbar";}
-      else {}
-    );
+    // (if pinned then { default_area = "navbar"; } else { });
 
   # Mapping: extension-id to { amoSlug, pinned? }
   # The attribute name is the extension ID; the slug is used to fetch from AMO.
@@ -55,16 +52,16 @@ let
       install_url = "https://github.com/mkaply/queryamoid/releases/download/v0.2/query_amo_addon_id-0.2-fx.xpi";
     };
   };
-in {
-  ExtensionSettings =
-    {
-      "*" = {
-        blocked_install_message = "The addon you are trying to install is not added in the Nix config";
-        installation_mode = "blocked";
-      };
-    }
-    // extensionSettingsFromAmo
-    // customExtensionSettings;
+in
+{
+  ExtensionSettings = {
+    "*" = {
+      blocked_install_message = "The addon you are trying to install is not added in the Nix config";
+      installation_mode = "blocked";
+    };
+  }
+  // extensionSettingsFromAmo
+  // customExtensionSettings;
 
   "3rdparty".Extensions = {
     # Dunno if these actually work but still

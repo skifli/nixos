@@ -10,4 +10,4 @@ let
     }
   );
 in
-  mkJoinedTabs {}
+mkJoinedTabs { }

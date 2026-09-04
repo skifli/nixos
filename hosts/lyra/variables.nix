@@ -1,4 +1,4 @@
-{pkgs, ...}: rec {
+{ pkgs, ... }: rec {
   # Feature toggles
   # disableX = true;
 
@@ -41,7 +41,7 @@
   ];
 
   # User configuration
-  enabledUsers = ["ami"];
+  enabledUsers = [ "ami" ];
 
   # Hardware configuration
   videoDriver = "intel"; # Empty to import none.
@@ -69,15 +69,31 @@
   };
 
   workspaces = {
-    "1" = {open-on-output = "HDMI-A-2";};
-    "2" = {open-on-output = "HDMI-A-2";};
-    "3" = {open-on-output = "HDMI-A-2";};
-    "4" = {open-on-output = "HDMI-A-2";};
+    "1" = {
+      open-on-output = "HDMI-A-2";
+    };
+    "2" = {
+      open-on-output = "HDMI-A-2";
+    };
+    "3" = {
+      open-on-output = "HDMI-A-2";
+    };
+    "4" = {
+      open-on-output = "HDMI-A-2";
+    };
 
-    "5" = {open-on-output = "DP-1";};
-    "6" = {open-on-output = "DP-1";};
-    "7" = {open-on-output = "DP-1";};
-    "8" = {open-on-output = "DP-1";};
+    "5" = {
+      open-on-output = "DP-1";
+    };
+    "6" = {
+      open-on-output = "DP-1";
+    };
+    "7" = {
+      open-on-output = "DP-1";
+    };
+    "8" = {
+      open-on-output = "DP-1";
+    };
   };
 
   devices = [
@@ -91,23 +107,25 @@
     }
 
     /*
-       TODO - Fix: Add to Pi config as no longer on this device
-    # -a: Monitor all standard ATA SMART attributes
-    # -o on -S on: Enable background testing & auto-save of attribute data
-    # -n standby,q: Never wake up the HDD from sleep/standby to run checks
-    # -W 4,50,55: Warn at 50°C, Critical at 55°C
-    # -C 197+: Alert immediately on any Current Pending Sectors (failing drive)
-    # -U 198+: Alert immediately on any Offline Uncorrectable Sectors (bad sectors)
-    # -s (S/../.././03|L/../../6/04): Short test daily at 3:00 AM, Long scan Saturdays at 4:00 AM
-    {
-      device = "/dev/sda";
-      options = "-a -o on -S on -n standby,q -W 4,50,55 -C 197+ -U 198+ -s (S/../.././03|L/../../6/04)";
-    }
+         TODO - Fix: Add to Pi config as no longer on this device
+      # -a: Monitor all standard ATA SMART attributes
+      # -o on -S on: Enable background testing & auto-save of attribute data
+      # -n standby,q: Never wake up the HDD from sleep/standby to run checks
+      # -W 4,50,55: Warn at 50°C, Critical at 55°C
+      # -C 197+: Alert immediately on any Current Pending Sectors (failing drive)
+      # -U 198+: Alert immediately on any Offline Uncorrectable Sectors (bad sectors)
+      # -s (S/../.././03|L/../../6/04): Short test daily at 3:00 AM, Long scan Saturdays at 4:00 AM
+      {
+        device = "/dev/sda";
+        options = "-a -o on -S on -n standby,q -W 4,50,55 -C 197+ -U 198+ -s (S/../.././03|L/../../6/04)";
+      }
     */
   ];
 
   printerDrivers = [
-    (pkgs.writeTextDir "share/cups/model/OKI-MC363-PS.ppd" (builtins.readFile ./assets/OKI-MC363-PS.ppd))
+    (pkgs.writeTextDir "share/cups/model/OKI-MC363-PS.ppd" (
+      builtins.readFile ./assets/OKI-MC363-PS.ppd
+    ))
   ];
 
   # Default printer is the first printer
@@ -159,7 +177,7 @@
   };
 
   niri = {
-    gestures.hot-corners.off = [];
+    gestures.hot-corners.off = [ ];
   };
 
   sessionVariables = {

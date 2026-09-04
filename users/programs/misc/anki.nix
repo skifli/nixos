@@ -3,7 +3,8 @@
   pkgs,
   userVars,
   ...
-}: let
+}:
+let
   advanced-review-bottom-bar = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
     pname = "advanced-review-bottom-bar";
     version = "v3.6.1";
@@ -11,7 +12,7 @@
       owner = "noobj2";
       repo = "Anki-Advanced-Review-Bottombar";
       rev = finalAttrs.version;
-      sparseCheckout = [""];
+      sparseCheckout = [ "" ];
       hash = "sha256-ah51DWf1DbULF580hMj360R5qPh3fHnYM6KGBtJrgh8=";
     };
     sourceRoot = "${finalAttrs.src.name}";
@@ -37,7 +38,7 @@
       owner = "sviatoslav-lebediev";
       repo = "anki-quizlet-importer-extended";
       rev = finalAttrs.version;
-      sparseCheckout = [""];
+      sparseCheckout = [ "" ];
       hash = "sha256-j/ow/HCc70dD/BpMDqGx7rib7G0FfxazzjuPmEQbYTk=";
     };
     sourceRoot = "${finalAttrs.src.name}";
@@ -56,18 +57,18 @@
   });
 
   /*
-  anki-redesign-plus = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
-    pname = "anki-redesign-plus";
-    version = "4c7621c";
-    src = pkgs.fetchFromGitHub {
-      owner = "qais8r";
-      repo = "anki-redesign-plus";
-      rev = finalAttrs.version;
-      sparseCheckout = [""];
-      hash = "";
-    };
-    sourceRoot = "${finalAttrs.src.name}";
-  });
+    anki-redesign-plus = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
+      pname = "anki-redesign-plus";
+      version = "4c7621c";
+      src = pkgs.fetchFromGitHub {
+        owner = "qais8r";
+        repo = "anki-redesign-plus";
+        rev = finalAttrs.version;
+        sparseCheckout = [""];
+        hash = "";
+      };
+      sourceRoot = "${finalAttrs.src.name}";
+    });
   */
 
   aw-watcher-anki = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
@@ -99,24 +100,25 @@
     ];
   });
   /*
-  onigiri-anki = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
-    pname = "onigiri-anki";
-    version = "e8ad970";
-    src = pkgs.fetchFromGitHub {
-      owner = "thepeacemonk";
-      repo = "Onigiri";
-      rev = finalAttrs.version;
-      sparseCheckout = [""];
-      hash = "sha256-Vy/IZo8N8zSMDDNNjchWHAZ9kTcWTHCox4ihYn2/GBE=";
-    };
-    sourceRoot = "${finalAttrs.src.name}";
-  });
+    onigiri-anki = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
+      pname = "onigiri-anki";
+      version = "e8ad970";
+      src = pkgs.fetchFromGitHub {
+        owner = "thepeacemonk";
+        repo = "Onigiri";
+        rev = finalAttrs.version;
+        sparseCheckout = [""];
+        hash = "sha256-Vy/IZo8N8zSMDDNNjchWHAZ9kTcWTHCox4ihYn2/GBE=";
+      };
+      sourceRoot = "${finalAttrs.src.name}";
+    });
   */
-in {
+in
+{
   /*
-  nixpkgs.overlays = [
-    inputs.anki-mcp.overlays.default
-  ];
+    nixpkgs.overlays = [
+      inputs.anki-mcp.overlays.default
+    ];
   */
 
   home-manager.users.${userVars.username} = {
@@ -125,15 +127,15 @@ in {
       addons = with pkgs; [
         inputs.anki-seara.packages."x86_64-linux".default # I :3 you https://github.com/rodrada/seara
         /*
-           (ankiAddons.anki-mcp-server.withConfig {
-          config = {
-            http_host = "0.0.0.0";
-          };
-        })
+             (ankiAddons.anki-mcp-server.withConfig {
+            config = {
+              http_host = "0.0.0.0";
+            };
+          })
         */
         (fsrs4anki-helper.withConfig {
           config = {
-            easy_dates = [];
+            easy_dates = [ ];
             days_to_reschedule = 7;
             auto_reschedule_after_sync = false;
             auto_disperse_after_sync = false;
@@ -155,7 +157,7 @@ in {
         (anki-connect.withConfig {
           config = {
             webBindAddress = "0.0.0.0";
-            webCorsOriginList = ["*"];
+            webCorsOriginList = [ "*" ];
           };
         })
         aw-watcher-anki
@@ -337,26 +339,26 @@ in {
 
   # 1. Make Node.js available (npx comes with it)
   /*
-     - I do not use anymore but in case needed
-  environment.systemPackages = with pkgs; [nodejs_22];
+       - I do not use anymore but in case needed
+    environment.systemPackages = with pkgs; [nodejs_22];
 
-  systemd.user.services.pdf-reader-mcp = {
-    description = "PDF Reader MCP (User)";
-    after = ["graphical-session.target"];
-    wantedBy = ["graphical-session.target"];
+    systemd.user.services.pdf-reader-mcp = {
+      description = "PDF Reader MCP (User)";
+      after = ["graphical-session.target"];
+      wantedBy = ["graphical-session.target"];
 
-    serviceConfig = {
-      Type = "simple";
-      Restart = "on-failure";
-      Environment = [
-        "HOME=%h" # your real home
-        "PATH=/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:/etc/profiles/per-user/%h/bin"
-        "MCP_TRANSPORT=http"
-        "MCP_HTTP_PORT=42069"
-        "MCP_HTTP_HOST=127.0.0.1"
-      ];
-      ExecStart = "${pkgs.nodejs_22}/bin/npx --yes @sylphx/pdf-reader-mcp";
+      serviceConfig = {
+        Type = "simple";
+        Restart = "on-failure";
+        Environment = [
+          "HOME=%h" # your real home
+          "PATH=/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:/etc/profiles/per-user/%h/bin"
+          "MCP_TRANSPORT=http"
+          "MCP_HTTP_PORT=42069"
+          "MCP_HTTP_HOST=127.0.0.1"
+        ];
+        ExecStart = "${pkgs.nodejs_22}/bin/npx --yes @sylphx/pdf-reader-mcp";
+      };
     };
-  };
   */
 }

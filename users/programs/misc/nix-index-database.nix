@@ -2,9 +2,10 @@
   inputs,
   userVars,
   ...
-}: {
+}:
+{
   home-manager = {
-    sharedModules = [inputs.nix-index-database.homeModules.default];
+    sharedModules = [ inputs.nix-index-database.homeModules.default ];
 
     users.${userVars.username} = {
       programs = {
