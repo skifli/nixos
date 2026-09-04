@@ -195,7 +195,7 @@
           default = pkgs.mkShell {
             packages = with pkgs; [
               pre-commit
-              alejandra
+              nixfmt
               statix
               deadnix
             ];
@@ -209,6 +209,6 @@
         }
       );
 
-      formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
+      formatter = nixpkgs.lib.genAttrs systems (system: nixpkgs.legacyPackages.${system}.nixfmt);
     };
 }
