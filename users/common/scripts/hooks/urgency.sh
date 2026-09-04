@@ -30,6 +30,19 @@ urgency_hook() {
     local urgent="$3"
     local raw_json="$4"
 
+    # Skip urgent notifications for the first 60s after session start
+    # so startup apps can finish loading without causing spam
+    local startup_file="$NIRI_STATE_DIR/.session_start"
+    if [[ ! -f "$startup_file" ]]; then
+        date +%s > "$startup_file"
+    fi
+    local now session_start
+    now=$(date +%s)
+    session_start=$(cat "$startup_file" 2>/dev/null || echo "$now")
+    if (( now - session_start < 60 )); then
+        return
+    fi
+
     case "$event" in
         WindowUrgencyChanged)
             if [[ "$urgent" == "true" ]]; then

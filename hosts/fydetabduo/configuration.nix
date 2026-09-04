@@ -4,10 +4,12 @@
   hostVars,
   pkgs,
   ...
-}: let
+}:
+let
   primaryUser = builtins.head hostVars.enabledUsers;
-in {
-  _module.args = {inherit hostname;};
+in
+{
+  _module.args = { inherit hostname; };
 
   imports = [
     ../common/default.nix
@@ -33,6 +35,7 @@ in {
     shell = {
       enable = false;
 
+      audio.enable = true;
       packages.enable = false; # Cherry-picked in host-packages.nix instead
       power = {
         enable = true; # Needed because shell.enable = false disables it
@@ -52,7 +55,7 @@ in {
 
   systemd.services."serial-getty@ttyFIQ0".enable = false;
 
-  systemd.sockets.dbus.wantedBy = ["sockets.target"];
+  systemd.sockets.dbus.wantedBy = [ "sockets.target" ];
 
   networking = {
     networkmanager.wifi = {
@@ -68,10 +71,20 @@ in {
     "d /tmp/.X11-unix 1777 root root -"
   ];
 
+  # Needed by niri-rotate daemon (monitor-sensor) for auto-rotation.
+  environment.etc."polkit-1/rules.d/50-iio-sensor-proxy.rules".text = ''
+    polkit.addRule(function(action, subject) {
+      if (action.id == "net.hadess.SensorProxy.claim-sensor" &&
+          subject.isInGroup("wheel")) {
+        return polkit.Result.YES;
+      }
+    });
+  '';
+
   systemd.services.fydetab-opengl-link = {
     description = "Ensure /run/opengl-driver points at Mesa";
-    wantedBy = ["graphical.target"];
-    before = ["greetd.service"];
+    wantedBy = [ "graphical.target" ];
+    before = [ "greetd.service" ];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
@@ -91,9 +104,9 @@ in {
   # assigns the touchscreen/stylus to the greeter session immediately
   systemd.services.fydetab-input-trigger = {
     description = "Re-trigger udev for input devices before greeter";
-    wantedBy = ["greetd.service"];
-    before = ["greetd.service"];
-    after = ["systemd-udevd.service"];
+    wantedBy = [ "greetd.service" ];
+    before = [ "greetd.service" ];
+    after = [ "systemd-udevd.service" ];
     serviceConfig = {
       Type = "oneshot";
       ExecStart = "${pkgs.systemd}/bin/udevadm trigger --subsystem-match=input";
@@ -101,5 +114,5 @@ in {
     };
   };
 
-  systemd.services.accounts-daemon.after = ["systemd-logind.service"];
+  systemd.services.accounts-daemon.after = [ "systemd-logind.service" ];
 }

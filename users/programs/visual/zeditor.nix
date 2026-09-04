@@ -3,7 +3,8 @@
   pkgs,
   userVars,
   ...
-}: {
+}:
+{
   home-manager.users.${userVars.username} = {
     home.packages = with pkgs; [
       prettier
@@ -26,7 +27,7 @@
       ];
 
       # Declare and inject extra system packages directly into the environment where the Zed editor runs
-      extraPackages = [];
+      extraPackages = [ ];
 
       enableMcpIntegration = false; # Whether to integrate the MCP server config from programs.mcp.servers into programs.zed-editor.userSettings.context_servers. Note: Settings defined in programs.zed-editor.userSettings.context_servers will take precedence over the generated MCP configuration.
 
@@ -162,8 +163,8 @@
         };
         agent = {
           dock = "right";
-          favorite_models = [];
-          model_parameters = [];
+          favorite_models = [ ];
+          model_parameters = [ ];
         };
 
         # Language Specific Configurations
@@ -176,7 +177,7 @@
             format_on_save = "on";
             formatter = {
               external = {
-                command = "alejandra";
+                command = "nixfmt";
               };
             };
           };

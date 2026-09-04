@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   services = {
     greetd = {
       enable = true;
@@ -26,11 +26,11 @@
   };
 
   security.pam.services.greetd.enableGnomeKeyring = true;
-  security.pam.services.swaylock = {};
+  security.pam.services.swaylock = { };
 
   users.users.greeter = {
     home = pkgs.lib.mkDefault "/var/lib/greetd";
-    extraGroups = ["video"];
+    extraGroups = [ "video" ];
   };
 
   systemd.tmpfiles.rules = [

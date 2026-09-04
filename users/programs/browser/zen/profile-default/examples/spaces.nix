@@ -7,7 +7,8 @@
 # If spacesForce = true, the old space is deleted.
 let
   containers = import ./containers.nix;
-in {
+in
+{
   Example = {
     id = "5e76f9c8-00c0-4443-a6ae-d239879bb1d5";
     icon = "📚";

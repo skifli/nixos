@@ -3,25 +3,24 @@
   lib,
   pkgs,
   ...
-} @ attrs:
+}@attrs:
 # Combine everything passed into here into one variable, attrs (includes not explicitly used variables)
 let
-  commonHostVars = import ./variables.nix {inherit pkgs;};
-  hostVarsRaw =
-    import ../${hostname}/variables.nix {inherit pkgs;}
-    // {
-      inherit hostname;
-    }; # Merges hostname with the other config, to more seamlessly combine
+  commonHostVars = import ./variables.nix { inherit pkgs; };
+  hostVarsRaw = import ../${hostname}/variables.nix { inherit pkgs; } // {
+    inherit hostname;
+  }; # Merges hostname with the other config, to more seamlessly combine
 
-  hostVars = let
-    # Focused screens first, then the rest
-    all = builtins.attrNames (hostVarsRaw.outputs or {});
-    split = lib.partition (name: hostVarsRaw.outputs.${name}.focus-at-startup or false) all;
-    orderedOutputs = split.right ++ split.wrong;
-    indexedMonitors = lib.listToAttrs (
-      lib.imap1 (i: name: lib.nameValuePair "monitor${toString i}" name) orderedOutputs
-    );
-  in
+  hostVars =
+    let
+      # Focused screens first, then the rest
+      all = builtins.attrNames (hostVarsRaw.outputs or { });
+      split = lib.partition (name: hostVarsRaw.outputs.${name}.focus-at-startup or false) all;
+      orderedOutputs = split.right ++ split.wrong;
+      indexedMonitors = lib.listToAttrs (
+        lib.imap1 (i: name: lib.nameValuePair "monitor${toString i}" name) orderedOutputs
+      );
+    in
     hostVarsRaw
     // indexedMonitors
     // {
@@ -29,44 +28,48 @@ let
     };
 
   usersVarsFile = import ../../users/variables.nix {
-    inherit commonHostVars hostVars lib pkgs;
+    inherit
+      commonHostVars
+      hostVars
+      lib
+      pkgs
+      ;
   };
 
   inherit (usersVarsFile) usersVars; # Get variables for all users enabled for this host
-in {
-  imports =
-    [
-      # Host unique files
-      ../${hostname}/hardware-configuration.nix
-      ../${hostname}/host-packages.nix
-      # Common stuff
-      ./host-packages.nix
-      ../../modules/core/agenix.nix
-      ../../users/default.nix
-    ]
-    ++ lib.flatten (
-      lib.mapAttrsToList (
-        _: userVars:
-          import ../../users/modules-for-user.nix (
-            attrs
-            // {
-              # Merge attrs and the variables that need to be explicitly imported
-              inherit
-                commonHostVars
-                hostVars
-                userVars
-                usersVars
-                ;
-            }
-          ) # Pass to the module
-      )
-      usersVars
-    ) # For each user, import the module that imports all their programs with their specific vars into a list for the user, and flatten into one big list for all users
-    ++ hostVars.enabledImports;
+in
+{
+  imports = [
+    # Host unique files
+    ../${hostname}/hardware-configuration.nix
+    ../${hostname}/host-packages.nix
+    # Common stuff
+    ./host-packages.nix
+    ../../modules/core/agenix.nix
+    ../../users/default.nix
+  ]
+  ++ lib.flatten (
+    lib.mapAttrsToList (
+      _: userVars:
+      import ../../users/modules-for-user.nix (
+        attrs
+        // {
+          # Merge attrs and the variables that need to be explicitly imported
+          inherit
+            commonHostVars
+            hostVars
+            userVars
+            usersVars
+            ;
+        }
+      ) # Pass to the module
+    ) usersVars
+  ) # For each user, import the module that imports all their programs with their specific vars into a list for the user, and flatten into one big list for all users
+  ++ hostVars.enabledImports;
 
   config = lib.mkMerge [
     {
-      _module.args = {inherit commonHostVars hostVars usersVars;}; # Pass these to future imported modules automagically
+      _module.args = { inherit commonHostVars hostVars usersVars; }; # Pass these to future imported modules automagically
       environment.shellAliases = commonHostVars.shellAliases;
 
       environment.sessionVariables =
@@ -118,7 +121,7 @@ in {
     (lib.mkIf hostVars.optimiseForHdd {
       boot = {
         kernelParams = [
-          "scsi_mod.use_blk_mq=1" #
+          "scsi_mod.use_blk_mq=1"
           "systemd.swap=0" # Do NOT mount swap partitions automatically detected on HDDs. ZRAM should still work though.
         ];
         kernel.sysctl = {

@@ -1,6 +1,8 @@
-attrs: let
+attrs:
+let
   settings = import ./settings.nix attrs;
-in {
+in
+{
   enable = true;
 
   systemd.variables = [

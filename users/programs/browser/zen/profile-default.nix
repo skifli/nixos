@@ -3,10 +3,11 @@
   inputs,
   pkgs,
   ...
-}: let
-  settings = import ./profile-default/settings.nix {inherit hostVars;};
+}:
+let
+  settings = import ./profile-default/settings.nix { inherit hostVars; };
   bookmarks = import ./profile-default/bookmarks.nix;
-  search = import ./profile-default/search.nix {inherit pkgs;};
+  search = import ./profile-default/search.nix { inherit pkgs; };
   containers = import ./profile-default/hidden/containers.nix;
   pins = import ./profile-default/hidden/pins.nix;
   liveFolders = import ./profile-default/hidden/live-folders.nix;
@@ -17,11 +18,12 @@
   mods = import ./profile-default/mods.nix;
 
   keyboardShortcutsSpec = import ./profile-default/keyboard-shortcuts.nix;
-  extraConfig = import ./profile-default/extra-config.nix {inherit inputs;};
+  extraConfig = import ./profile-default/extra-config.nix { inherit inputs; };
 
   profileId = 0;
   profileName = "default";
-in {
+in
+{
   id = profileId;
   name = profileName;
   isDefault = true;

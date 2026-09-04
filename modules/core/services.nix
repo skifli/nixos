@@ -2,7 +2,8 @@
   lib,
   pkgs,
   ...
-}: {
+}:
+{
   # Services to start
   services = {
     fstrim.enable = true; # Auto SSD trimming of no longer used blocks
@@ -30,13 +31,13 @@
     };
 
     /*
-       CAN CAUSE A BUNCH O' PROBLEMS
-    # Userspace CPU Scheduler for Improved Latency for Gaming (Hardware Specific)
-    scx = {
-      enable = true;
-      package = pkgs.scx.rustscheds;
-      scheduler = "scx_bpfland"; # https://github.com/sched-ext/scx/blob/main/scheds/rust/README.md
-    };
+         CAN CAUSE A BUNCH O' PROBLEMS
+      # Userspace CPU Scheduler for Improved Latency for Gaming (Hardware Specific)
+      scx = {
+        enable = true;
+        package = pkgs.scx.rustscheds;
+        scheduler = "scx_bpfland"; # https://github.com/sched-ext/scx/blob/main/scheds/rust/README.md
+      };
     */
   };
 
@@ -44,8 +45,8 @@
   # Run as root (it updates system hosts) but never hard-fail the system.
   systemd.services.hblock-update = {
     description = "Update hblock hosts blocklist";
-    after = ["network-online.target"];
-    wants = ["network-online.target"];
+    after = [ "network-online.target" ];
+    wants = [ "network-online.target" ];
     serviceConfig = {
       Type = "oneshot";
     };
@@ -58,7 +59,7 @@
   };
 
   systemd.timers.hblock-update = {
-    wantedBy = ["timers.target"];
+    wantedBy = [ "timers.target" ];
     timerConfig = {
       OnCalendar = "weekly";
       Persistent = true;

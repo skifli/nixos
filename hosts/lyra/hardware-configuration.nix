@@ -6,7 +6,8 @@
   lib,
   modulesPath,
   ...
-}: {
+}:
+{
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
@@ -22,7 +23,7 @@
       "sd_mod"
     ];
 
-    initrd.kernelModules = [];
+    initrd.kernelModules = [ ];
 
     kernelModules = [
       "kvm-intel"
@@ -30,7 +31,7 @@
       "snd-aloop"
     ];
 
-    extraModulePackages = [config.boot.kernelPackages.v4l2loopback];
+    extraModulePackages = [ config.boot.kernelPackages.v4l2loopback ];
   };
 
   # noatime is access time NOT change time (ctime) or modification time (mtime)
@@ -38,39 +39,57 @@
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/8017dc36-9408-4a47-9de5-6d048cd080e2";
     fsType = "btrfs";
-    options = ["subvol=@root" "compress=zstd:1" "noatime"];
+    options = [
+      "subvol=@root"
+      "compress=zstd:1"
+      "noatime"
+    ];
   };
 
   fileSystems."/home" = {
     device = "/dev/disk/by-uuid/8017dc36-9408-4a47-9de5-6d048cd080e2";
     fsType = "btrfs";
-    options = ["subvol=@home" "compress=zstd:1" "noatime"];
+    options = [
+      "subvol=@home"
+      "compress=zstd:1"
+      "noatime"
+    ];
   };
 
   fileSystems."/nix" = {
     device = "/dev/disk/by-uuid/8017dc36-9408-4a47-9de5-6d048cd080e2";
     fsType = "btrfs";
-    options = ["subvol=@nix" "compress=zstd:1" "noatime"];
+    options = [
+      "subvol=@nix"
+      "compress=zstd:1"
+      "noatime"
+    ];
   };
 
   fileSystems."/boot" = {
     device = "/dev/disk/by-uuid/EED6-CA1F";
     fsType = "vfat";
-    options = ["fmask=0022" "dmask=0022"];
+    options = [
+      "fmask=0022"
+      "dmask=0022"
+    ];
   };
 
   fileSystems."/mnt/Storage" = {
     device = "/dev/disk/by-label/Storage";
     fsType = "ext4";
-    options = ["nofail" "noatime"];
+    options = [
+      "nofail"
+      "noatime"
+    ];
   };
 
   /*
-  swapDevices = [
-    {device = "/dev/disk/by-uuid/be10efe9-8020-45f9-aa1c-3fdbe59a56e0";}
-  ];
+    swapDevices = [
+      {device = "/dev/disk/by-uuid/be10efe9-8020-45f9-aa1c-3fdbe59a56e0";}
+    ];
   */
-  swapDevices = lib.mkForce []; # This system has a HDD WHY did I have a swap device lol
+  swapDevices = lib.mkForce [ ]; # This system has a HDD WHY did I have a swap device lol
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's

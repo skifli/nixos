@@ -10,7 +10,8 @@
 # entries on restore.
 let
   spaces = import ./spaces.nix;
-in {
+in
+{
   "My Pull Requests" = {
     id = "zen-live-folder-github-pull-requests";
     kind = "github:pull-requests";

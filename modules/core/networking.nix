@@ -3,77 +3,85 @@
   hostVars,
   lib,
   ...
-}: let
+}:
+let
   wifiSecretKey = "${hostVars.hostname}-wifi.env";
   hasWifiSecret = builtins.hasAttr wifiSecretKey config.age.secrets;
   wifiCount = hostVars.declarativeWifi or 0;
 
-  mkPsk = i: let
-    idx = toString i;
-  in {
-    name = "wifi-${idx}-psk";
-    value = {
-      connection = {
-        id = "$WIFI_${idx}_SSID";
-        type = "wifi";
-        autoconnect = true;
-      };
-      wifi = {
-        mode = "infrastructure";
-        ssid = "$WIFI_${idx}_SSID";
-      };
-      wifi-security = {
-        auth-alg = "open";
-        key-mgmt = "wpa-psk";
-        pmf = 2;
-        psk = "$WIFI_${idx}_PASS";
-      };
-      ipv4.method = "auto";
-      ipv6 = {
-        addr-gen-mode = "default";
-        method = "auto";
-      };
-    };
-  };
-
-  mkEap = i: let
-    idx = toString i;
-  in {
-    name = "wifi-${idx}-eap";
-    value = {
-      connection = {
-        id = "$WIFI_${idx}_SSID-Enterprise";
-        type = "wifi";
-        autoconnect = true;
-      };
-      wifi = {
-        mode = "infrastructure";
-        ssid = "$WIFI_${idx}_SSID";
-      };
-      wifi-security = {
-        key-mgmt = "wpa-eap";
-        auth-alg = "open";
-      };
-      "802-1x" = {
-        eap = "peap;";
-        identity = "$WIFI_${idx}_USER";
-        password = "$WIFI_${idx}_PASS";
-        phase2-auth = "mschapv2";
-      };
-      ipv4.method = "auto";
-      ipv6 = {
-        addr-gen-mode = "default";
-        method = "auto";
+  mkPsk =
+    i:
+    let
+      idx = toString i;
+    in
+    {
+      name = "wifi-${idx}-psk";
+      value = {
+        connection = {
+          id = "$WIFI_${idx}_SSID";
+          type = "wifi";
+          autoconnect = true;
+        };
+        wifi = {
+          mode = "infrastructure";
+          ssid = "$WIFI_${idx}_SSID";
+        };
+        wifi-security = {
+          auth-alg = "open";
+          key-mgmt = "wpa-psk";
+          pmf = 2;
+          psk = "$WIFI_${idx}_PASS";
+        };
+        ipv4.method = "auto";
+        ipv6 = {
+          addr-gen-mode = "default";
+          method = "auto";
+        };
       };
     };
-  };
 
-  indices =
-    if wifiCount > 0
-    then lib.range 1 wifiCount
-    else [];
+  mkEap =
+    i:
+    let
+      idx = toString i;
+    in
+    {
+      name = "wifi-${idx}-eap";
+      value = {
+        connection = {
+          id = "$WIFI_${idx}_SSID-Enterprise";
+          type = "wifi";
+          autoconnect = true;
+        };
+        wifi = {
+          mode = "infrastructure";
+          ssid = "$WIFI_${idx}_SSID";
+        };
+        wifi-security = {
+          key-mgmt = "wpa-eap";
+          auth-alg = "open";
+          pmf = 2;
+        };
+        "802-1x" = {
+          eap = "peap;";
+          identity = "$WIFI_${idx}_USER";
+          password = "$WIFI_${idx}_PASS";
+          phase2-auth = "mschapv2";
+          system-ca-certs = true;
+          domain-suffix-match = "$WIFI_${idx}_DOMAIN";
+        };
+        ipv4.method = "auto";
+        ipv6 = {
+          addr-gen-mode = "default";
+          method = "auto";
+        };
+      };
+    };
+
+  indices = if wifiCount > 0 then lib.range 1 wifiCount else [ ];
   allProfiles = (map mkPsk indices) ++ (map mkEap indices);
-in {
+in
+{
   networking = {
     hostName = hostVars.hostname;
 

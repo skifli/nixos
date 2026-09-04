@@ -4,9 +4,11 @@
   pkgsUnstable,
   userVars,
   ...
-} @ attrs: let
+}@attrs:
+let
   default = import ./niri/default.nix attrs;
-in {
+in
+{
   imports = [
     inputs.niri-nix.nixosModules.default
   ];
@@ -30,8 +32,8 @@ in {
       systemd.user.services.niriusd = {
         Unit = {
           Description = "nirius daemon";
-          PartOf = ["graphical-session.target"];
-          After = ["graphical-session.target"];
+          PartOf = [ "graphical-session.target" ];
+          After = [ "graphical-session.target" ];
         };
         Service = {
           Type = "simple";
@@ -39,21 +41,21 @@ in {
           Restart = "on-failure";
           RestartSec = "2s";
         };
-        Install.WantedBy = ["graphical-session.target"];
+        Install.WantedBy = [ "graphical-session.target" ];
       };
     };
   };
 
   /*
-  # Used to be in home above only, here as well just in case.
-  # Edit: removed because actually uwsm should handle these
-  # and otherwise these are set e.g., even when in a TTY which
-  # is not what we want.
+    # Used to be in home above only, here as well just in case.
+    # Edit: removed because actually uwsm should handle these
+    # and otherwise these are set e.g., even when in a TTY which
+    # is not what we want.
 
-  environment.sessionVariables = {
-    XDG_CURRENT_DESKTOP = "niri";
-    XDG_SESSION_DESKTOP = "niri";
-  };
+    environment.sessionVariables = {
+      XDG_CURRENT_DESKTOP = "niri";
+      XDG_SESSION_DESKTOP = "niri";
+    };
   */
 
   # NixOS-level configuration
@@ -95,5 +97,5 @@ in {
     };
   };
 
-  xdg.portal.configPackages = [pkgs.niri];
+  xdg.portal.configPackages = [ pkgs.niri ];
 }

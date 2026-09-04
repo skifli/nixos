@@ -4,9 +4,11 @@
   pkgs,
   userVars,
   ...
-}: let
+}:
+let
   wshowkeysPkg = inputs.wshowkeys.packages.${pkgs.stdenv.hostPlatform.system}.default;
-in {
+in
+{
   # Enable setuid wrapper for wshowkeys (required to read /dev/input events)
   programs.wshowkeys = {
     enable = true;

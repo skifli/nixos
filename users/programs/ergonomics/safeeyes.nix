@@ -2,23 +2,20 @@
   pkgs,
   userVars,
   ...
-}: {
+}:
+{
   home-manager.users.${userVars.username} = {
     home.packages = with pkgs; [
       (safeeyes.overridePythonAttrs (oldAttrs: {
         # The following are for some reason defined in the https://github.com file as optional-dependencies but not actual dependencies, no idea why as optional-dependencies is not as far as I am aware reference further (at least in that file), but anyway. Maybe I don't understand how optional-dependencies should work
-        dependencies =
-          (oldAttrs.dependencies or [])
-          ++ [
-            python3Packages.croniter # Needed for Health Statistics
-            python3Packages.pywayland # Needed for Smart Pause
-          ];
-        propagatedBuildInputs =
-          (oldAttrs.propagatedBuildInputs or [])
-          ++ [
-            pkgs.python3Packages.croniter
-            pkgs.python3Packages.pywayland
-          ]; # Depending on the nixpkgs channel version overriding by just dependencies may not propagate so do both
+        dependencies = (oldAttrs.dependencies or [ ]) ++ [
+          python3Packages.croniter # Needed for Health Statistics
+          python3Packages.pywayland # Needed for Smart Pause
+        ];
+        propagatedBuildInputs = (oldAttrs.propagatedBuildInputs or [ ]) ++ [
+          pkgs.python3Packages.croniter
+          pkgs.python3Packages.pywayland
+        ]; # Depending on the nixpkgs channel version overriding by just dependencies may not propagate so do both
       }))
     ];
 

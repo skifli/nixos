@@ -4,7 +4,8 @@
   pkgs,
   userVars,
   ...
-}: let
+}:
+let
   rdpLayoutMap = {
     "gb" = "0x00000809";
     "uk" = "0x00000809";
@@ -14,7 +15,8 @@
   };
 
   kbdCode = rdpLayoutMap.${hostVars.keyboardLayout} or "0x00000809";
-in {
+in
+{
   home-manager.users.${userVars.username} = {
     home.packages = with pkgs; [
       freerdp

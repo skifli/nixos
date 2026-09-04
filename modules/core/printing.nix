@@ -3,20 +3,22 @@
   lib,
   pkgs,
   ...
-}: {
+}:
+{
   services = {
     # Whether to enable ipp-usb, a daemon to turn an USB printer/scanner supporting IPP everywhere (aka AirPrint, WSD, AirScan) into a locally accessible network printer/scanner.
     ipp-usb.enable = true;
 
     printing = {
       enable = true;
-      drivers = with pkgs;
+      drivers =
+        with pkgs;
         [
           splix
           gutenprint
           cups-filters
         ]
-        ++ (hostVars.printerDrivers or []);
+        ++ (hostVars.printerDrivers or [ ]);
     };
 
     avahi = {
@@ -29,10 +31,10 @@
   # Enable SANE scanner support + driverless AirScan/WSD backend
   hardware.sane = {
     enable = true;
-    extraBackends = [pkgs.sane-airscan];
+    extraBackends = [ pkgs.sane-airscan ];
   };
 
-  hardware.printers = lib.mkIf ((hostVars.printers or []) != []) {
+  hardware.printers = lib.mkIf ((hostVars.printers or [ ]) != [ ]) {
     ensurePrinters = hostVars.printers;
     ensureDefaultPrinter = (builtins.head hostVars.printers).name; # Default printer defaults to first printer
   };
@@ -48,6 +50,9 @@
   ];
 
   users.users = lib.genAttrs hostVars.enabledUsers (_username: {
-    extraGroups = ["lp" "scanner"];
+    extraGroups = [
+      "lp"
+      "scanner"
+    ];
   });
 }

@@ -16,16 +16,16 @@ lib.mkIf (hostVars.hostname != "fydetabduo") {
       autoInstallDependencies = true;
 
       /*
-      # NOT NEEDED ANYMORE AS AWWW IS DONE SEPARATELY FOR NIRI WORKSPACE BLUR
-      # Safely wraps wayle to include awww in its PATH before systemd runs it
-      package = pkgs.symlinkJoin {
-        name = "wayle-wrapped";
-        paths = [pkgs.wayle];
-        nativeBuildInputs = [pkgs.makeWrapper];
-        postBuild = ''
-          wrapProgram $out/bin/wayle --prefix PATH : ${pkgs.lib.makeBinPath [pkgs.awww]}
-        '';
-      };
+        # NOT NEEDED ANYMORE AS AWWW IS DONE SEPARATELY FOR NIRI WORKSPACE BLUR
+        # Safely wraps wayle to include awww in its PATH before systemd runs it
+        package = pkgs.symlinkJoin {
+          name = "wayle-wrapped";
+          paths = [pkgs.wayle];
+          nativeBuildInputs = [pkgs.makeWrapper];
+          postBuild = ''
+            wrapProgram $out/bin/wayle --prefix PATH : ${pkgs.lib.makeBinPath [pkgs.awww]}
+          '';
+        };
       */
 
       # Needs wallpaper.engine-enabled = true; to work
@@ -70,10 +70,10 @@ lib.mkIf (hostVars.hostname != "fydetabduo") {
               show = true;
             }
             {
-              center = [];
-              left = [];
+              center = [ ];
+              left = [ ];
               monitor = "*";
-              right = [];
+              right = [ ];
               show = false;
             }
           ];
@@ -359,13 +359,11 @@ lib.mkIf (hostVars.hostname != "fydetabduo") {
           engine-enabled = false;
           # Disabled because awww manages the main and overview wallpapers
 
-          monitors =
-            pkgs.lib.mapAttrsToList (monitorName: _: {
-              fit-mode = "fill";
-              name = monitorName;
-              wallpaper = "/home/${userVars.username}/.local/share/wallpaper";
-            })
-            hostVars.outputs;
+          monitors = pkgs.lib.mapAttrsToList (monitorName: _: {
+            fit-mode = "fill";
+            name = monitorName;
+            wallpaper = "/home/${userVars.username}/.local/share/wallpaper";
+          }) hostVars.outputs;
           transition-type = "none";
         };
       };

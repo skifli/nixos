@@ -2,7 +2,8 @@
   lib,
   pkgs,
   ...
-}: {
+}:
+{
   boot = {
     # Allow cross-compilation (only on x86_64 emulating aarch64)
     binfmt.emulatedSystems = lib.optionals (pkgs.stdenv.hostPlatform.system == "x86_64-linux") [
@@ -57,7 +58,7 @@
 
         style = {
           backdrop = "#202626"; # Matches the wallpaper
-          wallpapers = [pkgs.nixos-artwork.wallpapers.gear.gnomeFilePath];
+          wallpapers = [ pkgs.nixos-artwork.wallpapers.gear.gnomeFilePath ];
           wallpaperStyle = "centered";
         };
       };

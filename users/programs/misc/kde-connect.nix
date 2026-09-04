@@ -2,7 +2,8 @@
   pkgs,
   userVars,
   ...
-}: {
+}:
+{
   home-manager.users.${userVars.username} = {
     services.kdeconnect = {
       enable = true;
@@ -15,8 +16,8 @@
         Description = "Refresh KDE Connect devices";
 
         # So this only runs AFTER the main service is running
-        After = ["kdeconnect.service"];
-        Requires = ["kdeconnect.service"];
+        After = [ "kdeconnect.service" ];
+        Requires = [ "kdeconnect.service" ];
       };
       Service = {
         Type = "oneshot";
@@ -32,7 +33,7 @@
         AccuracySec = "10s";
       };
       Install = {
-        WantedBy = ["default.target"];
+        WantedBy = [ "default.target" ];
       };
     };
   };

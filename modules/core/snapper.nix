@@ -1,4 +1,4 @@
-{hostVars, ...}: {
+{ hostVars, ... }: {
   services.snapper = {
     persistentTimer = true;
 

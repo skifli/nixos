@@ -3,7 +3,8 @@
   pkgs,
   userVars,
   ...
-}: {
+}:
+{
   # Set Wayland-friendly environment variables
   environment.sessionVariables = {
     # ELECTRON_OZONE_PLATFORM_HINT = "auto"; - Caused issues for me - https://github.com/tom-james-watson/breaktimer-app/issues/406
@@ -41,12 +42,13 @@
     ];
 
     /*
-    error: The option `xdg.portal.config.niri."org.freedesktop.impl.portal.Secret"' has conflicting definition values:
-       - In `/nix/store/kwvm7rkxjxkyvcyky1jsmlihwydb637w-source/hosts/common/default.nix': "kwallet"
-       - In `/nix/store/7blcfay1hap81n2bc9j4d8b1cxrvng50-source/nixos/modules/programs/wayland/niri.nix': "gnome-keyring"
-       Use `lib.mkForce value` or `lib.mkDefault value` to change the priority on any of these definitions.
+      error: The option `xdg.portal.config.niri."org.freedesktop.impl.portal.Secret"' has conflicting definition values:
+         - In `/nix/store/kwvm7rkxjxkyvcyky1jsmlihwydb637w-source/hosts/common/default.nix': "kwallet"
+         - In `/nix/store/7blcfay1hap81n2bc9j4d8b1cxrvng50-source/nixos/modules/programs/wayland/niri.nix': "gnome-keyring"
+         Use `lib.mkForce value` or `lib.mkDefault value` to change the priority on any of these definitions.
     */
-    config.${userVars.programs.compositor}."org.freedesktop.impl.portal.Secret" = pkgs.lib.mkForce "kwallet";
+    config.${userVars.programs.compositor}."org.freedesktop.impl.portal.Secret" =
+      pkgs.lib.mkForce "kwallet";
   };
 
   security.pam.services = {
@@ -64,9 +66,9 @@
 
   systemd.user.services.pam-kwallet-init = {
     description = "Unlock kwallet from pam credentials";
-    wantedBy = ["graphical-session.target"];
-    wants = ["graphical-session.target"];
-    after = ["graphical-session.target"];
+    wantedBy = [ "graphical-session.target" ];
+    wants = [ "graphical-session.target" ];
+    after = [ "graphical-session.target" ];
     serviceConfig = {
       Type = "simple";
       ExecStart = "${pkgs.kdePackages.kwallet-pam}/libexec/pam_kwallet_init";
@@ -78,9 +80,9 @@
   # Start the agent as a graphical user service
   systemd.user.services.polkit-kde-agent-1 = {
     description = "polkit-kde-agent-1";
-    wantedBy = ["graphical-session.target"];
-    wants = ["graphical-session.target"];
-    after = ["graphical-session.target"];
+    wantedBy = [ "graphical-session.target" ];
+    wants = [ "graphical-session.target" ];
+    after = [ "graphical-session.target" ];
     serviceConfig = {
       Type = "simple";
       ExecStart = "${pkgs.kdePackages.polkit-kde-agent-1}/libexec/polkit-kde-authentication-agent-1";

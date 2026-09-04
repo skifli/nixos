@@ -5,15 +5,26 @@ TODO_FILE="$HOME/Documents/custom-scripts/todo.json"
 FONT="${FONT_MONOSPACE:-JetBrainsMono Nerd Font}"
 FONT_SIZE="${FONT_SIZE_APPLICATIONS:-11}"
 
-mkdir -p "$(dirname "$TODO_FILE")"
-[ -f "$TODO_FILE" ] || echo "[]" > "$TODO_FILE"
+# Only run mkdir if the path doesn't exist as a directory AND isn't a symlink
+TARGET_DIR="$(dirname "$TODO_FILE")"
+
+if [ ! -d "$TARGET_DIR" ] && [ ! -L "$TARGET_DIR" ]; then
+    mkdir -p "$TARGET_DIR"
+fi
+
+# Only try to init the file if the directory/link is actually accessible
+if [ -d "$TARGET_DIR" ]; then
+    [ -f "$TODO_FILE" ] || echo "[]" > "$TODO_FILE"
+else
+    notify-send -e -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" -u critical -t 0 "Reminders error" "Storage dir is currently unreachable"
+fi
 
 fuzzel_prompt() {
     local prompt="$1"
     local text_data="${2:-}"
     local min_lines="${3:-0}"
     local initial_search="${4:-}"
-    
+
     local num_lines=0
     local prompt_len=${#prompt}
     local calculated_width=35
@@ -31,7 +42,7 @@ fuzzel_prompt() {
         # Find longest line length
         local longest
         longest=$(echo "$text_data" | wc -L 2>/dev/null || echo "$text_data" | awk '{ if (length > max) { max = length } } END { print max }')
-        
+
         if [ -n "$longest" ] && [ "$longest" -gt 0 ]; then
             calculated_width=$((longest + prompt_len + 4))
         fi
@@ -91,7 +102,7 @@ if [ "${1:-}" = "--check" ]; then
         TMP=$(mktemp)
         jq --arg id "$id" 'map(if .id == $id then .notified = true else . end)' "$TODO_FILE" > "$TMP" && mv "$TMP" "$TODO_FILE"
     done
-    
+
     exit 0
 fi
 

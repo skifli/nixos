@@ -2,7 +2,8 @@
   pkgs,
   userVars,
   ...
-}: let
+}:
+let
   waynavPkg =
     pkgs.waynav or (pkgs.stdenv.mkDerivation (finalAttrs: {
       pname = "waynav";
@@ -37,7 +38,8 @@
         mainProgram = "waynav";
       };
     }));
-in {
+in
+{
   home-manager.users.${userVars.username} = {
     home.packages = [
       waynavPkg

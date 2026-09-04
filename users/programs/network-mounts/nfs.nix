@@ -2,37 +2,40 @@
   pkgs,
   userVars,
   ...
-}: let
-  nfsShares = userVars.networkMounts.nfsShares or [];
+}:
+let
+  nfsShares = userVars.networkMounts.nfsShares or [ ];
 
-  mkNfsMount = share: let
-    sanitizedServer = builtins.replaceStrings [" "] [""] share.server;
+  mkNfsMount =
+    share:
+    let
+      sanitizedServer = builtins.replaceStrings [ " " ] [ "" ] share.server;
 
-    # Escape spaces in the remote path for compatibility (\040)
-    escapedPath = builtins.replaceStrings [" "] ["\\040"] share.remotePath;
-  in {
-    device = "${sanitizedServer}:${escapedPath}";
-    fsType = "nfs";
-    options =
-      [
+      # Escape spaces in the remote path for compatibility (\040)
+      escapedPath = builtins.replaceStrings [ " " ] [ "\\040" ] share.remotePath;
+    in
+    {
+      device = "${sanitizedServer}:${escapedPath}";
+      fsType = "nfs";
+      options = [
         "_netdev"
         "nofail"
         "auto"
         "x-systemd.after=tailscale-online.target"
-        "x-systemd.requires=tailscale-online.target"
+        "x-systemd.wants=tailscale-online.target"
         "x-systemd.idle-timeout=600"
         "x-systemd.mount-timeout=30s"
         "x-systemd.device-timeout=30s"
       ]
-      ++ (share.options or []);
-  };
-in {
+      ++ (share.options or [ ]);
+    };
+in
+{
   fileSystems = builtins.listToAttrs (
     map (share: {
       name = share.mountPoint;
       value = mkNfsMount share;
-    })
-    nfsShares
+    }) nfsShares
   );
 
   boot.supportedFilesystems = [
@@ -41,14 +44,19 @@ in {
   ];
 
   services.rpcbind.enable = true; # Needed for NFS
-  environment.systemPackages = with pkgs; [nfs-utils];
+  environment.systemPackages = with pkgs; [ nfs-utils ];
 
   # Force lazy unmounting of all NFS mounts early during shutdown
   systemd.services.nfs-shutdown-umount = {
     description = "Force unmount NFS filesystems before network shutdown";
-    wantedBy = ["multi-user.target"];
-    before = ["network.target" "network-online.target" "shutdown.target" "tailscale-online.target"];
-    conflicts = ["shutdown.target"];
+    wantedBy = [ "multi-user.target" ];
+    before = [
+      "network.target"
+      "network-online.target"
+      "shutdown.target"
+      "tailscale-online.target"
+    ];
+    conflicts = [ "shutdown.target" ];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;

@@ -4,20 +4,25 @@
   pkgs,
   userVars,
   ...
-}: let
-  blockers = userVars.historyBlockers or {};
+}:
+let
+  blockers = userVars.historyBlockers or { };
 
   # Exact matches: "ls", "cd .."
-  exactPatterns = blockers.exact or [];
+  exactPatterns = blockers.exact or [ ];
 
   # Prefix matches: "copyl", "copyl *"
-  prefixPatterns = lib.concatMap (p: [p "${p} *"]) (blockers.prefixes or []);
+  prefixPatterns = lib.concatMap (p: [
+    p
+    "${p} *"
+  ]) (blockers.prefixes or [ ]);
 
   # Sensitive exports: "export *TOKEN*"
-  sensitivePatterns = map (s: "export *${s}*") (blockers.sensitiveKeywords or []);
+  sensitivePatterns = map (s: "export *${s}*") (blockers.sensitiveKeywords or [ ]);
 
   generatedIgnorePatterns = exactPatterns ++ prefixPatterns ++ sensitivePatterns;
-in {
+in
+{
   home-manager.users.${userVars.username} = {
     home = {
       packages = with pkgs; [
@@ -35,7 +40,7 @@ in {
       ];
     };
 
-    xdg.terminal-exec.settings.default = ["${userVars.programs.terminal}.desktop"];
+    xdg.terminal-exec.settings.default = [ "${userVars.programs.terminal}.desktop" ];
 
     programs = {
       pay-respects = {
@@ -134,26 +139,25 @@ in {
 
         oh-my-zsh = {
           enable = true;
-          plugins =
-            [
-              "colored-man-pages"
-              "colorize"
-              "copyfile"
-              "copypath"
-              "dirhistory"
-              "dotenv"
-              "extract"
-              "git"
-              "safe-paste"
-              "sudo"
-            ]
-            ++ lib.optional (userVars.programs.prompt == "starship") "starship";
+          plugins = [
+            "colored-man-pages"
+            "colorize"
+            "copyfile"
+            "copypath"
+            "dirhistory"
+            "dotenv"
+            "extract"
+            "git"
+            "safe-paste"
+            "sudo"
+          ]
+          ++ lib.optional (userVars.programs.prompt == "starship") "starship";
         };
       };
     };
   };
 
-  environment.pathsToLink = ["/share/zsh"];
+  environment.pathsToLink = [ "/share/zsh" ];
 
   users.users.${userVars.username}.shell = pkgs.zsh;
 }

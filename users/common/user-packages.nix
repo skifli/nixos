@@ -2,7 +2,8 @@
   pkgs,
   userVars,
   ...
-}: {
+}:
+{
   home-manager.users.${userVars.username} = {
     home.packages = with pkgs; [
       anytype
@@ -13,14 +14,14 @@
       evince # Document viewer
 
       /*
-         Not needed anymore?
-      (pkgs.ferdium.overrideAttrs (oldAttrs: {
-        postFixup = (oldAttrs.postFixup or "") + ''
-          wrapProgram $out/bin/ferdium \
-            --add-flags "--ozone-platform=wayland" \
-            --add-flags "--enable-features=WaylandWindowDecorations,UseOzonePlatform,WebRTCPipeWireCapturer"
-        '';
-      }))
+           Not needed anymore?
+        (pkgs.ferdium.overrideAttrs (oldAttrs: {
+          postFixup = (oldAttrs.postFixup or "") + ''
+            wrapProgram $out/bin/ferdium \
+              --add-flags "--ozone-platform=wayland" \
+              --add-flags "--enable-features=WaylandWindowDecorations,UseOzonePlatform,WebRTCPipeWireCapturer"
+          '';
+        }))
       */
       ferdium
 

@@ -1,4 +1,4 @@
-{...}: {
+{ ... }: {
   imports = [
     ./graphics/intel.nix
   ];

@@ -2,22 +2,24 @@
   lib,
   userVars,
   ...
-}: let
-  blockers = userVars.historyBlockers or {};
+}:
+let
+  blockers = userVars.historyBlockers or { };
 
-  escapeRegex = str: lib.replaceStrings ["."] ["\\."] str;
+  escapeRegex = str: lib.replaceStrings [ "." ] [ "\\." ] str;
 
   # Exact matches: "^ls$", "^cd \\.\\.$"
-  exactFilters = map (cmd: "^${escapeRegex cmd}$") (blockers.exact or []);
+  exactFilters = map (cmd: "^${escapeRegex cmd}$") (blockers.exact or [ ]);
 
   # Prefix matches: "^copyl.*", "^secret-tool.*"
-  prefixFilters = map (p: "^${escapeRegex p}.*") (blockers.prefixes or []);
+  prefixFilters = map (p: "^${escapeRegex p}.*") (blockers.prefixes or [ ]);
 
   # Sensitive exports: "^export .*TOKEN.*"
-  sensitiveFilters = map (s: "^export .*${s}.*") (blockers.sensitiveKeywords or []);
+  sensitiveFilters = map (s: "^export .*${s}.*") (blockers.sensitiveKeywords or [ ]);
 
   generatedHistoryFilter = exactFilters ++ prefixFilters ++ sensitiveFilters;
-in {
+in
+{
   home-manager = {
     users.${userVars.username} = {
       # First run run atuin import auto
@@ -32,7 +34,7 @@ in {
         forceOverwriteSettings = true;
 
         # Keep Up-Arrow for Zsh historySubstringSearch, use Ctrl+R for Atuin
-        flags = ["--disable-up-arrow"];
+        flags = [ "--disable-up-arrow" ];
 
         settings = {
           auto_sync = false; # No cloud sync

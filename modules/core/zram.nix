@@ -1,4 +1,4 @@
-_: {
+{ pkgs, ... }: {
   zramSwap = {
     enable = true;
     memoryPercent = 125;
@@ -10,6 +10,34 @@ _: {
     # zstd is both good compression and fast, but requires newer kernel.
     # You can check what other algorithms are supported by your zram device with cat /sys/class/block/zram*/comp_algorithm
     algorithm = "zstd";
+  };
+
+  # Drain swap early during shutdown so zram deactivation doesn't hang.
+  # With swappiness=180, zram holds a lot of compressed pages that can take
+  # minutes to decompress if swapoff runs late in the shutdown list of stuff todo.
+  systemd.services.early-swapoff = {
+    description = "Disable all swap before services stop";
+    wantedBy = [
+      "shutdown.target"
+      "reboot.target"
+      "halt.target"
+      "kexec.target"
+    ];
+    before = [
+      "shutdown.target"
+      "reboot.target"
+      "halt.target"
+      "kexec.target"
+    ];
+    unitConfig = {
+      DefaultDependencies = false;
+      Conflicts = "shutdown.target";
+    };
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.util-linux}/bin/swapoff -a";
+      TimeoutStartSec = "30s";
+    };
   };
 
   boot = {

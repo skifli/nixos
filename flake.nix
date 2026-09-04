@@ -56,10 +56,10 @@
     };
 
     /*
-    browseros-ai = {
-      url = "github:skifli/browseros-ai"; # Run nix store prefetch-file \
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+      browseros-ai = {
+        url = "github:skifli/browseros-ai"; # Run nix store prefetch-file \
+        inputs.nixpkgs.follows = "nixpkgs";
+      };
     */
 
     fyde-nix = {
@@ -97,10 +97,10 @@
     };
 
     /*
-    winapps = {
-      url = "github:winapps-org/winapps";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+      winapps = {
+        url = "github:winapps-org/winapps";
+        inputs.nixpkgs.follows = "nixpkgs";
+      };
     */
 
     zen-browser = {
@@ -117,17 +117,18 @@
     vicinae-extensions.url = "github:vicinaehq/extensions";
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    ...
-  } @ inputs:
-  # Captures all inputs into a variable
-  let
-    # Helper function to generate attributes for all systems in the list
-    mkHost =
-      # Pass host and system into the function
-      hostname: system:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      ...
+    }@inputs:
+    # Captures all inputs into a variable
+    let
+      # Helper function to generate attributes for all systems in the list
+      mkHost =
+        # Pass host and system into the function
+        hostname: system:
         nixpkgs.lib.nixosSystem {
           # Import required modules
           modules = [
@@ -147,61 +148,67 @@
           };
         };
 
-    # Define the hosts and their respective architecture
-    hosts = {
-      lyra = {
-        system = "x86_64-linux";
-        builder = mkHost;
-      };
-      fydetabduo = {
-        system = "aarch64-linux";
-        builder = mkHost;
-      };
-    };
-
-    systems = nixpkgs.lib.unique ((map (cfg: cfg.system) (builtins.attrValues hosts)) ++ ["aarch64-linux"]);
-    hostsForSystem = system: builtins.attrNames (nixpkgs.lib.filterAttrs (_: cfg: cfg.system == system) hosts);
-  in {
-    # Automatically generate nixosConfigurations from hosts list
-    nixosConfigurations = builtins.mapAttrs (hostname: cfg: cfg.builder hostname cfg.system) hosts;
-
-    checks = nixpkgs.lib.genAttrs systems (
-      system: let
-        pkgs = nixpkgs.legacyPackages.${system};
-      in
-        builtins.listToAttrs (
-          map (
-            hostname: {
-              name = "eval-${hostname}";
-              value = pkgs.writeText "eval-${hostname}" (
-                builtins.unsafeDiscardStringContext self.nixosConfigurations.${hostname}.config.system.build.toplevel.drvPath
-              );
-            }
-          ) (hostsForSystem system)
-        )
-    );
-
-    devShells = nixpkgs.lib.genAttrs systems (
-      system: let
-        pkgs = nixpkgs.legacyPackages.${system};
-      in {
-        default = pkgs.mkShell {
-          packages = with pkgs; [
-            pre-commit
-            alejandra
-            statix
-            deadnix
-          ];
-
-          shellHook = ''
-            if [ -d .git ]; then
-              pre-commit install --install-hooks >/dev/null 2>&1 || true
-            fi
-          '';
+      # Define the hosts and their respective architecture
+      hosts = {
+        lyra = {
+          system = "x86_64-linux";
+          builder = mkHost;
         };
-      }
-    );
+        fydetabduo = {
+          system = "aarch64-linux";
+          builder = mkHost;
+        };
+      };
 
-    formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
-  };
+      systems = nixpkgs.lib.unique (
+        (map (cfg: cfg.system) (builtins.attrValues hosts)) ++ [ "aarch64-linux" ]
+      );
+      hostsForSystem =
+        system: builtins.attrNames (nixpkgs.lib.filterAttrs (_: cfg: cfg.system == system) hosts);
+    in
+    {
+      # Automatically generate nixosConfigurations from hosts list
+      nixosConfigurations = builtins.mapAttrs (hostname: cfg: cfg.builder hostname cfg.system) hosts;
+
+      checks = nixpkgs.lib.genAttrs systems (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        builtins.listToAttrs (
+          map (hostname: {
+            name = "eval-${hostname}";
+            value = pkgs.writeText "eval-${hostname}" (
+              builtins.unsafeDiscardStringContext
+                self.nixosConfigurations.${hostname}.config.system.build.toplevel.drvPath
+            );
+          }) (hostsForSystem system)
+        )
+      );
+
+      devShells = nixpkgs.lib.genAttrs systems (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        {
+          default = pkgs.mkShell {
+            packages = with pkgs; [
+              pre-commit
+              alejandra
+              statix
+              deadnix
+            ];
+
+            shellHook = ''
+              if [ -d .git ]; then
+                pre-commit install --install-hooks >/dev/null 2>&1 || true
+              fi
+            '';
+          };
+        }
+      );
+
+      formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
+    };
 }

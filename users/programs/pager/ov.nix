@@ -2,7 +2,8 @@
   pkgs,
   userVars,
   ...
-}: {
+}:
+{
   home-manager.users.${userVars.username} = _: {
     home = {
       packages = with pkgs; [

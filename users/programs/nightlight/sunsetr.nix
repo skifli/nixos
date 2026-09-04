@@ -3,8 +3,9 @@
   pkgs,
   userVars,
   ...
-}: {
-  home-manager.users.${userVars.username} = {lib, ...}: {
+}:
+{
+  home-manager.users.${userVars.username} = { lib, ... }: {
     home.packages = with pkgs; [
       sunsetr
     ];
@@ -12,8 +13,8 @@
     systemd.user.services.sunsetr = {
       Unit = {
         Description = "Sunsetr daemon";
-        PartOf = ["graphical-session.target"];
-        After = ["graphical-session.target"];
+        PartOf = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
       };
       Service = {
         Type = "simple";
@@ -21,10 +22,10 @@
         Restart = "on-failure";
         RestartSec = "2s";
       };
-      Install.WantedBy = ["graphical-session.target"];
+      Install.WantedBy = [ "graphical-session.target" ];
     };
 
-    home.activation.setSunsetrCoordinates = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    home.activation.setSunsetrCoordinates = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         TARGET_FILE="$HOME/.config/sunsetr/sunsetr.toml"
         mkdir -p "$(dirname "$TARGET_FILE")"
 

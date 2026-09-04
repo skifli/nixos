@@ -19,18 +19,18 @@
 # https://github.com/0xc000022070/zen-browser-flake/issues/293
 #
 # Source - https://github.com/0xc000022070/zen-browser-flake/blob/main/examples/02b-settings-preferences.nix
-{hostVars, ...}: {
+{ hostVars, ... }: {
   /**
-   *************************************************************************
-  * Locale                                                                   *
-  **************************************************************************
+     *************************************************************************
+    * Locale                                                                   *
+    **************************************************************************
   */
   "intl.locale.requested" = hostVars.locale-simple; # Browser UI language
 
   /**
-   *************************************************************************
-  * Startup, onboarding, "default browser" nags                              *
-  **************************************************************************
+     *************************************************************************
+    * Startup, onboarding, "default browser" nags                              *
+    **************************************************************************
   */
   "browser.startup.page" = 3; # Restore previous session
   "browser.startup.homepage" = "";
@@ -45,9 +45,9 @@
   "browser.tabs.firefox-view" = false;
 
   /**
-   *************************************************************************
-  * New tab / Activity Stream                                                *
-  **************************************************************************
+     *************************************************************************
+    * New tab / Activity Stream                                                *
+    **************************************************************************
   */
   "browser.newtab.url" = "about:blank";
   "browser.newtabpage.activity-stream.enabled" = false;
@@ -67,9 +67,9 @@
   "browser.newtabpage.activity-stream.improvesearch.topSiteSearchShortcuts.searchEngines" = "";
 
   /**
-   *************************************************************************
-  * UI / tabs / URL bar                                                      *
-  **************************************************************************
+     *************************************************************************
+    * UI / tabs / URL bar                                                      *
+    **************************************************************************
   */
   "browser.ctrlTab.recentlyUsedOrder" = true;
   "browser.ctrlTab.previews" = true;
@@ -85,9 +85,9 @@
   "browser.urlbar.suggest.topsites" = false;
 
   /**
-   *************************************************************************
-  * Search, recommendations, discovery                                       *
-  **************************************************************************
+     *************************************************************************
+    * Search, recommendations, discovery                                       *
+    **************************************************************************
   */
   "browser.search.update" = false;
   "browser.search.suggest.enabled" = false;
@@ -98,9 +98,9 @@
   "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features" = false;
 
   /**
-   *************************************************************************
-  * Extensions                                                                *
-  **************************************************************************
+     *************************************************************************
+    * Extensions                                                                *
+    **************************************************************************
   */
   "extensions.update.enabled" = true;
   "extensions.extensions.activeThemeID" = "firefox-compact-light@mozilla.org";
@@ -135,9 +135,9 @@
   "extensions.webcompat.perform_ua_overrides" = true;
 
   /**
-   *************************************************************************
-  * Privacy & security                                                       *
-  **************************************************************************
+     *************************************************************************
+    * Privacy & security                                                       *
+    **************************************************************************
   */
   # Do not reveal enabled plugins:
   # https://mail.mozilla.org/pipermail/firefox-dev/2013-November/001186.html
@@ -183,9 +183,9 @@
   "browser.formfill.enable" = false;
 
   /**
-   *************************************************************************
-  * Telemetry, studies, crash reporting                                      *
-  **************************************************************************
+     *************************************************************************
+    * Telemetry, studies, crash reporting                                      *
+    **************************************************************************
   */
   "app.shield.optoutstudies.enabled" = false;
   "experiments.supported" = false;
@@ -222,9 +222,9 @@
   "browser.crashReports.unsubmittedCheck.autoSubmit2" = false;
 
   /**
-   *************************************************************************
-  * Permissions defaults                                                     *
-  **************************************************************************
+     *************************************************************************
+    * Permissions defaults                                                     *
+    **************************************************************************
   */
   # 0=always ask (default), 1=allow, 2=block
   "permissions.default.geo" = 0;
@@ -237,9 +237,9 @@
   "dom.webnotifications.serviceworker.enabled" = false;
 
   /**
-   *************************************************************************
-  * Performance / media                                                      *
-  **************************************************************************
+     *************************************************************************
+    * Performance / media                                                      *
+    **************************************************************************
   */
   "gfx.webrender.all" = true; # Force enable GPU acceleration
   "widget.dmabuf.force-enabled" = true; # Required in recent Firefoxes - https://github.com/niri-wm/niri/blob/59a10015610bb7d068a82ce1c386fcd8b44f6c52/docs/wiki/Application-Issues.md#zen-browser
@@ -251,9 +251,9 @@
   "network.http.http3.enabled" = true;
 
   /**
-   *************************************************************************
-  * Zen-specific UI prefs                                                    *
-  **************************************************************************
+     *************************************************************************
+    * Zen-specific UI prefs                                                    *
+    **************************************************************************
   */
   "layout.css.devPixelsPerPx" = -1;
 
@@ -309,9 +309,9 @@
   "widget.use-xdg-desktop-portal.file-picker" = 1; # Force the use of the XDG desktop portal file picker
 
   /**
-   *************************************************************************
-  * Optional ideas (commented out)                                           *
-  **************************************************************************
+     *************************************************************************
+    * Optional ideas (commented out)                                           *
+    **************************************************************************
   */
   # UI customization state is a large JSON blob; declare only if you want fully
   # reproducible toolbar layouts.

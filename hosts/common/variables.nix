@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   cursor = {
     package = pkgs.bibata-cursors;
     size = 12;
@@ -52,5 +52,5 @@
       style = "breeze";
     };
   };
-  shellAliases = {};
+  shellAliases = { };
 }
