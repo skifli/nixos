@@ -47,7 +47,7 @@ in
       };
       Service = {
         Type = "simple";
-        ExecStart = "${qwarp}/bin/qwarp";
+        ExecStart = "${qwarp}/bin/qwarp --start-minimized";
         Restart = "on-failure";
         RestartSec = "2s";
       };
