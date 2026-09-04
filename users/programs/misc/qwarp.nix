@@ -1,10 +1,11 @@
 {
   pkgs,
-  python3,
   userVars,
   ...
 }:
 let
+  python3 = pkgs.python3;
+
   qwarp = python3.pkgs.buildPythonApplication rec {
     pname = "qwarp";
     version = "0.9.4";
@@ -14,7 +15,7 @@ let
       owner = "iashutoshtiwari";
       repo = "qwarp";
       rev = "v${version}";
-      hash = "";
+      hash = "sha256-YXik9BGndmhOrJDza5Eo2kAt+yHv9jJgvkHKVsTknGg=";
     };
 
     build-system = with python3.pkgs; [
