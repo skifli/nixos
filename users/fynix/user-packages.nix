@@ -104,11 +104,11 @@ in
 
                               get_transform() {
                                 case "$1" in
-                                  *normal*)   echo normal ;;
-                                  *left-up*)  echo 90 ;;
-                                  *inverted*) echo 180 ;;
-                                  *right-up*) echo 270 ;;
-                                  *)          return 1 ;;
+                                  *normal*)    echo normal ;;
+                                  *left-up*)   echo 90 ;;
+                                  *right-up*)  echo 270 ;;
+                                  *bottom-up*) echo 180 ;;
+                                  *)           return 1 ;;
                                 esac
                               }
 
@@ -119,10 +119,10 @@ in
                               #   new_x = a*x + b*y + c,  new_y = d*x + e*y + f
                               get_calibration() {
                                 case "$1" in
-                                  normal) echo "1.0 0.0 0.0 0.0 1.0 0.0" ;;      # portrait (identity)
-                                  90)     echo "0.0 1.0 0.0 -1.0 0.0 1.0" ;;     # 90° CCW
-                                  180)    echo "-1.0 0.0 1.0 0.0 -1.0 1.0" ;;    # 180°
-                                  270)    echo "0.0 -1.0 1.0 1.0 0.0 0.0" ;;     # 270° CCW (default landscape)
+                                  normal) echo "1.0 0.0 0.0 0.0 1.0 0.0" ;;      # landscape (identity)
+                                  90)     echo "0.0 1.0 0.0 -1.0 0.0 1.0" ;;     # left-up
+                                  180)    echo "-1.0 0.0 1.0 0.0 -1.0 1.0" ;;    # bottom-up
+                                  270)    echo "0.0 -1.0 1.0 1.0 0.0 0.0" ;;     # right-up
                                   *) return 1 ;;
                                 esac
                               }
@@ -145,8 +145,8 @@ in
 
                               echo "niri-rotate: starting monitor-sensor (socket=$NIRI_SOCKET)..."
 
-                              $MONITOR_SENSOR 2>/dev/null | while IFS= read -r line; do
-                                orientation=$(echo "$line" | grep -ioP 'orientation:\s*\K[a-z-]+' || true)
+                              $MONITOR_SENSOR --accel 2>/dev/null | while IFS= read -r line; do
+                                orientation=$(echo "$line" | grep -ioP 'orientation changed(?:\s*to)?:\s*\K[a-z-]+' || true)
                                 if [ -z "$orientation" ]; then
                                   continue
                                 fi
