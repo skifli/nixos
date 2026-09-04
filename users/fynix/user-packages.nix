@@ -145,7 +145,10 @@ in
 
                               echo "niri-rotate: starting monitor-sensor (socket=$NIRI_SOCKET)..."
 
-                              $MONITOR_SENSOR --accel 2>/dev/null | while IFS= read -r line; do
+                              # monitor-sensor block-buffers its stdout when piped
+                              # (GLib only line-buffers on a TTY); tdbuf forces
+                              # line-buffering so show
+                              stdbuf -oL $MONITOR_SENSOR --accel 2>/dev/null | while IFS= read -r line; do
                                 orientation=$(echo "$line" | grep -ioP 'orientation changed(?:\s*to)?:\s*\K[a-z-]+' || true)
                                 if [ -z "$orientation" ]; then
                                   continue
