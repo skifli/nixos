@@ -39,7 +39,7 @@ urgency_hook() {
     local now session_start
     now=$(date +%s)
     session_start=$(cat "$startup_file" 2>/dev/null || echo "$now")
-    if (( now - session_start < 60 )); then
+    if (( now - session_start < 120 )); then
         return
     fi
 

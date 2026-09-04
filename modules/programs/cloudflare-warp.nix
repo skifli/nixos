@@ -66,7 +66,7 @@ in
         # connected yet (optimiseBoot disables NetworkManager-wait-online).
         SSID=""
         for i in {1..120}; do
-          SSID="$(nmcli -t -f NAME connection show --active 2>/dev/null | tail -1)"
+          SSID="$(nmcli -t -f NAME,TYPE connection show --active 2>/dev/null | grep ':802-11-wireless' | cut -d: -f1 | tail -1)"
           if [ -n "$SSID" ]; then
             break
           fi
