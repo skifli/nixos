@@ -104,10 +104,10 @@ in
 
                               get_transform() {
                                 case "$1" in
-                                  *normal*)   echo 0 ;;
-                                  *left-up*)  echo 1 ;;
-                                  *inverted*) echo 2 ;;
-                                  *right-up*) echo 3 ;;
+                                  *normal*)   echo normal ;;
+                                  *left-up*)  echo 90 ;;
+                                  *inverted*) echo 180 ;;
+                                  *right-up*) echo 270 ;;
                                   *)          return 1 ;;
                                 esac
                               }
@@ -119,10 +119,10 @@ in
                               #   new_x = a*x + b*y + c,  new_y = d*x + e*y + f
                               get_calibration() {
                                 case "$1" in
-                                  0) echo "1.0 0.0 0.0 0.0 1.0 0.0" ;;          # portrait (identity)
-                                  1) echo "0.0 1.0 0.0 -1.0 0.0 1.0" ;;         # 90° CCW
-                                  2) echo "-1.0 0.0 1.0 0.0 -1.0 1.0" ;;        # 180°
-                                  3) echo "0.0 -1.0 1.0 1.0 0.0 0.0" ;;         # 270° CCW (default landscape)
+                                  normal) echo "1.0 0.0 0.0 0.0 1.0 0.0" ;;      # portrait (identity)
+                                  90)     echo "0.0 1.0 0.0 -1.0 0.0 1.0" ;;     # 90° CCW
+                                  180)    echo "-1.0 0.0 1.0 0.0 -1.0 1.0" ;;    # 180°
+                                  270)    echo "0.0 -1.0 1.0 1.0 0.0 0.0" ;;     # 270° CCW (default landscape)
                                   *) return 1 ;;
                                 esac
                               }
