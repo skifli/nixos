@@ -25,24 +25,18 @@ in
   home-manager.users.${userVars.username} = {
     services.wayle.settings.wallpaper.engine-enabled = lib.mkForce false;
 
-    # Override auto-rotate module to use niri-rotate instead of rot8
-    # (upstream fyde-nix wayle.nix references rot8 which doesn't exist on niri)
-    services.wayle.settings.modules.custom = lib.mkAfter [
-      {
-        id = "auto-rotate";
-        command = ''systemctl --user is-active niri-rotate >/dev/null 2>&1 && printf '{"state":"On"}' || printf '{"state":"Off"}' '';
-        left-click = ''
-          if systemctl --user is-active niri-rotate >/dev/null 2>&1; then
-            systemctl --user stop niri-rotate
-            notify-send -a wayle -u low -t 2500 "Auto-rotate" "Auto-rotate disabling..."
-          else
-            systemctl --user start niri-rotate
-            notify-send -a wayle -u low -t 2500 "Auto-rotate" "Auto-rotate enabling..."
-          fi
-        '';
-        on-action = ''systemctl --user is-active niri-rotate >/dev/null 2>&1 && printf '{"state":"On"}' || printf '{"state":"Off"}' '';
-      }
-    ];
+    fydetabShell.wayle.autoRotate = {
+      statusCommand = ''systemctl --user is-active niri-rotate >/dev/null 2>&1 && printf '{"state":"On"}' || printf '{"state":"Off"}' '';
+      toggleCommand = ''
+        if systemctl --user is-active niri-rotate >/dev/null 2>&1; then
+          systemctl --user stop niri-rotate
+          notify-send -a wayle -u low -t 2500 "Auto-rotate" "Auto-rotate disabling..."
+        else
+          systemctl --user start niri-rotate
+          notify-send -a wayle -u low -t 2500 "Auto-rotate" "Auto-rotate enabling..."
+        fi
+      '';
+    };
 
     # Include an input override file that the rotation daemon updates
     # with the correct touch/tablet calibration-matrix for the current orientation.
