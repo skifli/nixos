@@ -6,7 +6,7 @@
   ...
 }:
 let
-  secretPath = ../../secrets + "/${hostVars.hostname}" + "/warp-prefixes.env";
+  secretPath = ../../secrets + "/${hostVars.hostname}" + "/warp-prefixes.env.age";
   hasWarpPrefixes = builtins.pathExists secretPath;
 in
 {
