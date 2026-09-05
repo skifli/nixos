@@ -53,4 +53,7 @@
     };
   };
   shellAliases = { };
+  sessionVariables = {
+    AWWW_TRANSITION = "none"; # Sorry - it's annoying (especially on the FydeTab Duo on rotate!)
+  };
 }

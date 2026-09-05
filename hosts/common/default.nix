@@ -76,7 +76,8 @@ in
         lib.listToAttrs (
           lib.imap1 (i: mon: lib.nameValuePair "MON_${toString i}" mon) hostVars.orderedOutputs
         )
-        // hostVars.sessionVariables;
+        // hostVars.sessionVariables
+        // commonHostVars.sessionVariables;
     }
 
     (lib.mkIf hostVars.optimiseBoot {
