@@ -49,6 +49,13 @@ in
 
   boot.loader.fydetabduo.enable = true;
 
+  # NFS mounts over tailscale (with hard/timeo=600) leave processes D-state
+  # when suspend closes the tunnel; systemd-sleep then waits a full ~60s
+  # freeze placed on user.slice before suspending. They aren't needed when
+  # suspended so allow an instant suspend.
+  systemd.services.systemd-suspend.environment.SYSTEMD_SLEEP_FREEZE_USER_SESSIONS = "0";
+  systemd.services.systemd-hybrid-sleep.environment.SYSTEMD_SLEEP_FREEZE_USER_SESSIONS = "0";
+
   # HERE BEGINS STUFF FROM FYDE-NIX WE HAD TO COPY OVER DUE TO NOT USING ALL THEIR FILES ETC
 
   hardware.graphics.enable = true;
