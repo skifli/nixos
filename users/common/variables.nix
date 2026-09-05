@@ -38,6 +38,7 @@ let
       "anki"
       "atuin"
       "aw"
+      "fuzzel"
       "kde-connect"
       "nix-direnv"
       "nix-index-database"

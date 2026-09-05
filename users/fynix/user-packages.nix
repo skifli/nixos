@@ -138,6 +138,7 @@ in
               map-to-output "DSI-1";
             }
             tablet {
+              calibration-matrix ''${matrix};
               map-to-output "DSI-1";
             }
           }
