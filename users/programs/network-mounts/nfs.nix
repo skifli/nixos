@@ -46,31 +46,18 @@ in
   services.rpcbind.enable = true; # Needed for NFS
   environment.systemPackages = with pkgs; [ nfs-utils ];
 
-  # Force lazy unmounting of all NFS mounts early during shutdown
   systemd.services.nfs-shutdown-umount = {
     description = "Force unmount NFS filesystems before network shutdown";
-    wantedBy = [ "multi-user.target" ];
-    # Start after the network/filesystems are available, so on shutdown this
-    # service is stopped before those dependencies get kaboomed.
-    after = [
-      "network.target"
-      "remote-fs.target"
-      "tailscale-online.target"
-    ];
-    before = [
-      "shutdown.target"
-      "umount.target"
-    ];
-    conflicts = [
-      "shutdown.target"
-      "umount.target"
-    ];
+    wantedBy = [ "umount.target" ];
+    before = [ "umount.target" ];
+    unitConfig = {
+      DefaultDependencies = false;
+    };
     serviceConfig = {
       Type = "oneshot";
-      RemainAfterExit = true;
       # -l is a lazy unmount, -a unmounts all, -t nfs limits to NFS types
-      ExecStop = "${pkgs.bash}/bin/bash -c '${pkgs.util-linux}/bin/umount -l -a -t nfs,nfs4 || true'";
-      TimeoutStopSec = "10s";
+      ExecStart = "${pkgs.bash}/bin/bash -c '${pkgs.util-linux}/bin/umount -l -a -t nfs,nfs4 || true'";
+      TimeoutStartSec = "10s";
     };
   };
 }
