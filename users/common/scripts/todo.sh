@@ -9,7 +9,20 @@ FONT_SIZE="${FONT_SIZE_APPLICATIONS:-11}"
 TARGET_DIR="$(dirname "$TODO_FILE")"
 
 if [ ! -d "$TARGET_DIR" ] && [ ! -L "$TARGET_DIR" ]; then
-    mkdir -p "$TARGET_DIR"
+    mkdir -p "$TARGET_DIR" 2>/dev/null || true
+fi
+
+if [ ! -d "$TARGET_DIR" ]; then
+    STORAGE_GRACE="${STORAGE_GRACE_SECONDS:-30}"
+    STORAGE_WAITED=0
+
+    while [ ! -d "$TARGET_DIR" ] && [ "$STORAGE_WAITED" -lt "$STORAGE_GRACE" ]; do
+        sleep 1
+
+        STORAGE_WAITED=$((STORAGE_WAITED + 1))
+    done
+
+    mkdir -p "$TARGET_DIR" 2>/dev/null || true
 fi
 
 # Only try to init the file if the directory/link is actually accessible

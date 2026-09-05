@@ -59,12 +59,12 @@ in
       text = ''
         input {
           touch {
-            calibration-matrix 0.0 -1.0 1.0 1.0 0.0 0.0;
+            calibration-matrix 0.0 1.0 0.0 -1.0 0.0 1.0;
             map-to-output "DSI-1";
           }
 
           tablet {
-            calibration-matrix 0.0 -1.0 1.0 1.0 0.0 0.0;
+            calibration-matrix 0.0 1.0 0.0 -1.0 0.0 1.0;
           }
         }
       '';
@@ -133,11 +133,13 @@ in
                               # Matrices use normalised [0,1] touch coords:
                               #   new_x = a*x + b*y + c,  new_y = d*x + e*y + f
                               get_calibration() {
-                                case "$1" in
-                                  normal) echo "1.0 0.0 0.0 0.0 1.0 0.0" ;;      # landscape (identity)
-                                  90)     echo "0.0 1.0 0.0 -1.0 0.0 1.0" ;;     # left-up
-                                  180)    echo "-1.0 0.0 1.0 0.0 -1.0 1.0" ;;    # bottom-up
-                                  270)    echo "0.0 -1.0 1.0 1.0 0.0 0.0" ;;     # right-up
+                                  # linked to niri transform values returned by get_transform
+                                  # (sensor "right-up"->normal, "normal"->90, "left-up"->180, "bottom-up"->270)
+                                  case "$1" in
+                                    normal) echo "0.0 1.0 0.0 -1.0 0.0 1.0" ;;     # sensor right-up -> landscape
+                                    90)     echo "0.0 1.0 0.0 -1.0 0.0 1.0" ;;     # sensor normal
+                                    180)    echo "-1.0 0.0 1.0 0.0 -1.0 1.0" ;;    # sensor left-up
+                                    270)    echo "0.0 -1.0 1.0 1.0 0.0 0.0" ;;     # sensor bottom-up
                                   *) return 1 ;;
                                 esac
                               }
