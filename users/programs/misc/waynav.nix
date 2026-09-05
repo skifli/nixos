@@ -59,10 +59,10 @@ in
       super+semicolon start,grid 2x2
 
       # Quadrant selection
-      q cell-select 1,warp
-      a cell-select 2,warp
-      w cell-select 3,warp
-      s cell-select 4,warp
+      q cell-select 1,warp # Top left
+      a cell-select 2,warp # Bottom left
+      w cell-select 3,warp # Top right
+      s cell-select 4,warp # Bottom right
 
       # 3x3 grid mode (press g to split current cell into 3x3)
       g grid 3x3
