@@ -54,7 +54,6 @@ in
     # service is stopped before those dependencies get kaboomed.
     after = [
       "network.target"
-      "network-online.target"
       "remote-fs.target"
       "tailscale-online.target"
     ];
