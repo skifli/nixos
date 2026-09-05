@@ -238,7 +238,9 @@ common
 
   kanata.keyboards = {
     fydetabduo = {
-      devices = [ ];
+      devices = [
+        "/dev/input/by-path/platform-fc880000.usb-usbv2-0:1.1:1.0-event-kbd"
+      ];
       extraDefCfg = "process-unmapped-keys yes";
 
       # Use https://jtroo.github.io/ to verify
