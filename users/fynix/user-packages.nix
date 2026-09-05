@@ -135,11 +135,12 @@ in
                               get_calibration() {
                                   # linked to niri transform values returned by get_transform
                                   # (sensor "right-up"->normal, "normal"->90, "left-up"->180, "bottom-up"->270)
+                                  # matrices validated live on the fydetab stylus (himax-stylus)
                                   case "$1" in
-                                    normal) echo "0.0 1.0 0.0 -1.0 0.0 1.0" ;;     # sensor right-up -> landscape
-                                    90)     echo "0.0 1.0 0.0 -1.0 0.0 1.0" ;;     # sensor normal
-                                    180)    echo "-1.0 0.0 1.0 0.0 -1.0 1.0" ;;    # sensor left-up
-                                    270)    echo "0.0 -1.0 1.0 1.0 0.0 0.0" ;;     # sensor bottom-up
+                                    normal) echo "0.0 1.0 0.0 -1.0 0.0 1.0" ;;  # sensor right-up (landscape)
+                                    90)     echo "1.0 0.0 0.0 0.0 1.0 0.0" ;;  # sensor normal
+                                    180)    echo "0.0 -1.0 1.0 1.0 0.0 0.0" ;;  # sensor left-up
+                                    270)    echo "-1.0 0.0 1.0 0.0 -1.0 1.0" ;;  # sensor bottom-up
                                   *) return 1 ;;
                                 esac
                               }
