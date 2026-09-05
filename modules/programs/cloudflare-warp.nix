@@ -44,7 +44,7 @@ in
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = false;
-      TimeoutStartSec = 30;
+      TimeoutStartSec = 150;
       Environment = "WARP_PREFIXES_FILE=${
         config.age.secrets."${hostVars.hostname}-warp-prefixes.env".path
       }";
@@ -66,8 +66,7 @@ in
         # connected yet (optimiseBoot disables NetworkManager-wait-online).
         SSID=""
         for i in {1..120}; do
-          SSID="$(nmcli -t -f NAME,TYPE connection show --active 2>/dev/null | grep ':802-11-wireless' | cut -d: -f1 | tail -1)"
-          if [ -n "$SSID" ]; then
+          if SSID="$(nmcli -t -f NAME,TYPE connection show --active 2>/dev/null | grep ':802-11-wireless' | cut -d: -f1 | tail -1 || true)"; [ -n "$SSID" ]; then
             break
           fi
           sleep 1
