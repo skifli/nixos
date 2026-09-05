@@ -12,34 +12,6 @@
     algorithm = "zstd";
   };
 
-  # Drain swap early during shutdown so zram deactivation doesn't hang.
-  # With swappiness=180, zram holds a lot of compressed pages that can take
-  # minutes to decompress if swapoff runs late in the shutdown list of stuff todo.
-  systemd.services.early-swapoff = {
-    description = "Disable all swap before services stop";
-    wantedBy = [
-      "shutdown.target"
-      "reboot.target"
-      "halt.target"
-      "kexec.target"
-    ];
-    before = [
-      "shutdown.target"
-      "reboot.target"
-      "halt.target"
-      "kexec.target"
-    ];
-    unitConfig = {
-      DefaultDependencies = false;
-      Conflicts = "shutdown.target";
-    };
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = "${pkgs.util-linux}/bin/swapoff -a";
-      TimeoutStartSec = "30s";
-    };
-  };
-
   boot = {
     kernelParams = [
       "zswap.enabled=0" # Prevent CPU wasting cycles compressing before ZRAM
