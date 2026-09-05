@@ -10,7 +10,9 @@ let
   shell-preload = pkgs.writeShellScript "shell-preload" ''
     set -u
     zsh_bin="$1"
+
     ${pkgs.coreutils}/bin/dd if="$zsh_bin" of=/dev/null bs=1M status=none 2>/dev/null
+
     for lib in $(${pkgs.glibc.bin}/bin/ldd "$zsh_bin" 2>/dev/null | ${pkgs.gawk}/bin/awk '/=>/ && /nix\/store/ {print $3}'); do
       [ -f "$lib" ] && ${pkgs.coreutils}/bin/dd if="$lib" of=/dev/null bs=1M status=none 2>/dev/null
     done
@@ -30,10 +32,10 @@ in
       toggleCommand = ''
         if systemctl --user is-active niri-rotate >/dev/null 2>&1; then
           systemctl --user stop niri-rotate
-          notify-send -a wayle -u low -t 2500 "Auto-rotate" "Auto-rotate disabling..."
+          notify-send -a niri -i "/home/${userVars.username}/.local/share/misc/niri-icon.svg" -u low -t 2500 "Auto-rotate" "Auto-rotate disabling..."
         else
           systemctl --user start niri-rotate
-          notify-send -a wayle -u low -t 2500 "Auto-rotate" "Auto-rotate enabling..."
+          notify-send -a niri -i "/home/${userVars.username}/.local/share/misc/niri-icon.svg" -u low -t 2500 "Auto-rotate" "Auto-rotate enabling..."
         fi
       '';
     };
@@ -70,7 +72,6 @@ in
       '';
     };
 
-    # niri-native auto-rotation daemon (user level, graphical session).
     # The DSI panel is natively portrait (touch X:0-1599, Y:0-2559) but driven
     # landscape. niri is smithay-based (NOT wlroots): map-to-output does NOT
     # rotate touch/tablet with the output transform. This daemon reads
