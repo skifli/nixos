@@ -1,6 +1,7 @@
 { hostVars, ... }:
 let
   extensions = import ./extensions.nix { inherit hostVars; };
+  extensionButtons = import ./extension-buttons.nix;
 
   lockPref = value: {
     Value = value;
@@ -8,6 +9,8 @@ let
   };
 in
 {
+  inherit extensionButtons;
+
   AllowFileSelectionDialogs = true;
   AppAutoUpdate = false;
   AutofillAddressEnabled = false;
