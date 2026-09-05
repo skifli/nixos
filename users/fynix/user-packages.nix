@@ -102,13 +102,14 @@ in
 
                               find_niri_socket || { echo "niri-rotate: no niri socket found"; exit 1; }
 
+                              # Magic numbers
                               get_transform() {
                                 case "$1" in
-                                  *normal*)    echo normal ;;
-                                  *left-up*)   echo 90 ;;
-                                  *right-up*)  echo 270 ;;
+                                  *normal*)   echo normal ;;
+                                  *left-up*)  echo 90 ;;
+                                  *right-up*) echo 270 ;;
                                   *bottom-up*) echo 180 ;;
-                                  *)           return 1 ;;
+                                  *)          return 1 ;;
                                 esac
                               }
 
@@ -143,23 +144,72 @@ in
           OVERRIDE
                               }
 
+                              apply_orientation() {
+                                local orientation="$1"
+                                local transform matrix
+
+                                transform=$(get_transform "$orientation") || return 0
+                                matrix=$(get_calibration "$transform") || return 0
+                                write_input_override "$matrix"
+
+                                niri msg output DSI-1 transform "$transform" 2>/dev/null || true
+                                niri msg action load-config-file 2>/dev/null || true
+
+                                # awww renders the wallpaper once for the landscape
+                                # output; after a transform change it then keeps the
+                                # old size and look stretched, so re-request it and
+                                # it crops to the new (rotated) output geometry.
+                                "${pkgs.awww}/bin/awww" img "$HOME/.local/share/wallpaper" 2>/dev/null || true
+                                "${pkgs.awww}/bin/awww" img --namespace overview "$HOME/.local/share/wallpaper-blurred" 2>/dev/null || true
+
+                                echo "niri-rotate: orientation=$orientation transform=$transform matrix=$matrix"
+                              }
+
+                              LAST_ORIENTATION=""
+
                               echo "niri-rotate: starting monitor-sensor (socket=$NIRI_SOCKET)..."
 
                               # monitor-sensor block-buffers its stdout when piped
                               # (GLib only line-buffers on a TTY); tdbuf forces
-                              # line-buffering so show
+                              # line-buffering to show.
+                              #
+                              # iio-sensor-proxy's orientation is only meaningful
+                              # while the device is upright: flat/face-down/face-up
+                              # states report arbitrary values that would rotate the
+                              # screen wrongly. We therefore ignore orientation
+                              # unless the tilt is upright, and re-apply the last
+                              # upright orientation when the device is stood back up.
                               stdbuf -oL $MONITOR_SENSOR --accel 2>/dev/null | while IFS= read -r line; do
+                                if echo "$line" | grep -qi 'Tilt changed:'; then
+                                  the_tilt=$(echo "$line" | grep -ioP 'Tilt changed:\s*\K[a-z-]+' || true)
+
+                                  case "$the_tilt" in
+                                    face-down|face-up|flat) upright=0 ;;
+                                    *)                      upright=1 ;;
+                                  esac
+                                  if [ "$upright" != "''${upright_prev:-}" ]; then
+                                    upright_prev=$upright
+
+                                    if [ "$upright" = "1" ] && [ -n "$LAST_ORIENTATION" ]; then
+                                      echo "niri-rotate: tilt=$the_tilt, resync orientation=$LAST_ORIENTATION"
+                                      apply_orientation "$LAST_ORIENTATION"
+                                    fi
+                                  fi
+                                  continue
+                                fi
+
                                 orientation=$(echo "$line" | grep -ioP 'orientation changed(?:\s*to)?:\s*\K[a-z-]+' || true)
+
                                 if [ -z "$orientation" ]; then
                                   continue
                                 fi
 
-                                TRANSFORM=$(get_transform "$orientation") || continue
-                                MATRIX=$(get_calibration "$TRANSFORM") || continue
-                                write_input_override "$MATRIX"
-                                niri msg output DSI-1 transform "$TRANSFORM" 2>/dev/null || true
-                                niri msg action load-config-file 2>/dev/null || true
-                                echo "niri-rotate: orientation=$orientation transform=$TRANSFORM matrix=$MATRIX"
+                                if [ "''${upright_prev:-1}" = "1" ]; then
+                                  LAST_ORIENTATION=$orientation
+                                  apply_orientation "$orientation"
+                                else
+                                  echo "niri-rotate: ignoring orientation=$orientation (device not upright)"
+                                fi
                               done
 
                               echo "niri-rotate: monitor-sensor exited, restarting..."
