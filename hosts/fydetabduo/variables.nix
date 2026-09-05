@@ -70,9 +70,12 @@
 
   niri = {
     gestures = {
-      hot-corners = {
-        top-left = [ ];
-      };
+      /*
+        hot-corners = {
+          top-left = [ ];
+          };
+      */
+      hot-corners.off = [ ];
     };
 
     input = {
