@@ -27,7 +27,7 @@ in
 
     sensors.autoRotate = false; # Replaced by niri-specific rotation daemon (see below)
     tabletMode.enable = true;
-    modem.enable = true;
+    modem.enable = false; # Avoids ModemManager probing delay
     npu.enable = true;
 
     installer-tools.enable = true;

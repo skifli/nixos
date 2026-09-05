@@ -51,6 +51,14 @@ in
       systemd.user.services = userVars.systemdServices;
       systemd.user.timers = userVars.systemdTimers;
 
+      # app-*.scopes (Electron apps like anytype) ignore SIGTERM, so the user
+      # manager's default 90s stop timeout made shutdown hang for like 2 mins.
+      systemd.user.settings = {
+        Manager = {
+          DefaultTimeoutStopSec = "5s";
+        };
+      };
+
       xdg = {
         configFile."mimeapps.list".force = true;
 

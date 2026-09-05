@@ -41,7 +41,8 @@ in
     };
 
     # Include an input override file that the rotation daemon updates
-    # with the correct touch/tablet calibration-matrix for the current orientation.
+    # with the correct tablet calibration-matrix for the current orientation.
+    # (touch needs no calibration: niri transforms touch with the output itself)
     wayland.windowManager.niri.extraConfig = ''
       include "input-override.kdl"
     '';
@@ -57,14 +58,11 @@ in
     # digitiser (himax-stylus 60x154mm vs DSI-1 0.625 inverted aspect). Without
     # map-to-output, keep_ratio is disabled and the calibration matrix does
     # the rotation itself, so the stylus tracks the output 1:1 in all orientations.
+    # touch uses NO calibration-matrix: niri already transforms touch with the
+    # output (unlike tablets), which is gud.
     xdg.configFile."niri/input-override.kdl" = {
       text = ''
         input {
-          touch {
-            calibration-matrix 0.0 1.0 0.0 -1.0 0.0 1.0;
-            map-to-output "DSI-1";
-          }
-
           tablet {
             calibration-matrix 0.0 1.0 0.0 -1.0 0.0 1.0;
           }
@@ -73,10 +71,10 @@ in
     };
 
     # The DSI panel is natively portrait (touch X:0-1599, Y:0-2559) but driven
-    # landscape. niri is smithay-based (NOT wlroots): map-to-output does NOT
-    # rotate touch/tablet with the output transform. This daemon reads
-    # monitor-sensor (accelerometer), rotates the niri output, and writes the
-    # matching touch/tablet calibration-matrix to ~/.config/niri/input-override.kdl.
+    # landscape. niri's touch option applies the output transform itself (so touch
+    # needs no calibration), but tablets do NOT follow the transform, so this
+    # daemon reads monitor-sensor (accelerometer), rotates the niri output, and
+    # writes the matching tablet calibration-matrix to ~/.config/niri/input-override.kdl.
     systemd.user.services.niri-rotate = {
       Unit = {
         Description = "niri-native auto-rotation daemon";
@@ -151,10 +149,6 @@ in
                                 rm -f "$HOME/.config/niri/input-override.kdl"
                                 cat > "$HOME/.config/niri/input-override.kdl" <<OVERRIDE
           input {
-            touch {
-              calibration-matrix ''${matrix};
-              map-to-output "DSI-1";
-            }
             tablet {
               calibration-matrix ''${matrix};
             }
