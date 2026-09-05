@@ -54,9 +54,10 @@ in
       "network.target"
       "network-online.target"
       "shutdown.target"
+      "umount.target"
       "tailscale-online.target"
     ];
-    conflicts = [ "shutdown.target" ];
+    conflicts = [ "shutdown.target" "umount.target" ];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;

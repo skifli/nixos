@@ -48,6 +48,13 @@ in
     # niri includes this via the `include "input-override.kdl"` line added
     # through extraConfig above. The rotation daemon replaces this symlink with
     # a regular file containing the calibration-matrix for the current orientation.
+    #
+    # NOTE: the tablet section deliberately omits `map-to-output`. niri applies
+    # aspect-ratio correction for some reasons to tablets that are mapped to an
+    # output, which stretches the stylus Y axis ~1.5x on this portrait-panel
+    # digitiser (himax-stylus 60x154mm vs DSI-1 0.625 inverted aspect). Without
+    # map-to-output, keep_ratio is disabled and the calibration matrix does
+    # the rotation itself, so the stylus tracks the output 1:1 in all orientations.
     xdg.configFile."niri/input-override.kdl" = {
       text = ''
         input {
@@ -57,7 +64,7 @@ in
           }
 
           tablet {
-            map-to-output "DSI-1";
+            calibration-matrix 0.0 -1.0 1.0 1.0 0.0 0.0;
           }
         }
       '';
@@ -113,9 +120,16 @@ in
                                 esac
                               }
 
-                              # niri 26.04 does NOT apply the output transform to
-                              # map-to-output'd touch/tablet. We therefore write the
-                              # matching calibration-matrix for each orientation.
+                              # niri's tablet logic (compute_tablet_position):
+                              #   - with  map-to-output: applies output transform
+                              #     AND its own aspect-ratio correction, which
+                              #     over-stretches this stylus Y axis ~1.5x.
+                              #   - without map-to-output: Transform::Normal + no
+                              #     aspect correction (keep_ratio=false), so the
+                              #     calibration matrix on its own maps the physical
+                              #     portrait digitiser to the logical output.
+                              # We therefore key the matrix to the SAME orientation
+                              # that get_transform chooses for the output transform.
                               # Matrices use normalised [0,1] touch coords:
                               #   new_x = a*x + b*y + c,  new_y = d*x + e*y + f
                               get_calibration() {
@@ -139,7 +153,6 @@ in
             }
             tablet {
               calibration-matrix ''${matrix};
-              map-to-output "DSI-1";
             }
           }
           OVERRIDE

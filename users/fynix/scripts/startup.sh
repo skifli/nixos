@@ -1,5 +1,22 @@
 #!/usr/bin/env bash
 
+# Wait until NetworkManager says there is an established connection so apps that
+# sync/phone-home on launch (anki, ferdium, anytype, ...) don't race w/ the wifi
+# association + DHCP at startup. Times out so we technically won't block the session.
+wait_for_network() {
+    local timeout="${1:-60}"
+
+    for _ in $(seq 1 "$timeout"); do
+        if nmcli -t -f STATE general 2>/dev/null | grep -qx connected; then
+            return 0
+        fi
+
+        sleep 1
+    done
+
+    return 1
+}
+
 start_and_manage() {
     local cmd="$1"
     local key="$2"
@@ -60,6 +77,7 @@ notify-send -e -a "gcr-prompter" -i "$HOME/.local/share/misc/Seahorse_icon_hicol
     done
 ) & disown
 
+wait_for_network 60 || true
 start_and_manage "ferdium" "app_id" "ferdium" "1"
 start_and_manage "zen-beta" "app_id" "zen-beta" "2"
 start_and_manage "anki" "title" "User 1 - Anki" "3"

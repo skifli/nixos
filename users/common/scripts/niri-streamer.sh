@@ -12,6 +12,8 @@ MAIN_PID="$$"
 export NIRI_STATE_DIR="/tmp/niri-state-${UID}"
 mkdir -m 0700 -p "$NIRI_STATE_DIR"
 
+date +%s > "$NIRI_STATE_DIR/.session_start"
+
 # Cleanup state directory on process exit
 cleanup() {
     if [[ "${BASHPID:-$$}" -eq "$MAIN_PID" ]]; then

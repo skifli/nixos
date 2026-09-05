@@ -80,6 +80,8 @@ notify-send -e -a "gcr-prompter" -i "$HOME/.local/share/misc/Seahorse_icon_hicol
     done
 ) & disown
 
+wait_for_network 60 || true
+
 # Apps that don't need keyring unlock
 start_and_manage "zen-beta" "app_id" "zen-beta" "$FOCUSED_MONITOR" "1"
 start_and_manage "anki" "title" "User 1 - Anki" "$FOCUSED_MONITOR" "2" # Otherwise it would sometimes just move the syncing window not the actual window which was annoying... tad of a workaround... but it works!
