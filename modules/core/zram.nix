@@ -35,7 +35,7 @@
     };
     serviceConfig = {
       Type = "oneshot";
-      ExecStart = "${pkgs.systemd}/bin/systemctl stop '*.swap'";
+      ExecStart = "${pkgs.util-linux}/bin/swapoff -a";
       TimeoutStartSec = "30s";
     };
   };

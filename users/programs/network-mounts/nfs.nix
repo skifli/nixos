@@ -50,12 +50,17 @@ in
   systemd.services.nfs-shutdown-umount = {
     description = "Force unmount NFS filesystems before network shutdown";
     wantedBy = [ "multi-user.target" ];
-    before = [
+    # Start after the network/filesystems are available, so on shutdown this
+    # service is stopped before those dependencies get kaboomed.
+    after = [
       "network.target"
       "network-online.target"
+      "remote-fs.target"
+      "tailscale-online.target"
+    ];
+    before = [
       "shutdown.target"
       "umount.target"
-      "tailscale-online.target"
     ];
     conflicts = [
       "shutdown.target"
@@ -65,7 +70,7 @@ in
       Type = "oneshot";
       RemainAfterExit = true;
       # -l is a lazy unmount, -a unmounts all, -t nfs limits to NFS types
-      ExecStop = "${pkgs.util-linux}/bin/umount -l -a -t nfs,nfs4";
+      ExecStop = "${pkgs.bash}/bin/bash -c '${pkgs.util-linux}/bin/umount -l -a -t nfs,nfs4 || true'";
       TimeoutStopSec = "10s";
     };
   };
