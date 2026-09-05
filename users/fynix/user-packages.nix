@@ -105,10 +105,10 @@ in
                               # Magic numbers
                               get_transform() {
                                 case "$1" in
-                                  *normal*)   echo normal ;;
-                                  *left-up*)  echo 90 ;;
-                                  *right-up*) echo 270 ;;
-                                  *bottom-up*) echo 180 ;;
+                                  *normal*)   echo 90 ;;
+                                  *left-up*)  echo 180 ;;
+                                  *right-up*) echo normal ;;
+                                  *bottom-up*) echo 270 ;;
                                   *)          return 1 ;;
                                 esac
                               }
