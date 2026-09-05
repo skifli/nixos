@@ -388,11 +388,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1788635469,
-        "narHash": "sha256-8FeQiiqJSO9sYkuNdRyuB/sRUDiAwXTjmVagWywGgQM=",
+        "lastModified": 1788636412,
+        "narHash": "sha256-SGEyRTafGItMff2BnZU+X/PYs3MJSOd5f7Byd5AV4Xk=",
         "owner": "NixOnFyde",
         "repo": "fyde-nix",
-        "rev": "b7c0de1bd81a73cf67e9ea768f14dd2fc68b6b45",
+        "rev": "b3026cecf615403965e9daaefe3bec78105348d2",
         "type": "github"
       },
       "original": {
