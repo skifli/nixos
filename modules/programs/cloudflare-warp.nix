@@ -29,11 +29,11 @@ in
     description = "Ensure Cloudflare WARP is connected on matching wifi networks";
     after = [
       "network-online.target"
-      "warp-svc.service"
+      "cloudflare-warp.service"
     ];
     wants = [
       "network-online.target"
-      "warp-svc.service"
+      "cloudflare-warp.service"
     ];
     path = with pkgs; [
       networkmanager
