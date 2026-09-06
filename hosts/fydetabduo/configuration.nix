@@ -49,6 +49,21 @@ in
 
   boot.loader.fydetabduo.enable = true;
 
+  # Do NOT import modules/core/boot.nix - for the following reason:
+  # that module also selects Lyra's kernel and bootloader configuration.
+  boot = {
+    plymouth = {
+      enable = true;
+      theme = "breeze";
+    };
+    kernelParams = [
+      "splash"
+      "systemd.show_status=false"
+      "rd.systemd.show_status=false"
+      "vt.global_cursor_default=0"
+    ];
+  };
+
   # NFS mounts over tailscale (with hard/timeo=600) leave processes D-state
   # when suspend closes the tunnel; systemd-sleep then waits a full ~60s
   # freeze placed on user.slice before suspending. They aren't needed when

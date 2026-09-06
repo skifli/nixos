@@ -17,6 +17,8 @@ let
       [ -f "$lib" ] && ${pkgs.coreutils}/bin/dd if="$lib" of=/dev/null bs=1M status=none 2>/dev/null
     done
   '';
+
+  stylusTouchPython = pkgs.python3.withPackages (pythonPackages: [ pythonPackages.evdev ]);
 in
 {
   home-manager.sharedModules = [
@@ -25,19 +27,78 @@ in
   ];
 
   home-manager.users.${userVars.username} = {
-    services.wayle.settings.wallpaper.engine-enabled = lib.mkForce false;
+    services.wayle.settings = {
+      # We use custom one cus Niri mhm
+      wallpaper.engine-enabled = lib.mkForce false;
 
-    fydetabShell.wayle.autoRotate = {
-      statusCommand = ''systemctl --user is-active niri-rotate >/dev/null 2>&1 && printf '{"state":"On"}' || printf '{"state":"Off"}' '';
-      toggleCommand = ''
-        if systemctl --user is-active niri-rotate >/dev/null 2>&1; then
-          systemctl --user stop niri-rotate
-          notify-send -a niri -i "/home/${userVars.username}/.local/share/misc/niri-icon.svg" -u low -t 2500 "Auto-rotate" "Auto-rotate disabling..."
-        else
-          systemctl --user start niri-rotate
-          notify-send -a niri -i "/home/${userVars.username}/.local/share/misc/niri-icon.svg" -u low -t 2500 "Auto-rotate" "Auto-rotate enabling..."
-        fi
-      '';
+      modules.custom = lib.mkAfter [
+        {
+          id = "stylus-touch";
+          mode = "poll";
+          interval-ms = 1000;
+          command = ''
+            systemctl --user is-active --quiet stylus-touch-arbitration.service && printf '{"state":"On"}' || printf '{"state":"Off"}'
+          '';
+          left-click = ''
+            if systemctl --user is-active --quiet stylus-touch-arbitration.service; then
+              systemctl --user stop stylus-touch-arbitration.service
+              notify-send -a wayle -u low -t 2500 "Stylus touch" "Touch arbitration disabled"
+            else
+              systemctl --user start stylus-touch-arbitration.service
+              notify-send -a wayle -u low -t 2500 "Stylus touch" "Touch arbitration enabled"
+            fi
+          '';
+          on-action = ''
+            systemctl --user is-active --quiet stylus-touch-arbitration.service && printf '{"state":"On"}' || printf '{"state":"Off"}'
+          '';
+          format = "{{ state }}";
+          icon-name = "input-tablet-symbolic";
+          icon-color = "fg-default";
+          label-color = "fg-default";
+        }
+      ];
+    };
+
+    fydetabShell.wayle = {
+      # Again custom one cus Niri
+      autoRotate = {
+        statusCommand = ''systemctl --user is-active niri-rotate >/dev/null 2>&1 && printf '{"state":"On"}' || printf '{"state":"Off"}' '';
+        toggleCommand = ''
+          if systemctl --user is-active niri-rotate >/dev/null 2>&1; then
+            systemctl --user stop niri-rotate
+            notify-send -a niri -i "/home/${userVars.username}/.local/share/misc/niri-icon.svg" -u low -t 2500 "Auto-rotate" "Auto-rotate disabling..."
+          else
+            systemctl --user start niri-rotate
+            notify-send -a niri -i "/home/${userVars.username}/.local/share/misc/niri-icon.svg" -u low -t 2500 "Auto-rotate" "Auto-rotate enabling..."
+          fi
+        '';
+      };
+
+      bar = {
+        left = [
+          "dashboard"
+          "clock"
+          "custom-auto-rotate"
+          "custom-tablet-mode"
+          "custom-stylus-touch" # New!
+          "systray"
+        ];
+      };
+    };
+
+    # New!
+    systemd.user.services.stylus-touch-arbitration = {
+      Unit = {
+        Description = "Suppress touchscreen input while the stylus is in proximity";
+        PartOf = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
+      };
+      Service = {
+        Type = "simple";
+        ExecStart = "${stylusTouchPython}/bin/python ${./scripts/stylus-touch-arbitration.py}";
+        Restart = "on-failure";
+        RestartSec = 2;
+      };
     };
 
     # Include an input override file that the rotation daemon updates
