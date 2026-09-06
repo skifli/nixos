@@ -7,6 +7,23 @@
 }:
 let
   primaryBrowser = builtins.elemAt userVars.programs.browsers 0;
+  isAarch64Linux = pkgs.stdenv.hostPlatform.system == "aarch64-linux";
+
+  widevineGmpPath =
+    pkgs.runCommand "widevine-gmp"
+      {
+        nativeBuildInputs = [ pkgs.patchelf ];
+      }
+      ''
+        gmp="$out/gmp-widevinecdm/system-installed"
+        mkdir -p "$gmp"
+
+        cp "${pkgs.widevine-cdm}/share/google/chrome/WidevineCdm/_platform_specific/linux_arm64/libwidevinecdm.so" "$gmp/libwidevinecdm.so"
+        chmod u+w "$gmp/libwidevinecdm.so"
+
+        patchelf --set-rpath "${pkgs.nspr}/lib" "$gmp/libwidevinecdm.so"
+        ln -s "${pkgs.widevine-cdm}/share/google/chrome/WidevineCdm/manifest.json" "$gmp/manifest.json"
+      '';
 in
 {
   # Breaks stuff now apparently - https://github.com/0xc000022070/zen-browser-flake#missing-configuration-after-update
@@ -27,7 +44,11 @@ in
         # Set environment variables for the Zen Browser launcher (Linux only).
         # Useful for theming/rendering workarounds, e.g., forcing a readable GTK theme
         # under Wayland. See https://github.com/0xc000022070/zen-browser-flake/issues/290
-        env = { };
+        env =
+          { }
+          // pkgs.lib.optionalAttrs isAarch64Linux {
+            MOZ_GMP_PATH = "${widevineGmpPath}/gmp-widevinecdm/system-installed";
+          };
 
         # Native messaging hosts for browser-application communication
         # Reference: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging

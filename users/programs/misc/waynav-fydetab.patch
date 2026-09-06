@@ -1,0 +1,31 @@
+diff --git a/src/overlay.c b/src/overlay.c
+--- a/src/overlay.c
++++ b/src/overlay.c
+@@ -1702,9 +1702,25 @@ void vptr_warp(struct overlay *ov, int x, int y) {
+     if (clamped_x != x || clamped_y != y)
+         log_warn("vptr warp: clamped %d,%d to %d,%d", x, y, clamped_x,
+                  clamped_y);
+-    log_debug("vptr warp: %d,%d in %ux%u", clamped_x, clamped_y, ow, oh);
++    uint32_t pointer_width = ow;
++    uint32_t pointer_height = oh;
++    int pointer_x = clamped_x;
++    int pointer_y = clamped_y;
++    /* Niri applies the FydeTab 270-degree output transform to virtual-pointer
++     * absolute coordinates; invert it to match the logical overlay coordinates. */
++    if (ov->vptr_output && ov->vptr_output->transform == WL_OUTPUT_TRANSFORM_270) {
++        pointer_x = (int)oh - clamped_y;
++        pointer_y = clamped_x;
++        pointer_width = oh;
++        pointer_height = ow;
++    }
++
++    log_debug("vptr warp: logical %d,%d -> protocol %d,%d in %ux%u",
++              clamped_x, clamped_y, pointer_x, pointer_y, pointer_width,
++              pointer_height);
+ 
+-    zwlr_virtual_pointer_v1_motion_absolute(ov->vptr, 0, (uint32_t)clamped_x,
+-                                            (uint32_t)clamped_y, ow, oh);
++    zwlr_virtual_pointer_v1_motion_absolute(ov->vptr, 0, (uint32_t)pointer_x,
++                                            (uint32_t)pointer_y, pointer_width,
++                                            pointer_height);
+     zwlr_virtual_pointer_v1_frame(ov->vptr);

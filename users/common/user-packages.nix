@@ -32,6 +32,7 @@
       grim # Grab images from a Wayland compositor
       hblock
       kdePackages.gwenview # Image viewer
+      krename # Powerful renamer
       moreutils # Used in some scripts (e.g., task-receiver.sh)
       mpv
       nix-prefetch

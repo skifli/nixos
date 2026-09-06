@@ -134,6 +134,12 @@
   "extensions.webcompat.perform_injections" = true;
   "extensions.webcompat.perform_ua_overrides" = true;
 
+  # ARM64 Widevine is sourced from nixpkgs and exposed through MOZ_GMP_PATH in zen.nix.
+  "media.eme.enabled" = true;
+  "media.gmp-widevinecdm.enabled" = true;
+  "media.gmp-widevinecdm.visible" = true;
+  "media.gmp-widevinecdm.autoupdate" = false;
+
   /**
      *************************************************************************
     * Privacy & security                                                       *

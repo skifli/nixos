@@ -4,7 +4,7 @@
   ...
 }:
 let
-  waynavPkg =
+  baseWaynavPkg =
     pkgs.waynav or (pkgs.stdenv.mkDerivation (finalAttrs: {
       pname = "waynav";
       version = "1.4.0";
@@ -38,6 +38,10 @@ let
         mainProgram = "waynav";
       };
     }));
+
+  waynavPkg = baseWaynavPkg.overrideAttrs (_old: {
+    patches = [ ./waynav-fydetab.patch ];
+  });
 in
 {
   home-manager.users.${userVars.username} = {
