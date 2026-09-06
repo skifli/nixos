@@ -274,7 +274,7 @@ common
 
   kanata.keyboards = {
     calliope-uk = {
-      devices = [ ]; # Grabs all connected desktop keyboards
+      devices = [ "/dev/input/by-id/usb-LiteOn_Lenovo_Calliope_USB_Keyboard-event-kbd" ];
       extraDefCfg = "process-unmapped-keys yes";
 
       # Use https://jtroo.github.io/ to verify
