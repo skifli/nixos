@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Suppress touchscreen touch while the FydeTab stylus is in proximity."""
+"""Suppress touchscreen touch while the stylus is in proximity or grace time."""
 
 from __future__ import annotations
 
 import glob
+import os
 import signal
 import time
 from selectors import EVENT_READ, DefaultSelector
@@ -15,6 +16,15 @@ TOUCHSCREEN_NAME = "himax-touchscreen"
 STYLUS_NAME = "himax-stylus"
 EVENT_GLOB = "/dev/input/event*"
 TOUCHSCREEN_PATH = "/dev/input/by-path/platform-feac0000.i2c-event"
+DEFAULT_GRACE_SECONDS = 3.0
+
+try:
+    GRACE_SECONDS = max(
+        0.0,
+        float(os.environ.get("STYLUS_TOUCH_GRACE_SECONDS", DEFAULT_GRACE_SECONDS)),
+    )
+except ValueError:
+    GRACE_SECONDS = DEFAULT_GRACE_SECONDS
 
 running = True
 
@@ -88,6 +98,7 @@ def run(touch: InputDevice, stylus: InputDevice) -> None:
             code in stylus.active_keys()
             for code in (ecodes.BTN_TOOL_PEN, ecodes.BTN_TOOL_RUBBER)
         )
+        blocked_until = 0.0
 
         while running:
             for selected_key, _ in selector.select(timeout=1):
@@ -104,11 +115,15 @@ def run(touch: InputDevice, stylus: InputDevice) -> None:
 
                             if next_proximity and not pen_in_proximity:
                                 release_contacts(output, active_slots, has_btn_touch)
+                                blocked_until = 0.0
+                            elif not next_proximity and pen_in_proximity:
+                                blocked_until = time.monotonic() + GRACE_SECONDS
 
                             pen_in_proximity = next_proximity
                         continue
 
-                    if pen_in_proximity:
+                    touch_blocked = pen_in_proximity or time.monotonic() < blocked_until
+                    if touch_blocked:
                         if (
                             event.type == ecodes.EV_SYN
                             and event.code == ecodes.SYN_REPORT

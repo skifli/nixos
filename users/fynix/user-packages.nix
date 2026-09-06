@@ -89,16 +89,18 @@ in
     # New!
     systemd.user.services.stylus-touch-arbitration = {
       Unit = {
-        Description = "Suppress touchscreen input while the stylus is in proximity";
+        Description = "Suppress touchscreen input while the stylus is in proximity or grace period";
         PartOf = [ "graphical-session.target" ];
         After = [ "graphical-session.target" ];
       };
       Service = {
         Type = "simple";
+        Environment = "STYLUS_TOUCH_GRACE_SECONDS=3";
         ExecStart = "${stylusTouchPython}/bin/python ${./scripts/stylus-touch-arbitration.py}";
         Restart = "on-failure";
         RestartSec = 2;
       };
+      Install.WantedBy = [ "graphical-session.target" ];
     };
 
     # Include an input override file that the rotation daemon updates
