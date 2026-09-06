@@ -1,6 +1,7 @@
 {
   inputs,
   pkgs,
+  pkgsUnstable,
   ...
 }:
 {
@@ -20,6 +21,9 @@
     android-tools # Provides adb/fastboot (ensure adb available system-wide)
 
     fbcat # Allows taking screenshots of a TTY
+
+    nix-tree # Interactively browse a Nix store paths dependencies
+    (pkgsUnstable.gdu) # Disk usage analyzer with console interface
 
     # WAS IN LYRA? MOVED HERE!
     ffmpeg-full
