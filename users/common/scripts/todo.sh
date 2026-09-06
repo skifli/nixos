@@ -4,33 +4,45 @@ set -euo pipefail
 TODO_FILE="$HOME/Documents/custom-scripts/todo.json"
 FONT="${FONT_MONOSPACE:-JetBrainsMono Nerd Font}"
 FONT_SIZE="${FONT_SIZE_APPLICATIONS:-11}"
+MODE="${1:-interactive}"
 
-# Only run mkdir if the path doesn't exist as a directory AND isn't a symlink
 TARGET_DIR="$(dirname "$TODO_FILE")"
 
+# Only wait for storage if running on startup
+if [ ! -d "$TARGET_DIR" ] && [ "$MODE" = "--startup" ]; then
+    STORAGE_GRACE="${STORAGE_GRACE_SECONDS:-300}"
+    STORAGE_WAITED=0
+
+    while [ ! -d "$TARGET_DIR" ] && [ "$STORAGE_WAITED" -lt "$STORAGE_GRACE" ]; do
+        sleep 1
+        STORAGE_WAITED=$((STORAGE_WAITED + 1))
+    done
+fi
+
+# Try creating directory if it doesn't exist and isn't a broken symlink
 if [ ! -d "$TARGET_DIR" ] && [ ! -L "$TARGET_DIR" ]; then
     mkdir -p "$TARGET_DIR" 2>/dev/null || true
 fi
 
 if [ ! -d "$TARGET_DIR" ]; then
-    STORAGE_GRACE="${STORAGE_GRACE_SECONDS:-30}"
-    STORAGE_WAITED=0
-
-    while [ ! -d "$TARGET_DIR" ] && [ "$STORAGE_WAITED" -lt "$STORAGE_GRACE" ]; do
-        sleep 1
-
-        STORAGE_WAITED=$((STORAGE_WAITED + 1))
-    done
-
-    mkdir -p "$TARGET_DIR" 2>/dev/null || true
+    case "$MODE" in
+        "--check")
+            # Exit because timer will retry in 1 minute
+            exit 0
+            ;;
+        "--startup")
+            # Storage didn't show up during startup; exit then without an error
+            exit 0
+            ;;
+        *)
+            notify-send -e -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" -u critical -t 5000 "Reminders error" "Storage dir is currently unreachable"
+            exit 1
+            ;;
+    esac
 fi
 
-# Only try to init the file if the directory/link is actually accessible
-if [ -d "$TARGET_DIR" ]; then
-    [ -f "$TODO_FILE" ] || echo "[]" > "$TODO_FILE"
-else
-    notify-send -e -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" -u critical -t 0 "Reminders error" "Storage dir is currently unreachable"
-fi
+# Initialize file if missing
+[ -f "$TODO_FILE" ] || echo "[]" > "$TODO_FILE"
 
 fuzzel_prompt() {
     local prompt="$1"
