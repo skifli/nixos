@@ -114,6 +114,125 @@
             }\"}" },
             "createdAt": 1783761415,
             "expansion": { "keyword": "!pat", "apps": [], "word": false }
+          },
+          {
+            "id": "snp-a81d4f29e10c",
+            "name": "Git: amend and force push",
+            "data": { "text": "git add -A && git commit --amend --no-edit && git push --force-with-lease" },
+            "createdAt": 1788694231,
+            "expansion": { "keyword": "!gamend", "apps": [], "word": false }
+          },
+          {
+            "id": "snp-b72e503af21d",
+            "name": "Git: undo last commit (keep staged)",
+            "data": { "text": "git reset --soft HEAD~1" },
+            "createdAt": 1788694231,
+            "expansion": { "keyword": "!gundo", "apps": [], "word": false }
+          },
+          {
+            "id": "snp-c63f614b032e",
+            "name": "Git: hard reset to origin main",
+            "data": { "text": "git fetch origin main && git checkout main && git reset --hard origin/main" },
+            "createdAt": 1788694231,
+            "expansion": { "keyword": "!greset", "apps": [], "word": false }
+          },
+          {
+            "id": "snp-d54a725c143f",
+            "name": "Git: discard all local changes",
+            "data": { "text": "git reset --hard HEAD && git clean -fd" },
+            "createdAt": 1788694231,
+            "expansion": { "keyword": "!gnuke", "apps": [], "word": false }
+          },
+          {
+            "id": "snp-e45b836d254a",
+            "name": "Git: quick WIP commit + push",
+            "data": { "text": "git add -A && git commit -m \"wip: save progress\" && git push" },
+            "createdAt": 1788694231,
+            "expansion": { "keyword": "!gwip", "apps": [], "word": false }
+          },
+          {
+            "id": "snp-f36c947e365b",
+            "name": "Git: prune merged local branches",
+            "data": { "text": "git fetch -p && git branch -vv | awk '/: gone]/{print $1}' | xargs -r git branch -D" },
+            "createdAt": 1788694231,
+            "expansion": { "keyword": "!gprune", "apps": [], "word": false }
+          },
+          {
+            "id": "snp-027d058f476c",
+            "name": "Git: current short SHA",
+            "data": { "text": "git rev-parse --short HEAD" },
+            "createdAt": 1788694231,
+            "expansion": { "keyword": "!gsha", "apps": [], "word": false }
+          },
+          {
+            "id": "snp-138e169a587d",
+            "name": "Git: current branch name",
+            "data": { "text": "git rev-parse --abbrev-ref HEAD" },
+            "createdAt": 1788694231,
+            "expansion": { "keyword": "!gbranch", "apps": [], "word": false }
+          },
+          {
+            "id": "snp-46b1492d8ba0",
+            "name": "Git: safe pull w/ rebase + autostash",
+            "data": { "text": "git pull --rebase --autostash" },
+            "createdAt": 1788694231,
+            "expansion": { "keyword": "!gpullr", "apps": [], "word": false }
+          },
+          {
+            "id": "snp-57c25a3e9cb1",
+            "name": "Git: push new branch + set upstream",
+            "data": { "text": "git push -u origin HEAD" },
+            "createdAt": 1788694231,
+            "expansion": { "keyword": "!gpushu", "apps": [], "word": false }
+          },
+          {
+            "id": "snp-68d36b4fac12",
+            "name": "Git: show unpushed commits",
+            "data": { "text": "git log @{u}..HEAD --oneline" },
+            "createdAt": 1788694231,
+            "expansion": { "keyword": "!gunpushed", "apps": [], "word": false }
+          },
+          {
+            "id": "snp-79e47c50bd23",
+            "name": "Git: full recursive submodule sync and update",
+            "data": { "text": "git submodule sync --recursive && git submodule update --init --recursive" },
+            "createdAt": 1788694231,
+            "expansion": { "keyword": "!gsub", "apps": [], "word": false }
+          },
+          {
+            "id": "snp-8af58d61ce34",
+            "name": "Git: stash all (including untracked files)",
+            "data": { "text": "git stash -u" },
+            "createdAt": 1788694231,
+            "expansion": { "keyword": "!gstash", "apps": [], "word": false }
+          },
+          {
+            "id": "snp-9b069e72df45",
+            "name": "Git: nuclear clean (untracked + gitignore caches)",
+            "data": { "text": "git clean -xdf" },
+            "createdAt": 1788694231,
+            "expansion": { "keyword": "!gcleanall", "apps": [], "word": false }
+          },
+          {
+            "id": "snp-0c17af83e056",
+            "name": "Git: diff only staged changes",
+            "data": { "text": "git diff --staged" },
+            "createdAt": 1788694231,
+            "expansion": { "keyword": "!gdiffs", "apps": [], "word": false }
+          },
+          {
+            "id": "snp-1d28b094f167",
+            "name": "Git: pretty compact commit graph",
+            "data": { "text": "git log --graph --oneline --decorate --all" },
+            "createdAt": 1788694231,
+            "expansion": { "keyword": "!glog", "apps": [], "word": false }
+          },
+          {
+            "id": "snp-2e39c1a50278",
+            "name": "Git: stash, pull, pop",
+            "data": { "text": "git stash -u && git pull && git stash pop" },
+            "createdAt": 1788694231,
+            "expansion": { "keyword": "!gsp", "apps": [], "word": false }
           }
         ]
       '';
