@@ -7,16 +7,16 @@ notify-send -e -a niri -i "/home/${USER}/.local/share/misc/niri-icon.svg" -u low
 stash_pomodoro_if_running
 
 # Future me: For zed you can do e.g., :45:10 to put ze cursor on line 45, column 10
-ensure_window_exists "org.gnome.Evince" "main.pdf — hmon NEA Writeup" "evince ~/Documents/hmon-nea/src/out/main.pdf" "org.gnome.Evince" "main.pdf — hmon NEA Writeup"
-ensure_window_exists "dev.zed.Zed" "hmon-nea —" "zeditor ~/Documents/hmon-nea ~/Documents/hmon-nea/src/main.tex" "dev.zed.Zed" "hmon-nea —"
-ensure_window_exists "dev.zed.Zed" "hmon —" "zeditor ~/Documents/hmon ~/Documents/hmon/src/main.c" "dev.zed.Zed" "hmon —"
+ensure_window_exists "org.gnome.Evince" "main.pdf — hmon NEA Writeup" "evince /mnt/Remote-Storage/hmon-nea/src/out/main.pdf" "org.gnome.Evince" "main.pdf — hmon NEA Writeup"
+ensure_window_exists "dev.zed.Zed" "hmon-nea —" "zeditor /mnt/Remote-Storage/hmon-nea /mnt/Remote-Storage/hmon-nea/src/main.tex" "dev.zed.Zed" "hmon-nea —"
+ensure_window_exists "dev.zed.Zed" "hmon —" "zeditor /mnt/Remote-Storage/hmon ~/Documents/hmon/src/main.c" "dev.zed.Zed" "hmon —"
 
 # Check if the process is already running to avoid duplicates
 if ! pgrep -f "zeditor-synctex.sh" > /dev/null; then
   notify-send -e -a niri -i "/home/${USER}/.local/share/misc/niri-icon.svg" -u low -t 2500 "NEA configuration" "Launching Zed SyncTeX daemon"
 
   # 3>&- closes File Descriptor 3, stopping direnv from blocking
-  bash ~/Documents/hmon-nea/src/zeditor-synctex.sh </dev/null >/tmp/zeditor-synctex.log 2>&1 3>&- & # Redirects stdout to a log file not dev/null, but stdin is dev/null and closes FD 3 to avoid direnv blocking
+  bash /mnt/Remote-Storage/hmon-nea/src/zeditor-synctex.sh </dev/null >/tmp/zeditor-synctex.log 2>&1 3>&- & # Redirects stdout to a log file not dev/null, but stdin is dev/null and closes FD 3 to avoid direnv blocking
 
   disown
 fi

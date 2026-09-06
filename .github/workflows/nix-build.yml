@@ -3,9 +3,45 @@ name: "Build & cache"
 on:
   workflow_dispatch:
 
+env:
+  CACHIX_PUSH_FILTER: "(-base-prefix-[123]$|Affinity-20x64\\.exe$|-affinity-extracted-sources$)"
+
 jobs:
+  warm-anki-seara:
+    name: Cache Anki Seara addon
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          token: ${{ secrets.GH_PAT }}
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Install Nix
+        uses: DeterminateSystems/determinate-nix-action@main
+
+      - name: Setup Cachix
+        uses: cachix/cachix-action@v17
+        with:
+          name: "skifli-nixos"
+          authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
+          pushFilter: "${{ env.CACHIX_PUSH_FILTER }}"
+
+      - name: Build and cache x86_64 Anki Seara addon
+        run: |
+          SEARA_PATH=$(nix build \
+            --accept-flake-config \
+            --impure \
+            --no-link \
+            --print-out-paths \
+            --expr '(builtins.getFlake (toString ./.)).inputs.anki-seara.packages."x86_64-linux".default')
+          cachix push skifli-nixos "$SEARA_PATH"
+
   build:
     name: Build (${{ matrix.host }})
+    needs: warm-anki-seara
     runs-on: ${{ matrix.runner }}
     env:
       CACHIX_PUSH_FILTER: "(-base-prefix-[123]$|Affinity-20x64\\.exe$|-affinity-extracted-sources$)"
@@ -78,7 +114,7 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: |
           PATHS_TO_PUSH="$LIGHT_PATH"
-          if [ -n "$DARK_PATH" ]; then
+          if [ -n "${DARK_PATH:-}" ]; then
             PATHS_TO_PUSH="$PATHS_TO_PUSH $DARK_PATH"
           fi
 
@@ -86,8 +122,7 @@ jobs:
             | grep -v -E "$CACHIX_PUSH_FILTER" \
             | cachix push skifli-nixos
 
-          # Pin both to 2 latest revisions
           cachix pin skifli-nixos "${{ matrix.host }}-light" "$LIGHT_PATH" --keep-revisions 2
-          if [ -n "$DARK_PATH" ]; then
+          if [ -n "${DARK_PATH:-}" ]; then
             cachix pin skifli-nixos "${{ matrix.host }}-dark" "$DARK_PATH" --keep-revisions 2
           fi
