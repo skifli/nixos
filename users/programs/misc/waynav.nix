@@ -40,6 +40,7 @@ let
     }));
 
   waynavPkg = baseWaynavPkg.overrideAttrs (_old: {
+    # TODO: Upstream patch?
     patches = [ ./waynav-fydetab.patch ];
   });
 in
