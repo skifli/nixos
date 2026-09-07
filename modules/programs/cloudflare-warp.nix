@@ -51,7 +51,7 @@ in
       ExecStart = pkgs.writeShellScript "warp-ensure" ''
         set -euo pipefail
 
-        WARP_CLI="${pkgs.cloudflare-warp}/bin/warp-cli"
+        WARP_CLI="${pkgs.cloudflare-warp}/bin/warp-cli --accept-tos"
 
         mapfile -t PREFIXES < <(
           grep -v '^\s*#' "$WARP_PREFIXES_FILE" | grep -v '^\s*$' || true
