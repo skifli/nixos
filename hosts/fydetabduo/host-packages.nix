@@ -13,6 +13,7 @@
     swaylock-effects
     wlopm
     usb-modeswitch
+    alsa-utils
 
     # Hardware debug
     rkdeveloptool
