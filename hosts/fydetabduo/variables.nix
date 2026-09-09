@@ -15,6 +15,7 @@
   enabledImports = [
     ../../modules/core/audio.nix
     # boot.nix not imported — fyde-nix handles boot for fydetabduo
+    ../../modules/core/btrfs.nix
     ../../modules/core/fonts.nix
     ../../modules/core/locale.nix
     ../../modules/core/networking.nix
@@ -24,7 +25,7 @@
     ../../modules/core/users.nix
     ../../modules/core/zram.nix
 
-    ../../modules/programs/cloudflare-warp.nix
+    ../../modules/programs/oracle-proxy.nix
   ];
 
   enabledUsers = [ "fynix" ];
@@ -86,6 +87,11 @@
     };
   };
 
+  # Snapshotting on mah fydetabduo is provided by fyde-nix's fydetab-snapshot
+  # (btrfs subvolume snapshot -r / with set-default rollback), not NixOS
+  # snapper. The tablet is only a single top-level subvol (subvolid=5), so a
+  # snapper config would snapshot the whole disk - tis a lotta data meow.
+
   sessionVariables = {
   };
 
@@ -105,5 +111,13 @@
   timezone = "Europe/London";
   location = "London+England";
 
-  declarativeWifi = 2;
+  declarativeWifi = [
+    "psk"
+    {
+      type = "psk";
+      privacy = true;
+    }
+    "psk"
+    "eap"
+  ];
 }
