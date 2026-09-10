@@ -7,20 +7,43 @@
 let
   wifiSecretKey = "${hostVars.hostname}-wifi.env";
   hasWifiSecret = builtins.hasAttr wifiSecretKey config.age.secrets;
-  wifiCount = hostVars.declarativeWifi or 0;
+  normalizeWifi =
+    entry:
+    if builtins.isString entry then
+      { type = entry; privacy = false; }
+    else
+      entry // { type = entry.type; privacy = entry.privacy or false; };
+
+  wifiTypes = map normalizeWifi (hostVars.declarativeWifi or [ ]);
+  wifiCount = builtins.length wifiTypes;
+
+  # Prefer networks in order of the list: wifi-1 is most preferred, then wifi-2, etc.
+  priorityFor = i: (wifiCount - i + 1) * 10;
+
+  privacySettings = {
+    wifi = {
+      cloned-mac-address = "random";
+      mac-address-randomization = 1;
+    };
+    ipv4."dhcp-send-hostname" = false;
+    ipv6 = {
+      "dhcp-send-hostname" = false;
+      "dhcp-duid" = "ll";
+      "addr-gen-mode" = "stable-privacy";
+      "ip6-privacy" = 2;
+    };
+  };
 
   mkPsk =
-    i:
+    i: privacy:
     let
       idx = toString i;
-    in
-    {
-      name = "wifi-${idx}-psk";
-      value = {
+      settings = {
         connection = {
           id = "$WIFI_${idx}_SSID";
           type = "wifi";
           autoconnect = true;
+          autoconnect-priority = priorityFor i;
         };
         wifi = {
           mode = "infrastructure";
@@ -38,20 +61,19 @@ let
           method = "auto";
         };
       };
-    };
+    in
+    if privacy then lib.recursiveUpdate settings privacySettings else settings;
 
   mkEap =
-    i:
+    i: privacy:
     let
       idx = toString i;
-    in
-    {
-      name = "wifi-${idx}-eap";
-      value = {
+      settings = {
         connection = {
-          id = "$WIFI_${idx}_SSID-Enterprise";
+          id = "$WIFI_${idx}_SSID";
           type = "wifi";
           autoconnect = true;
+          autoconnect-priority = priorityFor i;
         };
         wifi = {
           mode = "infrastructure";
@@ -67,8 +89,7 @@ let
           identity = "$WIFI_${idx}_USER";
           password = "$WIFI_${idx}_PASS";
           phase2-auth = "mschapv2";
-          system-ca-certs = true;
-          domain-suffix-match = "$WIFI_${idx}_DOMAIN";
+          system-ca-certs = false;
         };
         ipv4.method = "auto";
         ipv6 = {
@@ -76,10 +97,24 @@ let
           method = "auto";
         };
       };
+    in
+    if privacy then lib.recursiveUpdate settings privacySettings else settings;
+
+  mkProfile =
+    i:
+    let
+      entry = builtins.elemAt wifiTypes (i - 1);
+      value =
+        if entry.type == "psk" then (mkPsk i entry.privacy)
+        else (mkEap i entry.privacy);
+    in
+    {
+      name = "wifi-${toString i}-${entry.type}";
+      inherit value;
     };
 
   indices = if wifiCount > 0 then lib.range 1 wifiCount else [ ];
-  allProfiles = (map mkPsk indices) ++ (map mkEap indices);
+  allProfiles = map mkProfile indices;
 in
 {
   networking = {
