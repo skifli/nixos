@@ -156,7 +156,7 @@
       TIMELINE_LIMIT_HOURLY = 6;
       TIMELINE_LIMIT_DAILY = 7;
       TIMELINE_LIMIT_WEEKLY = 4;
-      TIMELINE_LIMIT_MONTHLY = 3;
+      TIMELINE_LIMIT_MONTHLY = 12; # Long-term recovery, cheaper than yearly
       TIMELINE_LIMIT_YEARLY = 0;
     };
 
@@ -171,7 +171,7 @@
       TIMELINE_LIMIT_HOURLY = 12; # Keeps 12 hours of active file revisions
       TIMELINE_LIMIT_DAILY = 7; # Keeps daily backups for a week
       TIMELINE_LIMIT_WEEKLY = 4; # Keeps weekly snapshots for a month
-      TIMELINE_LIMIT_MONTHLY = 3; # Keeps monthly snapshots for a quarter
+      TIMELINE_LIMIT_MONTHLY = 12; # Keeps monthly snapshots for a year
       TIMELINE_LIMIT_YEARLY = 0;
     };
   };
@@ -202,5 +202,7 @@
   timezone = "Europe/London"; # Your timezone
   location = "London+England";
 
-  declarativeWifi = 1;
+  declarativeWifi = [
+    "psk"
+  ];
 }
