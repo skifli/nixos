@@ -1,4 +1,4 @@
-{ hostVars, ... }: {
+{ hostVars, lib, ... }: {
   services.snapper = {
     persistentTimer = true;
 
@@ -14,5 +14,19 @@
   systemd.tmpfiles.rules = [
     "v /.snapshots 0750 root root -"
     "v /home/.snapshots 0750 root root -"
-  ];
+    # Exclude specifically large dirs from /home snapshots by making them
+    # nested subvolumes. btrfs snapshots do NOT recurse into nested subvols,
+    # so these paths are treated as empty in every /home snapshot.
+  ]
+  ++ lib.flatten (
+    map (username: [
+      "v /home/${username}/.cache 0700 ${username} users -"
+      "v /home/${username}/.local/share/Trash 0700 ${username} users -"
+      "v /home/${username}/.local/share/Steam 0700 ${username} users -"
+      # Electron app profile dirs (huge, high-churn caches). NOTE: anytype's
+      # actual note data lives under here too, so it won't be in snapshots.
+      "v /home/${username}/.config/Ferdium 0700 ${username} users -"
+      "v /home/${username}/.config/anytype 0700 ${username} users -"
+    ]) (hostVars.enabledUsers or [ ])
+  );
 }
