@@ -128,18 +128,6 @@ common
           "zen-beta"
         ];
       };
-      "Mod+Shift+D" = {
-        _props = {
-          hotkey-overlay-title = null;
-          allow-inhibiting = false;
-        };
-        spawn = [
-          "/home/${username}/.local/bin/find-or-make.sh"
-          "title"
-          "TigerVNC"
-          "TigerVNC"
-        ];
-      };
       "Mod+Shift+Y" = {
         _props = {
           hotkey-overlay-title = null;
@@ -151,6 +139,35 @@ common
           "affinity.exe"
           "affinity-v3"
         ];
+      };
+
+      "Mod+Ctrl+1" = {
+        _props = {
+          hotkey-overlay-title = null;
+          allow-inhibiting = false;
+        };
+        spawn = [ "/home/${username}/.local/bin/1-niri.sh" ];
+      };
+      "Mod+Ctrl+2" = {
+        _props = {
+          hotkey-overlay-title = null;
+          allow-inhibiting = false;
+        };
+        spawn = [ "/home/${username}/.local/bin/2-niri.sh" ];
+      };
+      "Mod+Ctrl+3" = {
+        _props = {
+          hotkey-overlay-title = null;
+          allow-inhibiting = false;
+        };
+        spawn = [ "/home/${username}/.local/bin/3-niri.sh" ];
+      };
+      "Mod+Ctrl+4" = {
+        _props = {
+          hotkey-overlay-title = null;
+          allow-inhibiting = false;
+        };
+        spawn = [ "/home/${username}/.local/bin/4-niri.sh" ];
       };
     };
 
