@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+. "$HOME/.local/bin/shared-state-lib.sh"
+
 STATE_DIR="$HOME/Documents/custom-scripts"
-mkdir -p "$STATE_DIR"
+mkdir -p "$STATE_DIR" || true
 STATE_FILE="$STATE_DIR/anki-pomodoro.state"
 
 FOCUS_NOTIF_ID=0
@@ -34,7 +36,7 @@ dismiss_notif() {
 
 cleanup() {
     set_dnd "off"
-    rm -f "$STATE_FILE"
+    rm -f "$STATE_FILE" || true
 
     dismiss_notif "$FOCUS_NOTIF_ID"
     dismiss_notif "$BREAK_NOTIF_ID"
@@ -83,7 +85,9 @@ while true; do
                 continue
             fi
 
-            echo "break" > "$STATE_FILE"
+            TMP=$(mktemp)
+            printf '%s\n' break > "$TMP"
+            state_commit "$STATE_FILE" "$TMP" || true
             notify-send -e -a "anki" -i "/home/${USER}/.local/share/misc/Anki-icon.svg" -u normal "Break started" "5 minutes break time. Notifications unmuted."
             termdown 5m -T "Break #$ROUND" || true
             BREAK_NOTIF_ID=$(notify-send -p -e -a "anki" -i "/home/${USER}/.local/share/misc/Anki-icon.svg" -u critical -t 0 "Break ended" "Break finished. Ready for Round $((ROUND + 1))?")
@@ -93,7 +97,9 @@ while true; do
     fi
 
     # Focus Phase
-    echo "focus" > "$STATE_FILE"
+    TMP=$(mktemp)
+    printf '%s\n' focus > "$TMP"
+    state_commit "$STATE_FILE" "$TMP" || true
     set_dnd "on"
     notify-send -e -a "anki" -i "/home/${USER}/.local/share/misc/Anki-icon.svg" -u low "Focus session started" "Round $ROUND: 25 minutes focus. Notifications muted."
 
@@ -119,7 +125,9 @@ while true; do
     fi
 
     # Break Phase
-    echo "break" > "$STATE_FILE"
+    TMP=$(mktemp)
+    printf '%s\n' break > "$TMP"
+    state_commit "$STATE_FILE" "$TMP" || true
     notify-send -e -a "anki" -i "/home/${USER}/.local/share/misc/Anki-icon.svg" -u normal "Break started" "5 minutes break time. Notifications unmuted."
 
     termdown 5m -T "Break #$ROUND" || true
