@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+. "$HOME/.local/bin/shared-state-lib.sh"
+
 STATE_DIR="$HOME/Documents/custom-scripts"
 mkdir -p "$STATE_DIR"
 PID_FILE="$STATE_DIR/autoclicker.pid"
@@ -13,14 +15,14 @@ if [ -f "$PID_FILE" ]; then
 
     if kill -0 "$PID" 2>/dev/null; then
         kill "$PID" 2>/dev/null || true
-        rm -f "$PID_FILE"
+        rm -f "$PID_FILE" || true
 
         notify-send -e -a "Auto-Clicker" -i "$HOME/.local/share/misc/niri-icon.svg" -u low "Auto-Clicker stopped" "Clicking loop terminated."
 
         exit 0
     fi
 
-    rm -f "$PID_FILE"
+    rm -f "$PID_FILE" || true
 fi
 
 if ! pgrep -f ydotoold >/dev/null 2>&1; then
@@ -104,6 +106,12 @@ esac
 ) &
 
 CLICKER_PID=$!
-echo "$CLICKER_PID" > "$PID_FILE"
+TMP=$(mktemp)
+printf '%s\n' "$CLICKER_PID" > "$TMP"
+if ! state_commit "$PID_FILE" "$TMP"; then
+    kill "$CLICKER_PID" 2>/dev/null || true
+    notify-send -e -a "Auto-Clicker" -i "$HOME/.local/share/misc/niri-icon.svg" -u critical -t 5000 "Auto-Clicker error" "Storage dir is currently unreachable; clicker stopped"
+    exit 1
+fi
 
 notify-send -e -a "Auto-Clicker" -i "$HOME/.local/share/misc/niri-icon.svg" -u low "Auto-Clicker started" "Mode: $MODE_SELECTION\nPress hotkey again to stop."
