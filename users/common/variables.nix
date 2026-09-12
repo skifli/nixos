@@ -47,6 +47,7 @@ let
       "styles"
       "typst"
       "waynav"
+      "wayscriber"
       "wl-clip-persist"
       "wshowkeys"
       "ydotool"
