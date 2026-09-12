@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+. "$HOME/.local/bin/shared-state-lib.sh"
+
 TODO_FILE="$HOME/Documents/custom-scripts/todo.json"
 FONT="${FONT_MONOSPACE:-JetBrainsMono Nerd Font}"
 FONT_SIZE="${FONT_SIZE_APPLICATIONS:-11}"
@@ -43,6 +45,25 @@ fi
 
 # Initialize file if missing
 [ -f "$TODO_FILE" ] || echo "[]" > "$TODO_FILE"
+
+# Guards against a partially written/corrupt JSON (e.g., after a Wi-Fi boom).
+# If the found file is not a valid array, restore the newest valid backup.
+if ! jq -e 'type == "array"' "$TODO_FILE" >/dev/null 2>&1; then
+    RECOVERED=$(state_json_array "$TODO_FILE") || RECOVERED=""
+
+    if [ -n "$RECOVERED" ]; then
+        TMP=$(mktemp)
+        printf '%s\n' "$RECOVERED" > "$TMP"
+        state_commit "$TODO_FILE" "$TMP"
+        notify-send -e -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" -u critical -t 5000 "Reminders recovered" "todo.json was corrupt; restored latest valid backup"
+    else
+        # Nothing valid anywhere; start a clean list rather than crash.
+        TMP=$(mktemp)
+        printf '%s\n' "[]" > "$TMP"
+        state_commit "$TODO_FILE" "$TMP"
+        notify-send -e -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" -u critical -t 5000 "Reminders reset" "todo.json was unrecoverable; started with an empty list"
+    fi
+fi
 
 fuzzel_prompt() {
     local prompt="$1"
@@ -125,7 +146,7 @@ if [ "${1:-}" = "--check" ]; then
     jq -r --argjson now "$NOW" '.[] | select(.done != true and .due_ts != null and .due_ts <= $now and .notified != true) | .id + "|" + .text' "$TODO_FILE" | while IFS='|' read -r id text; do
         notify-send -e -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" -u critical -t 0 "Reminder due" "$text"
         TMP=$(mktemp)
-        jq --arg id "$id" 'map(if .id == $id then .notified = true else . end)' "$TODO_FILE" > "$TMP" && mv "$TMP" "$TODO_FILE"
+        jq --arg id "$id" 'map(if .id == $id then .notified = true else . end)' "$TODO_FILE" > "$TMP" && state_commit "$TODO_FILE" "$TMP"
     done
 
     exit 0
@@ -296,7 +317,7 @@ if [[ "$SELECTED" == *"$ADD_HEADER"* ]]; then
        --arg due_str "$DUE_STR" \
        --argjson on_startup "$ON_STARTUP" \
        '. += [{"id": $id, "text": $text, "done": false, "due_ts": $due_ts, "due_str": $due_str, "on_startup": $on_startup, "notified": false}]' \
-       "$TODO_FILE" > "$TMP" && mv "$TMP" "$TODO_FILE"
+       "$TODO_FILE" > "$TMP" && state_commit "$TODO_FILE" "$TMP"
 
     if [ "$ON_STARTUP" = "true" ]; then
         notify-send -e -u low -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Todo added" "'$TODO_TEXT' (set for next startup)"
@@ -324,7 +345,7 @@ $COMPLETED_ITEMS"
 
     if [[ "$HIST_SEL" == *"[Clear All Completed History]"* ]]; then
         TMP=$(mktemp)
-        jq 'map(select(.done != true))' "$TODO_FILE" > "$TMP" && mv "$TMP" "$TODO_FILE"
+        jq 'map(select(.done != true))' "$TODO_FILE" > "$TMP" && state_commit "$TODO_FILE" "$TMP"
         notify-send -e -u low -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "History cleared"
     else
         HIST_ID=$(echo "$HIST_SEL" | sed -n 's/.*(ID:\([0-9]*\))/\1/p')
@@ -337,12 +358,12 @@ $COMPLETED_ITEMS"
         case "$(echo "$HIST_ACT_SEL" | tr '[:upper:]' '[:lower:]')" in
             *"restore"*)
                 TMP=$(mktemp)
-                jq --arg id "$HIST_ID" 'map(if .id == $id then .done = false | .notified = false else . end)' "$TODO_FILE" > "$TMP" && mv "$TMP" "$TODO_FILE"
+                jq --arg id "$HIST_ID" 'map(if .id == $id then .done = false | .notified = false else . end)' "$TODO_FILE" > "$TMP" && state_commit "$TODO_FILE" "$TMP"
                 notify-send -e -u low -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Task restored"
                 ;;
             *"delete"*)
                 TMP=$(mktemp)
-                jq --arg id "$HIST_ID" 'map(select(.id != $id))' "$TODO_FILE" > "$TMP" && mv "$TMP" "$TODO_FILE"
+                jq --arg id "$HIST_ID" 'map(select(.id != $id))' "$TODO_FILE" > "$TMP" && state_commit "$TODO_FILE" "$TMP"
                 notify-send -e -u low -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Task deleted"
                 ;;
         esac
@@ -363,7 +384,7 @@ else
     case "$ACT_LOWER" in
         *"completed"*)
             TMP=$(mktemp)
-            jq --arg id "$TODO_ID" 'map(if .id == $id then .done = true else . end)' "$TODO_FILE" > "$TMP" && mv "$TMP" "$TODO_FILE"
+            jq --arg id "$TODO_ID" 'map(if .id == $id then .done = true else . end)' "$TODO_FILE" > "$TMP" && state_commit "$TODO_FILE" "$TMP"
             notify-send -e -u low -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Task completed"
             ;;
         *"change"*)
@@ -387,7 +408,7 @@ else
                --arg due_str "$DUE_STR" \
                --argjson on_startup "$ON_STARTUP" \
                'map(if .id == $id then .due_ts = $due_ts | .due_str = $due_str | .on_startup = $on_startup | .notified = false else . end)' \
-               "$TODO_FILE" > "$TMP" && mv "$TMP" "$TODO_FILE"
+               "$TODO_FILE" > "$TMP" && state_commit "$TODO_FILE" "$TMP"
             notify-send -e -u low -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Reminder updated"
             ;;
         *"edit"*)
@@ -397,13 +418,13 @@ else
                 TMP=$(mktemp)
                 jq --arg id "$TODO_ID" --arg text "$NEW_TEXT" \
                    'map(if .id == $id then .text = $text else . end)' \
-                   "$TODO_FILE" > "$TMP" && mv "$TMP" "$TODO_FILE"
+                   "$TODO_FILE" > "$TMP" && state_commit "$TODO_FILE" "$TMP"
                 notify-send -e -u low -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Task updated"
             fi
             ;;
         *"delete"*)
             TMP=$(mktemp)
-            jq --arg id "$TODO_ID" 'map(select(.id != $id))' "$TODO_FILE" > "$TMP" && mv "$TMP" "$TODO_FILE"
+            jq --arg id "$TODO_ID" 'map(select(.id != $id))' "$TODO_FILE" > "$TMP" && state_commit "$TODO_FILE" "$TMP"
             notify-send -e -u low -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Task deleted"
             ;;
         *)
