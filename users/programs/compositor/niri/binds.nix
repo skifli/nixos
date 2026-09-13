@@ -741,6 +741,18 @@
     spawn-sh = "grim - | wl-copy";
   };
 
+  # SCREEN ANNOTATION
+  "Mod+Shift+W" = {
+    _props = {
+      hotkey-overlay-title = "Toggle Wayscriber overlay";
+      allow-inhibiting = false;
+    };
+    spawn = [
+      "wayscriber"
+      "--daemon-toggle"
+    ];
+  };
+
   # MEDIA KEYS
   "XF86AudioRaiseVolume" = {
     _props = {
@@ -1038,6 +1050,18 @@
     };
     spawn = [ "/home/${userVars.username}/.local/bin/rdp.sh" ];
   };
+  "Mod+Shift+D" = {
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
+    spawn = [
+      "/home/${userVars.username}/.local/bin/find-or-make.sh"
+      "title"
+      "TigerVNC"
+      "TigerVNC"
+    ];
+  };
   "Mod+Alt+G" = {
     _props = {
       hotkey-overlay-title = "Toggle GPU Screen recorder";
@@ -1176,35 +1200,5 @@
       "/home/${userVars.username}/.local/bin/emoji-picker.sh"
       userVars.programs.terminal
     ];
-  };
-
-  # Preset layout scripts
-  "Mod+Ctrl+1" = {
-    _props = {
-      hotkey-overlay-title = null;
-      allow-inhibiting = false;
-    };
-    spawn = [ "/home/${userVars.username}/.local/bin/1-niri.sh" ];
-  };
-  "Mod+Ctrl+2" = {
-    _props = {
-      hotkey-overlay-title = null;
-      allow-inhibiting = false;
-    };
-    spawn = [ "/home/${userVars.username}/.local/bin/2-niri.sh" ];
-  };
-  "Mod+Ctrl+3" = {
-    _props = {
-      hotkey-overlay-title = null;
-      allow-inhibiting = false;
-    };
-    spawn = [ "/home/${userVars.username}/.local/bin/3-niri.sh" ];
-  };
-  "Mod+Ctrl+4" = {
-    _props = {
-      hotkey-overlay-title = null;
-      allow-inhibiting = false;
-    };
-    spawn = [ "/home/${userVars.username}/.local/bin/4-niri.sh" ];
   };
 }

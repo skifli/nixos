@@ -1,13 +1,27 @@
-{ userVars, ... }:
+{
+  hostVars,
+  lib,
+  userVars,
+  ...
+}:
 let
+  # On the Fydetab (RK3588 / Mesa panthor) recomputing blur over changing
+  # scenes can render weirdly where two blurred/translucent surfaces overlap,
+  # e.g., Zen under the Vicinae launcher.
+  browserEffect = {
+    blur = lib.mkDefault true;
+    xray = lib.mkDefault true;
+    noise = 0.01;
+    saturation = 1.1;
+  }
+  // lib.optionalAttrs (hostVars.hostname == "fydetabduo") {
+    xray = false;
+  };
+
   # Map over all browsers to generate for each blur and layout rules
   browserRules = map (browser: {
     match._props.app-id._raw = ''r#"(?i)${browser}"#'';
-    background-effect = {
-      blur = true;
-      noise = 0.01;
-      saturation = 1.1;
-    };
+    background-effect = browserEffect;
     open-maximized = true;
   }) userVars.programs.browsers;
 
