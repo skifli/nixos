@@ -26,7 +26,8 @@
   user_pref("browser.ml.linkPreview.enabled", false);
 
   // Optional hardening
-  user_pref("identity.fxaccounts.enabled", false); // Disable Firefox Sync
+  // BUT, enable Mozilla account / Zen sync
+  user_pref("identity.fxaccounts.enabled", true);
   user_pref("browser.firefox-view.feature-tour", "{\"screen\":\"\",\"complete\":true}");
 
   user_pref("signon.rememberSignons", false);

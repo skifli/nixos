@@ -23,7 +23,7 @@ in
   BlockAboutSupport = false;
   # Containers = { };
   DisableAppUpdate = true;
-  DisableFirefoxAccounts = true;
+  DisableFirefoxAccounts = false; # For normal tabs syncing!
   DisableFirefoxScreenshots = true;
   DisableFirefoxStudies = true;
   DisableFormHistory = true;
