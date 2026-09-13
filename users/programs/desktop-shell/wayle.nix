@@ -43,6 +43,15 @@ lib.mkIf (hostVars.hostname != "fydetabduo") {
           dropdown-opacity = 95;
           layout = [
             {
+              left = [
+                "dashboard"
+                "custom-screencast"
+                "custom-screen_recorder"
+                "systray"
+                "niri-workspaces"
+                "custom-system_errors"
+                "window-title"
+              ];
               center = [
                 "cpu"
                 "custom-load"
@@ -50,23 +59,14 @@ lib.mkIf (hostVars.hostname != "fydetabduo") {
                 "custom-storage"
                 "weather"
               ];
-              left = [
-                "dashboard"
-                "custom-screencast"
-                "custom-screen_recorder"
-                "niri-workspaces"
-                "custom-system_errors"
-                "window-title"
-              ];
-              monitor = userVars.bar.output;
               right = [
                 "volume"
                 "microphone"
-                "systray"
                 "network"
                 "clock"
                 "notifications"
               ];
+              monitor = userVars.bar.output;
               show = true;
             }
             {
