@@ -2,8 +2,8 @@
 blammo() {
   if [ -f /tmp/blammo ]; then
     cat /tmp/blammo
-  elif [ -f "$HOME/Documents/custom-scripts/blammo" ]; then
-    cat "$HOME/Documents/custom-scripts/blammo"
+  elif timeout 1 test -f "$HOME/Documents/custom-scripts/blammo" && timeout 1 cat "$HOME/Documents/custom-scripts/blammo"; then
+    :
   else
     echo "No blammo selection found"
   fi
@@ -13,8 +13,8 @@ blammo() {
 precmd() {
   if [ -f /tmp/blammo ]; then
     blammo_in=$(cat /tmp/blammo 2>/dev/null)
-  elif [ -f "$HOME/Documents/custom-scripts/blammo" ]; then
-    blammo_in=$(cat "$HOME/Documents/custom-scripts/blammo" 2>/dev/null)
+  elif timeout 1 test -f "$HOME/Documents/custom-scripts/blammo" && blammo_in=$(timeout 1 cat "$HOME/Documents/custom-scripts/blammo" 2>/dev/null); then
+    :
   fi
 }
 
