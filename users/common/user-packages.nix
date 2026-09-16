@@ -1,6 +1,5 @@
 {
   pkgs,
-  pkgsUnstable,
   userVars,
   ...
 }:
@@ -41,7 +40,6 @@
       noto-fonts
       noto-fonts-color-emoji
       ocrmypdf
-      (pkgsUnstable.opencode)
       proton-vpn
       proton-vpn-cli
       swayimg # Used in some scripts (e.g., view-clipboard-image.sh)

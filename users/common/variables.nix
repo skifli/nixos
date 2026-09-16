@@ -43,6 +43,7 @@ let
       "nix-direnv"
       "nix-index-database"
       "nix-your-shell"
+      "opencode"
       "styles"
       "typst"
       "waynav"
