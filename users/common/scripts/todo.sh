@@ -57,9 +57,9 @@ fuzzel_prompt() {
     if [ -n "$text_data" ]; then
         # Calculate height
         num_lines=$(echo "$text_data" | wc -l)
-        if [ "$num_lines" -gt 12 ]; then
-            num_lines=12
-        fi
+        # if [ "$num_lines" -gt 12 ]; then
+        #     num_lines=12
+        # fi
         if [ "$num_lines" -lt "$min_lines" ]; then
             num_lines="$min_lines"
         fi
