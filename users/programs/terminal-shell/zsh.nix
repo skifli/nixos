@@ -1,5 +1,6 @@
 {
   config,
+  inputs,
   lib,
   pkgs,
   userVars,
@@ -7,6 +8,7 @@
 }:
 let
   blockers = userVars.historyBlockers or { };
+  terminalWakatime = inputs.terminal-wakatime.packages.${pkgs.system}.default;
 
   # Exact matches: "ls", "cd .."
   exactPatterns = blockers.exact or [ ];
@@ -106,6 +108,7 @@ in
         # Force the functions to the bottom of .zshrc
         initContent = lib.mkOrder 1500 ''
           export WL_COPY_BIN="${pkgs.wl-clipboard}/bin/wl-copy"
+          eval "$("${terminalWakatime}/bin/terminal-wakatime" init)"
 
           ${builtins.readFile ./zsh/initContent.sh}
         '';

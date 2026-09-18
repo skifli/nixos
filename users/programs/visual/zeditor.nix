@@ -24,6 +24,7 @@
         "markdownlint"
         "markdown-snippets"
         "nix"
+        "wakatime"
       ];
 
       # Declare and inject extra system packages directly into the environment where the Zed editor runs

@@ -862,6 +862,7 @@
         "nixpkgs": "nixpkgs_6",
         "nixpkgs-unstable": "nixpkgs-unstable_2",
         "stylix": "stylix",
+        "terminal-wakatime": "terminal-wakatime",
         "vicinae": "vicinae",
         "vicinae-extensions": "vicinae-extensions",
         "wshowkeys": "wshowkeys",
@@ -996,6 +997,26 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "terminal-wakatime": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1780526329,
+        "narHash": "sha256-hDglPhTKF1KByN1WXyNUx9mPhwYz78WbgOVbiy6FT7s=",
+        "owner": "hackclub",
+        "repo": "terminal-wakatime",
+        "rev": "c2317ca5ed8eec97977620ac5f7d878da0331f53",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hackclub",
+        "repo": "terminal-wakatime",
         "type": "github"
       }
     },

@@ -91,6 +91,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     }; # System wide theming
 
+    terminal-wakatime = {
+      url = "github:hackclub/terminal-wakatime";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     wshowkeys = {
       url = "github:DreamMaoMao/wshowkeys";
       inputs.nixpkgs.follows = "nixpkgs";

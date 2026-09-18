@@ -1,4 +1,5 @@
 {
+  inputs,
   pkgs,
   userVars,
   ...
@@ -43,6 +44,7 @@
       proton-vpn
       proton-vpn-cli
       swayimg # Used in some scripts (e.g., view-clipboard-image.sh)
+      inputs.terminal-wakatime.packages.${pkgs.system}.default
       wl-clipboard # Used in some scripts (e.g., emoji-picker.sh)
       wtype # Added for keystroke / paste simulation
       zstd # Short for Zstandard, this is a fast lossless compression algorithm, targeting real-time compression scenarios at zlib-level compression ratio
