@@ -10,9 +10,16 @@ let
   normalizeWifi =
     entry:
     if builtins.isString entry then
-      { type = entry; privacy = false; }
+      {
+        type = entry;
+        privacy = false;
+      }
     else
-      entry // { type = entry.type; privacy = entry.privacy or false; };
+      entry
+      // {
+        type = entry.type;
+        privacy = entry.privacy or false;
+      };
 
   wifiTypes = map normalizeWifi (hostVars.declarativeWifi or [ ]);
   wifiCount = builtins.length wifiTypes;
@@ -104,9 +111,7 @@ let
     i:
     let
       entry = builtins.elemAt wifiTypes (i - 1);
-      value =
-        if entry.type == "psk" then (mkPsk i entry.privacy)
-        else (mkEap i entry.privacy);
+      value = if entry.type == "psk" then (mkPsk i entry.privacy) else (mkEap i entry.privacy);
     in
     {
       name = "wifi-${toString i}-${entry.type}";
