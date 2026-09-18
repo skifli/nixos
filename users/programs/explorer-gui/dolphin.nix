@@ -100,7 +100,7 @@ in
         file = {
           # Wrapper so the script runs with the bundled Python (no pip/venv needed)
           ".local/bin/linux-file-converter-addon.py" = {
-            source = lfcaWrapper;
+            source = "${lfcaWrapper}/bin/linux-file-converter-addon.py";
             executable = true;
           };
 
