@@ -306,7 +306,10 @@ common
   programs = common.programs // {
     login-manager = "tuigreet";
     terminal = "foot";
-    other = common.programs.other ++ [ "qwarp" "rnote" ];
+    other = common.programs.other ++ [
+      "qwarp"
+      "rnote"
+    ];
   };
 
   stylixTargetsWhitelist = common.stylixTargetsWhitelist ++ [ programs.terminal ];
