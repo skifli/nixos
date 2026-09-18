@@ -245,24 +245,26 @@
           enable = true;
         };
 
-        extensions = with inputs.vicinae-extensions.packages.${pkgs.stdenv.hostPlatform.system}; [
-          clean-keyboard
-          color-converter
-          # dbus # Packaging is disabled - https://github.com/vicinaehq/extensions/pull/61
-          firefox
-          github
-          it-tools
-          kde-connect
-          niri
-          nix
-          port-killer
-          process-manager
-          protondb-search
-          protonvpn # By yours truly!
-          # systemd # Same as above...
-          zed-recents
-        ]
-        ++ lib.optional (pkgs.stdenv.hostPlatform.system != "aarch64-linux") html-symbol-finder;
+        extensions =
+          with inputs.vicinae-extensions.packages.${pkgs.stdenv.hostPlatform.system};
+          [
+            clean-keyboard
+            color-converter
+            # dbus # Packaging is disabled - https://github.com/vicinaehq/extensions/pull/61
+            firefox
+            github
+            it-tools
+            kde-connect
+            niri
+            nix
+            port-killer
+            process-manager
+            protondb-search
+            protonvpn # By yours truly!
+            # systemd # Same as above...
+            zed-recents
+          ]
+          ++ lib.optional (pkgs.stdenv.hostPlatform.system != "aarch64-linux") html-symbol-finder;
         # Extension names can be found here https://github.com/vicinaehq/extensions/tree/main/extensions
 
         settings = {
