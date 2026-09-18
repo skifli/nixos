@@ -98,12 +98,6 @@ in
       home = {
         # Linux File Converter Addon files (see let-bindings above)
         file = {
-          # Wrapper so the script runs with the bundled Python (no pip/venv needed)
-          ".local/bin/linux-file-converter-addon.py" = {
-            source = "${lfcaWrapper}/bin/linux-file-converter-addon.py";
-            executable = true;
-          };
-
           # kio servicemenu; Exec rewritten to the wrapper's absolute path (no
           # "python3 " prefix since NixOS has no /usr/bin/python3 and ~ isn't safe)
           ".local/share/kio/servicemenus/linux-file-converter-addon.desktop" = {
@@ -113,7 +107,7 @@ in
                   "Exec=python3 ~/.local/bin/linux-file-converter-addon.py --dolphin-run %U"
                 ]
                 [
-                  "Exec=/home/${userVars.username}/.local/bin/linux-file-converter-addon.py --dolphin-run %U"
+                  "Exec=${config.home.profileDirectory}/bin/linux-file-converter-addon.py --dolphin-run %U"
                 ]
                 (builtins.readFile lfcaServicemenu);
           };
@@ -143,6 +137,7 @@ in
         '';
 
         packages = with pkgs; [
+          lfcaWrapper
           kdePackages.dolphin
           kdePackages.dolphin-plugins
 
