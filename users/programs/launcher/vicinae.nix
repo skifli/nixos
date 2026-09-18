@@ -251,7 +251,6 @@
           # dbus # Packaging is disabled - https://github.com/vicinaehq/extensions/pull/61
           firefox
           github
-          html-symbol-finder
           it-tools
           kde-connect
           niri
@@ -262,7 +261,9 @@
           protonvpn # By yours truly!
           # systemd # Same as above...
           zed-recents
-        ]; # Extension names can be found here https://github.com/vicinaehq/extensions/tree/main/extensions
+        ]
+        ++ lib.optional (pkgs.stdenv.hostPlatform.system != "aarch64-linux") html-symbol-finder;
+        # Extension names can be found here https://github.com/vicinaehq/extensions/tree/main/extensions
 
         settings = {
           favorites = [
