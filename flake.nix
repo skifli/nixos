@@ -2,6 +2,7 @@
   description = "nixOS + Home Manager configuration";
 
   nixConfig = {
+    # Make sure to update the Cachix as well!
     extra-substituters = [
       "https://skifli-nixos.cachix.org"
       "https://cache.nixos.org/"
