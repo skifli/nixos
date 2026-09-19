@@ -6,7 +6,7 @@ on:
       dry-run:
         description: "Report what a Cachix cleanup would delete"
         type: boolean
-        default: true
+        default: false
 
 env:
   CACHIX_PUSH_FILTER: "(-base-prefix-[123]$|Affinity-20x64\\.exe$|-affinity-extracted-sources$)"
