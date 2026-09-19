@@ -159,7 +159,20 @@ jobs:
           # 1. Collect pinned store paths (the keep set roots)
           echo "$PINS" | jq -r '.[].lastRevision.storePath' > /tmp/roots.txt
 
-          # 2. Walk closures of each pinned root using narinfo references
+          # 2. List the paths that are present in this cache. A Nix closure can
+          # reference paths from by other caches, so do not query those.
+          curl -fsSL -H "$AUTH" "$API/contents" | jq -r '.[]' > /tmp/contents.txt
+          sed 's#/nix/store/##; s/-.*//' /tmp/contents.txt | sort -u > /tmp/cache-hashes.txt
+
+          while read -r root; do
+            root_hash=$(basename "$root" | cut -d- -f1)
+            if ! grep -qxF "$root_hash" /tmp/cache-hashes.txt; then
+              echo "## Aborting: pinned root is missing from Cachix: $root" >&2
+              exit 1
+            fi
+          done < /tmp/roots.txt
+
+          # 3. Walk closures of each pinned root using narinfo references
           : > /tmp/seen.txt
           : > /tmp/keep.txt
           cp /tmp/roots.txt /tmp/queue.txt
@@ -174,11 +187,17 @@ jobs:
               continue
             fi
             echo "$hash" >> /tmp/seen.txt
+
+            if ! grep -qxF "$hash" /tmp/cache-hashes.txt; then
+              continue
+            fi
             echo "$hash" >> /tmp/keep.txt
 
             # Cachix serves standard Nix narinfo files from its binary cache.
             # References are the full store basenames, so turn them back into paths.
-            narinfo=$(curl -fsSL "https://skifli-nixos.cachix.org/$hash.narinfo" || true)
+            # Some closure refs are absent because the push
+            # filter excludes them. Missing narinfo is therefore expected here.
+            narinfo=$(curl -fsSL "https://skifli-nixos.cachix.org/$hash.narinfo" 2>/dev/null || true)
             references=$(printf '%s\n' "$narinfo" | sed -n 's/^References: //p')
             if [ -n "$references" ]; then
               for reference in $references; do
@@ -199,12 +218,11 @@ jobs:
           fi
           echo "## Keep-set: $KEEP_COUNT store paths"
 
-          # 3. List everything in the cache
-          curl -fsSL -H "$AUTH" "$API/contents" | jq -r '.[]' > /tmp/contents.txt
+          # 4. List everything in the cache
           TOTAL=$(wc -l < /tmp/contents.txt)
           echo "## Cache has $TOTAL store paths"
 
-          # 4. Delete anything not in the keep set
+          # 5. Delete anything not in the keep set
           DOMAIN_DELETED=0
           while read -r path; do
             hash=$(echo "$path" | sed 's#/nix/store/##; s#-# #' | awk '{print $1}')
