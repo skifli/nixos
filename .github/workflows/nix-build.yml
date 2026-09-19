@@ -181,9 +181,9 @@ jobs:
             narinfo=$(curl -fsSL "https://skifli-nixos.cachix.org/$hash.narinfo" || true)
             references=$(printf '%s\n' "$narinfo" | sed -n 's/^References: //p')
             if [ -n "$references" ]; then
-              while read -r reference; do
-                [ -n "$reference" ] && printf '/nix/store/%s\n' "$reference" >> /tmp/queue.txt
-              done <<< "$references"
+              for reference in $references; do
+                printf '/nix/store/%s\n' "$reference" >> /tmp/queue.txt
+              done
             fi
           done
 
