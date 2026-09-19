@@ -158,9 +158,6 @@ jobs:
 
           # 1. Collect pinned store paths (the keep set roots)
           echo "$PINS" | jq -r '.[].lastRevision.storePath' > /tmp/roots.txt
-          while read -r root; do
-            echo "$root" | sed 's#/nix/store/##; s#-# #' | awk '{print $1}' >> /tmp/keep.txt
-          done < /tmp/roots.txt
 
           # 2. Walk closures of each pinned root using narinfo references
           : > /tmp/seen.txt
@@ -172,18 +169,21 @@ jobs:
             [ -n "$storePath" ] || break
             HEAD=$((HEAD + 1))
 
-            hash=$(echo "$storePath" | sed 's#/nix/store/##; s#-# #' | awk '{print $1}')
+            hash=$(basename "$storePath" | cut -d- -f1)
             if grep -qxF "$hash" /tmp/seen.txt 2>/dev/null; then
               continue
             fi
             echo "$hash" >> /tmp/seen.txt
             echo "$hash" >> /tmp/keep.txt
 
-            # Get the JSON narinfo (swagger: produces text/x-nix-narinfo OR
-            # application/json)
-            narinfo=$(curl -fsSL -H "$AUTH" -H "Accept: application/json" "$API/$hash" || true)
-            if [ -n "$narinfo" ]; then
-              echo "$narinfo" | jq -r '.references[]? // empty' >> /tmp/queue.txt 2>/dev/null || true
+            # Cachix serves standard Nix narinfo files from its binary cache.
+            # References are the full store basenames, so turn them back into paths.
+            narinfo=$(curl -fsSL "https://skifli-nixos.cachix.org/$hash.narinfo" || true)
+            references=$(printf '%s\n' "$narinfo" | sed -n 's/^References: //p')
+            if [ -n "$references" ]; then
+              while read -r reference; do
+                [ -n "$reference" ] && printf '/nix/store/%s\n' "$reference" >> /tmp/queue.txt
+              done <<< "$references"
             fi
           done
 
@@ -202,7 +202,7 @@ jobs:
           # 3. List everything in the cache
           curl -fsSL -H "$AUTH" "$API/contents" | jq -r '.[]' > /tmp/contents.txt
           TOTAL=$(wc -l < /tmp/contents.txt)
-          echo ## Cache has $TOTAL store paths"
+          echo "## Cache has $TOTAL store paths"
 
           # 4. Delete anything not in the keep set
           DOMAIN_DELETED=0
