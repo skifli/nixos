@@ -21,13 +21,14 @@ let
         "_netdev"
         "nofail"
         "auto"
+        "bg" # Fork to bg if network is missing
         "soft"
         "timeo=50"
         "retrans=2"
         "x-systemd.after=tailscale-online.target"
         "x-systemd.wants=tailscale-online.target"
         "x-systemd.idle-timeout=600"
-        "x-systemd.mount-timeout=30s"
+        "x-systemd.mount-timeout=0" # Don't timeout, let the "bg" option handle it
         "x-systemd.device-timeout=30s"
       ]
       ++ (share.options or [ ]);
