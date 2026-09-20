@@ -2,11 +2,6 @@ name: "Build & cache"
 
 on:
   workflow_dispatch:
-    inputs:
-      dry-run:
-        description: "Report what a Cachix cleanup would delete"
-        type: boolean
-        default: false
 
 env:
   CACHIX_PUSH_FILTER: "(-base-prefix-[123]$|Affinity-20x64\\.exe$|-affinity-extracted-sources$)"
@@ -127,116 +122,8 @@ jobs:
             | grep -v -E "$CACHIX_PUSH_FILTER" \
             | cachix push skifli-nixos
 
-          cachix pin skifli-nixos "${{ matrix.host }}-light" "$LIGHT_PATH" --keep-revisions 2
+          cachix pin skifli-nixos "${{ matrix.host }}-light" "$LIGHT_PATH" --keep-revisions 1
           if [ -n "${DARK_PATH:-}" ]; then
-            cachix pin skifli-nixos "${{ matrix.host }}-dark" "$DARK_PATH" --keep-revisions 2
+            cachix pin skifli-nixos "${{ matrix.host }}-dark" "$DARK_PATH" --keep-revisions 1
           fi
 
-  clean-cachix:
-    name: Clean Cachix (keep only pinned closures)
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.ref == 'refs/heads/main'
-    env:
-      CACHIX_AUTH_TOKEN: "${{ secrets.CACHIX_AUTH_TOKEN }}"
-      DRY_RUN: "${{ inputs.dry-run }}"
-    steps:
-      - name: Trim Cachix to closures of current pins
-        shell: bash
-        run: |
-          set -euo pipefail
-          API="https://app.cachix.org/api/v1/cache/skifli-nixos"
-          AUTH="Authorization: Bearer $CACHIX_AUTH_TOKEN"
-
-          if [ "${DRY_RUN:-true}" = "true" ]; then
-            echo "# DRY RUN: reporting only"
-          fi
-
-          echo "## Current pins:"
-          PINS=$(curl -fsSL -H "$AUTH" "$API/pin")
-          echo "$PINS" | jq -r '.[] | "\(.name) -> \(.lastRevision.storePath)"'
-
-          # 1. Collect pinned store paths (the keep set roots)
-          echo "$PINS" | jq -r '.[].lastRevision.storePath' > /tmp/roots.txt
-
-          # 2. List the paths that are present in this cache. A Nix closure can
-          # reference paths from by other caches, so do not query those.
-          curl -fsSL -H "$AUTH" "$API/contents" | jq -r '.[]' > /tmp/contents.txt
-          sed 's#/nix/store/##; s/-.*//' /tmp/contents.txt | sort -u > /tmp/cache-hashes.txt
-
-          while read -r root; do
-            root_hash=$(basename "$root" | cut -d- -f1)
-            if ! grep -qxF "$root_hash" /tmp/cache-hashes.txt; then
-              echo "## Aborting: pinned root is missing from Cachix: $root" >&2
-              exit 1
-            fi
-          done < /tmp/roots.txt
-
-          # 3. Walk closures of each pinned root using narinfo references
-          : > /tmp/seen.txt
-          : > /tmp/keep.txt
-          cp /tmp/roots.txt /tmp/queue.txt
-          HEAD=1
-          while true; do
-            storePath=$(sed -n "${HEAD}p" /tmp/queue.txt)
-            [ -n "$storePath" ] || break
-            HEAD=$((HEAD + 1))
-
-            hash=$(basename "$storePath" | cut -d- -f1)
-            if grep -qxF "$hash" /tmp/seen.txt 2>/dev/null; then
-              continue
-            fi
-            echo "$hash" >> /tmp/seen.txt
-
-            if ! grep -qxF "$hash" /tmp/cache-hashes.txt; then
-              continue
-            fi
-            echo "$hash" >> /tmp/keep.txt
-
-            # Cachix serves standard Nix narinfo files from its binary cache.
-            # References are the full store basenames, so turn them back into paths.
-            # Some closure refs are absent because the push
-            # filter excludes them. Missing narinfo is therefore expected here.
-            narinfo=$(curl -fsSL "https://skifli-nixos.cachix.org/$hash.narinfo" 2>/dev/null || true)
-            references=$(printf '%s\n' "$narinfo" | sed -n 's/^References: //p')
-            if [ -n "$references" ]; then
-              for reference in $references; do
-                printf '/nix/store/%s\n' "$reference" >> /tmp/queue.txt
-              done
-            fi
-          done
-
-          sort -u /tmp/keep.txt -o /tmp/keep.txt
-          KEEP_COUNT=$(wc -l < /tmp/keep.txt)
-
-          # Just in case - as the closure of two NixOS systems is hundreds of paths. If
-          # the keep-set is extremely small the narinfo parse probs has failed -
-          # abort rather than delete the cache.
-          if [ "$KEEP_COUNT" -lt 50 ]; then
-            echo "## Aborting: keep-set only $KEEP_COUNT paths (<50) - refusing to delete cache" >&2
-            exit 1
-          fi
-          echo "## Keep-set: $KEEP_COUNT store paths"
-
-          # 4. List everything in the cache
-          TOTAL=$(wc -l < /tmp/contents.txt)
-          echo "## Cache has $TOTAL store paths"
-
-          # 5. Delete anything not in the keep set
-          DOMAIN_DELETED=0
-          while read -r path; do
-            hash=$(echo "$path" | sed 's#/nix/store/##; s#-# #' | awk '{print $1}')
-            if ! grep -qxF "$hash" /tmp/keep.txt; then
-              echo "delete $hash ($path)"
-              if [ "${DRY_RUN:-true}" != "true" ]; then
-                status=$(curl -sSL -o /dev/null -w "%{http_code}" -X DELETE -H "$AUTH" "$API/$hash")
-                echo "  -> HTTP $status"
-                if [ "$status" != "200" ] && [ "$status" != "204" ]; then
-                  DOMAIN_DELETED=1
-                fi
-              fi
-            fi
-          done < /tmp/contents.txt
-
-          echo "## Fin!"
-          exit $DOMAIN_DELETED
