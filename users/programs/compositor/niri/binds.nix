@@ -1117,6 +1117,13 @@
     };
     spawn = [ "toggle-wshowkeys" ];
   };
+  "Mod+Alt+F" = {
+    _props = {
+      hotkey-overlay-title = null;
+      allow-inhibiting = false;
+    };
+    spawn = [ "/home/${userVars.username}/.local/bin/anki-import.sh" ];
+  };
 
   # MISC & SCRIPTS
   "Mod+B" = {
