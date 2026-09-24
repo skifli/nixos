@@ -289,6 +289,7 @@
   "zen.urlbar.replace-newtab" = true;
 
   "zen.view.drag-window-from-content" = false; # Disable added feature from v1.21.11b - without this Zen will move the window when dragging empty space at the top (which on a tiling compositor like mine is not behaviour I want) - I do not like this feature at all but that's my personal preference! maubg the goat <3.
+  "zen.view.compact.animate-sidebar" = false; # Just quicker - me likey
   "zen.view.compact.enable-at-startup" = false; # Now it's usually on my main monitor so tis fine...
   "zen.view.compact.hide-tabbar" = true;
   "zen.view.compact.hide-toolbar" = true;
