@@ -1,6 +1,8 @@
 {
   config,
+  hostVars,
   inputs,
+  lib,
   pkgs,
   userVars,
   ...
@@ -100,6 +102,19 @@ let
       pkgs.python313Packages.aw-client
     ];
   });
+
+  memory-forest = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
+    pname = "memory-forest";
+    version = "acf7bff";
+    src = pkgs.fetchFromGitHub {
+      owner = "baraklevy20";
+      repo = "memory-forest";
+      rev = finalAttrs.version;
+      hash = "sha256-wJbvNR/OzRKt1wBTk3BwJ2oAwUF2mxIJWiFpYd46dOI=";
+    };
+    sourceRoot = "${finalAttrs.src.name}";
+  });
+
   /*
     onigiri-anki = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
       pname = "onigiri-anki";
@@ -164,6 +179,14 @@ in
         aw-watcher-anki
         anki-quizlet-importer-extended # More up to date than their version (which as of writing is 2025.03.13)
         anki-stylus-draw
+        (memory-forest.withConfig {
+          config = {
+            weather = "auto";
+            time_of_day = "auto";
+            landmark = "moon_bridge";
+            city = builtins.head (lib.splitString "+" hostVars.location);
+          };
+        })
         # onigiri-anki
         (advanced-review-bottom-bar.withConfig {
           config = {
