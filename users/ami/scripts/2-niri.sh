@@ -7,7 +7,7 @@ notify-send -e -a niri -i "/home/${USER}/.local/share/misc/niri-icon.svg" -u low
 stash_pomodoro_if_running
 
 # Future me: For zed you can do e.g., :45:10 to put ze cursor on line 45, column 10
-ensure_window_exists "org.gnome.Evince" "main.pdf — hmon NEA Writeup" "evince /mnt/Remote-Storage/hmon-nea/src/out/main.pdf" "org.gnome.Evince" "main.pdf — hmon NEA Writeup"
+ensure_window_exists "org.gnome.Evince" "main.pdf — hmon NEA Writeup" "evince /mnt/Remote-Storage/hmon-nea/src/main.pdf" "org.gnome.Evince" "main.pdf — hmon NEA Writeup"
 ensure_window_exists "dev.zed.Zed" "hmon-nea —" "zeditor /mnt/Remote-Storage/hmon-nea /mnt/Remote-Storage/hmon-nea/src/main.tex" "dev.zed.Zed" "hmon-nea —"
 ensure_window_exists "dev.zed.Zed" "hmon —" "zeditor /mnt/Remote-Storage/hmon ~/Documents/hmon/src/main.c" "dev.zed.Zed" "hmon —"
 
