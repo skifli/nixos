@@ -3,6 +3,28 @@
   pkgs,
   ...
 }:
+let
+  # Workaround for nixpkgs issue #576406 (fixed in nixpkgs PR #575861, not yet in 26.05):
+  # External modules now run depmod (due to System.map in kernel.dev),
+  # creating modules.alias etc. that conflict with aggregateModules.
+  # Proper fix: pass DEPMOD=true + INSTALL_MOD_PATH to make install (not yet in 26.05).
+  # Workaround: strip depmod-generated files post-install.
+  fixedV4l2loopback = pkgs.linuxPackages_cachyos.v4l2loopback.overrideAttrs (old: {
+    postInstall = (old.postInstall or "") + ''
+      # Strip depmod files that conflict with kernel's aggregateModules
+      find $out/lib/modules -name "modules.alias*" -delete
+      find $out/lib/modules -name "modules.dep*" -delete
+      find $out/lib/modules -name "modules.symbols*" -delete
+      find $out/lib/modules -name "modules.builtin*" -delete
+      find $out/lib/modules -name "modules.order*" -delete
+      find $out/lib/modules -name "modules.softdep*" -delete
+    '';
+  });
+
+  kernelPackages = pkgs.linuxPackages_cachyos // {
+    v4l2loopback = fixedV4l2loopback;
+  };
+in
 {
   boot = {
     # Allow cross-compilation (only on x86_64 emulating aarch64)
@@ -11,7 +33,7 @@
     ];
 
     # Previous: kernelPackages = pkgs.linuxPackages_latest; # Use latest kernel version available
-    kernelPackages = pkgs.linuxPackages_cachyos; # Use high-performance CachyOS Kernel (BORE Scheduler + Thin LTO)
+    inherit kernelPackages; # Use high-performance CachyOS Kernel (BORE Scheduler + Thin LTO)
     kernelParams = [
       "preempt=full" # Lower latency but less throughput
       "quiet" # Non-verbose boot mode
