@@ -5,7 +5,7 @@ TIMESTAMP=$(date +"%Y-%m-%d_%H%M%S")
 TMP_FILE="/tmp/anki_clip_${TIMESTAMP}.txt"
 
 if [ -n "${WAYLAND_DISPLAY:-}" ]; then
-    wl-paste > "$TMP_FILE"
+    wl-paste > "$TMP_FILE" || true
 fi
 
 if [ ! -s "$TMP_FILE" ]; then

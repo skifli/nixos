@@ -99,16 +99,15 @@ in
   };
 
   tailscaleDevices = {
-    bruty-instance = "100.89.107.62";
     fydetabduo = "100.77.113.52";
     lenovo-a2016a40 = "100.103.254.124";
     lyra = "100.76.87.14";
     oneplus-be2013 = "100.100.169.28";
+    oracle-nix = "100.78.161.125";
     pifi = "100.120.18.23";
   };
 
   kdeConnectExcluded = [
-    "bruty-instance"
     "lenovo-a2016a40"
   ];
 

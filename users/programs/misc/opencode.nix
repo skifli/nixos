@@ -21,11 +21,8 @@
         # Required by opentmux
         tmux
 
-        # Required by opencode-notify (desktop alerts)
+        # Required by @mohak34/opencode-notifier (desktop alerts)
         libnotify
-
-        # Opencode-snip
-        snip
       ];
 
       xdg.configFile."opencode/opencode.json".text = builtins.toJSON {
@@ -37,9 +34,8 @@
           "opencode-handoff"
           "opentmux"
           "opencode-adaptive-thinking"
-          "opencode-notify"
+          "@mohak34/opencode-notifier@latest"
           "opencode-update-notifier"
-          "opencode-snip@latest"
           "@knikolov/opencode-plugin-simple-memory"
         ];
       };
