@@ -3,13 +3,15 @@
   pkgs,
   pkgsUnstable,
   ...
-}: let
-  overlay = final: prev: {
-    msitools = prev.msitools.overrideAttrs (old: {
+}:
+let
+  overlay = _final: prev: {
+    msitools = prev.msitools.overrideAttrs (_old: {
       doCheck = false;
     });
   };
-in {
+in
+{
   # Specify which packages to install on a system level
   environment.systemPackages = with pkgs; [
     inputs.agenix.packages.${pkgs.stdenv.hostPlatform.system}.default # agenix CLI
