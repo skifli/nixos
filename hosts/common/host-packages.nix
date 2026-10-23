@@ -5,9 +5,22 @@
   ...
 }:
 let
-  overlay = _final: prev: {
-    msitools = prev.msitools.overrideAttrs (_old: {
+  overlay = final: prev: {
+    msitools = prev.msitools.overrideAttrs (old: {
       doCheck = false;
+    });
+
+    v4l2loopback = prev.v4l2loopback.overrideAttrs (old: {
+      postInstall = (old.postInstall or "") + ''
+        # Workaround for nixpkgs issue #576406:
+        # External modules now run depmod (due to System.map in kernel.dev),
+        # creating modules.alias etc. that conflict with aggregateModules.
+        find $out/lib/modules -name "modules.alias*" -delete
+        find $out/lib/modules -name "modules.dep*" -delete
+        find $out/lib/modules -name "modules.symbols*" -delete
+        find $out/lib/modules -name "modules.builtin*" -delete
+        find $out/lib/modules -name "modules.order*" -delete
+      '';
     });
   };
 in
