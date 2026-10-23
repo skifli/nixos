@@ -1,29 +1,29 @@
 {
+  config,
   lib,
   pkgs,
   ...
 }:
 let
-  # Workaround for nixpkgs issue #576406 (fixed in nixpkgs PR #575861, not yet in 26.05):
-  # External modules now run depmod (due to System.map in kernel.dev),
-  # creating modules.alias etc. that conflict with aggregateModules.
-  # Proper fix: pass DEPMOD=true + INSTALL_MOD_PATH to make install (not yet in 26.05).
-  # Workaround: strip depmod-generated files post-install.
-  fixedV4l2loopback = pkgs.linuxPackages_cachyos.v4l2loopback.overrideAttrs (old: {
-    postInstall = (old.postInstall or "") + ''
-      # Strip depmod files that conflict with kernel's aggregateModules
-      find $out/lib/modules -name "modules.alias*" -delete
-      find $out/lib/modules -name "modules.dep*" -delete
-      find $out/lib/modules -name "modules.symbols*" -delete
-      find $out/lib/modules -name "modules.builtin*" -delete
-      find $out/lib/modules -name "modules.order*" -delete
-      find $out/lib/modules -name "modules.softdep*" -delete
-    '';
-  });
-
-  kernelPackages = pkgs.linuxPackages_cachyos // {
-    v4l2loopback = fixedV4l2loopback;
-  };
+  # Workaround for nixpkgs issue #576406: external modules now run depmod (due to
+  # System.map in kernel.dev), generating modules.alias/dep/etc that conflict with
+  # the kernel's own files during buildEnv aggregation. We copy the module tree but
+  # strip the conflicting top-level metadata files, keeping the actual .ko intact.
+  # This must be applied at the point of use because chaotic's linuxPackages_cachyos
+  # is built via callPackage against its own nixpkgs, so a nixpkgs.overlays
+  # // override cannot reliably get to the nested v4l2loopback attribute.
+  fixedV4l2loopback =
+    pkgs.runCommand "v4l2loopback-fixed"
+      {
+        version = config.boot.kernelPackages.v4l2loopback.version;
+      }
+      ''
+        subdir=lib/modules/${config.boot.kernelPackages.kernel.modDirVersion}
+        mkdir -p $out/$subdir
+        cp -r ${config.boot.kernelPackages.v4l2loopback}/$subdir/. $out/$subdir/
+        # Remove the conflicting metadata files that buildEnv will otherwise choke on
+        find $out/$subdir -maxdepth 1 -name 'modules.*' -delete
+      '';
 in
 {
   boot = {
@@ -32,8 +32,12 @@ in
       "aarch64-linux"
     ];
 
-    # Previous: kernelPackages = pkgs.linuxPackages_latest; # Use latest kernel version available
-    inherit kernelPackages; # Use high-performance CachyOS Kernel (BORE Scheduler + Thin LTO)
+    # Use high-performance CachyOS Kernel (BORE Scheduler + Thin LTO)
+    kernelPackages = pkgs.linuxPackages_cachyos;
+
+    # Use the depmod-conflict-free v4l2loopback (see fixedV4l2loopback above).
+    # mkForce overrides the auto-generated hardware-configuration.nix entry.
+    extraModulePackages = lib.mkForce [ fixedV4l2loopback ];
     kernelParams = [
       "preempt=full" # Lower latency but less throughput
       "quiet" # Non-verbose boot mode

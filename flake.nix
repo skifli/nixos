@@ -131,6 +131,18 @@
     }@inputs:
     # Captures all inputs into a variable
     let
+      # Overlay to fix upstream nixpkgs issues in 26.05
+      # 1. msitools 0.106 test suite broken
+      # 2. v4l2loopback depmod conflict (nixpkgs #576406) is fixed at the point of
+      #    use in modules/core/boot.nix (fixedV4l2loopback wrapper), because
+      #    chaotic's linuxPackages_cachyos is built via callPackage against its
+      #    own nixpkgs and cannot be reached reliably through nixpkgs.overlays.
+      fixOverlay = _final: prev: {
+        msitools = prev.msitools.overrideAttrs (_old: {
+          doCheck = false;
+        });
+      };
+
       # Helper function to generate attributes for all systems in the list
       mkHost =
         # Pass host and system into the function
@@ -140,6 +152,10 @@
           modules = [
             ./hosts/${hostname}/configuration.nix
             ./lix.nix
+            # Apply fixOverlay at the NixOS module level (mkAfter ensures it runs after chaotic's overlay)
+            ({ lib, ... }: {
+              nixpkgs.overlays = lib.mkAfter [ fixOverlay ];
+            })
           ];
           # Attribute set of extra arguments passed to Nix module functions
           specialArgs = {
@@ -166,9 +182,10 @@
         };
       };
 
-      systems = nixpkgs.lib.unique (
-        (map (cfg: cfg.system) (builtins.attrValues hosts)) ++ [ "aarch64-linux" ]
-      );
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+      ];
       hostsForSystem =
         system: builtins.attrNames (nixpkgs.lib.filterAttrs (_: cfg: cfg.system == system) hosts);
     in
