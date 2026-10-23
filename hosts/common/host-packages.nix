@@ -5,8 +5,8 @@
   ...
 }:
 let
-  overlay = final: prev: {
-    msitools = prev.msitools.overrideAttrs (old: {
+  overlay = _final: prev: {
+    msitools = prev.msitools.overrideAttrs (_old: {
       doCheck = false;
     });
 
