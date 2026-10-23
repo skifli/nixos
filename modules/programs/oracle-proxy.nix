@@ -13,7 +13,7 @@ let
   proxySecretPath = config.age.secrets.${proxySecretKey}.path;
   hasProxySecret = builtins.hasAttr proxySecretKey config.age.secrets;
 
-  prefixSecretKey = "${hostVars.hostname}-warp-prefixes.env";
+  prefixSecretKey = "${hostVars.hostname}-proxy-prefixes.env";
   prefixSecretPath = config.age.secrets.${prefixSecretKey}.path;
   hasPrefixes = builtins.hasAttr prefixSecretKey config.age.secrets;
 

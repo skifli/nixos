@@ -6,7 +6,7 @@
   ...
 }:
 let
-  secretPath = ../../secrets + "/${hostVars.hostname}" + "/warp-prefixes.env.age";
+  secretPath = ../../secrets + "/${hostVars.hostname}" + "/proxy-prefixes.env.age";
   hasWarpPrefixes = builtins.pathExists secretPath;
 in
 {
@@ -46,7 +46,7 @@ in
       RemainAfterExit = false;
       TimeoutStartSec = 150;
       Environment = "WARP_PREFIXES_FILE=${
-        config.age.secrets."${hostVars.hostname}-warp-prefixes.env".path
+        config.age.secrets."${hostVars.hostname}-proxy-prefixes.env".path
       }";
       ExecStart = pkgs.writeShellScript "warp-ensure" ''
         set -euo pipefail
