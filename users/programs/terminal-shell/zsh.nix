@@ -8,7 +8,7 @@
 }:
 let
   blockers = userVars.historyBlockers or { };
-  terminalWakatime = inputs.terminal-wakatime.packages.${pkgs.system}.default;
+  terminalWakatime = inputs.terminal-wakatime.packages.${pkgs.stdenv.hostPlatform.system}.default;
 
   # Exact matches: "ls", "cd .."
   exactPatterns = blockers.exact or [ ];

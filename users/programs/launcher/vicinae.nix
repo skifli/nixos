@@ -430,7 +430,6 @@
 
             clipboard = {
               preferences = {
-                encryption = true;
                 eraseOnStartup = false;
                 ignorePasswords = true;
                 monitoring = true;
@@ -518,7 +517,7 @@
             snippets = {
               preferences = {
                 enabled = true;
-                keyDelay = 0.1;
+                keyDelay = 10;
                 layout = "";
                 prePasteDelay = 0;
                 undo = true;

@@ -268,8 +268,16 @@
 
   "zen.window-sync.enabled" = true; # Decouple from windows and instead couple tabs to spaces
 
+  # Zen Library (new in 1.23) - unified sidebar for history/bookmarks/downloads/media
+  "zen.library.enabled" = true;
+  "zen.library.last-tab" = "downloads";
+  "zen.library.history.closed-tabs" = true;
+  "zen.library.media.enabled" = false;
+  "zen.library.media.folders" = "downloads,documents,pictures";
+
   # Not using https://sameerasw.com/zen#intro anymore so now set to false
-  "zen.theme.acrylic-elements" = true;
+  "zen.theme.acrylic-urlbar" = true;
+  "zen.theme.acrylic-sidebar" = true;
   "widget.transparent-windows" = true;
   "zen.theme.gradient.show-custom-colors" = true;
 
