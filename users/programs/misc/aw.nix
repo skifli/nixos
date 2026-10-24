@@ -14,8 +14,8 @@ let
   awWatcherInputSrc = pkgs.fetchFromGitHub {
     owner = "skifli";
     repo = "aw-watcher-input";
-    rev = "c41b75e";
-    sha256 = "sha256-CsCX/9828JF6g5W1Pil+TeMfFcWBZxOzzxiqPS7WhxI=";
+    rev = "52015e84d64ea5f9bdfff25a0595751247e5c7a1";
+    sha256 = "sha256-4+kOZGpag4RyAyaR13m5BDLR1J8PJqAlirpV21neXiE=";
   };
 
   awNotifyRs = pkgs.rustPlatform.buildRustPackage {
@@ -25,8 +25,8 @@ let
     src = pkgs.fetchFromGitHub {
       owner = "0xbrayo";
       repo = "aw-notify-rs";
-      rev = "9e41fdb";
-      sha256 = "sha256-beLuNvgRY1D8/m0xXKLgKOZYNuH/zSED/AskvohlUjM=";
+      rev = "87e83cca65276b2278e4361db74087764c3ecf2c";
+      sha256 = "sha256-NAWAvRNRV4zFQ15nuguwP4GdSFCglMybca7DTVLONlI=";
     };
 
     cargoHash = "sha256-5GVyQg1+xSaSkYNPFTSyagc4/vSWVgFU0p4XV5RAxHw=";

@@ -23,38 +23,38 @@ let
 
   anki-connect = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
     pname = "anki-connect";
-    version = "de6e6e1b";
+    version = "62fc13d107c2b02130e503749e9933495c6456fb";
     src = pkgs.fetchFromSourcehut {
       domain = "sr.ht";
       owner = "~foosoft";
       repo = "anki-connect";
       rev = finalAttrs.version;
-      hash = "sha256-27ZQpk/5aGlE0FVqftU6x7cUj8ZIOiOGFvy/tt/HzNU=";
+      hash = "sha256-9JFyEQ3kfJNHnwkJuUCXhEhbs4jWkTlGy4m53kro5H8=";
     };
     sourceRoot = "${finalAttrs.src.name}/plugin";
   });
 
   anki-quizlet-importer-extended = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
     pname = "anki-quizlet-importer-extended";
-    version = "v2025.09.28";
+    version = "v2026.06.08";
     src = pkgs.fetchFromGitHub {
       owner = "sviatoslav-lebediev";
       repo = "anki-quizlet-importer-extended";
       rev = finalAttrs.version;
       sparseCheckout = [ "" ];
-      hash = "sha256-j/ow/HCc70dD/BpMDqGx7rib7G0FfxazzjuPmEQbYTk=";
+      hash = "sha256-f8Y2Tp3Wo41rKhz/YX602xhxvR7xWUOfvjIKuprt/bo=";
     };
     sourceRoot = "${finalAttrs.src.name}";
   });
 
   anki-stylus-draw = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
     pname = "anki-stylusdraw";
-    version = "dd8c82b";
+    version = "858f5f4be1a5a9945ae87450460dfc1c75cfb83f";
     src = pkgs.fetchFromGitHub {
       owner = "Rytisgit";
       repo = "Anki-StylusDraw";
       rev = finalAttrs.version;
-      hash = "sha256-0lTYOugrDeJa9iUc8WXpF6Eez3s2KSJrDgnECbrl2lQ=";
+      hash = "sha256-CXD5yiEbJ5+k3AtCpSy/t6c2A58pOIGywxGdwHdW/a4=";
     };
     sourceRoot = "${finalAttrs.src.name}/AnkiDraw";
   });
@@ -89,12 +89,12 @@ let
 
   fsrs4anki-helper = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
     pname = "fsrs4anki-helper";
-    version = "703c99f";
+    version = "29208f220f21ff994c199712a6aaac47636773bf";
     src = pkgs.fetchFromGitHub {
       owner = "open-spaced-repetition";
       repo = "fsrs4anki-helper";
       rev = finalAttrs.version;
-      hash = "sha256-kSLWBeSIsIjCo9rRfOkqkng5WHhCQPEFAbF1g79Gsy4=";
+      hash = "sha256-U48726VMWdy3p5nfIuWfyNb3FmerqdnjjE8f3EBarZg=";
       fetchSubmodules = true;
     };
     sourceRoot = "${finalAttrs.src.name}";
@@ -105,12 +105,12 @@ let
 
   memory-forest = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
     pname = "memory-forest";
-    version = "acf7bff";
+    version = "v1.4.0";
     src = pkgs.fetchFromGitHub {
       owner = "baraklevy20";
       repo = "memory-forest";
       rev = finalAttrs.version;
-      hash = "sha256-wJbvNR/OzRKt1wBTk3BwJ2oAwUF2mxIJWiFpYd46dOI=";
+      hash = "sha256-cWTHkSZuKPKZO2YEIAKYyjuwlWODA0XUJpQFRdTqnTU=";
     };
     sourceRoot = "${finalAttrs.src.name}";
   });

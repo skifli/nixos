@@ -7,13 +7,13 @@ let
   baseWaynavPkg =
     pkgs.waynav or (pkgs.stdenv.mkDerivation (finalAttrs: {
       pname = "waynav";
-      version = "1.4.0";
+      version = "1.5.0";
 
       src = pkgs.fetchFromGitHub {
         owner = "kovetskiy";
         repo = "waynav";
         rev = finalAttrs.version;
-        hash = "sha256-L7l3zV4Z451SESFjdq3BVoCgRiAJCuTDI74q7fdVTfQ=";
+        hash = "sha256-t9KCJ1k903Fxi3fNARpkkNJMUoln4MmeyGPuYJmcJHc=";
       };
 
       nativeBuildInputs = with pkgs; [

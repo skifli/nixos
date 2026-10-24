@@ -8,14 +8,14 @@ let
 
   qwarp = python3.pkgs.buildPythonApplication rec {
     pname = "qwarp";
-    version = "0.9.4";
+    version = "0.10.1";
     pyproject = true;
 
     src = pkgs.fetchFromGitHub {
       owner = "iashutoshtiwari";
       repo = "qwarp";
       rev = "v${version}";
-      hash = "sha256-YXik9BGndmhOrJDza5Eo2kAt+yHv9jJgvkHKVsTknGg=";
+      hash = "sha256-UTixFzbMUogHXxLi90Pruuxwxth2qu+joa7l3rcWBb0=";
     };
 
     build-system = with python3.pkgs; [
