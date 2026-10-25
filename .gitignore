@@ -12,5 +12,3 @@ output.txt
 # Plaintext secrets should never be committed.
 # Encrypted agenix secrets live in /secrets and should be tracked.
 users/**/secrets/**
-
-.*

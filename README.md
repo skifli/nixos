@@ -65,6 +65,8 @@ Before we go more in depth, I want to first state that I have a personal cache s
 
 I have a workflow setup under [`nix-build.yml`](.github/workflows/nix-build.yml) that builds when I tell it to (which used to be on push but sometimes I don't want / need it to), and caches anything built locally (i.e., not pulled from caches), and it also makes sure to pin my main system paths! This has helped bring my rebuild times down to an average of 2-3 minutes, which compared to the 10+ it was before is quite an improvement :p. Of course, my system is a bit complex with e.g., multiple specialisations for light / dark theme, Home Manager, etc, which mean it won't be the fastest to rebuild - but if anyone has any other ideas I'm all ears :).
 
+Oh also alongside that I have a personal self-hosted cache setup with [Xilo](https://github.com/stubbedev/xilo) that runs on my own systems as I have a **lot** of hosts now.
+
 ## GitHub workflows
 
 My configuration also uses some other GitHub Actions located in [`.github/workflows/`](.github/workflows/):
@@ -187,30 +189,30 @@ Configured in [`users/programs/compositor/niri/binds.nix`](users/programs/compos
 
 The app toggle shortcuts will focus the application if already open, launch it if closed, or switch back to the previous window if the target is already focused (last one as per niri settings):
 
-| Keybinding              | Application                                                                           |
-| :---------------------- | :------------------------------------------------------------------------------------ |
-| `Mod + D`               | Vicinae launcher                                                                      |
-| `Mod + Return`          | Ghostty terminal                                                                      |
-| `Mod + Shift + Return`  | Centered floating terminal ([`floating-term.sh`](users/ami/scripts/floating-term.sh)) |
-| `Mod + ;`               | Grid-based mouse navigator and warper ([`waynav`](users/programs/misc/waynav.nix))    |
-| `Mod + F`               | Dolphin file manager                                                                  |
-| `Mod + Shift + F`       | Yazi file manager                                                                     |
-| `Mod + V`               | Zed editor (`zeditor`)                                                                |
-| `Mod + E`               | Helix editor (`hx`)                                                                   |
-| `Mod + Shift + Z`       | Zen Browser (`zen-beta`)                                                              |
-| `Mod + Shift + A`       | Anytype                                                                               |
-| `Mod + Shift + N`       | Anki                                                                                  |
-| `Mod + Shift + C`       | Ferdium                                                                               |
-| `Mod + Shift + D`       | TigerVNC / FreeRDP                                                                    |
-| `Mod + Shift + Y`       | Affinity suite                                                                        |
+| Keybinding              | Application                                                                                      |
+| :---------------------- | :----------------------------------------------------------------------------------------------- |
+| `Mod + D`               | Vicinae launcher                                                                                 |
+| `Mod + Return`          | Ghostty terminal                                                                                 |
+| `Mod + Shift + Return`  | Centered floating terminal ([`floating-term.sh`](users/ami/scripts/floating-term.sh))            |
+| `Mod + ;`               | Grid-based mouse navigator and warper ([`waynav`](users/programs/misc/waynav.nix))               |
+| `Mod + F`               | Dolphin file manager                                                                             |
+| `Mod + Shift + F`       | Yazi file manager                                                                                |
+| `Mod + V`               | Zed editor (`zeditor`)                                                                           |
+| `Mod + E`               | Helix editor (`hx`)                                                                              |
+| `Mod + Shift + Z`       | Zen Browser (`zen-beta`)                                                                         |
+| `Mod + Shift + A`       | Anytype                                                                                          |
+| `Mod + Shift + N`       | Anki                                                                                             |
+| `Mod + Shift + C`       | Ferdium                                                                                          |
+| `Mod + Shift + D`       | TigerVNC / FreeRDP                                                                               |
+| `Mod + Shift + Y`       | Affinity suite                                                                                   |
 | `Mod + Shift + W`       | Toggle Wayscriber screen annotation overlay ([`wayscriber`](users/programs/misc/wayscriber.nix)) |
-| `Ctrl + Shift + Escape` | Mission Center (`system-monitor`)                                                     |
-| `Shift + Escape`        | Btop                                                                                  |
-| `Mod + N`               | Todo and reminder manager ([`todo.sh`](users/ami/scripts/todo.sh))                    |
-| `Mod + Q`               | Close focused window                                                                  |
-| `Mod + Shift + Q`       | Force kill current window (`killcurrent`)                                             |
-| `Mod + Ctrl + Q`        | Interactive click-to-kill window (`killclick`)                                        |
-| `Mod + Alt + K`         | Toggle on-screen keystroke overlay ([`wshowkeys`](users/programs/misc/wshowkeys.nix)) |
+| `Ctrl + Shift + Escape` | Mission Center (`system-monitor`)                                                                |
+| `Shift + Escape`        | Btop                                                                                             |
+| `Mod + N`               | Todo and reminder manager ([`todo.sh`](users/ami/scripts/todo.sh))                               |
+| `Mod + Q`               | Close focused window                                                                             |
+| `Mod + Shift + Q`       | Force kill current window (`killcurrent`)                                                        |
+| `Mod + Ctrl + Q`        | Interactive click-to-kill window (`killclick`)                                                   |
+| `Mod + Alt + K`         | Toggle on-screen keystroke overlay ([`wshowkeys`](users/programs/misc/wshowkeys.nix))            |
 
 </details>
 
