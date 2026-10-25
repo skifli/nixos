@@ -136,7 +136,7 @@ jobs:
       - name: Push and pin builds on Xilo (aarch64 only)
         if: github.ref == 'refs/heads/main' && matrix.cache == 'xilo'
         run: |
-          xilo push encore-sr/nixos ${{ env.LIGHT_PATH }}
+          xilo push admin/nixos ${{ env.LIGHT_PATH }}
           if [ -n "${DARK_PATH}" ]; then
-            xilo push encore-sr/nixos ${{ env.DARK_PATH }}
+            xilo push admin/nixos ${{ env.DARK_PATH }}
           fi
