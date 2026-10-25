@@ -79,7 +79,6 @@ in
   "secrets/ami/rdp-pifi-win.age".publicKeys = amiOnLyra;
   "secrets/ami/vnc-oracle.age".publicKeys = amiOnLyra;
   "secrets/ami/oracle-vnc-key.age".publicKeys = amiOnLyra;
-  "secrets/ami/xilo-netrc.age".publicKeys = amiOnLyra;
 
   "secrets/fynix/hashedPasswordFile.age".publicKeys = fynixOnFydetabduo;
   "secrets/fynix/github-credentials.age".publicKeys = fynixOnFydetabduo;
@@ -89,7 +88,6 @@ in
   "secrets/fynix/anki-usernameFile.age".publicKeys = fynixOnFydetabduo;
   "secrets/fynix/cachix.dhall.age".publicKeys = fynixOnFydetabduo;
   "secrets/fynix/rdp-pifi-linux.age".publicKeys = fynixOnFydetabduo;
-  "secrets/fynix/xilo-netrc.age".publicKeys = fynixOnFydetabduo;
   "secrets/fynix/rdp-pifi-win.age".publicKeys = fynixOnFydetabduo;
   "secrets/fynix/vnc-oracle.age".publicKeys = fynixOnFydetabduo;
   "secrets/fynix/oracle-vnc-key.age".publicKeys = fynixOnFydetabduo;

@@ -77,10 +77,6 @@ let
         path = "/home/${username}/.config/cachix/cachix.dhall";
         mode = "0600";
       })
-      (mkUserSecret username "xilo-netrc" {
-        path = "/home/${username}/.netrc";
-        mode = "0600";
-      })
     ];
 
   rescuePasswordSecret =
