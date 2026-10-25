@@ -30,6 +30,10 @@ in
     modem.enable = false; # Avoids ModemManager probing delay
     npu.enable = true;
 
+    # Cap charging at 80%, resuming below 75%
+    battery.chargeLimit = 80;
+    battery.rechargeAt = 75;
+
     installer-tools.enable = true;
 
     shell = {

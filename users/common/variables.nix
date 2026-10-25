@@ -99,7 +99,7 @@ in
   };
 
   tailscaleDevices = {
-    fydetabduo = "100.77.113.52";
+    fydetabduo = "100.107.134.34";
     lenovo-a2016a40 = "100.103.254.124";
     lyra = "100.76.87.14";
     oneplus-be2013 = "100.100.169.28";
