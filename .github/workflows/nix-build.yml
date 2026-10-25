@@ -60,15 +60,19 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
-      - name: Set up Swap Space
+      - name: Set up Swap Space (only on GitHub-hosted runners)
+        if: runner.os != 'self-hosted'
         uses: pierotofy/set-swap-space@master
         with:
           swap-size-gb: 10
 
-      - uses: wimpysworld/nothing-but-nix@main
-
-      - name: Install Nix
+      - name: Install Nix (only on GitHub-hosted runners)
+        if: runner.os != 'self-hosted'
         uses: DeterminateSystems/determinate-nix-action@main
+
+      - name: Setup nothing-but-nix (only on GitHub-hosted runners)
+        if: runner.os != 'self-hosted'
+        uses: wimpysworld/nothing-but-nix@main
 
       - name: Detect target system
         id: system
