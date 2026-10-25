@@ -31,6 +31,8 @@ let
 
     cargoHash = "sha256-Mep7ppAQ/nCwHKSsokjY7HKFwDtakmqK8oFoM6HtTT0=";
 
+    doCheck = false; # Otherwise on self-hosted runner there are "Error: failed to find time zone `America/New_York` since there is no time zone database configured" errors but we are just doing this for ourselves so tis fine
+
     nativeBuildInputs = with pkgs; [
       pkg-config
     ];
