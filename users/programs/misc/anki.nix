@@ -21,18 +21,20 @@ let
     sourceRoot = "${finalAttrs.src.name}";
   });
 
-  anki-connect = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
-    pname = "anki-connect";
-    version = "62fc13d107c2b02130e503749e9933495c6456fb";
-    src = pkgs.fetchFromSourcehut {
-      domain = "sr.ht";
-      owner = "~foosoft";
-      repo = "anki-connect";
-      rev = finalAttrs.version;
-      hash = "sha256-9JFyEQ3kfJNHnwkJuUCXhEhbs4jWkTlGy4m53kro5H8=";
-    };
-    sourceRoot = "${finalAttrs.src.name}/plugin";
-  });
+  /*
+    anki-connect = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
+      pname = "anki-connect";
+      version = "62fc13d107c2b02130e503749e9933495c6456fb";
+      src = pkgs.fetchFromSourcehut {
+        domain = "sr.ht";
+        owner = "~foosoft";
+        repo = "anki-connect";
+        rev = finalAttrs.version;
+        hash = "sha256-9JFyEQ3kfJNHnwkJuUCXhEhbs4jWkTlGy4m53kro5H8=";
+      };
+      sourceRoot = "${finalAttrs.src.name}/plugin";
+    });
+  */
 
   anki-quizlet-importer-extended = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
     pname = "anki-quizlet-importer-extended";
@@ -170,12 +172,14 @@ in
         })
         # anki-redesign-plus
         ankiAddons.reviewer-refocus-card
-        (anki-connect.withConfig {
-          config = {
-            webBindAddress = "0.0.0.0";
-            webCorsOriginList = [ "*" ];
-          };
-        })
+        /*
+          (anki-connect.withConfig {
+            config = {
+              webBindAddress = "0.0.0.0";
+              webCorsOriginList = [ "*" ];
+            };
+          })
+        */
         aw-watcher-anki
         anki-quizlet-importer-extended # More up to date than their version (which as of writing is 2025.03.13)
         anki-stylus-draw
@@ -183,7 +187,9 @@ in
           config = {
             weather = "auto";
             time_of_day = "auto";
-            landmark = "moon_bridge";
+            landmark = "peak";
+            landscape = "mountains";
+            environment = "misty_valley";
             city = builtins.head (lib.splitString "+" hostVars.location);
           };
         })
