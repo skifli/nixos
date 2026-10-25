@@ -43,7 +43,7 @@ in
     fbcat # Allows taking screenshots of a TTY
 
     nix-tree # Interactively browse a Nix store paths dependencies
-    pkgsUnstable.gdu # Disk usage analyzer with console interface
+    (pkgsUnstable.gdu) # Disk usage analyzer with console interface
 
     oci-cli # Oracle Cloud Infrastructure
 
