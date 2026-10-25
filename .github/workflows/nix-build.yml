@@ -98,8 +98,7 @@ jobs:
           name: "skifli-nixos"
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
 
-      - name: Setup Xilo cache (for aarch64 only)
-        if: matrix.cache == 'xilo'
+      - name: Setup Xilo cache # For anyone as it also sets up the pull token
         uses: stubbedev/xilo@v1.2.6
         with:
           url: https://xilo.encore-sr.com
