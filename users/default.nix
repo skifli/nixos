@@ -224,7 +224,7 @@ in
           ln -sf "$share" "$target"
         '';
 
-        stateVersion = hostVars.stateVersion;
+        inherit (hostVars) stateVersion;
       };
     }) usersVars; # For each user
   };
