@@ -94,9 +94,9 @@ jobs:
         if: matrix.cache == 'xilo'
         uses: stubbedev/xilo@v1.2.6
         with:
-          server: https://xilo.encore-sr.com
+          url: https://xilo.encore-sr.com
           token: ${{ secrets.XILO_PUSH_TOKEN }}
-          cache: encore-sr/nixos
+          cache: admin/nixos
 
       - name: Build NixOS system (${{ matrix.host }})
         run: |
