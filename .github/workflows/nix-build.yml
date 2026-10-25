@@ -78,14 +78,6 @@ jobs:
           username: xilo
           password: ${{ secrets.XILO_PULL_TOKEN }}
 
-      - name: Setup netrc push (for x86_64 only)
-        if: matrix.cache == 'cachix'
-        uses: extractions/netrc@v3
-        with:
-          machine: xilo.encore-sr.com
-          username: xilo
-          password: ${{ secrets.XILO_PUSH_TOKEN }}
-
       - name: Install Nix (for x86_64 only)
         if: matrix.cache == 'cachix'
         uses: DeterminateSystems/determinate-nix-action@main
