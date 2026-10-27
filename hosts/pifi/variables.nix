@@ -1,4 +1,4 @@
-{ ... }: rec {
+_: rec {
   stateVersion = "26.05";
 
   optimiseBoot = true;
@@ -55,19 +55,38 @@
     "HDMI-1" = {
       mode = "1920x1080@60";
       scale = 1.0;
-      position = { x = 0; y = 0; };
+      position = {
+        x = 0;
+        y = 0;
+      };
       focus-at-startup = true;
     };
   };
 
   workspaces = {
-    "1" = { open-on-output = "HDMI-1"; };
-    "2" = { open-on-output = "HDMI-1"; };
-    "3" = { open-on-output = "HDMI-1"; };
-    "4" = { open-on-output = "HDMI-1"; };
-    "5" = { open-on-output = "HDMI-1"; };
-    "6" = { open-on-output = "HDMI-1"; };
-    "7" = { open-on-output = "HDMI-1"; };
-    "8" = { open-on-output = "HDMI-1"; };
+    "1" = {
+      open-on-output = "HDMI-1";
+    };
+    "2" = {
+      open-on-output = "HDMI-1";
+    };
+    "3" = {
+      open-on-output = "HDMI-1";
+    };
+    "4" = {
+      open-on-output = "HDMI-1";
+    };
+    "5" = {
+      open-on-output = "HDMI-1";
+    };
+    "6" = {
+      open-on-output = "HDMI-1";
+    };
+    "7" = {
+      open-on-output = "HDMI-1";
+    };
+    "8" = {
+      open-on-output = "HDMI-1";
+    };
   };
 }

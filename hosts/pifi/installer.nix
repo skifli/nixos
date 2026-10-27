@@ -2,12 +2,8 @@
   hostname,
   inputs,
   hostVars,
-  pkgs,
   ...
 }:
-let
-  primaryUser = builtins.head hostVars.enabledUsers;
-in
 {
   _module.args = { inherit hostname; };
 

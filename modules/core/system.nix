@@ -108,6 +108,6 @@ in
     # copySystemConfiguration = true;
     # NOT SUPPORTED WITH FLAKES
 
-    stateVersion = hostVars.stateVersion;
+    inherit (hostVars) stateVersion;
   };
 }

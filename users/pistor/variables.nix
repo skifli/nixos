@@ -36,7 +36,7 @@ common
     idler = "";
     keyboard = "";
     visual = "hx";
-    browsers = [];
+    browsers = [ ];
     other = common.programs.other ++ [
       "tailscale"
       "awscli2"

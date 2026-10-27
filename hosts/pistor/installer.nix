@@ -2,12 +2,8 @@
   hostname,
   inputs,
   hostVars,
-  pkgs,
   ...
 }:
-let
-  primaryUser = builtins.head hostVars.enabledUsers;
-in
 {
   _module.args = { inherit hostname; };
 
@@ -19,7 +15,7 @@ in
   ];
 
   hardware.raspberry-pi = {
-    config = {};
+    config = { };
   };
 
   boot.loader = {

@@ -4,7 +4,7 @@
   ...
 }:
 let
-  python3 = pkgs.python3;
+  inherit (pkgs) python3;
 
   qwarp = python3.pkgs.buildPythonApplication rec {
     pname = "qwarp";

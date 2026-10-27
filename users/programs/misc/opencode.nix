@@ -8,7 +8,7 @@
   home-manager = {
     users.${userVars.username} = {
       home.packages = with pkgs; [
-        (pkgsUnstable.opencode)
+        pkgsUnstable.opencode
 
         # Required for OpenCode
         nodejs_22
