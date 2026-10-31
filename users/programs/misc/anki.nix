@@ -185,11 +185,14 @@ in
         anki-stylus-draw
         (memory-forest.withConfig {
           config = {
+            layout = "one_beside";
+            calendar_width = "full";
+            calendar_colours = "ready:magenta";
+            calendar_tiles = "contours";
+            environment = "misty_valley";
             weather = "auto";
             time_of_day = "auto";
-            landmark = "peak";
-            landscape = "mountains";
-            environment = "misty_valley";
+            landmark = "pagoda";
             city = builtins.head (lib.splitString "+" hostVars.location);
           };
         })
