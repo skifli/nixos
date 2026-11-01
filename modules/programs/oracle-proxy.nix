@@ -17,6 +17,14 @@ let
   prefixSecretPath = config.age.secrets.${prefixSecretKey}.path;
   hasPrefixes = builtins.hasAttr prefixSecretKey config.age.secrets;
 
+  # With auto_route, sing-box makes systemd-resolved send all DNS for
+  # singtun0 (~.) to 172.19.0.2. Hijack port 53 before the private-IP
+  # "direct" rule, otherwise those packets are forwarded to the fake tun
+  # address instead of being answered by the DNS module.
+  #
+  # The "system" TUN stack does not complete TCP handshakes from singtun0
+  # on this kernel (SYNs stay in SYN-SENT, sing-box never logs the
+  # connection); gvisor with an explicit MTU of 9000 works.
   configTemplate = pkgs.writeText "oracle-proxy.json" ''
     {
       "log": {
@@ -65,7 +73,8 @@ let
           ],
           "auto_route": true,
           "strict_route": false,
-          "stack": "system"
+          "stack": "gvisor",
+          "mtu": 9000
         },
         {
           "type": "mixed",
@@ -93,8 +102,13 @@ let
         }
       ],
       "route": {
+        "auto_detect_interface": true,
         "default_domain_resolver": "local",
         "rules": [
+          {
+            "action": "hijack-dns",
+            "port": 53
+          },
           {
             "action": "route",
             "outbound": "direct",
