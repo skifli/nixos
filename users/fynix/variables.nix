@@ -307,7 +307,6 @@ common
     login-manager = "tuigreet";
     terminal = "foot";
     other = common.programs.other ++ [
-      "qwarp"
       "rnote"
     ];
   };

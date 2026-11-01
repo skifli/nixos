@@ -1,5 +1,6 @@
 {
   inputs,
+  lib,
   pkgs,
   userVars,
   ...
@@ -24,7 +25,24 @@
           '';
         }))
       */
-      ferdium
+
+      # Ferdium's Linux tray advertises `ferdium-tray-${this.iconRevision}` and
+      # points IconThemePath at a temp dir. Wayle ignores IconThemePath and the
+      # revision is unbounded, so no theme icon can match and the tray falls
+      # back to the "missing icon" placeholder. Rename the tray icon to the
+      # static `ferdium` name that the package already installs into hicolor.
+      # The replacement keeps the exact original byte length so the asar
+      # archive's file offsets stay valid.
+      (ferdium.overrideAttrs (oldAttrs: {
+        postFixup =
+          (oldAttrs.postFixup or "")
+          + ''
+            asar="$out/opt/Ferdium/resources/app.asar"
+            chmod +w "$asar"
+            perl -0pi -e 's!`ferdium-tray-.{20}`!q{"ferdium"} . (" " x 26)!ge' "$asar"
+          '';
+        nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [ pkgs.perl ];
+      }))
 
       fira-code
       haruna # Media player
@@ -49,7 +67,11 @@
       wl-clipboard # Used in some scripts (e.g., emoji-picker.sh)
       wtype # Added for keystroke / paste simulation
       zstd # Short for Zstandard, this is a fast lossless compression algorithm, targeting real-time compression scenarios at zlib-level compression ratio
-    ];
+    ]
+    # OnlyOffice only publishes x86_64 Linux builds in nixpkgs right now, so
+    # keep the tablet (aarch64) evaluating by skipping it there until the
+    # upstream aarch64 PR lands.
+    ++ lib.optional (pkgs.stdenv.hostPlatform.isx86_64) pkgs.onlyoffice-desktopeditors;
 
     xdg = {
       mimeApps.defaultApplications = {
