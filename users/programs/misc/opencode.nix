@@ -29,6 +29,19 @@
         ];
       };
 
+      xdg.configFile."opencode/cli.json".text = builtins.toJSON {
+        "$schema" = "https://opencode.ai/v2/cli.json";
+        session = {
+          thinking = "show";
+          permissions = "autoaccept";
+          new_location = "launch";
+        };
+        tabs = {
+          mode = "on";
+          layout = "horizontal";
+        };
+      };
+
       xdg.configFile."opencode/dcp.jsonc" = {
         text = ''
           {
