@@ -32,8 +32,7 @@ lib.mkIf (hostVars.videoDriver == "intel") {
     kernelParams = [
       "intel_pstate=active"
       "i915.enable_psr=0" # Disables PSR completely. This is the most common workaround for fixing screen flickering, random system freezes, or graphical corruption.
-      "i915.enable_guc=3" # Enable GuC/HuC firmware loading
-      "i915.fastboot=1" # Skip unnecessary mode sets at boot
+      "i915.enable_guc=2" # Enable HuC firmware loading (GuC submission is N/A on this Gen9 iGPU)
     ]
     ++ videoKernelParams;
 

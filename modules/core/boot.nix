@@ -24,6 +24,61 @@ let
         # Remove the conflicting metadata files that buildEnv will otherwise choke on
         find $out/$subdir -maxdepth 1 -name 'modules.*' -delete
       '';
+
+  # The Plymouth script engine builds one virtual canvas sized to the largest
+  # connected display. Breeze positions the logo/spinner once, when the theme
+  # loads. Whichever monitor registers first determines that canvas, so if a
+  # bigger monitor appears a moment later everything stays centred on the old
+  # (smaller) canvas and ends up off-centre on every display.
+  #
+  # Patch the NixOS-branded Breeze theme to re-run the layout whenever the
+  # canvas size changes (i.e., a display was added/removed after startup).
+  breezePlymouth =
+    (pkgs.kdePackages.breeze-plymouth.override {
+      logoFile = config.boot.plymouth.logo;
+      logoName = "nixos";
+      osName = config.system.nixos.distroName;
+      osVersion = config.system.nixos.release;
+    }).overrideAttrs
+      (old: {
+        postInstall = (old.postInstall or "") + ''
+          substituteInPlace $out/share/plymouth/themes/breeze/breeze.script \
+            --replace-fail 'global.spin = Spinner();' 'global.spin = Spinner();
+
+          // Re-centre everything when the largest display changes size (e.g., a
+          // monitor that appears after the theme script has loaded).
+          global.layout_width = Window.GetWidth();
+          global.layout_height = Window.GetHeight();
+
+          fun Relayout() {
+              global.layout_width = Window.GetWidth();
+              global.layout_height = Window.GetHeight();
+
+              logo.x = Window.GetX() + Window.GetWidth() / 2 - logo.image.GetWidth() / 2;
+              logo.y = Window.GetY() + Window.GetHeight() / 2 - logo.image.GetHeight() / 2;
+              logo.SetPosition(logo.x, logo.y, logo.z);
+
+              logo.name.x = Window.GetX() + Window.GetWidth() / 2 - logo.name.GetImage().GetWidth() / 2;
+              logo.name.y = logo.y + logo.image.GetHeight() + logo.name.GetImage().GetHeight() / 2;
+              logo.name.SetPosition(logo.name.x, logo.name.y, logo.name.z);
+
+              for (i = 0; i <= spin.count; ++i) {
+                  if (i % spin.steps != 0) {
+                      continue;
+                  }
+                  center_offset = logo.image.GetWidth() / 2 - spin[i].width / 2;
+                  top_offset = logo.image.GetHeight() + logo.name.GetImage().GetHeight() + spin[i].height;
+                  spin[i].SetPosition(logo.x + center_offset, logo.y + top_offset, logo.z);
+              }
+
+              top_of_the_text = TextYOffset();
+          }' \
+            --replace-fail 'fun refresh_callback() {' 'fun refresh_callback() {
+              if (Window.GetWidth() != global.layout_width || Window.GetHeight() != global.layout_height) {
+                  Relayout();
+              }'
+        '';
+      });
 in
 {
   boot = {
@@ -53,6 +108,7 @@ in
     plymouth = {
       enable = true;
       theme = "breeze"; # A NixOS branded variant of the breeze theme when config.boot.plymouth.theme == "breeze", otherwise [ ].
+      themePackages = lib.mkForce [ breezePlymouth ]; # See breezePlymouth above: multi-monitor centring fix.
     };
 
     kernel.sysctl = {
