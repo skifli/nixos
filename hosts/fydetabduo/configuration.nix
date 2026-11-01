@@ -7,6 +7,8 @@
 }:
 let
   primaryUser = builtins.head hostVars.enabledUsers;
+  tabletLock = "${pkgs.swaylock}/bin/swaylock -f -i /home/${primaryUser}/.local/share/wallpaper-blurred";
+  display = status: "${pkgs.niri}/bin/niri msg action power-${status}-monitors";
 in
 {
   _module.args = { inherit hostname; };
@@ -60,6 +62,33 @@ in
         "sbc_xq"
         "sbc"
       ];
+    };
+  };
+
+  # fyde-nix's swayidle uses wlopm, which needs
+  # wlr-output-power-management-v1. Niri does not implement that protocol,
+  # so `wlopm --off '*'` fails and the DSI panel never turns off.
+  home-manager.users.${primaryUser}.services.swayidle = pkgs.lib.mkForce {
+    enable = true;
+    systemdTargets = [ "graphical-session.target" ];
+
+    timeouts = [
+      {
+        timeout = hostVars.screen-lock-timeout * 60;
+        command = tabletLock;
+      }
+      {
+        timeout = hostVars.screen-blank-timeout * 60;
+        command = display "off";
+        resumeCommand = display "on";
+      }
+    ];
+
+    events = {
+      lock = tabletLock;
+
+      before-sleep = "${tabletLock}; ${display "off"}";
+      after-resume = display "on";
     };
   };
 
