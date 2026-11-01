@@ -93,6 +93,7 @@ let
         }
       ],
       "route": {
+        "default_domain_resolver": "local",
         "rules": [
           {
             "action": "route",

@@ -51,6 +51,18 @@ in
     };
   };
 
+  # The soundcore V20i is unreliable with AAC and sounds/lags better with
+  # SBC-XQ. Restricting the codec list also prevents WirePlumber from
+  # going back to AAC on reconnect.
+  services.pipewire.wireplumber.extraConfig."90-bluetooth-codecs" = {
+    "monitor.bluez.properties" = {
+      "bluez5.codecs" = [
+        "sbc_xq"
+        "sbc"
+      ];
+    };
+  };
+
   # Do NOT import modules/core/boot.nix - for the following reason:
   # that module also selects Lyra's kernel and bootloader configuration.
   boot.loader.fydetabduo.enable = true;

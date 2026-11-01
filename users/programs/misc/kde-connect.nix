@@ -38,8 +38,18 @@ in
             $DRY_RUN_CMD printf "\n[General]\ncustomDevices=%s\n" "$DEVICES" >> "$CONFIG_FILE"
           fi
         fi
+        # The Bluetooth backend keeps the adapter in BR/EDR inquiry, which
+        # makes A2DP playback stutter and lag. KDE Connect 26.x calls this
+        # backend AsyncLinkProvider (older releases: BluetoothLinkProvider).
+        if grep -q "^disabled_providers=" "$CONFIG_FILE"; then
+          $DRY_RUN_CMD sed -i "s|^disabled_providers=.*|disabled_providers=AsyncLinkProvider|" "$CONFIG_FILE"
+        elif grep -q "^\[General\]" "$CONFIG_FILE"; then
+          $DRY_RUN_CMD sed -i "/^\[General\]/a disabled_providers=AsyncLinkProvider" "$CONFIG_FILE"
+        else
+          $DRY_RUN_CMD printf "\n[General]\ndisabled_providers=AsyncLinkProvider\n" >> "$CONFIG_FILE"
+        fi
       else
-        $DRY_RUN_CMD printf "[General]\ncustomDevices=%s\n" "$DEVICES" > "$CONFIG_FILE"
+        $DRY_RUN_CMD printf "[General]\ncustomDevices=%s\ndisabled_providers=AsyncLinkProvider\n" "$DEVICES" > "$CONFIG_FILE"
       fi
     '';
 
