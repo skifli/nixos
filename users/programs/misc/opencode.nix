@@ -14,13 +14,6 @@
         nodejs_22
         bun
 
-        # Required by opencode-direnv
-        direnv
-        nix-direnv
-
-        # Required by opentmux
-        tmux
-
         # Required by @mohak34/opencode-notifier (desktop alerts)
         libnotify
       ];
@@ -28,12 +21,8 @@
       xdg.configFile."opencode/opencode.json".text = builtins.toJSON {
         "$schema" = "https://opencode.ai/config.json";
         plugin = [
-          "@simonwjackson/opencode-direnv"
           "@tarquinen/opencode-dcp@latest"
-          "opencode-background-agents"
           "opencode-handoff"
-          "opentmux"
-          "opencode-adaptive-thinking"
           "@mohak34/opencode-notifier@latest"
           "opencode-update-notifier"
           "@knikolov/opencode-plugin-simple-memory"
@@ -158,7 +147,6 @@
   };
 
   programs = {
-    direnv.enable = true;
     nix-ld.enable = true;
   };
 }
