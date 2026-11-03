@@ -1,0 +1,7 @@
+NOT mine.
+
+Source: https://simpleicons.org/
+Specifically: https://cdn.simpleicons.org/grafana
+Author: Simple Icons contributors
+
+"Simple Icons is released under CC0 1.0 Universal." The Grafana name and logo are trademarks of Grafana Labs and are used here only to identify the service that sends the alert.

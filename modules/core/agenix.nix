@@ -77,6 +77,8 @@ let
         path = "/home/${username}/.config/cachix/cachix.dhall";
         mode = "0600";
       })
+      # ntfy alert token
+      (mkUserSecret username "ntfy-personal-token" { })
     ];
 
   rescuePasswordSecret =

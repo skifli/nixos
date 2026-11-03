@@ -43,6 +43,7 @@ let
       "nix-direnv"
       "nix-index-database"
       "nix-your-shell"
+      "ntfy-notifications"
       "opencode"
       "styles"
       "typst"
