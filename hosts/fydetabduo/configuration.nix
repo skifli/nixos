@@ -33,8 +33,8 @@ in
     npu.enable = true;
 
     # Cap charging at 80%, resuming below 75%
-    battery.chargeLimit = 80;
-    battery.rechargeAt = 75;
+    battery.chargeLimit = 90;
+    battery.rechargeAt = 85;
 
     installer-tools.enable = true;
 
