@@ -189,6 +189,7 @@ in
             calendar_width = "full";
             calendar_colours = "ready:magenta";
             calendar_tiles = "contours";
+            calendar = "streak";
             environment = "misty_valley";
             weather = "auto";
             time_of_day = "auto";
