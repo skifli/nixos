@@ -200,14 +200,20 @@ in
           target="$HOME/Documents/custom-scripts"
           share="${userVars.sharedStateDir}"
 
-          # Poll for the NFS share to appear (mount race on boot).
+          # Poll for the NFS share to appear (mount race on boot), with timeout.
+          # Use a quick stat test first to avoid hanging on I/O errors.
           attempts=0
-          while [ ! -d "$share" ] && [ "$attempts" -lt 40 ]; do
+          while [ "$attempts" -lt 20 ]; do
+            # Use timeout to prevent hanging on I/O errors
+            if timeout 1 test -d "$share" 2>/dev/null; then
+              break
+            fi
             sleep 0.5
             attempts=$((attempts + 1))
           done
 
-          [ -d "$share" ] || exit 0 # mount still offline; skip (optional)
+          # If still not a directory, skip (mount offline or I/O error)
+          timeout 1 test -d "$share" 2>/dev/null || exit 0
 
           mkdir -p "$HOME/Documents"
 
