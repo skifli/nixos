@@ -117,7 +117,10 @@
       type = "psk";
       privacy = true;
     }
-    "psk"
+    {
+      type = "psk";
+      privacy = true;
+    }
     "eap"
   ];
 }
