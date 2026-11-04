@@ -31,9 +31,15 @@
       };
       Service = {
         Type = "simple";
+        # Small delay lets the compositor/tray fully initialise before the daemon
+        # registers its StatusNotifierItem, avoiding a double-registration race.
+        ExecStartPre = "${pkgs.coreutils}/bin/sleep 5";
         ExecStart = "${pkgsUnstable.wayscriber}/bin/wayscriber --daemon";
         Restart = "on-failure";
         RestartSec = "2s";
+        # Prevent restart storms if something else goes wrong
+        StartLimitIntervalSec = 60;
+        StartLimitBurst = 3;
       };
       Install.WantedBy = [ "graphical-session.target" ];
     };
