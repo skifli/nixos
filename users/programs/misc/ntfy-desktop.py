@@ -12,12 +12,12 @@ NOTIFY_SEND = "@NOTIFY_SEND@"
 ICON = "@ICON@"
 
 # ntfy priority (1..5) -> (notify-send urgency, timeout ms)
-# 0 means "never expire".
+# 0 means "never expire" (sticky).
 URGENCY = {
-    1: ("low", "3000"),
-    2: ("low", "4000"),
-    3: ("normal", "5000"),
-    4: ("critical", "6000"),
+    1: ("low", "10000"),
+    2: ("low", "12000"),
+    3: ("normal", "15000"),
+    4: ("critical", "0"),
     5: ("critical", "0"),
 }
 
