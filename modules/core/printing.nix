@@ -11,6 +11,7 @@
 
     printing = {
       enable = true;
+      browsed.enable = false; # Stops auto creating a queue again when the printer is plugged in. Since I explicitly define my printers, this is a generic driverless queue created that is confusing and stale. And also vanishes whenever the printer is unplugged ;-;.
       drivers =
         with pkgs;
         [
