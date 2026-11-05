@@ -1,4 +1,4 @@
-{ ... }:
+_:
 # Extension policy wiring for zen-browser-flake.
 # Learn more:
 # https://github.com/0xc000022070/zen-browser-flake/tree/b6b1e625e4aa049b59930611fc20790c0ccbc840?tab=readme-ov-file#extensions

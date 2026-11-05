@@ -6,7 +6,7 @@
   ...
 }:
 let
-  username = userVars.username;
+  inherit (userVars) username;
   ntfyTopic = "grafana-alerts";
   ntfyServer = "https://ntfy.encore-sr.com";
 
