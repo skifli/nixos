@@ -3,16 +3,29 @@ set -euo pipefail
 
 # Inspired by axlefublr
 
-DATA_DIR="$HOME/Documents/custom-scripts/task-scheduler"
+STATE_ROOT="$HOME/Documents/custom-scripts"
+DATA_DIR="$STATE_ROOT/task-scheduler"
 QUEUE_DIR="$DATA_DIR/queue"
 LOGS_DIR="$DATA_DIR/logs"
 
 FONT="${FONT_MONOSPACE:-JetBrainsMono Nerd Font}"
 FONT_SIZE="${FONT_SIZE_APPLICATIONS:-11}"
 
+# The state dir is on NFS-backed shared storage. When the NFS is offline
+# the symlink dangles, so `mkdir -p` fails with EEXIST and `set -e` would
+# crash-loop this service. Idle until the storage is actually available.
+if [ ! -d "$STATE_ROOT" ]; then
+    echo "Waiting for shared state dir $STATE_ROOT (NFS storage unavailable)..."
+    until [ -d "$STATE_ROOT" ]; do
+        sleep 5
+    done
+fi
+
 mkdir -p "$QUEUE_DIR" "$LOGS_DIR"
 
-notify-send -e -a "Task receiver" -i "$HOME/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 2500 "Task receiver started" "Listening for tasks..."
+# At boot the notification daemon may not be up, but it must
+# not kill the receiver if this happens.
+notify-send -e -a "Task receiver" -i "$HOME/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 2500 "Task receiver started" "Listening for tasks..." || true
 echo "Listening for queued tasks..."
 
 while true; do
@@ -33,7 +46,7 @@ while true; do
 
         sed -i 's/STATUS="pending"/STATUS="running"/' "$NEXT_TASK"
 
-        notify-send -e -a "Task receiver" -i "$HOME/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 2500 "Executing task (#$ID)" "$CMD (in $CWD)"
+        notify-send -e -a "Task receiver" -i "$HOME/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 2500 "Executing task (#$ID)" "$CMD (in $CWD)" || true
         echo -e "\e[1;35m[Executing #$ID]\e[0m $CMD (in $CWD)"
 
         LOG_FILE="$LOGS_DIR/$ID.log"
@@ -114,10 +127,10 @@ while true; do
         if [ "$EXIT_CODE" -eq 0 ]; then
             sed -i 's/STATUS="running"/STATUS="completed"/' "$NEXT_TASK"
             echo -e "\e[1;32m[Success #$ID]\e[0m $CMD"
-            notify-send -e -a "Task receiver" -i "$HOME/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 3000 "Task completed (#$ID)" "$CMD"
+            notify-send -e -a "Task receiver" -i "$HOME/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 3000 "Task completed (#$ID)" "$CMD" || true
         else
             echo -e "\e[1;31m[Failed #$ID]\e[0m $CMD"
-            notify-send -e -a "Task receiver" -i "$HOME/.local/share/misc/nix-snowflake-rainbow.svg" -u critical -t 0 "Task failed (#$ID)" "$CMD"
+            notify-send -e -a "Task receiver" -i "$HOME/.local/share/misc/nix-snowflake-rainbow.svg" -u critical -t 0 "Task failed (#$ID)" "$CMD" || true
 
             WIN_ID=$(niri msg -j focused-window 2>/dev/null | jq -r '.id // empty' || true)
             [ -n "$WIN_ID" ] && niri msg action set-window-urgent --id "$WIN_ID" 2>/dev/null || true

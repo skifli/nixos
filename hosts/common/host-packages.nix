@@ -32,7 +32,6 @@ in
     deadnix # Find dead nix code
     fastfetch # Neofetch C alternative
 
-    nixfmt
     nixd # Nix language server
 
     coreutils # Some Unix CLI utilities

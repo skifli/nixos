@@ -11,7 +11,7 @@ connect_rdp() {
     kbd=${RDP_KBD:-}
 
     if [ -z "$host" ] || [ -z "$user" ]; then
-        notify-send -e -a FreeRDP -i "/home/${USER}/.local/share/misc/663376.png" -u critical "RDP Error" "Missing RDP_HOST or RDP_USER in Agenix secret file!"
+        notify-send -e -a FreeRDP -i "$HOME/.local/share/misc/663376.png" -u critical "RDP Error" "Missing RDP_HOST or RDP_USER in Agenix secret file!"
         echo "Error: Host and user must be set in the secret file." >&2
         exit 1
     fi
@@ -41,7 +41,7 @@ connect_oracle_vnc() {
     local key_file="/run/agenix/${USER}-oracle-vnc-key"
 
     if [ ! -f "$secret_file" ] || [ ! -f "$key_file" ]; then
-        notify-send -e -a VNCViewer -i "/home/${USER}/.local/share/misc/663376.png" -u critical "VNC Error" "Missing secret file or SSH key in /run/agenix/!"
+        notify-send -e -a VNCViewer -i "$HOME/.local/share/misc/663376.png" -u critical "VNC Error" "Missing secret file or SSH key in /run/agenix/!"
         exit 1
     fi
 
@@ -52,12 +52,12 @@ connect_oracle_vnc() {
     local user="${SSH_USER:-}"
     local port="${VNC_PORT:-5901}"
 
-    notify-send -e -a VNCViewer -i "/home/${USER}/.local/share/misc/663376.png" -u low "VNC Connection" "Connecting to Oracle server via SSH tunnel"
+    notify-send -e -a VNCViewer -i "$HOME/.local/share/misc/663376.png" -u low "VNC Connection" "Connecting to Oracle server via SSH tunnel"
 
     # Open SSH tunnel in background
     ssh -f -i "$key_file" -L "$port:127.0.0.1:$port" "$user@$host" sleep 1 # Keeps the tunnel open just long enough for the local vncviewer to make a connection. Once closed, the SSH tunnel will automatically clean itself up and exit.
 
-    notify-send -e -a VNCViewer -i "/home/${USER}/.local/share/misc/663376.png" -u low "VNC Connection" "Launching VNC viewer"
+    notify-send -e -a VNCViewer -i "$HOME/.local/share/misc/663376.png" -u low "VNC Connection" "Launching VNC viewer"
 
     vncviewer "127.0.0.1:$port" "$@"
 }
@@ -69,7 +69,7 @@ run_target() {
     local secret_file="/run/agenix/${USER}-${secret_name}"
 
     if [ ! -f "$secret_file" ]; then
-        notify-send -e -a FreeRDP -i "/home/${USER}/.local/share/misc/663376.png" -u critical "RDP Error" "Secret file missing: $secret_file"
+        notify-send -e -a FreeRDP -i "$HOME/.local/share/misc/663376.png" -u critical "RDP Error" "Secret file missing: $secret_file"
         echo "Error: Secret file missing: $secret_file" >&2
         exit 1
     fi
@@ -110,14 +110,14 @@ fi
 
 TARGET_NORM=$(echo "$TARGET" | tr '[:upper:]' '[:lower:]')
 
-notify-send -e -a FreeRDP -i "/home/${USER}/.local/share/misc/663376.png" -u low "Remote desktop" "Connecting to: $TARGET"
+notify-send -e -a FreeRDP -i "$HOME/.local/share/misc/663376.png" -u low "Remote desktop" "Connecting to: $TARGET"
 
 case "$TARGET_NORM" in
     *pifi-linux*|*1*|*"pifi linux"*) run_target "rdp-pifi-linux" "$@" ;;
     *pifi-win*|*2*|*"pifi windows"*)   run_target "rdp-pifi-win" "$@" ;;
     *oracle*|*3*)                     connect_oracle_vnc "$@" ;;
     *)
-        [ -n "$TARGET" ] && notify-send -e -a FreeRDP -i "/home/${USER}/.local/share/misc/663376.png" -u low "Remote desktop" "Cancelled or invalid selection: '$TARGET'"
+        [ -n "$TARGET" ] && notify-send -e -a FreeRDP -i "$HOME/.local/share/misc/663376.png" -u low "Remote desktop" "Cancelled or invalid selection: '$TARGET'"
         exit 0
         ;;
 esac

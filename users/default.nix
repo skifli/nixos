@@ -64,29 +64,6 @@ in
 
         enable = true; # Ensures ENV variables are set up so apps follow the XDG Base Dir Spec
 
-        /*
-             Disabled due to https://cashmere.rs/blog/20250612002456-how-to-fix-screensharing-for-niri-wm-under-nixos#solution
-          portal = {
-            enable = true;
-
-            # https://mynixos.com/home-manager/option/xdg.portal.xdgOpenUsePortal
-            xdgOpenUsePortal = true;
-
-            config.common = {
-              default = [
-                "luminous"
-                "kde"
-              ];
-            };
-
-            extraPortals = with pkgs; [
-              xdg-desktop-portal-luminous
-              kdePackages.xdg-desktop-portal-kde
-              # xdg-desktop-portal-luminous
-            ];
-          };
-        */
-
         mimeApps.enable = true;
         userDirs = {
           enable = true;
