@@ -40,6 +40,7 @@ let
       "aw"
       "fuzzel"
       "kde-connect"
+      "lumine-capture"
       "nix-direnv"
       "nix-index-database"
       "nix-your-shell"
@@ -373,6 +374,7 @@ in
     "copyl" = builtins.readFile ./scripts/copyl.sh;
     "schedule" = builtins.readFile ./scripts/schedule.sh;
     "smart-rebuild" = builtins.readFile ./scripts/smart-rebuild.sh;
+    "toggle-dnd" = builtins.readFile ./scripts/toggle-dnd.sh;
 
     "is-workspace-focused" =
       "niri msg focused-output | grep -q \"$1\" && niri msg workspaces | grep -A 10 \"$1\" | grep \"^\\s*\\*\" | grep -q \" $2 \"";

@@ -717,28 +717,37 @@
       hotkey-overlay-title = null;
       allow-inhibiting = false;
     };
-    screenshot = [ ];
+    spawn = [ "lumine-capture" ];
   };
   "Shift+Print" = {
     _props = {
-      hotkey-overlay-title = null;
+      hotkey-overlay-title = "Full-screen screenshot (save + copy to clipboard)";
       allow-inhibiting = false;
     };
-    screenshot-window = [ ];
+    spawn = [ "lumine-capture" "-f" "-t" "sc" ];
   };
   "Ctrl+Print" = {
     _props = {
-      hotkey-overlay-title = "Screenshot OCR";
+      hotkey-overlay-title = "Region OCR (LumineCapture)";
       allow-inhibiting = false;
     };
-    spawn = [ "normcap" ];
+    spawn = [ "lumine-capture" "-r" "ocr" "-t" "sc" ];
   };
   "Alt+Print" = {
     _props = {
-      hotkey-overlay-title = "Screenshot all monitors";
+      hotkey-overlay-title = "Monitor under pointer (save + copy to clipboard)";
       allow-inhibiting = false;
     };
-    spawn-sh = "grim - | wl-copy";
+    spawn = [ "lumine-capture" "-m" "-t" "sc" ];
+  };
+
+  # NOTIFICATIONS / DO NOT DISTURB
+  "Mod+Ctrl+D" = {
+    _props = {
+      hotkey-overlay-title = "Toggle Do Not Disturb";
+      allow-inhibiting = false;
+    };
+    spawn = [ "toggle-dnd" ];
   };
 
   # SCREEN ANNOTATION

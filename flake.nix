@@ -116,6 +116,11 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
+    lumine-capture = {
+      url = "github:Netflate/LumineCapture";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
     affinity-nix.url = "github:mrshmllow/affinity-nix";
     # anki-mcp.url = "github:ankimcp/anki-mcp-server-addon";
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";

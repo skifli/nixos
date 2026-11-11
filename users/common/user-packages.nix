@@ -55,7 +55,6 @@
       mpv
       nix-prefetch
       nix-prefetch-github # REALLY USEFUL - e.g., `nix-prefetch-github skifli awatcher --rev e93f57b818d9c29952940ebb3e6927958a310166`
-      normcap
       noto-fonts
       noto-fonts-color-emoji
       ocrmypdf
