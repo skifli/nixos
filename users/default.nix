@@ -170,41 +170,36 @@ in
         activation.linkSharedState = pkgs.lib.mkAfter ''
           # Shared state using NFS: symlink ~/Documents/custom-scripts to a via NFS sharedStateDir
           # Tis optional however: do not make HM fail when the NFS mount is offline.
-          if [ -z "${userVars.sharedStateDir}" ]; then
-            exit 0
-          fi
+          if [ -n "${userVars.sharedStateDir}" ]; then
+            target="$HOME/Documents/custom-scripts"
+            share="${userVars.sharedStateDir}"
 
-          target="$HOME/Documents/custom-scripts"
-          share="${userVars.sharedStateDir}"
+            # Poll for the NFS share to appear (mount race on boot), with timeout.
+            # Use a quick stat test first to avoid hanging on I/O errors.
+            attempts=0
+            while [ "$attempts" -lt 20 ]; do
+              if timeout 1 test -d "$share" 2>/dev/null; then
+                break
+              fi
+              sleep 0.5
+              attempts=$((attempts + 1))
+            done
 
-          # Poll for the NFS share to appear (mount race on boot), with timeout.
-          # Use a quick stat test first to avoid hanging on I/O errors.
-          attempts=0
-          while [ "$attempts" -lt 20 ]; do
-            # Use timeout to prevent hanging on I/O errors
+            # The share is optional; skip this symlink if it is still unavailable.
             if timeout 1 test -d "$share" 2>/dev/null; then
-              break
+              mkdir -p "$HOME/Documents"
+
+              # Only update the link when it is not already correct.
+              if [ ! -L "$target" ] || [ "$(readlink "$target")" != "$share" ]; then
+                # Back up an actual stale directory rather than deleting its contents.
+                if [ -d "$target" ] && [ ! -L "$target" ]; then
+                  mv "$target" "$target.bak" 2>/dev/null || rm -rf "$target"
+                fi
+
+                ln -sf "$share" "$target"
+              fi
             fi
-            sleep 0.5
-            attempts=$((attempts + 1))
-          done
-
-          # If still not a directory, skip (mount offline or I/O error)
-          timeout 1 test -d "$share" 2>/dev/null || exit 0
-
-          mkdir -p "$HOME/Documents"
-
-          # Already a correct symlink? Nothing to do.
-          [ -L "$target" ] && [ "$(readlink "$target")" = "$share" ] && exit 0
-
-          # Stale real dir (leftover before this custom script existed):
-          # back it up rather than deleting, then link. Only if the share is
-          # already populated though.
-          if [ -d "$target" ] && [ ! -L "$target" ]; then
-            mv "$target" "$target.bak" 2>/dev/null || rm -rf "$target"
           fi
-
-          ln -sf "$share" "$target"
         '';
 
         stateVersion = hostVars.stateVersion;
