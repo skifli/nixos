@@ -80,6 +80,7 @@ in
   "secrets/ami/vnc-oracle.age".publicKeys = amiOnLyra;
   "secrets/ami/oracle-vnc-key.age".publicKeys = amiOnLyra;
   "secrets/ami/ntfy-personal-token.age".publicKeys = amiOnLyra;
+  "secrets/ami/wakatime.cfg.age".publicKeys = amiOnLyra;
 
   "secrets/fynix/hashedPasswordFile.age".publicKeys = fynixOnFydetabduo;
   "secrets/fynix/github-credentials.age".publicKeys = fynixOnFydetabduo;
@@ -93,6 +94,7 @@ in
   "secrets/fynix/rdp-pifi-win.age".publicKeys = fynixOnFydetabduo;
   "secrets/fynix/vnc-oracle.age".publicKeys = fynixOnFydetabduo;
   "secrets/fynix/oracle-vnc-key.age".publicKeys = fynixOnFydetabduo;
+  "secrets/fynix/wakatime.cfg.age".publicKeys = fynixOnFydetabduo;
 
   # Misc secrets
   "secrets/rescue/hashedPasswordFile.age".publicKeys = rescueRecipients;

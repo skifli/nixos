@@ -79,6 +79,10 @@ let
       })
       # ntfy alert token
       (mkUserSecret username "ntfy-personal-token" { })
+      (mkUserSecret username "wakatime.cfg" {
+        path = "/home/${username}/.wakatime.cfg";
+        mode = "0600";
+      })
     ];
 
   rescuePasswordSecret =
