@@ -177,12 +177,12 @@ common
             if [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
               kill "$(cat "$PIDFILE")" 2>/dev/null || true
               rm -f "$PIDFILE"
-              notify-send -e -a "Inhibit" -i "$HOME/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 2500 "Sleep inhibit" "Tablet can sleep again"
+              notify-send -e -a "Inhibit" -i "$HOME/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 2500 "Sleep uninhibited" "Tablet may sleep again"
             else
               mkdir -p "$(dirname "$PIDFILE")"
               systemd-inhibit --what=sleep:handle-lid-switch --mode=block --why="Keep tablet awake in bag" sleep infinity &
               echo $! > "$PIDFILE"
-              notify-send -e -a "Inhibit" -i "$HOME/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 2500 "Sleep inhibit" "Tablet kept awake in bag"
+              notify-send -e -a "Inhibit" -i "$HOME/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 2500 "Sleep inhibited" "Tablet may not sleep now"
             fi
           ''
         ];
