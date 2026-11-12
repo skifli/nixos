@@ -339,6 +339,7 @@ in
         Description = "Launch ${userVars.username} startup applications";
         PartOf = [ "graphical-session.target" ];
         After = [ "graphical-session.target" ];
+        X-SwitchMethod = "keep-old";
       };
       Service = {
         Type = "oneshot";
