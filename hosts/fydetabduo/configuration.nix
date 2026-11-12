@@ -32,7 +32,7 @@ in
     modem.enable = false; # Avoids ModemManager probing delay
     npu.enable = true;
 
-    # Cap charging at 80%, resuming below 75%
+    # Cap charging at 90%, resuming below 85%
     battery.chargeLimit = 90;
     battery.rechargeAt = 85;
 
@@ -45,6 +45,12 @@ in
       packages.enable = false; # Cherry-picked in host-packages.nix instead
       power = {
         enable = true; # Needed because shell.enable = false disables it
+
+        # The keyboard's lock key locks the session by default. Change to
+        # "suspend" to suspend, or "ignore" to leave the key to your own
+        # compositor.
+        keyboardSleepKeyAction = "ignore";
+      
         autoProfile = {
           enable = true;
           forcePerformanceOnAC = true;
