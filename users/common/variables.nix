@@ -156,6 +156,8 @@ in
       };
       Service = {
         Type = "oneshot";
+        RemainAfterExit = true;
+        Environment = "STORAGE_GRACE_SECONDS=30";
         ExecStart = "/home/${username}/.local/bin/todo.sh --startup";
         ExecStartPre = "${pkgs.coreutils}/bin/sleep 10";
       };
