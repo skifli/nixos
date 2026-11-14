@@ -50,7 +50,7 @@ in
         # "suspend" to suspend, or "ignore" to leave the key to your own
         # compositor.
         keyboardSleepKeyAction = "ignore";
-      
+
         autoProfile = {
           enable = true;
           forcePerformanceOnAC = true;

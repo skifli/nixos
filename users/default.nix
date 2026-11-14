@@ -202,7 +202,7 @@ in
           fi
         '';
 
-        stateVersion = hostVars.stateVersion;
+        inherit (hostVars) stateVersion;
       };
     }) usersVars; # For each user
   };

@@ -1,4 +1,10 @@
-{ lib, pkgs, hostVars, userVars, ... }:
+{
+  lib,
+  pkgs,
+  hostVars,
+  userVars,
+  ...
+}:
 let
   # Host-supplied ALSA node name for the built-in speakers. Unset on hosts that
   # shouldn't mute anything at login (e.g. the tablet), which disables the unit.

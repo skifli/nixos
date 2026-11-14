@@ -724,21 +724,37 @@
       hotkey-overlay-title = "Full-screen screenshot (save + copy to clipboard)";
       allow-inhibiting = false;
     };
-    spawn = [ "lumine-capture" "-f" "-t" "sc" ];
+    spawn = [
+      "lumine-capture"
+      "-f"
+      "-t"
+      "sc"
+    ];
   };
   "Ctrl+Print" = {
     _props = {
       hotkey-overlay-title = "Region OCR (LumineCapture)";
       allow-inhibiting = false;
     };
-    spawn = [ "lumine-capture" "-r" "ocr" "-t" "sc" ];
+    spawn = [
+      "lumine-capture"
+      "-r"
+      "ocr"
+      "-t"
+      "sc"
+    ];
   };
   "Alt+Print" = {
     _props = {
       hotkey-overlay-title = "Monitor under pointer (save + copy to clipboard)";
       allow-inhibiting = false;
     };
-    spawn = [ "lumine-capture" "-m" "-t" "sc" ];
+    spawn = [
+      "lumine-capture"
+      "-m"
+      "-t"
+      "sc"
+    ];
   };
 
   # NOTIFICATIONS / DO NOT DISTURB
