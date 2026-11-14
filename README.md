@@ -5,7 +5,7 @@
 - [nixOS - An indubitably splendiferous configuration](#nixos---an-indubitably-splendiferous-configuration)
   - [Hosts](#hosts)
   - [Users](#users)
-  - [Cachix](#cachix-)
+  - [Binary cache](#binary-cache)
   - [GitHub workflows](#github-workflows)
   - [Keyboard-centric workflow](#keyboard-centric-workflow)
     - [The navigation layers](#the-navigation-layers)
@@ -56,23 +56,16 @@ This is the configuration that started my NixOS journey, and it has stayed with 
 | `fynix`  | FydeTab Duo user       | `zsh`         | Niri + Wayle + Vicinae + Foot + Zen Browser    |
 | `rescue` | In case of kaboom user | `bash`        | Fallback system user so none                   |
 
-## Cachix [![Build & cache](https://github.com/skifli/nixos/actions/workflows/nix-build.yml/badge.svg)](https://github.com/skifli/nixos/actions/workflows/nix-build.yml)
+## Binary cache [![Build & cache](https://github.com/skifli/nixos/actions/workflows/nix-build.yml/badge.svg)](https://github.com/skifli/nixos/actions/workflows/nix-build.yml)
 
-> [!IMPORTANT]
-> "Users have a free 5 GB limit for open source projects and 20 Cachix Deploy agents." - [Cachix Pricing](https://www.cachix.org/pricing).
-
-Before we go more in depth, I want to first state that I have a personal cache setup on [Cachix](https://cachix.org) under [skifli-nixos](https://app.cachix.org/cache/skifli-nixos) (yes it's free). This is extremely useful and I would suggest anyone reading this to also set one up (unless you have your own alternative already). 5 GB may not seem a lot but since in Cachix you can also configure upstream caches (i.e., they skip uploading store paths already present in any of them), 5 GB is plenty. Plus, you can pin specific paths to tell them not to delete (which they do based on a LRU policy if you are over 5 GB), and my pins are less than 4 GiB, so I have plenty of space!
-
-I have a workflow setup under [`nix-build.yml`](.github/workflows/nix-build.yml) that builds when I tell it to (which used to be on push but sometimes I don't want / need it to), and caches anything built locally (i.e., not pulled from caches), and it also makes sure to pin my main system paths! This has helped bring my rebuild times down to an average of 2-3 minutes, which compared to the 10+ it was before is quite an improvement :p. Of course, my system is a bit complex with e.g., multiple specialisations for light / dark theme, Home Manager, etc, which mean it won't be the fastest to rebuild - but if anyone has any other ideas I'm all ears :).
-
-Oh also alongside that I have a personal self-hosted cache setup with [Xilo](https://github.com/stubbedev/xilo) that runs on my own systems as I have a **lot** of hosts now.
+GitHub Actions builds the `lyra` and `fydetabduo` NixOS configurations and uploads their closures, including light/dark specialisations, to my self-hosted [Xilo](https://github.com/stubbedev/xilo). The workflow also uploads the Anki Seara addon. Lyra uses GitHub's hosted x86_64 runner; FydeTab Duo uses the hosted `ubuntu-24.04-arm` runner.
 
 ## GitHub workflows
 
 My configuration also uses some other GitHub Actions located in [`.github/workflows/`](.github/workflows/):
 
 - [`flake-checker.yml`](.github/workflows/flake-checker.yml): Runs weekly checks on `flake.lock` health.
-- [`nix-build.yml`](.github/workflows/nix-build.yml): As aforementioned, this builds the `lyra` system (for both light and dark theme specialisations), pushes the results directly to Cachix, and pins the latest two revisions.
+- [`nix-build.yml`](.github/workflows/nix-build.yml): Builds `lyra` and `fydetabduo` (including available light/dark specialisations) and uploads their closures, plus the Anki Seara addon, to Xilo.
 - [`nix-maid.yml`](.github/workflows/nix-maid.yml): Runs [`statix`](https://github.com/molybdenumsoftware/statix), [`deadnix`](https://github.com/astro/deadnix), and [`alejandra`](https://github.com/kamadorueda/alejandra) on pushes/PRs, automatically opening a PR with the changes.
 - [`update-lockfile.yml`](.github/workflows/update-lockfile.yml): Scheduled weekly run (Sundays at 00:00) that automatically updates `flake.lock` and opens an automated PR.
 - [`dependabot.yml`](.github/dependabot.yml): Make sure the GitHub Actions dependencies are up to date, weekly.
@@ -189,36 +182,36 @@ Configured in [`users/programs/compositor/niri/binds.nix`](users/programs/compos
 
 The app toggle shortcuts will focus the application if already open, launch it if closed, or switch back to the previous window if the target is already focused (last one as per niri settings):
 
-| Keybinding              | Application                                                                                         |
-| :---------------------- | :-------------------------------------------------------------------------------------------------- |
-| `Mod + D`               | Vicinae launcher                                                                                    |
-| `Mod + Return`          | Ghostty terminal                                                                                    |
-| `Mod + Shift + Return`  | Centered floating terminal ([`floating-term.sh`](users/ami/scripts/floating-term.sh))               |
-| `Mod + ;`               | Grid-based mouse navigator and warper ([`waynav`](users/programs/misc/waynav.nix))                  |
-| `Mod + F`               | Dolphin file manager                                                                                |
-| `Mod + Shift + F`       | Yazi file manager                                                                                   |
-| `Mod + V`               | Zed editor (`zeditor`)                                                                              |
-| `Mod + E`               | Helix editor (`hx`)                                                                                 |
-| `Mod + Shift + Z`       | Zen Browser (`zen-beta`)                                                                            |
-| `Mod + Shift + A`       | Anytype                                                                                             |
-| `Mod + Shift + N`       | Anki                                                                                                |
-| `Mod + Shift + C`       | Ferdium                                                                                             |
-| `Mod + Shift + D`       | TigerVNC viewer                                                                                     |
-| `Mod + Shift + Y`       | Affinity suite                                                                                      |
-| `Mod + Shift + W`       | Toggle Wayscriber screen annotation overlay ([`wayscriber`](users/programs/misc/wayscriber.nix))    |
-| `Print`                 | Open LumineCapture screenshot editor ([`lumine-capture`](users/programs/misc/lumine-capture.nix))   |
+| Keybinding              | Application                                                                                                |
+| :---------------------- | :--------------------------------------------------------------------------------------------------------- |
+| `Mod + D`               | Vicinae launcher                                                                                           |
+| `Mod + Return`          | Ghostty terminal                                                                                           |
+| `Mod + Shift + Return`  | Centered floating terminal ([`floating-term.sh`](users/ami/scripts/floating-term.sh))                      |
+| `Mod + ;`               | Grid-based mouse navigator and warper ([`waynav`](users/programs/misc/waynav.nix))                         |
+| `Mod + F`               | Dolphin file manager                                                                                       |
+| `Mod + Shift + F`       | Yazi file manager                                                                                          |
+| `Mod + V`               | Zed editor (`zeditor`)                                                                                     |
+| `Mod + E`               | Helix editor (`hx`)                                                                                        |
+| `Mod + Shift + Z`       | Zen Browser (`zen-beta`)                                                                                   |
+| `Mod + Shift + A`       | Anytype                                                                                                    |
+| `Mod + Shift + N`       | Anki                                                                                                       |
+| `Mod + Shift + C`       | Ferdium                                                                                                    |
+| `Mod + Shift + D`       | TigerVNC viewer                                                                                            |
+| `Mod + Shift + Y`       | Affinity suite                                                                                             |
+| `Mod + Shift + W`       | Toggle Wayscriber screen annotation overlay ([`wayscriber`](users/programs/misc/wayscriber.nix))           |
+| `Print`                 | Open LumineCapture screenshot editor ([`lumine-capture`](users/programs/misc/lumine-capture.nix))          |
 | `Shift + Print`         | Full-screen screenshot, save + copy to clipboard ([LumineCapture](users/programs/misc/lumine-capture.nix)) |
-| `Ctrl + Print`          | Region OCR via LumineCapture, save + copy ([`lumine-capture`](users/programs/misc/lumine-capture.nix))           |
+| `Ctrl + Print`          | Region OCR via LumineCapture, save + copy ([`lumine-capture`](users/programs/misc/lumine-capture.nix))     |
 | `Alt + Print`           | Monitor under pointer, save + copy to clipboard ([LumineCapture](users/programs/misc/lumine-capture.nix))  |
-| `Mod + Ctrl + D`        | Toggle Do Not Disturb notifications ([`toggle-dnd`](users/common/scripts/toggle-dnd.sh))            |
-| `Mod + Ctrl + L`        | Toggle sleep inhibit                                                                                |
-| `Ctrl + Shift + Escape` | Mission Center (`system-monitor`)                                                                   |
-| `Shift + Escape`        | Btop                                                                                                |
-| `Mod + N`               | Todo and reminder manager ([`todo.sh`](users/ami/scripts/todo.sh))                                  |
-| `Mod + Q`               | Close focused window                                                                                |
-| `Mod + Shift + Q`       | Force kill current window (`killcurrent`)                                                           |
-| `Mod + Ctrl + Q`        | Interactive click-to-kill window (`killclick`)                                                      |
-| `Mod + Alt + K`         | Toggle on-screen keystroke overlay ([`wshowkeys`](users/programs/misc/wshowkeys.nix))               |
+| `Mod + Ctrl + D`        | Toggle Do Not Disturb notifications ([`toggle-dnd`](users/common/scripts/toggle-dnd.sh))                   |
+| `Mod + Ctrl + L`        | Toggle sleep inhibit                                                                                       |
+| `Ctrl + Shift + Escape` | Mission Center (`system-monitor`)                                                                          |
+| `Shift + Escape`        | Btop                                                                                                       |
+| `Mod + N`               | Todo and reminder manager ([`todo.sh`](users/ami/scripts/todo.sh))                                         |
+| `Mod + Q`               | Close focused window                                                                                       |
+| `Mod + Shift + Q`       | Force kill current window (`killcurrent`)                                                                  |
+| `Mod + Ctrl + Q`        | Interactive click-to-kill window (`killclick`)                                                             |
+| `Mod + Alt + K`         | Toggle on-screen keystroke overlay ([`wshowkeys`](users/programs/misc/wshowkeys.nix))                      |
 
 </details>
 

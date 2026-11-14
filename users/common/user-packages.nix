@@ -59,6 +59,7 @@
         noto-fonts
         noto-fonts-color-emoji
         ocrmypdf
+        openssl
         poppler-utils
         proton-vpn
         proton-vpn-cli

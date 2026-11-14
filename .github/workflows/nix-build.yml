@@ -21,11 +21,12 @@ jobs:
       - name: Install Nix
         uses: DeterminateSystems/determinate-nix-action@main
 
-      - name: Setup Cachix
-        uses: cachix/cachix-action@v17
+      - name: Setup Xilo cache
+        uses: stubbedev/xilo@v1.2.8
         with:
-          name: "skifli-nixos"
-          authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
+          url: https://xilo.warp-racing.com
+          token: ${{ secrets.XILO_PUSH_TOKEN }}
+          cache: admin/skifli-nixos
 
       - name: Build and cache x86_64 Anki Seara addon
         run: |
@@ -35,7 +36,7 @@ jobs:
             --no-link \
             --print-out-paths \
             --expr '(builtins.getFlake (toString ./.)).inputs.anki-seara.packages."x86_64-linux".default')
-          cachix push skifli-nixos "$SEARA_PATH"
+          nix-store -qR "$SEARA_PATH" | xilo push admin/skifli-nixos -
 
   build:
     name: Build (${{ matrix.host }})
@@ -46,11 +47,9 @@ jobs:
       matrix:
         include:
           - host: lyra
-            runner: ubuntu-latest # Intel x86_64 runner
-            cache: cachix
+            runner: ubuntu-latest
           - host: fydetabduo
-            runner: self-hosted
-            cache: xilo
+            runner: ubuntu-24.04-arm
 
     steps:
       - name: Checkout repository
@@ -60,55 +59,30 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
-      - name: Set up Swap Space (for x86_64 only)
-        if: matrix.cache == 'cachix'
+      - name: Set up Swap Space
         uses: pierotofy/set-swap-space@master
         with:
           swap-size-gb: 10
 
-      - name: Setup nothing-but-nix (for x86_64 only)
-        if: matrix.cache == 'cachix'
+      - name: Setup nothing-but-nix
         uses: wimpysworld/nothing-but-nix@main
 
-      - name: Install Nix (for x86_64 only)
-        if: matrix.cache == 'cachix'
+      - name: Install Nix
         uses: DeterminateSystems/determinate-nix-action@main
 
-      - name: Detect target system
-        id: system
-        run: |
-          SYSTEM=$(nix eval ".?submodules=1#nixosConfigurations.${{ matrix.host }}.config.nixpkgs.hostPlatform.system" --raw)
-          IS_AARCH64=$( [ "$SYSTEM" = "aarch64-linux" ] && echo "true" || echo "false" )
-          echo "system=$SYSTEM" >> "$GITHUB_OUTPUT"
-          echo "is_aarch64=$IS_AARCH64" >> "$GITHUB_OUTPUT"
-          echo "Target system: $SYSTEM (aarch64: $IS_AARCH64)"
-
-      - name: Setup Cachix (for x86_64 only)
-        if: matrix.cache == 'cachix'
-        uses: cachix/cachix-action@v17
-        with:
-          name: "skifli-nixos"
-          authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
-
       - name: Setup Xilo cache # For anyone as it also sets up the pull token
-        uses: stubbedev/xilo@v1.2.7
+        uses: stubbedev/xilo@v1.2.8
         with:
-          url: https://xilo.encore-sr.com
+          url: https://xilo.warp-racing.com
           token: ${{ secrets.XILO_PUSH_TOKEN }}
-          cache: admin/nixos
+          cache: admin/skifli-nixos
 
       - name: Build NixOS system (${{ matrix.host }})
         run: |
-          EXTRA_PLATFORMS=""
-          if [ "${{ steps.system.outputs.is_aarch64 }}" = "true" ]; then
-            EXTRA_PLATFORMS="--option extra-platforms aarch64-linux"
-          fi
-
           LIGHT_PATH=$(nix build ".?submodules=1#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" \
             --accept-flake-config \
             --no-link \
-            --print-out-paths \
-            $EXTRA_PLATFORMS)
+            --print-out-paths)
 
           echo "LIGHT_PATH=$LIGHT_PATH" >> "$GITHUB_ENV"
 
@@ -117,26 +91,11 @@ jobs:
             echo "DARK_PATH=$DARK_PATH" >> "$GITHUB_ENV"
           fi
 
-      - name: Push and pin builds on Cachix (x86_64 only)
-        if: github.ref == 'refs/heads/main' && matrix.cache == 'cachix'
+      - name: Push builds to Xilo
+        if: github.ref == 'refs/heads/main'
         run: |
           PATHS_TO_PUSH="$LIGHT_PATH"
           if [ -n "${DARK_PATH:-}" ]; then
             PATHS_TO_PUSH="$PATHS_TO_PUSH $DARK_PATH"
           fi
-
-          nix-store -qR $PATHS_TO_PUSH \
-            | cachix push skifli-nixos
-
-          cachix pin skifli-nixos "${{ matrix.host }}-light" "$LIGHT_PATH" --keep-revisions 1
-          if [ -n "${DARK_PATH:-}" ]; then
-            cachix pin skifli-nixos "${{ matrix.host }}-dark" "$DARK_PATH" --keep-revisions 1
-          fi
-
-      - name: Push and pin builds on Xilo (aarch64 only)
-        if: github.ref == 'refs/heads/main' && matrix.cache == 'xilo'
-        run: |
-          xilo push admin/nixos ${{ env.LIGHT_PATH }}
-          if [ -n "${DARK_PATH}" ]; then
-            xilo push admin/nixos ${{ env.DARK_PATH }}
-          fi
+          nix-store -qR $PATHS_TO_PUSH | xilo push admin/skifli-nixos -

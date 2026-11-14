@@ -9,7 +9,7 @@
   - `variables.nix` - set `enabledImports`, outputs/orderedOutputs, locale/timezone, etc.
 - Add user under `users/<username>/` (copy/adapt ami or fynix): `variables.nix`, `user-packages.nix`, scripts; register in `modules/core/users.nix` `enabledUsers`.
 - Secrets: create any `secrets/<hostname>/*.age` and register in `secrets/secrets.nix`.
-- CI: add host to `.github/workflows/nix-build.yml` matrix (self-hosted for aarch64 otherwise GitHub runner).
+- CI: add host to `.github/workflows/nix-build.yml` matrix (`ubuntu-24.04-arm` for aarch64, `ubuntu-latest` for x86_64).
 
 ## On-device stuff
 
