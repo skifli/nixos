@@ -17,7 +17,7 @@ let
     else
       entry
       // {
-        type = entry.type;
+        inherit (entry) type;
         privacy = entry.privacy or false;
       };
 

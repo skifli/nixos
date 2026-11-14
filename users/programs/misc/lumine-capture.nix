@@ -21,20 +21,27 @@ let
           "sha256-onxvQAayz47gsY84SWP320prp4pKdckPc+QX4ItF4Jw=";
     };
 
-    nativeBuildInputs = [ pkgs.dpkg pkgs.makeWrapper ];
+    nativeBuildInputs = [
+      pkgs.dpkg
+      pkgs.makeWrapper
+    ];
 
     installPhase = ''
       dpkg-deb -x $src $out
       install -Dm755 $out/usr/bin/lumine-capture $out/bin/lumine-capture
       wrapProgram $out/bin/lumine-capture \
-        --prefix LD_LIBRARY_PATH : ${builtins.toString (builtins.foldl' (acc: p: acc + p + "/lib:") "" [
-          pkgs.openssl
-          pkgs.libxkbcommon
-          pkgs.pipewire
-          pkgs.wayland
-          pkgs.libGL
-          pkgs.vulkan-loader
-        ])}
+        --prefix LD_LIBRARY_PATH : ${
+          builtins.toString (
+            builtins.foldl' (acc: p: acc + p + "/lib:") "" [
+              pkgs.openssl
+              pkgs.libxkbcommon
+              pkgs.pipewire
+              pkgs.wayland
+              pkgs.libGL
+              pkgs.vulkan-loader
+            ]
+          )
+        }
       install -Dm644 $out/usr/share/applications/lumine-capture.desktop \
         $out/share/applications/lumine-capture.desktop
       substituteInPlace $out/share/applications/lumine-capture.desktop \

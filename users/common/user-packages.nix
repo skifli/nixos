@@ -71,7 +71,7 @@
       # OnlyOffice only publishes x86_64 Linux builds in nixpkgs right now, so
       # keep the tablet (aarch64) evaluating by skipping it there until the
       # upstream aarch64 PR lands.
-      ++ lib.optional (pkgs.stdenv.hostPlatform.isx86_64) pkgs.onlyoffice-desktopeditors;
+      ++ lib.optional pkgs.stdenv.hostPlatform.isx86_64 pkgs.onlyoffice-desktopeditors;
 
     xdg = {
       mimeApps.defaultApplications = {
