@@ -1053,7 +1053,7 @@
   };
   "Mod+Alt+Shift+R" = {
     _props = {
-      hotkey-overlay-title = "Spawn RDP script (no workspace/focus checks)";
+      hotkey-overlay-title = "Spawn VNC script (no workspace/focus checks)";
       allow-inhibiting = false;
       repeat = false;
     };

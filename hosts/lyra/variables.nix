@@ -16,9 +16,23 @@
 
   # Host configuration
   cpuFreqGovernor = "performance";
+
+  # AX200 is a Wi-Fi + Bluetooth combo. Wi-Fi here is 5 GHz-only, so the 2.4 GHz
+  # page-scan cost of FastConnectable doesn't apply; ResumeDelay lets Wi-Fi settle
+  # after resume before Bluetooth starts reconnecting audio devices.
+  bluetooth = {
+    fastConnectable = true;
+    resumeDelay = 2;
+  };
+
+  # ALSA node name of the built-in analogue speakers (muted once per login by
+  # users/programs/misc/mute-builtin-speakers.nix).
+  builtinSpeakerSink = "alsa_output.pci-0000_00_1f.3.analog-stereo";
+
   enabledImports = [
     # Host specific modules
     ../../modules/core/audio.nix
+    ../../modules/core/bluetooth.nix
     ../../modules/core/boot.nix
     ../../modules/core/btrfs.nix
     ../../modules/core/chaotic.nix

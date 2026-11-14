@@ -26,7 +26,7 @@ let
     pager = "ov";
     partition-manager = "kde";
     prompt = "starship";
-    remote-desktop = "freerdp";
+    remote-desktop = "vnc";
     screen-recorder = "gpu-screen-recorder";
     system-monitor = "missioncenter";
     terminal = "";
@@ -63,24 +63,34 @@ in
 
   # NFS-backed shared state: todo.json, task-scheduler, etc.
   # Both hosts see the same list since it's shared across users too.
-  sharedStateDir = "/mnt/Remote-Storage/custom-scripts";
+  sharedStateDir = "/mnt/pifi-data/remote-storage/custom-scripts";
 
   networkMounts = {
     nfsShares = [
       {
         mountPoint = "/mnt/pifi";
         server = "pifi";
-        remotePath = "/home/ami";
+        remotePath = "/home/pili";
       }
       {
-        mountPoint = "/mnt/Main";
+        mountPoint = "/mnt/pifi-data";
         server = "pifi";
-        remotePath = "/media/ami/Main";
+        remotePath = "/data";
       }
       {
-        mountPoint = "/mnt/Remote-Storage";
+        mountPoint = "/mnt/pifi-media";
         server = "pifi";
-        remotePath = "/media/ami/Remote-Storage";
+        remotePath = "/media";
+      }
+      {
+        mountPoint = "/mnt/pistor";
+        server = "pistor";
+        remotePath = "/home/castor";
+      }
+      {
+        mountPoint = "/mnt/pistor-archive";
+        server = "pistor";
+        remotePath = "/archive";
       }
     ];
   };
@@ -106,7 +116,8 @@ in
     lyra = "100.76.87.14";
     oneplus-be2013 = "100.100.169.28";
     oracle-nix = "100.78.161.125";
-    pifi = "100.120.18.23";
+    pifi = "100.88.68.91";
+    pistor = "100.90.46.33";
   };
 
   kdeConnectExcluded = [

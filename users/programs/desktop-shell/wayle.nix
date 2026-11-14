@@ -63,6 +63,7 @@ lib.mkIf (hostVars.hostname != "fydetabduo") {
                 "volume"
                 "microphone"
                 "network"
+                "bluetooth"
                 "clock"
                 "notifications"
               ];
@@ -83,6 +84,13 @@ lib.mkIf (hostVars.hostname != "fydetabduo") {
           font-sans = "Monospace";
         };
         modules = {
+          bluetooth = {
+            border-show = false;
+            icon-color = "fg-default";
+            label-color = "fg-default";
+            label-max-length = 20;
+            left-click = "dropdown:bluetooth"; # built-in pairing/manage dropdown
+          };
           niri-workspaces = {
             monitor-specific = false;
           };

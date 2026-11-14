@@ -203,7 +203,7 @@ The app toggle shortcuts will focus the application if already open, launch it i
 | `Mod + Shift + A`       | Anytype                                                                                             |
 | `Mod + Shift + N`       | Anki                                                                                                |
 | `Mod + Shift + C`       | Ferdium                                                                                             |
-| `Mod + Shift + D`       | TigerVNC / FreeRDP                                                                                  |
+| `Mod + Shift + D`       | TigerVNC viewer                                                                                     |
 | `Mod + Shift + Y`       | Affinity suite                                                                                      |
 | `Mod + Shift + W`       | Toggle Wayscriber screen annotation overlay ([`wayscriber`](users/programs/misc/wayscriber.nix))    |
 | `Print`                 | Open LumineCapture screenshot editor ([`lumine-capture`](users/programs/misc/lumine-capture.nix))   |
@@ -327,7 +327,7 @@ The majority of these are bound to Niri keybinds, or are user systemd services:
 - [`zen-keyboard-shortcuts.sh`](users/ami/scripts/zen-keyboard-shortcuts.sh): A custom tool that compares the shortcuts in the Nix config against Zen Browser's actual JSON file to make updating easier when there's a change to Zen's schema version.
 - [`autoclicker.sh`](users/ami/scripts/autoclicker.sh): A script that uses [`ydotool`](https://github.com/ReimuNotMoe/ydotool) with preset speed modes (50ms, anti-AFK, 100-click bursts, or custom intervals).
 - [`view-clipboard-image.sh`](users/ami/scripts/view-clipboard-image.sh): Quickly opens the copied image or file URI in [`swayimg`](https://github.com/artemsen/swayimg).
-- [`rdp.sh`](users/ami/scripts/rdp.sh): Another [`fuzzel`](https://codeberg.org/dnkl/fuzzel) launcher for [FreeRDP](https://www.freerdp.com/) and [TigerVNC](https://tigervnc.org/) connecting to remote machines using credentials from [Agenix](https://github.com/ryantm/agenix).
+- [`rdp.sh`](users/ami/scripts/rdp.sh): Another [`fuzzel`](https://codeberg.org/dnkl/fuzzel) launcher for [TigerVNC](https://tigervnc.org/) VNC connections to remote machines using credentials from [Agenix](https://github.com/ryantm/agenix).
 
 </details>
 
@@ -368,7 +368,7 @@ More are available (that I've added myself to the code but not the below concise
 | `network-mounts`           | `nfs`                 | NFS remote mount automation                                                         |
 | `pager`                    | `ov`                  | [ov](https://noborus.github.io/ov/)                                                 |
 | `partition-manager`        | `kde`                 | [KDE Partition Manager](https://apps.kde.org/partitionmanager/)                     |
-| `remote-desktop`           | `freerdp`, `remmina`  | [FreeRDP](https://www.freerdp.com/), [Remmina](https://remmina.org/)                |
+| `remote-desktop`           | `vnc`, `remmina`      | [TigerVNC](https://tigervnc.org/), [Remmina](https://remmina.org/)                  |
 | `screen-recorder`          | `gpu-screen-recorder` | [GPU Screen Recorder](https://git.dec05eba.com/gpu-screen-recorder/about/)          |
 | `system-monitor`           | `missioncenter`       | [Mission Center](https://missioncenter.io/)                                         |
 | `vpn`                      | `tailscale`           | [Tailscale](https://tailscale.com/)                                                 |

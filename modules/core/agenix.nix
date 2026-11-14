@@ -67,10 +67,9 @@ let
       (mkUserSecret username "anki-usernameFile" { })
 
       # --- Remote Desktop / VNC Secrets ---
-      (mkUserSecret username "rdp-pifi-linux" { })
-      (mkUserSecret username "rdp-pifi-win" { })
       (mkUserSecret username "vnc-oracle" { })
       (mkUserSecret username "oracle-vnc-key" { })
+      (mkUserSecret username "vnc-pis" { })
 
       # --- Misc ---
       (mkUserSecret username "cachix.dhall" {

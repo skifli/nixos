@@ -262,7 +262,7 @@ common
         open-maximized = true;
       }
 
-      # FreeRDP - maximize
+      # TigerVNC viewer - maximize
       {
         match._props.title._raw = ''r#"(?i)TigerVNC"#'';
         open-maximized = true;
@@ -351,7 +351,7 @@ common
   };
 
   bar = {
-    output = builtins.elemAt hostVars.orderedOutputs 1;
+    output = builtins.elemAt hostVars.orderedOutputs 0;
   };
 
   programs = common.programs // {
@@ -360,6 +360,7 @@ common
     terminal = "ghostty";
     other = common.programs.other ++ [
       "affinity"
+      "mute-builtin-speakers"
       "opentabletdriver"
       "steam"
     ];

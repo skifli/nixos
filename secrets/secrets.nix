@@ -57,7 +57,7 @@ let
     1. Run `export RULES="$PWD/secrets/secrets.nix"` in the ROOT of this repository (`nixos`)
     2. Add secret entries to `secrets/secrets.nix` FIRST (ahoy).
     3. Register secrets in `modules/core/agenix.nix` SECOND.
-    4. THEN create and edit the encrypted files - e.g., `agenix -e secrets/ami/rdp-pifi-linux.age`
+    4. THEN create and edit the encrypted files - e.g., `agenix -e secrets/ami/vnc-pis.age`
   */
 in
 {
@@ -75,10 +75,9 @@ in
   "secrets/ami/anki-keyFile.age".publicKeys = amiOnLyra;
   "secrets/ami/anki-usernameFile.age".publicKeys = amiOnLyra;
   "secrets/ami/cachix.dhall.age".publicKeys = amiOnLyra;
-  "secrets/ami/rdp-pifi-linux.age".publicKeys = amiOnLyra;
-  "secrets/ami/rdp-pifi-win.age".publicKeys = amiOnLyra;
   "secrets/ami/vnc-oracle.age".publicKeys = amiOnLyra;
   "secrets/ami/oracle-vnc-key.age".publicKeys = amiOnLyra;
+  "secrets/ami/vnc-pis.age".publicKeys = amiOnLyra;
   "secrets/ami/ntfy-personal-token.age".publicKeys = amiOnLyra;
   "secrets/ami/wakatime.cfg.age".publicKeys = amiOnLyra;
 
@@ -90,10 +89,9 @@ in
   "secrets/fynix/anki-usernameFile.age".publicKeys = fynixOnFydetabduo;
   "secrets/fynix/cachix.dhall.age".publicKeys = fynixOnFydetabduo;
   "secrets/fynix/ntfy-personal-token.age".publicKeys = fynixOnFydetabduo;
-  "secrets/fynix/rdp-pifi-linux.age".publicKeys = fynixOnFydetabduo;
-  "secrets/fynix/rdp-pifi-win.age".publicKeys = fynixOnFydetabduo;
   "secrets/fynix/vnc-oracle.age".publicKeys = fynixOnFydetabduo;
   "secrets/fynix/oracle-vnc-key.age".publicKeys = fynixOnFydetabduo;
+  "secrets/fynix/vnc-pis.age".publicKeys = fynixOnFydetabduo;
   "secrets/fynix/wakatime.cfg.age".publicKeys = fynixOnFydetabduo;
 
   # Misc secrets
