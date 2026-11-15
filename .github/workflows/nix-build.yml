@@ -94,8 +94,25 @@ jobs:
       - name: Push builds to Xilo
         if: github.ref == 'refs/heads/main'
         run: |
-          PATHS_TO_PUSH="$LIGHT_PATH"
+          PATHS_TO_PUSH=("$LIGHT_PATH")
           if [ -n "${DARK_PATH:-}" ]; then
-            PATHS_TO_PUSH="$PATHS_TO_PUSH $DARK_PATH"
+            PATHS_TO_PUSH+=("$DARK_PATH")
           fi
-          nix-store -qR $PATHS_TO_PUSH | xilo push admin/skifli-nixos -
+
+          # A brief tunnel/Cloudflare interruption can fail an otherwise-good
+          # upload. Xilo skips paths and chunks already present, so retrying the
+          # full closure resumes the upload without rebuilding it.
+          for attempt in 1 2 3 4 5; do
+            if nix-store -qR "${PATHS_TO_PUSH[@]}" | xilo push admin/skifli-nixos -; then
+              exit 0
+            fi
+
+            if [ "$attempt" -eq 5 ]; then
+              echo "Xilo upload failed after $attempt attempts."
+              exit 1
+            fi
+
+            delay=$((5 * (2 ** (attempt - 1))))
+            echo "Xilo upload failed (attempt $attempt/5); retrying in ${delay}s."
+            sleep "$delay"
+          done
