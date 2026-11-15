@@ -17,18 +17,22 @@ let
     {
       device = "${sanitizedServer}:${escapedPath}";
       fsType = "nfs";
+      # A dead NFS server must not D-state the whole desktop:
+      # - automount only mounts on first access and makes idle-timeout work
+      # - timeo=20 is 2s per retransmission, so soft failures surface in ~6s
+      # - keep a finite mount timeout instead of letting mount jobs run forever
       options = [
         "_netdev"
         "nofail"
         "auto"
-        "bg" # Fork to bg if network is missing
         "soft"
-        "timeo=50"
+        "timeo=20"
         "retrans=2"
         "x-systemd.after=tailscale-online.target"
         "x-systemd.wants=tailscale-online.target"
+        "x-systemd.automount"
         "x-systemd.idle-timeout=600"
-        "x-systemd.mount-timeout=0" # Don't timeout, let the "bg" option handle it
+        "x-systemd.mount-timeout=30s"
         "x-systemd.device-timeout=30s"
       ]
       ++ (share.options or [ ]);

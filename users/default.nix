@@ -174,30 +174,19 @@ in
             target="$HOME/Documents/custom-scripts"
             share="${userVars.sharedStateDir}"
 
-            # Poll for the NFS share to appear (mount race on boot), with timeout.
-            # Use a quick stat test first to avoid hanging on I/O errors.
-            attempts=0
-            while [ "$attempts" -lt 20 ]; do
-              if timeout 1 test -d "$share" 2>/dev/null; then
-                break
+            # The symlink may dangle while NFS is down, which is fine. Do not
+            # stat the share here: with automount that triggers a blocking
+            # mount attempt and can stall activation for the whole timeout.
+            mkdir -p "$HOME/Documents"
+
+            # Only update the link when it is not already correct.
+            if [ ! -L "$target" ] || [ "$(readlink "$target")" != "$share" ]; then
+              # Back up an actual stale directory rather than deleting its contents.
+              if [ -d "$target" ] && [ ! -L "$target" ]; then
+                mv "$target" "$target.bak" 2>/dev/null || rm -rf "$target"
               fi
-              sleep 0.5
-              attempts=$((attempts + 1))
-            done
 
-            # The share is optional; skip this symlink if it is still unavailable.
-            if timeout 1 test -d "$share" 2>/dev/null; then
-              mkdir -p "$HOME/Documents"
-
-              # Only update the link when it is not already correct.
-              if [ ! -L "$target" ] || [ "$(readlink "$target")" != "$share" ]; then
-                # Back up an actual stale directory rather than deleting its contents.
-                if [ -d "$target" ] && [ ! -L "$target" ]; then
-                  mv "$target" "$target.bak" 2>/dev/null || rm -rf "$target"
-                fi
-
-                ln -sf "$share" "$target"
-              fi
+              ln -sfn "$share" "$target"
             fi
           fi
         '';

@@ -8,14 +8,27 @@ DATA_DIR="$STATE_ROOT/task-scheduler"
 QUEUE_DIR="$DATA_DIR/queue"
 LOGS_DIR="$DATA_DIR/logs"
 
+NFS_HOST="pifi"
+
 FONT="${FONT_MONOSPACE:-JetBrainsMono Nerd Font}"
 FONT_SIZE="${FONT_SIZE_APPLICATIONS:-11}"
+
+# Cheap liveness probe that does not touch the NFS mount. A stat on a dead
+# mount enters uninterruptible sleep, so use a TCP connect with a timeout.
+nfs_reachable() {
+    timeout 2 bash -c "exec 3<>/dev/tcp/$NFS_HOST/2049" 2>/dev/null
+}
 
 # The state dir is on NFS-backed shared storage. When the NFS is offline
 # the symlink dangles, so `mkdir -p` fails with EEXIST and `set -e` would
 # crash-loop this service. Idle until the storage is actually available.
+until nfs_reachable; do
+    echo "Waiting for NFS server $NFS_HOST (shared state unavailable)..."
+    sleep 5
+done
+
 if [ ! -d "$STATE_ROOT" ]; then
-    echo "Waiting for shared state dir $STATE_ROOT (NFS storage unavailable)..."
+    echo "Waiting for shared state dir $STATE_ROOT..."
     until [ -d "$STATE_ROOT" ]; do
         sleep 5
     done
@@ -28,7 +41,20 @@ mkdir -p "$QUEUE_DIR" "$LOGS_DIR"
 notify-send -e -a "Task receiver" -i "$HOME/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 2500 "Task receiver started" "Listening for tasks..." || true
 echo "Listening for queued tasks..."
 
+LAST_NFS_CHECK=$SECONDS
+
 while true; do
+    # Check at most every 30s. Without this, a dead server makes every loop
+    # iteration block on NFS RPCs and can leave this daemon stuck for hours.
+    if (( SECONDS - LAST_NFS_CHECK >= 30 )); then
+        LAST_NFS_CHECK=$SECONDS
+        if ! nfs_reachable; then
+            echo "NFS server $NFS_HOST unreachable; pausing task receiver..."
+            sleep 10
+            continue
+        fi
+    fi
+
     shopt -s nullglob
     TASKS=("$QUEUE_DIR"/*.task)
 

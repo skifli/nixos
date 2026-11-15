@@ -465,8 +465,12 @@
               };
               preferences = {
                 autoIndexing = true;
-                excludedIndexingPaths = [ ];
-                indexingPaths = map (share: share.mountPoint) userVars.networkMounts.nfsShares ++ [
+                # Never index NFS: walking an unreachable mount stalls the
+                # indexer and keeps the share mounted, freezing other apps.
+                excludedIndexingPaths = map (share: share.mountPoint) userVars.networkMounts.nfsShares ++ [
+                  "/home/${userVars.username}/Documents/custom-scripts"
+                ];
+                indexingPaths = [
                   "/home/${userVars.username}/Downloads"
                   "/home/${userVars.username}/Documents"
                   "/home/${userVars.username}/Pictures"

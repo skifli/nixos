@@ -4,11 +4,13 @@
     match._props.namespace = "^awww-daemonoverview$";
     place-within-backdrop = true;
   }
-  # Block notifications from screen recordings
+  # Block notifications from screen recordings, but keep them in screenshots.
+  # "screen-capture" would make LumineCapture/grim render them as black
+  # rectangles; "screencast" only blocks xdg-desktop-portal recordings (OBS).
   {
     match._props.namespace = "notification";
     # E.g., wayle-notification-popup
-    block-out-from = "screen-capture";
+    block-out-from = "screencast";
     opacity = 0.9; # Makes it a bit nice
   }
   /*

@@ -14,6 +14,7 @@ _: rec {
 
   enabledImports = [
     ../../modules/core/audio.nix
+    ../../modules/core/bluetooth.nix
     # boot.nix not imported — fyde-nix handles boot for fydetabduo
     ../../modules/core/btrfs.nix
     ../../modules/core/fonts.nix

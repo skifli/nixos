@@ -38,6 +38,7 @@ let
       "anki"
       "atuin"
       "aw"
+      "default-bluetooth-sink"
       "fuzzel"
       "kde-connect"
       "lumine-capture"
