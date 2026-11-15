@@ -386,6 +386,9 @@ in
     '';
 
     "copyl" = builtins.readFile ./scripts/copyl.sh;
+    "pifi-private-open" = builtins.readFile ./scripts/pifi-private-open.sh;
+    "pifi-private-close" = builtins.readFile ./scripts/pifi-private-close.sh;
+    "pifi-private-menu" = builtins.readFile ./scripts/pifi-private-menu.sh;
     "schedule" = builtins.readFile ./scripts/schedule.sh;
     "smart-rebuild" = builtins.readFile ./scripts/smart-rebuild.sh;
     "toggle-dnd" = builtins.readFile ./scripts/toggle-dnd.sh;

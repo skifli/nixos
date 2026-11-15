@@ -38,6 +38,13 @@ common
     spawn-sh-at-startup = "$HOME/.local/bin/startup.sh \"${builtins.elemAt hostVars.orderedOutputs 0}\" \"${builtins.elemAt hostVars.orderedOutputs 1}\"";
 
     binds = {
+      "Mod+Alt+Shift+P" = {
+        _props = {
+          hotkey-overlay-title = "Open or close Pifi private vault";
+          allow-inhibiting = false;
+        };
+        spawn = [ "pifi-private-menu" ];
+      };
       "Mod+1" = {
         _props = {
           hotkey-overlay-title = "Focus monitor left (also with left arrow and Mod+Alt+H)";
