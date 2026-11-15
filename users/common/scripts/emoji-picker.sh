@@ -250,6 +250,146 @@ get_base_emojis() {
 👹 :ogre: japanese monster red ogre mask
 👺 :goblin: goblin long nose red mask
 👾 :space_invader: arcade pixel video game monster
+🫨 :shaking_face: shaking face shock vibration earthquake tremble
+🥲 :smiling_face_with_tear: smiling tear bittersweet grateful emotional
+😃 :smiley: big grin happy excited cheerful
+😄 :smile: smiling eyes happy grin laugh
+😊 :blush: smiling blush shy warm pleased
+😉 :wink: wink playful flirty joke
+🙃 :upside_down_face: upside down sarcasm silly ironic
+😐 :neutral_face: neutral blank expression no reaction
+😑 :expressionless: expressionless annoyed unimpressed
+😕 :confused_face: confused unsure puzzled uncertain
+😢 :cry: crying tear sad upset
+😮 :open_mouth: surprised shocked wow
+😯 :hushed: hushed surprised speechless
+😲 :astonished: astonished shocked amazed
+😤 :triumph: huff steam frustration determined
+😠 :angry: angry face mad cross
+😫 :tired_face: tired exhausted fed up
+🥺 :puppy_eyes: pleading eyes please cute sad
+😇 :innocent: angel halo innocent good
+🤩 :star_struck: star struck amazed excited fan
+😜 :stuck_out_tongue_winking_eye: silly wink tongue playful
+😝 :stuck_out_tongue_closed_eyes: tongue out silly joking
+😛 :stuck_out_tongue: tongue out playful teasing
+😶 :no_mouth: silent speechless quiet
+🤦 :facepalm: facepalm mistake embarrassed oh no
+🤦‍♀️ :woman_facepalming: woman facepalm mistake frustrated
+🤦‍♂️ :man_facepalming: man facepalm mistake frustrated
+🤷‍♀️ :woman_shrugging: woman shrug idk whatever
+🤷‍♂️ :man_shrugging: man shrug idk whatever
+🙋 :raising_hand: raise hand question volunteer hello
+🙌 :raised_hands: hands up celebrate praise hooray
+🫶 :heart_hands: heart hands love support care
+🫰 :finger_heart: finger heart korean love tiny heart
+🤟 :love_you_gesture: love you hand sign rock on
+🤘 :metal: rock horns metal concert
+🤞 :crossed_fingers: fingers crossed luck hope
+🤙 :call_me_hand: call me phone hang loose
+👎 :thumbsdown: thumbs down dislike no disagree
+👈 :point_left: point left direction back
+👉 :point_right: point right direction this
+👆 :point_up_2: point up direction above
+👇 :point_down: point down direction below
+🫵 :point_forward: pointing at you you this
+💅 :nail_care: nail polish manicure sass fabulous
+🖤 :black_heart: black heart dark love
+🤍 :white_heart: white heart pure love
+💚 :green_heart: green heart nature love
+💙 :blue_heart: blue heart love
+🧡 :orange_heart: orange heart love
+🩵 :light_blue_heart: light blue heart cyan love
+🩶 :grey_heart: grey gray heart neutral
+💔 :broken_heart: broken heart heartbreak sad
+💕 :two_hearts: two hearts love couple
+💞 :revolving_hearts: revolving hearts love romance
+💓 :heartbeat: beating heart pulse love
+💗 :heartpulse: growing heart love affection
+💘 :cupid: heart arrow cupid romance
+❤️‍🔥 :heart_on_fire: heart on fire passionate love
+❤️‍🩹 :mending_heart: mending heart healing recovery
+🇬🇧 :flag_gb: flag united kingdom britain british uk
+🇺🇸 :flag_us: flag united states america american usa
+🇺🇦 :flag_ua: flag ukraine ukrainian
+🇯🇵 :flag_jp: flag japan japanese
+🇫🇷 :flag_fr: flag france french
+🇩🇪 :flag_de: flag germany german
+🎵 :musical_note: music note song tune melody
+🎶 :notes: music notes song singing melody
+🎂 :birthday: birthday cake celebration candles
+🧁 :cupcake: cupcake muffin dessert icing
+🍰 :cake: cake slice dessert sweet
+🍫 :chocolate_bar: chocolate candy sweet dessert
+🍪 :cookie: cookie biscuit snack dessert
+🍩 :doughnut: doughnut donut pastry dessert
+🍦 :icecream: soft serve ice cream dessert cold
+🍜 :ramen: ramen noodles soup japanese
+🍣 :sushi: sushi japanese fish rice
+🍱 :bento: bento lunch box japanese meal
+🥐 :croissant: croissant pastry breakfast french
+🥑 :avocado: avocado fruit green toast
+🫐 :blueberries: blueberries berry fruit
+🍓 :strawberry: strawberry berry fruit red
+🍒 :cherries: cherries cherry fruit red
+🍇 :grapes: grapes fruit purple wine
+🍉 :watermelon: watermelon fruit summer slice
+🥭 :mango: mango tropical fruit
+🥝 :kiwi_fruit: kiwi fruit green
+🥕 :carrot: carrot vegetable orange
+🥦 :broccoli: broccoli vegetable green
+🥔 :potato: potato vegetable chips fries
+🧀 :cheese: cheese dairy cheddar
+🥨 :pretzel: pretzel bread snack salty
+🥞 :pancakes: pancakes breakfast maple syrup
+🍯 :honey_pot: honey pot sweet bee
+🦋 :butterfly: butterfly insect wings nature
+🐝 :bee: bee honey insect buzz
+🐸 :frog: frog amphibian green ribbit
+🐧 :penguin: penguin bird cold antarctica
+🦉 :owl: owl bird wise night
+🦆 :duck: duck bird quack
+🐙 :octopus: octopus sea ocean tentacles
+🐢 :turtle: turtle tortoise slow reptile
+🐬 :dolphin: dolphin sea ocean swimming
+🐳 :whale: whale ocean sea big
+🦈 :shark: shark ocean fish danger
+🦄 :unicorn: unicorn magical horse fantasy
+🐺 :wolf: wolf canine wild moon
+🦝 :raccoon: raccoon animal bandit trash panda
+🐈‍⬛ :black_cat: black cat halloween pet
+🐕 :dog2: dog canine pet animal
+🚗 :car: car automobile drive vehicle
+🚙 :suv: suv car vehicle travel
+🚕 :taxi: taxi cab car transport
+🚌 :bus: bus public transport vehicle
+🚆 :train: train rail transport commute
+✈️ :airplane: airplane flight travel plane
+🛫 :flight_departure: airplane takeoff departure travel
+🛬 :flight_arrival: airplane landing arrival travel
+🚲 :bike: bicycle cycle cycling ride
+🛴 :scooter: kick scooter ride transport
+🛸 :flying_saucer: flying saucer ufo spaceship alien
+🌤️ :sun_behind_small_cloud: partly sunny weather bright
+🌥️ :sun_behind_large_cloud: mostly cloudy weather
+🌦️ :sun_behind_rain_cloud: sun shower weather rain
+⛈️ :thunder_cloud_and_rain: thunderstorm storm lightning rain
+🌩️ :cloud_with_lightning: lightning storm thunder
+🌪️ :tornado: tornado cyclone storm wind
+🌫️ :fog: fog mist haze weather
+🌬️ :wind_face: wind blowing breeze gust
+🌊 :ocean: wave ocean sea surf water
+☔ :umbrella: umbrella rain wet weather
+☂️ :umbrella2: umbrella rain protection
+🛜 :wireless: wireless wifi network internet signal
+🪫 :low_battery: low battery drained power
+🪙 :coin: coin money currency change
+🧾 :receipt: receipt bill shopping payment
+🪪 :identification_card: id card identity license
+🧑‍💻 :technologist: technologist developer coder computer
+🧑‍🔧 :mechanic: mechanic repair technician tools
+🧑‍🎓 :student: student graduation study school
+🧑‍🚀 :astronaut: astronaut space rocket science
 EOF
 }
 
