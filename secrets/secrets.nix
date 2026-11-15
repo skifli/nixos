@@ -96,4 +96,8 @@ in
 
   # Misc secrets
   "secrets/rescue/hashedPasswordFile.age".publicKeys = rescueRecipients;
+
+  # Read-only credentials for the private Sernix and Oracle Xilo caches.
+  # Both desktop hosts use the same encrypted netrc for Nix daemon downloads.
+  "secrets/xilo-cache-netrc.age".publicKeys = amiOnLyra ++ fynixOnFydetabduo;
 }

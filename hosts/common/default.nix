@@ -46,6 +46,7 @@ in
     # Common stuff
     ./host-packages.nix
     ../../modules/core/agenix.nix
+    ../../modules/core/nix-cache.nix
     ../../users/default.nix
   ]
   ++ lib.flatten (

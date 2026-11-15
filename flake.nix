@@ -3,7 +3,9 @@
 
   nixConfig = {
     extra-substituters = [
-      "https://xilo.warp-racing.com/c/admin/skifli-nixos"
+      "https://nixos-cache.warp-racing.com/c/admin/skifli-nixos"
+      "https://sernix-cache.warp-racing.com/c/admin/skifli-sernix"
+      "https://oracle-cache.warp-racing.com/c/admin/encore-sr-oracle-vps"
       "https://cache.nixos.org/"
       "https://cachix.cachix.org"
       # "https://lan-mouse.cachix.org/"
@@ -19,6 +21,8 @@
 
     extra-trusted-public-keys = [
       "skifli-nixos:xNH7IYz/XkeFkPVzag7TGFw2wY1pW8EVmnoLy194Htg="
+      "skifli-sernix:sYPdAV6YDGzFKZnHJ3v7ifcjwlOegpM533z+UwBSR7g="
+      "encore-sr-oracle-vps:ssTArP9V3BjHYh99ZrKgddRAxYf27LCh4+A7PnDn4aw="
       "nixos:O40wgTDcKlInWkq2ajYM7kLJxvmRgCy1P7BbWeyTutI="
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "cachix.cachix.org-1:eWNHQldwUO7G2VkjpnjDbWwy4KQ/HNxht7H4SSoMckM="

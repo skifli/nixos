@@ -48,6 +48,14 @@ let
       (mkHostSecret hostname "wifi.env" { })
       (mkHostSecret hostname "proxy-prefixes.env" { })
       (mkHostSecret hostname "xray-proxy.env" { })
+      (lib.mkIf (hostname == "lyra" || hostname == "fydetabduo") {
+        xilo-cache-netrc = {
+          file = secretsDir + "/xilo-cache-netrc.age";
+          owner = "root";
+          group = "root";
+          mode = "0400";
+        };
+      })
     ];
 
   mkUserSecrets =
