@@ -5,10 +5,11 @@ on:
     branches: [main]
   workflow_dispatch:
 
-# Queue every build run rather than canceling an older pending run.
+# Keep one run active and the newest run waiting; newer pending builds replace
+# older pending builds because the newest config includes all earlier changes.
 concurrency:
   group: nix-system-build
-  queue: max
+  queue: single
   cancel-in-progress: false
 
 jobs:
