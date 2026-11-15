@@ -5,6 +5,12 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# Queue every build run rather than canceling an older pending run.
+concurrency:
+  group: nix-system-build
+  queue: max
+  cancel-in-progress: false
+
 jobs:
   warm-anki-seara:
     name: Cache Anki Seara addon
@@ -52,12 +58,25 @@ jobs:
 
       - name: Build and cache x86_64 Anki Seara addon
         run: |
-          SEARA_PATH=$(nix build \
-            --accept-flake-config \
-            --impure \
-            --no-link \
-            --print-out-paths \
-            --expr '(builtins.getFlake (toString ./.)).inputs.anki-seara.packages."x86_64-linux".default')
+          SEARA_PATH=""
+          for attempt in 1 2 3 4; do
+            if SEARA_PATH=$(nix build \
+              --accept-flake-config \
+              --impure \
+              --option download-attempts 10 \
+              --no-link \
+              --print-out-paths \
+              --expr '(builtins.getFlake (toString ./.)).inputs.anki-seara.packages."x86_64-linux".default'); then
+              break
+            fi
+            if [ "$attempt" -eq 4 ]; then
+              echo "Anki Seara build failed after ${attempt} attempts."
+              exit 1
+            fi
+            delay=$((15 * (2 ** (attempt - 1))))
+            echo "Anki Seara build failed (attempt ${attempt}/4); retrying in ${delay}s."
+            sleep "$delay"
+          done
           nix-store -qR "$SEARA_PATH" | xilo push admin/skifli-nixos -
 
   build:
@@ -123,10 +142,23 @@ jobs:
 
       - name: Build NixOS system (${{ matrix.host }})
         run: |
-          LIGHT_PATH=$(nix build ".?submodules=1#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" \
-            --accept-flake-config \
-            --no-link \
-            --print-out-paths)
+          LIGHT_PATH=""
+          for attempt in 1 2 3 4; do
+            if LIGHT_PATH=$(nix build ".?submodules=1#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" \
+              --accept-flake-config \
+              --option download-attempts 10 \
+              --no-link \
+              --print-out-paths); then
+              break
+            fi
+            if [ "$attempt" -eq 4 ]; then
+              echo "NixOS build failed after ${attempt} attempts."
+              exit 1
+            fi
+            delay=$((15 * (2 ** (attempt - 1))))
+            echo "NixOS build failed (attempt ${attempt}/4); retrying in ${delay}s."
+            sleep "$delay"
+          done
 
           echo "LIGHT_PATH=$LIGHT_PATH" >> "$GITHUB_ENV"
 
