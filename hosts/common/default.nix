@@ -80,6 +80,16 @@ in
         // commonHostVars.sessionVariables;
     }
 
+    # Temporary workaround for Lix issue #577: an interrupted client can leave a
+    # per-connection nix-daemon child deadlocked while it holds store-path locks.
+    # Lix's unit sets KillMode=process, so a daemon restart would leave that child
+    # behind. Kill the whole cgroup on stop/restart so the locks are released.
+    #
+    # https://git.lix.systems/lix-project/lix/issues/577
+    {
+      systemd.services.nix-daemon.serviceConfig.KillMode = lib.mkForce "control-group";
+    }
+
     (lib.mkIf hostVars.optimiseBoot {
       # Don't wait to be online to start, can cause a oh you're now online notification after boot but tis fine!
       systemd.services.NetworkManager-wait-online.enable = false;
