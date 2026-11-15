@@ -21,7 +21,7 @@ before_paths="$(mktemp "$temporary_dir/xilo-before.XXXXXX")"
 after_paths="$(mktemp "$temporary_dir/xilo-after.XXXXXX")"
 new_paths="$(mktemp "$temporary_dir/xilo-new.XXXXXX")"
 watch_log="$(mktemp "$temporary_dir/xilo-watch.XXXXXX")"
-nix-store --query --all | LC_ALL=C sort -u > "$before_paths"
+nix path-info --all | LC_ALL=C sort -u > "$before_paths"
 
 push_enabled=false
 if [[ "${GITHUB_REF:-}" == "refs/heads/main" ]]; then
@@ -55,7 +55,7 @@ finish() {
   stop_watcher
 
   if [[ "$push_enabled" == true ]]; then
-    if nix-store --query --all | LC_ALL=C sort -u > "$after_paths"; then
+    if nix path-info --all | LC_ALL=C sort -u > "$after_paths"; then
       if comm -13 "$before_paths" "$after_paths" > "$new_paths.raw"; then
         grep -Ev -- '(-source|\.drv)$' "$new_paths.raw" > "$new_paths" || true
         if [[ -s "$new_paths" ]]; then
