@@ -32,7 +32,7 @@ let
   vlessOutbound = {
     type = "vless";
     tag = "proxy";
-    server = cfg.server;
+    inherit (cfg) server;
     server_port = cfg.port;
     uuid = "__XRAY_UUID__";
     tls = {
