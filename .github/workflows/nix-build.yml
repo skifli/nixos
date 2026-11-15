@@ -59,26 +59,14 @@ jobs:
 
       - name: Build and cache x86_64 Anki Seara addon
         run: |
-          SEARA_PATH=""
-          for attempt in 1 2 3 4; do
-            if SEARA_PATH=$(nix build \
-              --accept-flake-config \
-              --impure \
-              --option download-attempts 10 \
-              --no-link \
-              --print-out-paths \
-              --expr '(builtins.getFlake (toString ./.)).inputs.anki-seara.packages."x86_64-linux".default'); then
-              break
-            fi
-            if [ "$attempt" -eq 4 ]; then
-              echo "Anki Seara build failed after ${attempt} attempts."
-              exit 1
-            fi
-            delay=$((15 * (2 ** (attempt - 1))))
-            echo "Anki Seara build failed (attempt ${attempt}/4); retrying in ${delay}s."
-            sleep "$delay"
-          done
-          nix-store -qR "$SEARA_PATH" | xilo push admin/skifli-nixos -
+          ./.github/scripts/build-with-xilo-watch.sh admin/skifli-nixos \
+            nix build \
+            --accept-flake-config \
+            --impure \
+            --option download-attempts 10 \
+            --no-link \
+            --print-out-paths \
+            --expr '(builtins.getFlake (toString ./.)).inputs.anki-seara.packages."x86_64-linux".default'
 
   build:
     name: Build (${{ matrix.host }})
@@ -141,55 +129,11 @@ jobs:
           nix show-config | grep -F "netrc-file = $HOME/.netrc"
           rm -f "$RUNNER_TEMP/xilo.netrc"
 
-      - name: Build NixOS system (${{ matrix.host }})
+      - name: Build and incrementally cache NixOS system (${{ matrix.host }})
         run: |
-          LIGHT_PATH=""
-          for attempt in 1 2 3 4; do
-            if LIGHT_PATH=$(nix build ".?submodules=1#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" \
-              --accept-flake-config \
-              --option download-attempts 10 \
-              --no-link \
-              --print-out-paths); then
-              break
-            fi
-            if [ "$attempt" -eq 4 ]; then
-              echo "NixOS build failed after ${attempt} attempts."
-              exit 1
-            fi
-            delay=$((15 * (2 ** (attempt - 1))))
-            echo "NixOS build failed (attempt ${attempt}/4); retrying in ${delay}s."
-            sleep "$delay"
-          done
-
-          echo "LIGHT_PATH=$LIGHT_PATH" >> "$GITHUB_ENV"
-
-          if [ -d "$LIGHT_PATH/specialisation/dark" ]; then
-            DARK_PATH=$(readlink -f "$LIGHT_PATH/specialisation/dark")
-            echo "DARK_PATH=$DARK_PATH" >> "$GITHUB_ENV"
-          fi
-
-      - name: Push builds to Xilo
-        if: github.ref == 'refs/heads/main'
-        run: |
-          PATHS_TO_PUSH=("$LIGHT_PATH")
-          if [ -n "${DARK_PATH:-}" ]; then
-            PATHS_TO_PUSH+=("$DARK_PATH")
-          fi
-
-          # A brief tunnel/Cloudflare interruption can fail an otherwise-good
-          # upload. Xilo skips paths and chunks already present, so retrying the
-          # full closure resumes the upload without rebuilding it.
-          for attempt in 1 2 3 4 5; do
-            if nix-store -qR "${PATHS_TO_PUSH[@]}" | xilo push admin/skifli-nixos -; then
-              exit 0
-            fi
-
-            if [ "$attempt" -eq 5 ]; then
-              echo "Xilo upload failed after $attempt attempts."
-              exit 1
-            fi
-
-            delay=$((5 * (2 ** (attempt - 1))))
-            echo "Xilo upload failed (attempt $attempt/5); retrying in ${delay}s."
-            sleep "$delay"
-          done
+          ./.github/scripts/build-with-xilo-watch.sh admin/skifli-nixos \
+            nix build ".?submodules=1#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" \
+            --accept-flake-config \
+            --option download-attempts 10 \
+            --no-link \
+            --print-out-paths
