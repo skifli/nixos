@@ -43,9 +43,11 @@ jobs:
             password ${XILO_ORACLE_PULL_TOKEN}
           EOF
           install -m 0600 "$RUNNER_TEMP/xilo.netrc" "$HOME/.netrc"
-          sudo install -o root -g root -m 0600 "$RUNNER_TEMP/xilo.netrc" /root/.netrc
-          echo 'netrc-file = /root/.netrc' | sudo tee -a /etc/nix/nix.conf >/dev/null
+          echo "netrc-file = $HOME/.netrc" | sudo tee -a /etc/nix/nix.conf >/dev/null
+          printf 'NIX_CONFIG=netrc-file = %s/.netrc\n' "$HOME" >> "$GITHUB_ENV"
           sudo systemctl restart nix-daemon.service
+          export NIX_CONFIG="netrc-file = $HOME/.netrc"
+          nix show-config | grep -F "netrc-file = $HOME/.netrc"
           rm -f "$RUNNER_TEMP/xilo.netrc"
 
       - name: Build and cache x86_64 Anki Seara addon
@@ -111,9 +113,12 @@ jobs:
             login xilo
             password ${XILO_ORACLE_PULL_TOKEN}
           EOF
-          sudo install -o root -g root -m 0600 "$RUNNER_TEMP/xilo.netrc" /root/.netrc
-          echo 'netrc-file = /root/.netrc' | sudo tee -a /etc/nix/nix.conf >/dev/null
+          install -m 0600 "$RUNNER_TEMP/xilo.netrc" "$HOME/.netrc"
+          echo "netrc-file = $HOME/.netrc" | sudo tee -a /etc/nix/nix.conf >/dev/null
+          printf 'NIX_CONFIG=netrc-file = %s/.netrc\n' "$HOME" >> "$GITHUB_ENV"
           sudo systemctl restart nix-daemon.service
+          export NIX_CONFIG="netrc-file = $HOME/.netrc"
+          nix show-config | grep -F "netrc-file = $HOME/.netrc"
           rm -f "$RUNNER_TEMP/xilo.netrc"
 
       - name: Build NixOS system (${{ matrix.host }})
