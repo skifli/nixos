@@ -19,6 +19,8 @@ in
 
   # The cross-project caches are private. Only hosts that have this secret
   # receive its path in nix.conf; the Nix daemon reads the netrc as root.
-  nix.settings.netrc-file = lib.mkIf (builtins.elem config.networking.hostName [ "lyra" "fydetabduo" ])
-    config.age.secrets.xilo-cache-netrc.path;
+  nix.settings.netrc-file = lib.mkIf (builtins.elem config.networking.hostName [
+    "lyra"
+    "fydetabduo"
+  ]) config.age.secrets.xilo-cache-netrc.path;
 }

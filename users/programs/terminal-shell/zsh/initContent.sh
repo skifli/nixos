@@ -1,3 +1,11 @@
+# Fix TERM when the client advertises a terminal type we don't have terminfo for
+# (e.g., SSHing from ghostty to a machine without ghostty's terminfo installed,
+# like fydetabduo). Without this, `clear` fails and readline/ls echo garbled or
+# duplicate text because the terminal can't interpret cursor-movement codes.
+if [ -n "${TERM-}" ] && ! infocmp "$TERM" >/dev/null 2>&1; then
+    export TERM=xterm-256color
+fi
+
 # Axlefublr da goat: Read file selection buffer
 blammo() {
   if [ -f /tmp/blammo ]; then
