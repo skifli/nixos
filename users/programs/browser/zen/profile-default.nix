@@ -49,7 +49,7 @@ in
     mods
     ;
 
-  inherit (keyboardShortcutsSpec) keyboardShortcuts keyboardShortcutsVersion;
+  inherit (keyboardShortcutsSpec) keyboardShortcuts;
 
   sine = {
     # Disabled due to buggy and not (yet) documented:

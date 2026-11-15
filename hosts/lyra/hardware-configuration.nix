@@ -75,15 +75,6 @@
     ];
   };
 
-  fileSystems."/mnt/Storage" = {
-    device = "/dev/disk/by-label/Storage";
-    fsType = "ext4";
-    options = [
-      "nofail"
-      "noatime"
-    ];
-  };
-
   /*
     swapDevices = [
       {device = "/dev/disk/by-uuid/be10efe9-8020-45f9-aa1c-3fdbe59a56e0";}

@@ -2,6 +2,7 @@
   inputs,
   lib,
   pkgs,
+  pkgsUnstable,
   userVars,
   ...
 }:
@@ -14,6 +15,7 @@
         cachix # Command-line client for Nix binary cache hosting https://cachix.org
         cameractrls
         cameractrls-gtk4
+        pkgsUnstable.codex
         doxx
         evince # Document viewer
 

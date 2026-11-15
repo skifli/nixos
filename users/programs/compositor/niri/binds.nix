@@ -712,12 +712,16 @@
   };
 
   # SCREENSHOTS
+  # -n disables LumineCapture's desktop notification after the shot.
   "Print" = {
     _props = {
       hotkey-overlay-title = null;
       allow-inhibiting = false;
     };
-    spawn = [ "lumine-capture" ];
+    spawn = [
+      "lumine-capture"
+      "-n"
+    ];
   };
   "Shift+Print" = {
     _props = {
@@ -726,6 +730,7 @@
     };
     spawn = [
       "lumine-capture"
+      "-n"
       "-f"
       "-t"
       "sc"
@@ -751,6 +756,7 @@
     };
     spawn = [
       "lumine-capture"
+      "-n"
       "-m"
       "-t"
       "sc"
@@ -1185,17 +1191,6 @@
       allow-inhibiting = false;
     };
     spawn = [ "/home/${userVars.username}/.local/bin/paste-sequence.sh" ];
-  };
-  "Mod+Z" = {
-    _props = {
-      hotkey-overlay-title = null;
-      allow-inhibiting = false;
-    };
-    spawn = [
-      "sh"
-      "-c"
-      "${userVars.programs.terminal} -e ${userVars.programs.terminal-shell} -c \"/home/${userVars.username}/.local/bin/zen-keyboard-shortcuts.sh; ${userVars.programs.terminal-shell}\""
-    ];
   };
   "Mod+I" = {
     _props = {

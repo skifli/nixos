@@ -212,7 +212,9 @@ in
           Service = {
             Type = "simple";
             ExecStart = "${awNotifyRs}/bin/aw-notify start";
-            Restart = "always";
+            # aw-notify exits 0 when notifications are disabled, so "always"
+            # made systemd restart it every 3s forever.
+            Restart = "on-failure";
             RestartSec = 3;
           };
 

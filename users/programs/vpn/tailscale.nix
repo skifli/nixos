@@ -34,6 +34,27 @@
     "TS_DEBUG_FIREWALL_MODE=nftables"
   ];
 
+  # `tailscale set --operator` only lives in tailscaled's runtime state, so
+  # re-apply it at boot. This lets ktailctl talk to tailscaled without root.
+  systemd.services.tailscale-operator = {
+    description = "Set Tailscale operator to ${userVars.username}";
+    wantedBy = [ "multi-user.target" ];
+    wants = [ "tailscaled.service" ];
+    after = [ "tailscaled.service" ];
+
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = pkgs.writeShellScript "tailscale-set-operator" ''
+        for _ in $(${pkgs.coreutils}/bin/seq 1 60); do
+          ${config.services.tailscale.package}/bin/tailscale set --operator=${userVars.username} && exit 0
+          ${pkgs.coreutils}/bin/sleep 1
+        done
+        exit 1
+      '';
+    };
+  };
+
   # Prevent systemd from waiting for network online
   systemd.network.wait-online.enable = false;
   boot.initrd.systemd.network.wait-online.enable = false;

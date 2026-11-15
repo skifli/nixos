@@ -47,8 +47,8 @@ lib.mkIf (hostVars.hostname != "fydetabduo") {
                 "dashboard"
                 "custom-screencast"
                 "custom-screen_recorder"
-                "systray"
                 "niri-workspaces"
+                "systray"
                 "custom-system_errors"
                 "window-title"
               ];

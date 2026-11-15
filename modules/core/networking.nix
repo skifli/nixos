@@ -170,5 +170,11 @@ in
   services.resolved = {
     enable = true;
     # It auto sets settings.Resolve.DNS to config.networking.nameservers
+
+    # Avahi is the mDNS responder on this host. systemd-resolved also answers
+    # mDNS by default, which makes avahi detect a second mDNS stack and rename
+    # the host on every conflict (lyra-2, lyra-3, ... lyra-38). Leave mDNS to
+    # avahi only.
+    settings.Resolve.MulticastDNS = false;
   };
 }

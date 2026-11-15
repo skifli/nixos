@@ -1,5 +1,6 @@
 {
   lib,
+  options,
   pkgs,
   ...
 }:
@@ -20,9 +21,6 @@
       openFirewall = false;
     };
 
-    # CachyOS - Enable sched-ext support for CPU scheduling
-    scx.enable = true; # Uses scx_rustland by default
-
     # Auto-nice daemon that should raise priority of user stuff vs. bg sys tasks
     ananicy = {
       enable = true;
@@ -39,6 +37,17 @@
         scheduler = "scx_bpfland"; # https://github.com/sched-ext/scx/blob/main/scheds/rust/README.md
       };
     */
+  }
+  // lib.optionalAttrs (options ? services.scx-loader) {
+    # NixOS 26.11 replaced services.scx with services.scx-loader.
+    scx-loader = {
+      enable = true;
+      config.default_sched = "scx_rustland";
+    };
+  }
+  // lib.optionalAttrs (!(options ? services.scx-loader)) {
+    # CachyOS sched-ext (pre-26.11 module): defaults to scx_rustland.
+    scx.enable = true;
   };
 
   # Weekly hosts blocklist refresh.

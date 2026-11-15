@@ -1,15 +1,12 @@
-# Declarative keyboard shortcut overrides with version protection
-# Version protection detects breaking changes after Zen updates.
+# Declarative keyboard shortcut overrides for Zen >= 1.24b.
+# These are upserted into the profile's customKeys.json (the about:keyboard
+# store); only customized ids are present and an empty object means unbound.
 # ⚠ Only if modifying keyboardShortcuts: close Zen before home-manager switch
-# (activation script modifies zen-keyboard-shortcuts.json, which is locked while browser runs)
-# Version check prevents silent breakage if Zen updates change the shortcuts schema.
+# (the activation script modifies customKeys.json, which is locked while the
+# browser is running).
 #
-# Find shortcut IDs in ~/.config/zen/default/zen-keyboard-shortcuts.json
-# Get version from about:config -> zen.keyboard.shortcuts.version
-# Activation fails if version changes (prevents silent breakage).
-#
-# Use this command:
-# jq -c '.shortcuts[] | {id, key, keycode, action}' ~/.config/zen/default/zen-keyboard-shortcuts.json | fzf
+# Find shortcut IDs in about:keyboard (or the generated customKeys.json):
+# jq -c 'to_entries[]' ~/.config/zen/default/customKeys.json | fzf
 {
   keyboardShortcuts = [
     {
@@ -196,8 +193,4 @@
       disabled = true;
     }
   ];
-
-  # In order to avoid breaking changes here, sometimes when you upgrade you
-  # should be asked to bump this version
-  keyboardShortcutsVersion = 21;
 }
