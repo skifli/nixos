@@ -39,6 +39,7 @@ jobs:
         env:
           XILO_SERNIX_PULL_TOKEN: ${{ secrets.XILO_SERNIX_PULL_TOKEN }}
           XILO_ORACLE_PULL_TOKEN: ${{ secrets.XILO_ORACLE_PULL_TOKEN }}
+          XILO_NIXOS_PULL_TOKEN: ${{ secrets.XILO_NIXOS_PULL_TOKEN }}
         run: |
           umask 077
           cat > "$RUNNER_TEMP/xilo.netrc" <<EOF
@@ -48,6 +49,9 @@ jobs:
           machine oracle-cache.warp-racing.com
             login xilo
             password ${XILO_ORACLE_PULL_TOKEN}
+          machine nixos-cache.warp-racing.com
+            login xilo
+            password ${XILO_NIXOS_PULL_TOKEN}
           EOF
           install -m 0600 "$RUNNER_TEMP/xilo.netrc" "$HOME/.netrc"
           echo "netrc-file = $HOME/.netrc" | sudo tee -a /etc/nix/nix.conf >/dev/null
@@ -111,6 +115,7 @@ jobs:
         env:
           XILO_SERNIX_PULL_TOKEN: ${{ secrets.XILO_SERNIX_PULL_TOKEN }}
           XILO_ORACLE_PULL_TOKEN: ${{ secrets.XILO_ORACLE_PULL_TOKEN }}
+          XILO_NIXOS_PULL_TOKEN: ${{ secrets.XILO_NIXOS_PULL_TOKEN }}
         run: |
           umask 077
           cat > "$RUNNER_TEMP/xilo.netrc" <<EOF
@@ -120,6 +125,9 @@ jobs:
           machine oracle-cache.warp-racing.com
             login xilo
             password ${XILO_ORACLE_PULL_TOKEN}
+          machine nixos-cache.warp-racing.com
+            login xilo
+            password ${XILO_NIXOS_PULL_TOKEN}
           EOF
           install -m 0600 "$RUNNER_TEMP/xilo.netrc" "$HOME/.netrc"
           echo "netrc-file = $HOME/.netrc" | sudo tee -a /etc/nix/nix.conf >/dev/null
