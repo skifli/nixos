@@ -9,9 +9,9 @@ let
   cfg = config.sernix.xrayClient;
 
   proxyUser = builtins.head hostVars.enabledUsers;
-  overrideFile = "/home/${proxyUser}/.config/oracle-proxy/override";
+  overrideFile = "/home/${proxyUser}/.config/xray-proxy/override";
 
-  proxySecretKey = "${hostVars.hostname}-oracle-proxy.env";
+  proxySecretKey = "${hostVars.hostname}-xray-proxy.env";
   proxySecretPath = config.age.secrets.${proxySecretKey}.path;
   hasProxySecret = builtins.hasAttr proxySecretKey config.age.secrets;
 
@@ -59,7 +59,7 @@ let
     flow = "xtls-rprx-vision";
   };
 
-  configTemplate = pkgs.writeText "oracle-proxy.json" (
+  configTemplate = pkgs.writeText "xray-proxy.json" (
     builtins.toJSON {
       log = {
         level = "info";
@@ -204,8 +204,8 @@ in
 
   config = lib.mkMerge [
     {
-      systemd.services.oracle-proxy = lib.mkIf hasProxySecret {
-        description = "Oracle VPS proxy (sing-box TUN, VLESS/WS)";
+      systemd.services.xray-proxy = lib.mkIf hasProxySecret {
+        description = "Xray proxy (sing-box TUN, VLESS/WS)";
         after = [ "network-online.target" ];
         wants = [ "network-online.target" ];
 
@@ -217,12 +217,12 @@ in
 
         serviceConfig = {
           Type = "simple";
-          RuntimeDirectory = "oracle-proxy";
+          RuntimeDirectory = "xray-proxy";
           RuntimeDirectoryMode = "0700";
           UMask = "0077";
           ExecStartPre = [
             # Generate the config from the age-decrypted env secret.
-            (pkgs.writeShellScript "oracle-proxy-gen" ''
+            (pkgs.writeShellScript "xray-proxy-gen" ''
               set -euo pipefail
               set -a
               . "${proxySecretPath}"
@@ -239,7 +239,7 @@ in
               ${pkgs.sing-box}/bin/sing-box check -c "$RUNTIME_DIRECTORY/config.json"
             '')
           ];
-          ExecStart = "${pkgs.sing-box}/bin/sing-box run -c /run/oracle-proxy/config.json";
+          ExecStart = "${pkgs.sing-box}/bin/sing-box run -c /run/xray-proxy/config.json";
           Restart = "on-failure";
           RestartSec = 5;
         };
@@ -247,14 +247,14 @@ in
     }
     {
       environment.shellAliases = {
-        p-on = "sudo systemctl start oracle-proxy.service";
-        p-off = "sudo systemctl stop oracle-proxy.service";
-        p-st = "systemctl is-active oracle-proxy.service; systemctl status --no-pager -n 5 oracle-proxy.service";
+        p-on = "sudo systemctl start xray-proxy.service";
+        p-off = "sudo systemctl stop xray-proxy.service";
+        p-st = "systemctl is-active xray-proxy.service; systemctl status --no-pager -n 5 xray-proxy.service";
       };
     }
     {
-      systemd.services.oracle-proxy-ensure = lib.mkIf hasPrefixes {
-        description = "Ensure Oracle proxy is active on matching wifi networks";
+      systemd.services.xray-proxy-ensure = lib.mkIf hasPrefixes {
+        description = "Ensure Xray proxy is active on matching wifi networks";
         after = [ "network-online.target" ];
         wants = [ "network-online.target" ];
         path = with pkgs; [
@@ -267,24 +267,24 @@ in
           RemainAfterExit = false;
           TimeoutStartSec = 150;
           Environment = "PROXY_PREFIXES_FILE=${prefixSecretPath}";
-          ExecStart = pkgs.writeShellScript "oracle-proxy-ensure" ''
+          ExecStart = pkgs.writeShellScript "xray-proxy-ensure" ''
             set -euo pipefail
 
-            # Respect a manual override written by the wayle bar "oracle-proxy"
+            # Respect a manual override written by the wayle bar "xray-proxy"
             # toggle in the host user's home:
             #   "on"  -> force start, "off" -> force stop, absent -> auto by SSID.
             if [ -f "${overrideFile}" ]; then
               case "$(cat "${overrideFile}")" in
                 on)
-                  echo "oracle-proxy-ensure: manual override=on, starting proxy"
-                  systemctl start oracle-proxy.service 2>/dev/null || true
+                  echo "xray-proxy-ensure: manual override=on, starting proxy"
+                  systemctl start xray-proxy.service 2>/dev/null || true
                   ;;
                 off)
-                  echo "oracle-proxy-ensure: manual override=off, stopping proxy"
-                  systemctl stop oracle-proxy.service 2>/dev/null || true
+                  echo "xray-proxy-ensure: manual override=off, stopping proxy"
+                  systemctl stop xray-proxy.service 2>/dev/null || true
                   ;;
                 *)
-                  echo "oracle-proxy-ensure: manual override='$(cat "${overrideFile}")' unrecognised, ignoring"
+                  echo "xray-proxy-ensure: manual override='$(cat "${overrideFile}")' unrecognised, ignoring"
                   ;;
               esac
               exit 0
@@ -295,8 +295,8 @@ in
             )
 
             if [ ''${#PREFIXES[@]} -eq 0 ]; then
-              echo "oracle-proxy-ensure: no prefixes configured, stopping proxy"
-              systemctl stop oracle-proxy.service 2>/dev/null || true
+              echo "xray-proxy-ensure: no prefixes configured, stopping proxy"
+              systemctl stop xray-proxy.service 2>/dev/null || true
               exit 0
             fi
 
@@ -311,8 +311,8 @@ in
             done
 
             if [ -z "$SSID" ]; then
-              echo "oracle-proxy-ensure: no active wifi connection after 2m, stopping proxy"
-              systemctl stop oracle-proxy.service 2>/dev/null || true
+              echo "xray-proxy-ensure: no active wifi connection after 2m, stopping proxy"
+              systemctl stop xray-proxy.service 2>/dev/null || true
               exit 0
             fi
 
@@ -327,24 +327,24 @@ in
             done
 
             if [ "$MATCHED" = true ]; then
-              echo "oracle-proxy-ensure: SSID '$SSID' matches a prefix, ensuring proxy"
-              systemctl start oracle-proxy.service 2>/dev/null || true
+              echo "xray-proxy-ensure: SSID '$SSID' matches a prefix, ensuring proxy"
+              systemctl start xray-proxy.service 2>/dev/null || true
             else
-              echo "oracle-proxy-ensure: SSID '$SSID' does not match any prefix, stopping proxy"
-              systemctl stop oracle-proxy.service 2>/dev/null || true
+              echo "xray-proxy-ensure: SSID '$SSID' does not match any prefix, stopping proxy"
+              systemctl stop xray-proxy.service 2>/dev/null || true
             fi
           '';
         };
       };
     }
     {
-      systemd.timers.oracle-proxy-ensure = lib.mkIf hasPrefixes {
-        description = "Trigger Oracle proxy SSID check";
+      systemd.timers.xray-proxy-ensure = lib.mkIf hasPrefixes {
+        description = "Trigger Xray proxy SSID check";
         wantedBy = [ "timers.target" ];
         timerConfig = {
           OnBootSec = 0;
           OnUnitActiveSec = 60;
-          Unit = "oracle-proxy-ensure.service";
+          Unit = "xray-proxy-ensure.service";
         };
       };
     }
@@ -354,15 +354,15 @@ in
           users = [ proxyUser ];
           commands = [
             {
-              command = "/run/current-system/sw/bin/systemctl start oracle-proxy.service";
+              command = "/run/current-system/sw/bin/systemctl start xray-proxy.service";
               options = [ "NOPASSWD" ];
             }
             {
-              command = "/run/current-system/sw/bin/systemctl stop oracle-proxy.service";
+              command = "/run/current-system/sw/bin/systemctl stop xray-proxy.service";
               options = [ "NOPASSWD" ];
             }
             {
-              command = "/run/current-system/sw/bin/systemctl start oracle-proxy-ensure.service";
+              command = "/run/current-system/sw/bin/systemctl start xray-proxy-ensure.service";
               options = [ "NOPASSWD" ];
             }
           ];

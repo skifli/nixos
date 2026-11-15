@@ -25,7 +25,7 @@ _: rec {
     ../../modules/core/users.nix
     ../../modules/core/zram.nix
 
-    ../../modules/programs/oracle-proxy.nix
+    ../../modules/programs/xray-proxy.nix
   ];
 
   enabledUsers = [ "fynix" ];

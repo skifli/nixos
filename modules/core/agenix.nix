@@ -47,7 +47,7 @@ let
     lib.mkMerge [
       (mkHostSecret hostname "wifi.env" { })
       (mkHostSecret hostname "proxy-prefixes.env" { })
-      (mkHostSecret hostname "oracle-proxy.env" { })
+      (mkHostSecret hostname "xray-proxy.env" { })
     ];
 
   mkUserSecrets =

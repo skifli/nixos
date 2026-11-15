@@ -57,33 +57,33 @@ in
           label-color = "fg-default";
         }
         {
-          id = "oracle-proxy";
+          id = "xray-proxy";
           mode = "poll";
           interval-ms = 5000;
           command = ''
-            systemctl is-active oracle-proxy.service >/dev/null 2>&1 && printf '{"state":"On"}' || printf '{"state":"Off"}'
+            systemctl is-active xray-proxy.service >/dev/null 2>&1 && printf '{"state":"On"}' || printf '{"state":"Off"}'
           '';
           left-click = ''
-            OVERRIDE="$HOME/.config/oracle-proxy/override"
+            OVERRIDE="$HOME/.config/xray-proxy/override"
             mkdir -p "$(dirname "$OVERRIDE")"
 
-            if systemctl is-active oracle-proxy.service >/dev/null 2>&1; then
+            if systemctl is-active xray-proxy.service >/dev/null 2>&1; then
               printf 'off\n' > "$OVERRIDE"
-              sudo systemctl stop oracle-proxy.service
-              notify-send -a nixOS -i /home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg -u low -t 2500 "Oracle proxy" "Proxy disabled (manual override)"
+              sudo systemctl stop xray-proxy.service
+              notify-send -a nixOS -i /home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg -u low -t 2500 "Xray proxy" "Proxy disabled (manual override)"
             else
               printf 'on\n' > "$OVERRIDE"
-              sudo systemctl start oracle-proxy.service
-              notify-send -a nixOS -i /home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg -u low -t 2500 "Oracle proxy" "Proxy enabled (manual override)"
+              sudo systemctl start xray-proxy.service
+              notify-send -a nixOS -i /home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg -u low -t 2500 "Xray proxy" "Proxy enabled (manual override)"
             fi
           '';
           right-click = ''
-            rm -f "$HOME/.config/oracle-proxy/override"
-            sudo systemctl start oracle-proxy-ensure.service
-            notify-send -a nixOS -i /home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg -u low -t 2500 "Oracle proxy" "Proxy back to auto (SSID)"
+            rm -f "$HOME/.config/xray-proxy/override"
+            sudo systemctl start xray-proxy-ensure.service
+            notify-send -a nixOS -i /home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg -u low -t 2500 "Xray proxy" "Proxy back to auto (SSID)"
           '';
           on-action = ''
-            systemctl is-active oracle-proxy.service >/dev/null 2>&1 && printf '{"state":"On"}' || printf '{"state":"Off"}'
+            systemctl is-active xray-proxy.service >/dev/null 2>&1 && printf '{"state":"On"}' || printf '{"state":"Off"}'
           '';
           format = "{{ state }}";
           icon-name = "network-vpn-symbolic";
@@ -115,7 +115,7 @@ in
           "custom-auto-rotate"
           "custom-tablet-mode"
           "custom-stylus-touch" # New!
-          "custom-oracle-proxy"
+          "custom-xray-proxy"
           "systray"
         ];
       };

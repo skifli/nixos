@@ -65,7 +65,7 @@ in
   "secrets/lyra/wifi.env.age".publicKeys = amiOnLyra;
   "secrets/fydetabduo/proxy-prefixes.env.age".publicKeys = fynixOnFydetabduo;
   "secrets/fydetabduo/wifi.env.age".publicKeys = fynixOnFydetabduo;
-  "secrets/fydetabduo/oracle-proxy.env.age".publicKeys = fynixOnFydetabduo;
+  "secrets/fydetabduo/xray-proxy.env.age".publicKeys = fynixOnFydetabduo;
 
   # Per-user secrets (filenames match secrets/<user>/<name>.age)
   "secrets/ami/hashedPasswordFile.age".publicKeys = amiOnLyra;
