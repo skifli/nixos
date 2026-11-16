@@ -214,7 +214,7 @@ in
         path = with pkgs; [
           sing-box
           coreutils
-          glibc.bin
+          getent
           gnused
         ];
 
