@@ -229,8 +229,7 @@ in
     {
       # Manual bar overrides should last for this boot only. Clear the
       # persistent marker at boot so SSID-based automatic mode takes over.
-      systemd.tmpfiles.rules = lib.optional hasPrefixes
-        "r ${overrideFile} - - - -";
+      systemd.tmpfiles.rules = lib.optional hasPrefixes "r ${overrideFile} - - - -";
     }
     {
       systemd.services.xray-proxy = lib.mkIf hasProxySecret {
