@@ -101,18 +101,26 @@ trap 'exit 130' INT
 trap 'exit 143' TERM
 
 build_status=1
-for attempt in 1 2 3 4; do
-  echo "Build attempt $attempt/4: $*"
-  if "$@"; then
+build_attempts=5
+for ((attempt = 1; attempt <= build_attempts; attempt++)); do
+  echo "Build attempt $attempt/$build_attempts: $*"
+  if [[ "$attempt" -eq "$build_attempts" && "${1:-}" == "nix" && "${2:-}" == "build" ]]; then
+    echo "Final attempt enables Nix fallback builds for failed substitutes."
+    if "$@" --fallback; then
+      build_status=0
+      break
+    fi
+  elif "$@"; then
     build_status=0
     break
   fi
-  if [[ "$attempt" -eq 4 ]]; then
+  if [[ "$attempt" -eq "$build_attempts" ]]; then
     echo "Build failed after $attempt attempts; preserving and pushing completed store paths." >&2
     break
   fi
   delay=$((15 * (2 ** (attempt - 1))))
-  echo "Build failed (attempt $attempt/4); retrying in ${delay}s." >&2
+  (( delay > 120 )) && delay=120
+  echo "Build failed (attempt $attempt/$build_attempts); retrying in ${delay}s." >&2
   sleep "$delay"
 done
 

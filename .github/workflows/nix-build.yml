@@ -67,7 +67,8 @@ jobs:
             nix build \
             --accept-flake-config \
             --impure \
-            --option download-attempts 10 \
+            --option download-attempts 20 \
+            --option max-substitution-jobs 8 \
             --no-link \
             --print-out-paths \
             --expr '(builtins.getFlake (toString ./.)).inputs.anki-seara.packages."x86_64-linux".default'
@@ -142,6 +143,7 @@ jobs:
           ./.github/scripts/build-with-xilo-watch.sh admin/skifli-nixos \
             nix build ".?submodules=1#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" \
             --accept-flake-config \
-            --option download-attempts 10 \
+            --option download-attempts 20 \
+            --option max-substitution-jobs 8 \
             --no-link \
             --print-out-paths
