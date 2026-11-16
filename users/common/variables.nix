@@ -257,19 +257,22 @@ in
       Install.WantedBy = [ "graphical-session.target" ];
     };
 
-    gsd-xsettings = {
-      Unit = {
-        Description = "GNOME Settings Daemon - XSettings plugin";
-        After = [ "xdg-desktop-portal.service" ];
-        Wants = [ "xdg-desktop-portal.service" ];
-      };
-      Service = {
-        Type = "simple";
-        ExecStart = "${pkgs.gnome-settings-daemon}/libexec/gsd-xsettings";
-        Restart = "on-failure";
-      };
-      Install.WantedBy = [ "graphical-session.target" ];
-    };
+    # gsd-xsettings disabled: crashes on Wayland (SEGV + "only one xsettings manager").
+    # KDE already runs its own xsettings manager. gsd-color is sufficient for
+    # GTK3 theme propagation on Wayland via the portal/dconf.
+    # gsd-xsettings = {
+    #   Unit = {
+    #     Description = "GNOME Settings Daemon - XSettings plugin";
+    #     After = [ "xdg-desktop-portal.service" ];
+    #     Wants = [ "xdg-desktop-portal.service" ];
+    #   };
+    #   Service = {
+    #     Type = "simple";
+    #     ExecStart = "${pkgs.gnome-settings-daemon}/libexec/gsd-xsettings";
+    #     Restart = "on-failure";
+    #   };
+    #   Install.WantedBy = [ "graphical-session.target" ];
+    # };
   };
 
   systemdTimers = {
