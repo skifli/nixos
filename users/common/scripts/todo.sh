@@ -9,24 +9,37 @@ FONT_SIZE="${FONT_SIZE_APPLICATIONS:-11}"
 MODE="${1:-interactive}"
 
 TARGET_DIR="$(dirname "$TODO_FILE")"
+TODO_NFS_HOST="${TODO_NFS_HOST:-pifi}"
+
+nfs_available() {
+    timeout 2 bash -c 'exec 3<>"/dev/tcp/$1/2049"' _ "$TODO_NFS_HOST" >/dev/null 2>&1
+}
+
+storage_ready() {
+    nfs_available && [ -d "$TARGET_DIR" ]
+}
+
+todo_recovery() {
+    local recovered
+    recovered=$(state_git_nonempty_json_array "$TODO_FILE") && {
+        printf '%s\n' "$recovered"
+        return 0
+    }
+    state_json_array "$TODO_FILE"
+}
 
 # Only wait for storage if running on startup
-if [ ! -d "$TARGET_DIR" ] && [ "$MODE" = "--startup" ]; then
+if ! storage_ready && [ "$MODE" = "--startup" ]; then
     STORAGE_GRACE="${STORAGE_GRACE_SECONDS:-300}"
     STORAGE_WAITED=0
 
-    while [ ! -d "$TARGET_DIR" ] && [ "$STORAGE_WAITED" -lt "$STORAGE_GRACE" ]; do
+    while ! storage_ready && [ "$STORAGE_WAITED" -lt "$STORAGE_GRACE" ]; do
         sleep 1
         STORAGE_WAITED=$((STORAGE_WAITED + 1))
     done
 fi
 
-# Try creating directory if it doesn't exist and isn't a broken symlink
-if [ ! -d "$TARGET_DIR" ] && [ ! -L "$TARGET_DIR" ]; then
-    mkdir -p "$TARGET_DIR" 2>/dev/null || true
-fi
-
-if [ ! -d "$TARGET_DIR" ]; then
+if ! storage_ready; then
     case "$MODE" in
         "--check")
             # Exit because timer will retry in 1 minute
@@ -43,13 +56,36 @@ if [ ! -d "$TARGET_DIR" ]; then
     esac
 fi
 
-# Initialize file if missing
-[ -f "$TODO_FILE" ] || echo "[]" > "$TODO_FILE"
+# Serialise todo readers and read/modify/write operations across machines.
+# Scheduled invocations skip when the UI is active; interactive invocations
+# wait briefly so they never race another editor.
+exec 8>"$TARGET_DIR/.todo-state.guard" 2>/dev/null || exit 0
+case "$MODE" in
+    "--check"|"--startup") flock -n 8 || exit 0 ;;
+    *) flock -w 20 8 || { notify-send -e -a "todos" -u critical "Reminders busy" "Another todo operation is still running"; exit 1; } ;;
+esac
+
+# Never create [] over a path that merely appears missing during an NFS
+# interruption or stale lookup. Recover backups/history, then use an atomic
+# no-clobber link so a concurrent writer always wins.
+if [ ! -f "$TODO_FILE" ]; then
+    RECOVERED=$(todo_recovery) || RECOVERED=""
+    [ -n "$RECOVERED" ] || RECOVERED='[]'
+    TMP=$(mktemp "$TARGET_DIR/.todo-init.XXXXXX") || exit 0
+    printf '%s\n' "$RECOVERED" > "$TMP"
+    target=$(state_real "$TODO_FILE")
+    if ! ln "$TMP" "$target" 2>/dev/null; then
+        rm -f "$TMP" 2>/dev/null || true
+    else
+        rm -f "$TMP" 2>/dev/null || true
+        state_autocommit "$target"
+    fi
+fi
 
 # Guards against a partially written/corrupt JSON (e.g., after a Wi-Fi boom).
 # If the found file is not a valid array, restore the newest valid backup.
 if ! jq -e 'type == "array"' "$TODO_FILE" >/dev/null 2>&1; then
-    RECOVERED=$(state_json_array "$TODO_FILE") || RECOVERED=""
+    RECOVERED=$(todo_recovery) || RECOVERED=""
 
     if [ -n "$RECOVERED" ]; then
         TMP=$(mktemp)

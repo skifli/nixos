@@ -29,7 +29,7 @@ state_backup_name() {
 # - Renames the temp file atomically over the target.
 state_commit() {
     local file="$1" tmp="$2"
-    local dir target slot
+    local dir target slot local_tmp
     dir=$(dirname "$file")
 
     [ -f "$tmp" ] || return 1
@@ -52,6 +52,18 @@ state_commit() {
         cp -f "$target" "$(state_backup_name "$target" 1)" 2>/dev/null || true
     fi
 
+    # mktemp defaults to /tmp. Cross-filesystem mv is copy-and-delete and can
+    # expose a truncated file on NFS, so stage beside the destination first.
+    if [ "$(dirname "$tmp")" != "$dir" ]; then
+        local_tmp=$(mktemp "$dir/.state.XXXXXX") || return 1
+        if ! cat "$tmp" > "$local_tmp"; then
+            rm -f "$local_tmp" "$tmp" 2>/dev/null || true
+            return 1
+        fi
+        rm -f "$tmp" 2>/dev/null || true
+        tmp="$local_tmp"
+    fi
+
     if ! mv -f "$tmp" "$target" 2>/dev/null; then
         rm -f "$tmp" 2>/dev/null || true
         return 1
@@ -61,6 +73,23 @@ state_commit() {
     return 0
 }
 
+# Return the newest non-empty valid todo array found in Git history. This is a
+# last-resort recovery path for a missing/corrupt shared file and its backups.
+state_git_nonempty_json_array() {
+    local file="$1" top rel rev value
+    top=$(cd "$(dirname "$file")" 2>/dev/null && git rev-parse --show-toplevel 2>/dev/null) || return 1
+    rel=$(git -C "$top" ls-files --error-unmatch "$file" 2>/dev/null) || return 1
+    while IFS= read -r rev; do
+        [ -n "$rev" ] || continue
+        value=$(git -C "$top" show "$rev:$rel" 2>/dev/null) || continue
+        if printf '%s\n' "$value" | jq -e 'type == "array" and length > 0' >/dev/null 2>&1; then
+            printf '%s\n' "$value"
+            return 0
+        fi
+    done < <(git -C "$top" rev-list --all -- "$rel" 2>/dev/null)
+    return 1
+}
+
 # If a commit-and-push is configured for the state file's git work tree, stage
 # and commit just that file after every successful write. Controlled via
 # STATE_COMMIT_AUTO (1/0, default 1) and STATE_COMMIT_NAME (e.g. "ami <ami@pifi>",
@@ -68,18 +97,23 @@ state_commit() {
 # git work tree; just skips otherwise.
 # Usage: state_autocommit <path>
 state_autocommit() {
-    local file="$1" top
+    local file="$1" top rel lock_fd
     [ "${STATE_COMMIT_AUTO:-1}" = "1" ] || return 0
     [ -f "$file" ] || return 0
 
     # Resolve to the repo top-level; skip if not inside a git work tree.
     top=$(cd "$(dirname "$file")" 2>/dev/null && git rev-parse --show-toplevel 2>/dev/null) || return 0
 
-    # Include a couple of neighboring .bak files and this file relative to root.
-    local rel
-    rel=$(git -C "$top" ls-files --error-unmatch "$file" 2>/dev/null) && {
-        git -C "$top" add -A -- "$rel" 2>/dev/null || true
-    }
+    rel=$(git -C "$top" ls-files --error-unmatch "$file" 2>/dev/null) || return 0
+
+    # Coordinate with custom-scripts-sync, which snapshots this shared repo.
+    # If it owns the lock, leave the file dirty for its next run.
+    exec {lock_fd}>"$top/.git/custom-scripts-sync.guard" 2>/dev/null || return 0
+    if ! flock -n "$lock_fd" 2>/dev/null; then
+        exec {lock_fd}>&-
+        return 0
+    fi
+    git -C "$top" add -A -- "$rel" 2>/dev/null || true
 
     # Only commit if there is something staged (i.e., a real change happened).
     if ! git -C "$top" diff --cached --quiet 2>/dev/null; then
@@ -87,11 +121,12 @@ state_autocommit() {
             git -C "$top" \
                 -c "user.name=${STATE_COMMIT_NAME%% *}" \
                 -c "user.email=${STATE_COMMIT_NAME##* }" \
-                commit -m "state: auto-commit $(basename "$file")" --quiet >/dev/null 2>&1 || true
+                commit --only --quiet -m "state: auto-commit $(basename "$file")" -- "$rel" >/dev/null 2>&1 || true
         else
-            git -C "$top" commit -m "state: auto-commit $(basename "$file")" --quiet >/dev/null 2>&1 || true
+            git -C "$top" commit --only --quiet -m "state: auto-commit $(basename "$file")" -- "$rel" >/dev/null 2>&1 || true
         fi
     fi
+    exec {lock_fd}>&-
     return 0
 }
 
