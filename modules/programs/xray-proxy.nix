@@ -145,11 +145,12 @@ let
             action = "hijack-dns";
             port = 53;
           }
-          # Keep Tailscale's peer UDP on the physical network. Let its TCP
-          # control and DERP connections use the proxy on restrictive networks.
+          # Send Tailscale's UDP STUN probes through the proxy so they can
+          # receive replies on networks that block direct UDP. Tailnet peer
+          # addresses are excluded from the TUN route above and stay direct.
           {
             action = "route";
-            outbound = "direct";
+            outbound = "proxy";
             network = "udp";
             process_name = [ "tailscaled" ];
           }
