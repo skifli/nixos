@@ -11,7 +11,7 @@
     home.packages =
       with pkgs;
       [
-        anytype
+        pkgsUnstable.anytype
         cachix # Command-line client for Nix binary cache hosting https://cachix.org
         cameractrls
         cameractrls-gtk4

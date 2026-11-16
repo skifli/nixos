@@ -168,7 +168,13 @@
           ];
           # Attribute set of extra arguments passed to Nix module functions
           specialArgs = {
-            pkgsUnstable = inputs.nixpkgs-unstable.legacyPackages.${system};
+            # Import rather than legacyPackages so the unstable instance can
+            # allow unfree packages (pkgsUnstable.anytype). System-wide
+            # nixpkgs.config does not apply to a separate legacyPackages set.
+            pkgsUnstable = import inputs.nixpkgs-unstable {
+              inherit system;
+              config.allowUnfree = true;
+            };
 
             inherit
               self

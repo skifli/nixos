@@ -16,6 +16,7 @@ let
     12/08/2026@21:45 - The latter makes Zen Browser have like accessibility highlights and stuff which are of course useful to those who need it but I realised it's from this (tested it and confirmed) so I'm disabling this setting for good... hopefully somehow Anytype just... follows the rest of my system??? :sob:
     13/08/2026@13:31 - Finally fixed for good - Anytype switches to system theme when it changes without a restart! I THINK (not 100% sure) it was linked to this commit - https://github.com/skifli/nixos/commit/4ec0c216570e677e6ec6d5a4d1d1d083e7dceb2a. Specifically, setting `org.freedesktop.impl.portal.Settings` to just `gtk`. At least this charade is all over now, phew!
     13/08/2026@22:22 - It broke again but after a rebuild with ADW_DISABLE_PORTAL=1 it works again??? I didn't know before, I definitely don't know now. Just, if I restart my PC tomorrow, and it's switched - I'll be a happy blob of existence. Anyway this hurts my brain, goodnight :sob:.
+    16/11/2026 - Root cause found: Electron before 45 ignores the portal's SettingChanged signal, so Anytype only checked the theme at startup. Anytype now comes from pkgsUnstable (Electron 45), which supports it. ADW_DISABLE_PORTAL and GTK_THEME were workarounds for this and are no longer needed.
   */
   /*
     FOR THE BELOW REASON, IN THE RAW GTK CONFIGS, gtk4.theme IS SET TO NULL
@@ -305,14 +306,7 @@ in
   system.nixos.tags = lib.mkDefault [ "light" ];
 
   environment.sessionVariables = {
-    GTK_THEME = lib.mkDefault commonHostVars.theme.gtk.lightName;
-
     # DAY THEME CONFIGURATION OUTSIDE THE SPECIALISATIONS ENDS HERE
-
-    # Forces applications to bypass the portal lookup, instead reading raw gsettings.
-    ADW_DISABLE_PORTAL = 1; # Without this Anytype would not work...
-    # I removed this because it was probably causing some issues and I don't think it's needed anymore. Double check though.
-    # 12/08/2026@18:18 - 1. Oooh we got an eclipse going on right now :D. 2 - More boring but yeah confirmed that this is not needed anymore! Maybe was even causing more issues than what it solved. I dunno!
 
     # Some below used in scripts
     FONT_SANS_SERIF = commonHostVars.fonts.sansSerif.name;
@@ -329,7 +323,6 @@ in
     The specialisations (and also the above outside specialisation light theme configuration) change the following important things:
     * system.nixos.tags
     * /etc/specialisation file
-    * GTK_THEME environment variable
     * Home-manager GTK configuration
     * Home-manager dconf configuration
     * Home-manager Stylix base16 scheme and cursor name
@@ -367,10 +360,6 @@ in
 
         system.nixos.tags = lib.mkForce [ "dark" ];
         environment.etc."specialisation".text = lib.mkForce "dark";
-
-        environment.sessionVariables = {
-          GTK_THEME = lib.mkForce commonHostVars.theme.gtk.darkName;
-        };
       };
   };
 
