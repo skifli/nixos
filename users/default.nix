@@ -272,17 +272,14 @@ in
   };
 
   systemd.user.services.xdg-desktop-portal-kde-service = {
-    Unit = {
-      Description = "Xdg Desktop Portal For KDE";
-      After = [ "xdg-desktop-portal.service" ];
-      Wants = [ "xdg-desktop-portal.service" ];
-    };
-    Service = {
+    description = "Xdg Desktop Portal For KDE";
+    wantedBy = [ "graphical-session.target" ];
+    after = [ "xdg-desktop-portal.service" ];
+    serviceConfig = {
       Type = "simple";
       ExecStart = "${xdg-desktop-portal-kde}/libexec/xdg-desktop-portal-kde";
       Restart = "on-failure";
     };
-    Install.WantedBy = [ "graphical-session.target" ];
   };
 
   environment.systemPackages =
