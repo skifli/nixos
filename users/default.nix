@@ -258,71 +258,31 @@ in
 
   # Required to prevent the GNOME portal backend from timing out on startup
   services.dbus.packages = [ pkgs.gsettings-desktop-schemas ];
-  systemd.user.services = {
-    "xdg-desktop-portal" = {
-      after = [
-        "xdg-desktop-portal-gnome.service"
-        "xdg-desktop-portal-kde.service"
-        "xdg-desktop-portal-gtk.service"
-      ];
-      wants = [
-        "xdg-desktop-portal-gnome.service"
-        "xdg-desktop-portal-kde.service"
-        "xdg-desktop-portal-gtk.service"
-      ];
-    };
+  systemd.user.services."xdg-desktop-portal" = {
+    after = [
+      "xdg-desktop-portal-gnome.service"
+      "xdg-desktop-portal-kde.service"
+      "xdg-desktop-portal-gtk.service"
+    ];
+    wants = [
+      "xdg-desktop-portal-gnome.service"
+      "xdg-desktop-portal-kde.service"
+      "xdg-desktop-portal-gtk.service"
+    ];
+  };
 
-    "xdg-desktop-portal-kde" = {
-      Unit = {
-        Description = "Xdg Desktop Portal For KDE";
-        After = [ "xdg-desktop-portal.service" ];
-        Wants = [ "xdg-desktop-portal.service" ];
-      };
-      Service = {
-        Type = "simple";
-        ExecStart = "${xdg-desktop-portal-kde}/libexec/xdg-desktop-portal-kde";
-        Restart = "on-failure";
-      };
-      Install = {
-        WantedBy = [ "graphical-session.target" ];
-      };
+  systemd.user.services."xdg-desktop-portal-kde" = {
+    Unit = {
+      Description = "Xdg Desktop Portal For KDE";
+      After = [ "xdg-desktop-portal.service" ];
+      Wants = [ "xdg-desktop-portal.service" ];
     };
-
-    # Minimal GNOME settings daemon plugins for GTK3 live theme reload.
-    # gsd-color watches the portal/dconf for color-scheme changes and
-    # broadcasts them; gsd-xsettings exports XSETTINGS (Net/ThemeName, etc.)
-    # so GTK3 apps pick up the new theme without restart.
-    "gsd-color" = {
-      Unit = {
-        Description = "GNOME Settings Daemon - Color plugin";
-        After = [ "xdg-desktop-portal.service" ];
-        Wants = [ "xdg-desktop-portal.service" ];
-      };
-      Service = {
-        Type = "simple";
-        ExecStart = "${pkgs.gnome-settings-daemon}/libexec/gsd-color";
-        Restart = "on-failure";
-      };
-      Install = {
-        WantedBy = [ "graphical-session.target" ];
-      };
+    Service = {
+      Type = "simple";
+      ExecStart = "${xdg-desktop-portal-kde}/libexec/xdg-desktop-portal-kde";
+      Restart = "on-failure";
     };
-
-    "gsd-xsettings" = {
-      Unit = {
-        Description = "GNOME Settings Daemon - XSettings plugin";
-        After = [ "xdg-desktop-portal.service" ];
-        Wants = [ "xdg-desktop-portal.service" ];
-      };
-      Service = {
-        Type = "simple";
-        ExecStart = "${pkgs.gnome-settings-daemon}/libexec/gsd-xsettings";
-        Restart = "on-failure";
-      };
-      Install = {
-        WantedBy = [ "graphical-session.target" ];
-      };
-    };
+    Install.WantedBy = [ "graphical-session.target" ];
   };
 
   environment.systemPackages =

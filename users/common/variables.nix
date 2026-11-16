@@ -238,6 +238,38 @@ in
       };
       Install.WantedBy = [ "graphical-session.target" ];
     };
+
+    # Minimal GNOME settings daemon plugins for GTK3 live theme reload.
+    # gsd-color watches the portal/dconf for color-scheme changes and
+    # broadcasts them; gsd-xsettings exports XSETTINGS (Net/ThemeName, etc.)
+    # so GTK3 apps pick up the new theme without restart.
+    gsd-color = {
+      Unit = {
+        Description = "GNOME Settings Daemon - Color plugin";
+        After = [ "xdg-desktop-portal.service" ];
+        Wants = [ "xdg-desktop-portal.service" ];
+      };
+      Service = {
+        Type = "simple";
+        ExecStart = "${pkgs.gnome-settings-daemon}/libexec/gsd-color";
+        Restart = "on-failure";
+      };
+      Install.WantedBy = [ "graphical-session.target" ];
+    };
+
+    gsd-xsettings = {
+      Unit = {
+        Description = "GNOME Settings Daemon - XSettings plugin";
+        After = [ "xdg-desktop-portal.service" ];
+        Wants = [ "xdg-desktop-portal.service" ];
+      };
+      Service = {
+        Type = "simple";
+        ExecStart = "${pkgs.gnome-settings-daemon}/libexec/gsd-xsettings";
+        Restart = "on-failure";
+      };
+      Install.WantedBy = [ "graphical-session.target" ];
+    };
   };
 
   systemdTimers = {
