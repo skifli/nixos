@@ -145,14 +145,14 @@ let
             action = "hijack-dns";
             port = 53;
           }
-          # Send Tailscale's UDP STUN probes through the proxy so they can
-          # receive replies on networks that block direct UDP. Tailnet peer
-          # addresses are excluded from the TUN route above and stay direct.
+          # Keep Tailscale UDP on the underlying network. Proxying it hides
+          # native UDP reachability and adds a proxy hop. Include the standalone
+          # CLI so `tailscale netcheck` measures this same native UDP path.
           {
             action = "route";
-            outbound = "proxy";
+            outbound = "direct";
             network = "udp";
-            process_name = [ "tailscaled" ];
+            process_name = [ "tailscaled" "tailscale" ];
           }
           {
             action = "route";

@@ -48,3 +48,13 @@ safe_reboot() {
 
 alias reboot="safe_reboot reboot"
 alias shutdown="safe_reboot shutdown"
+
+# Allow the fixed netcheck command without a password; its UDP probes use
+# the direct outbound rule in the sing-box TUN configuration.
+tailscale() {
+  if [[ "$#" -eq 1 && "$1" == netcheck ]]; then
+    command sudo -n /run/current-system/sw/bin/tailscale netcheck
+  else
+    command /run/current-system/sw/bin/tailscale "$@"
+  fi
+}
