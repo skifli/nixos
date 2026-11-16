@@ -106,10 +106,9 @@ let
           interface_name = "singtun0";
           address = [ "172.19.0.1/28" ];
           auto_route = true;
-          # Tailscale installs policy rules around priority 5210. Keep the
-          # TUN rule ahead of those so marked control/DERP traffic is also
-          # captured by sing-box while the proxy is enabled.
-          iproute2_rule_index = 5000;
+          # Run after Tailscale's policy rules so tailnet destinations use
+          # tailscale0 instead of being captured by the proxy TUN.
+          iproute2_rule_index = 6000;
           strict_route = false;
           stack = "gvisor";
           mtu = 9000;
