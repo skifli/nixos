@@ -139,12 +139,12 @@ let
             action = "hijack-dns";
             port = 53;
           }
-          # Keep Tailscale's outer WireGuard, STUN, and DERP connections on
-          # the physical network instead of sending the transport through
-          # its own proxy tunnel.
+          # Keep Tailscale's peer UDP on the physical network. Let its TCP
+          # control and DERP connections use the proxy on restrictive networks.
           {
             action = "route";
             outbound = "direct";
+            network = "udp";
             process_name = [ "tailscaled" ];
           }
           {
