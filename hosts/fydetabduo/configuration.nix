@@ -13,6 +13,20 @@ in
 {
   _module.args = { inherit hostname; };
 
+  # Allow the fixed netcheck command without a password; its UDP probes use
+  # the direct outbound rule in the sing-box TUN configuration.
+  security.sudo.extraRules = [
+    {
+      users = [ primaryUser ];
+      commands = [
+        {
+          command = "/run/current-system/sw/bin/tailscale netcheck";
+          options = [ "NOPASSWD" ];
+        }
+      ];
+    }
+  ];
+
   imports = [
     ../common/default.nix
 
