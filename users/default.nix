@@ -271,7 +271,7 @@ in
     ];
   };
 
-  systemd.user.services."xdg-desktop-portal-kde" = {
+  systemd.user.services.xdg-desktop-portal-kde-service = {
     Unit = {
       Description = "Xdg Desktop Portal For KDE";
       After = [ "xdg-desktop-portal.service" ];
