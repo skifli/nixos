@@ -152,7 +152,10 @@ let
             action = "route";
             outbound = "direct";
             network = "udp";
-            process_name = [ "tailscaled" "tailscale" ];
+            process_name = [
+              "tailscaled"
+              "tailscale"
+            ];
           }
           {
             action = "route";
