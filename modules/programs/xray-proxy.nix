@@ -106,9 +106,15 @@ let
           interface_name = "singtun0";
           address = [ "172.19.0.1/28" ];
           auto_route = true;
-          # Run after Tailscale's policy rules so tailnet destinations use
-          # tailscale0 instead of being captured by the proxy TUN.
-          iproute2_rule_index = 6000;
+          # Run before Tailscale's marked-socket rules so tailscaled's
+          # control-plane and DERP TCP connections enter the proxy TUN.
+          # Exclude the tailnet address ranges from this table so peer traffic
+          # falls through to Tailscale's own policy-routing table (52).
+          iproute2_rule_index = 5000;
+          route_exclude_address = [
+            "100.64.0.0/10"
+            "fd7a:115c:a1e0::/48"
+          ];
           strict_route = false;
           stack = "gvisor";
           mtu = 9000;
