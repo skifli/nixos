@@ -32,7 +32,9 @@ let
   vlessOutbound = {
     type = "vless";
     tag = "proxy";
-    inherit (cfg) server;
+    # Resolve the endpoint in ExecStartPre, before the TUN changes DNS
+    # routing. Keep the hostname separately for TLS SNI and the WS Host.
+    server = "__XRAY_SERVER_IP__";
     server_port = cfg.port;
     uuid = "__XRAY_UUID__";
     tls = {
@@ -212,6 +214,7 @@ in
         path = with pkgs; [
           sing-box
           coreutils
+          glibc.bin
           gnused
         ];
 
@@ -234,8 +237,21 @@ in
                 exit 1
               fi
 
+              # Resolve before sing-box starts its TUN. Otherwise resolving
+              # the VLESS server itself can follow the system DNS route back
+              # into this proxy and time out during connection setup.
+              server_records="$(getent ahostsv4 ${lib.escapeShellArg cfg.server} || true)"
+              server_ip="''${server_records%%[[:space:]]*}"
+              if ! [[ "$server_ip" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+                echo "Unable to resolve Xray endpoint ${cfg.server} to IPv4 before starting the TUN" >&2
+                exit 1
+              fi
+
               umask 077
-              ${pkgs.gnused}/bin/sed "s/__XRAY_UUID__/$uuid/g" "${configTemplate}" > "$RUNTIME_DIRECTORY/config.json"
+              ${pkgs.gnused}/bin/sed \
+                -e "s/__XRAY_UUID__/$uuid/g" \
+                -e "s/__XRAY_SERVER_IP__/$server_ip/g" \
+                "${configTemplate}" > "$RUNTIME_DIRECTORY/config.json"
               ${pkgs.sing-box}/bin/sing-box check -c "$RUNTIME_DIRECTORY/config.json"
             '')
           ];
