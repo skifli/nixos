@@ -24,6 +24,13 @@ let
     in
     {
       isNormalUser = true;
+      openssh.authorizedKeys.keys = [
+        "from=\"100.64.0.0/10\" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM00chXNLX0Mdss+qEVuYmoIDVgJNY2AqyGIEgn0Z48I ami@lyra"
+        "from=\"100.64.0.0/10\" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPLjuhLizbbD7biJR6CBnal8duh68uFkC5u78uxEa02Z fynix@fydetabduo"
+        "from=\"100.64.0.0/10\" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGleqnbQooy98BklJhyUTNrDoa7ww7jKaL93+Kdiz284 root@pifi"
+        "from=\"100.64.0.0/10\" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIqh8SWmOJPdhwsEF4/KCnwUhRXGRjYjnuFVf0WbEDbP root@pistor"
+        "from=\"100.64.0.0/10\" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHZpm0DlqCaVyelcsI/nPsRBoAeOv0ZLN1Ga6rzuno2i nixci@oracle-nix"
+      ];
       ignoreShellProgramCheck = true; # Silence shell warning since its configured in home manager
 
       # Prefer agenix-managed secrets for user passwords.

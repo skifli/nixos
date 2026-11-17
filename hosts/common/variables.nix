@@ -53,6 +53,36 @@
     };
   };
   shellAliases = { };
+  tailscaleDevices = {
+    fydetabduo = {
+      address = "100.107.134.34";
+      sshUser = "fynix";
+    };
+    lenovo-a2016a40 = {
+      address = "100.103.254.124";
+      sshUser = null;
+    };
+    lyra = {
+      address = "100.76.87.14";
+      sshUser = "ami";
+    };
+    oneplus-be2013 = {
+      address = "100.71.197.78";
+      sshUser = null;
+    };
+    oracle-nix = {
+      address = "100.78.161.125";
+      sshUser = "nixci";
+    };
+    pifi = {
+      address = "100.88.68.91";
+      sshUser = "root";
+    };
+    pistor = {
+      address = "100.90.46.33";
+      sshUser = "root";
+    };
+  };
   sessionVariables = {
     AWWW_TRANSITION = "none"; # Sorry - it's annoying (especially on the FydeTab Duo on rotate!)
   };

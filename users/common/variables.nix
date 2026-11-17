@@ -111,16 +111,6 @@ in
     };
   };
 
-  tailscaleDevices = {
-    fydetabduo = "100.107.134.34";
-    lenovo-a2016a40 = "100.103.254.124";
-    lyra = "100.76.87.14";
-    oneplus-be2013 = "100.71.197.78";
-    oracle-nix = "100.78.161.125";
-    pifi = "100.88.68.91";
-    pistor = "100.90.46.33";
-  };
-
   kdeConnectExcluded = [
     "lenovo-a2016a40"
   ];

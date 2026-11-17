@@ -2,9 +2,26 @@
   lib,
   options,
   pkgs,
+  commonHostVars,
   ...
 }:
+let
+  sshDevices = lib.filterAttrs (_: device: device.sshUser != null) commonHostVars.tailscaleDevices;
+  sshHosts = lib.concatStringsSep "\n" (
+    lib.mapAttrsToList (host: device: ''
+      Host ${host}
+        HostName ${device.address}
+        User ${device.sshUser}
+        HostKeyAlias ${host}
+    '') sshDevices
+  );
+in
 {
+  programs.ssh.extraConfig = ''
+    VisualHostKey yes
+    ${sshHosts}
+  '';
+
   # Services to start
   services = {
     fstrim.enable = true; # Auto SSD trimming of no longer used blocks
