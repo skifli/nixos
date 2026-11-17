@@ -261,12 +261,12 @@ in
   systemd.user.services."xdg-desktop-portal" = {
     after = [
       "xdg-desktop-portal-gnome.service"
-      "xdg-desktop-portal-kde.service"
+      "plasma-xdg-desktop-portal-kde.service"
       "xdg-desktop-portal-gtk.service"
     ];
     wants = [
       "xdg-desktop-portal-gnome.service"
-      "xdg-desktop-portal-kde.service"
+      "plasma-xdg-desktop-portal-kde.service"
       "xdg-desktop-portal-gtk.service"
     ];
   };
