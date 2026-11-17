@@ -2,7 +2,7 @@ name: "Anki add-ons: check upstream releases"
 
 on:
   schedule:
-    - cron: "23 2 * * 1" # Monday 02:23 UTC
+    - cron: "0 0 * * 0" # Runs weekly on Sunday at 00:00
   workflow_dispatch:
 
 permissions:
