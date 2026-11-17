@@ -1,0 +1,64 @@
+name: "Nix sources: check GitHub releases"
+
+on:
+  schedule:
+    - cron: "0 5 * * 0" # Weekly on Sunday
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: nix-github-source-updates
+  cancel-in-progress: false
+
+jobs:
+  update-sources:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          token: ${{ github.token }}
+          fetch-depth: 0
+
+      - name: Install Nix
+        uses: DeterminateSystems/determinate-nix-action@main
+
+      - name: Check pinned GitHub sources
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          NIX_SOURCE_PR_BODY: ${{ runner.temp }}/nix-source-update-pr.md
+        run: python3 .github/scripts/update-nix-github-sources.py
+
+      - name: Create or update review PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git add -u -- '*.nix'
+          if git diff --cached --quiet; then
+            echo "No Nix source files changed; no PR needed."
+            exit 0
+          fi
+
+          branch="automation/nix-github-source-updates"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$branch"
+          git commit -m "chore(nix): update pinned GitHub sources"
+          gh auth setup-git
+          git push --force --set-upstream origin "$branch"
+
+          existing_pr="$(gh pr list --head "$branch" --state open --json number --jq '.[0].number // empty')"
+          if [ -n "$existing_pr" ]; then
+            gh pr edit "$existing_pr" \
+              --title "Update pinned GitHub sources" \
+              --body-file "$RUNNER_TEMP/nix-source-update-pr.md"
+          else
+            gh pr create \
+              --base main \
+              --head "$branch" \
+              --title "Update pinned GitHub sources" \
+              --body-file "$RUNNER_TEMP/nix-source-update-pr.md"
+          fi
