@@ -8,6 +8,9 @@
   ...
 }:
 let
+  ankiMcpTailscaleIp = userVars.tailscaleDevices.${hostVars.hostname} or null;
+  ankiMcpTailscaleEnabled = ankiMcpTailscaleIp != null;
+
   advanced-review-bottom-bar = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
     pname = "advanced-review-bottom-bar";
     version = "v3.6.1";
@@ -47,18 +50,6 @@ let
       hash = "sha256-f8Y2Tp3Wo41rKhz/YX602xhxvR7xWUOfvjIKuprt/bo=";
     };
     sourceRoot = "${finalAttrs.src.name}";
-  });
-
-  anki-stylus-draw = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
-    pname = "anki-stylusdraw";
-    version = "858f5f4be1a5a9945ae87450460dfc1c75cfb83f";
-    src = pkgs.fetchFromGitHub {
-      owner = "Rytisgit";
-      repo = "Anki-StylusDraw";
-      rev = finalAttrs.version;
-      hash = "sha256-CXD5yiEbJ5+k3AtCpSy/t6c2A58pOIGywxGdwHdW/a4=";
-    };
-    sourceRoot = "${finalAttrs.src.name}/AnkiDraw";
   });
 
   /*
@@ -133,24 +124,21 @@ let
   */
 in
 {
-  /*
-    nixpkgs.overlays = [
-      inputs.anki-mcp.overlays.default
-    ];
-  */
+  nixpkgs.overlays = [ inputs.anki-mcp.overlays.default ];
 
   home-manager.users.${userVars.username} = {
     programs.anki = {
       enable = true;
       addons = with pkgs; [
         inputs.anki-seara.packages."x86_64-linux".default # I :3 you https://github.com/rodrada/seara
-        /*
-             (ankiAddons.anki-mcp-server.withConfig {
-            config = {
-              http_host = "0.0.0.0";
-            };
-          })
-        */
+        (ankiAddons.anki-mcp-server.withConfig {
+          config = {
+            http_enabled = true;
+            http_host = if ankiMcpTailscaleEnabled then "0.0.0.0" else "127.0.0.1";
+            http_port = 3141;
+            http_allowed_hosts = lib.optional ankiMcpTailscaleEnabled "${ankiMcpTailscaleIp}:3141";
+          };
+        })
         (fsrs4anki-helper.withConfig {
           config = {
             easy_dates = [ ];
@@ -182,7 +170,6 @@ in
         */
         aw-watcher-anki
         anki-quizlet-importer-extended # More up to date than their version (which as of writing is 2025.03.13)
-        anki-stylus-draw
         (memory-forest.withConfig {
           config = {
             layout = "one_beside";
@@ -370,6 +357,8 @@ in
 
     allowedTCPPorts = allowedUDPPorts;
   };
+
+  networking.firewall.interfaces.tailscale0.allowedTCPPorts = lib.optionals ankiMcpTailscaleEnabled [ 3141 ];
 
   # 1. Make Node.js available (npx comes with it)
   /*
