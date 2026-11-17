@@ -124,7 +124,25 @@ let
   */
 in
 {
-  nixpkgs.overlays = [ inputs.anki-mcp.overlays.default ];
+  nixpkgs.overlays = [
+    inputs.anki-mcp.overlays.default
+    (final: prev: {
+      ankiAddons = (prev.ankiAddons or { }) // {
+        anki-mcp-server = prev.ankiAddons.anki-mcp-server.overrideAttrs (old: {
+          # The upstream overlay uses packaging to locate the pydantic_core wheel,
+          # but currently omits it from vendor/shared.
+          postFixup = (old.postFixup or "") + ''
+            addonDir="$out/share/anki/addons/anki-mcp-server"
+            packagingSitePackages="${final.python3Packages.packaging}/${final.python3.sitePackages}"
+            ln -sfn "$packagingSitePackages/packaging" "$addonDir/vendor/shared/packaging"
+            for entry in "$packagingSitePackages"/packaging-*.dist-info; do
+              ln -sfn "$entry" "$addonDir/vendor/shared/"
+            done
+          '';
+        });
+      };
+    })
+  ];
 
   home-manager.users.${userVars.username} = {
     programs.anki = {
