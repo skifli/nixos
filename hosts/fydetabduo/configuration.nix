@@ -33,13 +33,24 @@ in
     # All hardware features
     inputs.fyde-nix.nixosModules.fydetabduo-hardware
 
-    # Shell sub-modules: power management + fydetab-update package
-    # (shell.enable = false skips labwc/compositor stuff)
+    # Upstream ReGreet configuration (its greeter compositor is separate
+    # from the Niri session selected after authentication).
+    inputs.fyde-nix.nixosModules.desktop
+
+    # Shell sub-modules: power management + fydetab-update package.
     inputs.fyde-nix.nixosModules.shell
   ];
 
+  # The old local tuigreet module granted this group; retain GPU access for
+  # the upstream ReGreet compositor after removing that module.
+  users.users.greeter.extraGroups = [ "video" ];
+
   hardware.fydetabduo = {
     enable = true;
+
+    # ReGreet's pre-login compositor is separate; this selects Niri through
+    # UWSM as the session to start after authentication.
+    greeter.defaultSession = "Niri (UWSM)";
 
     sensors.autoRotate = false; # Replaced by niri-specific rotation daemon (see below)
     tabletMode.enable = true;

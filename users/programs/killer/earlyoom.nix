@@ -21,6 +21,9 @@
           "systemd"
           "systemd-logind"
           "systemd-udevd"
+          "greetd"
+          "labwc"
+          "regreet"
           # userVars.programs.bar
           userVars.programs.compositor
           userVars.programs.display-server

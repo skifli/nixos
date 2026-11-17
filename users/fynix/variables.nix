@@ -327,7 +327,7 @@ common
   };
 
   programs = common.programs // {
-    login-manager = "tuigreet";
+    login-manager = "";
     terminal = "foot";
     other = common.programs.other ++ [
       "rnote"
