@@ -98,12 +98,12 @@ let
 
   memory-forest = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
     pname = "memory-forest";
-    version = "v1.5.0";
+    version = "v1.7.0";
     src = pkgs.fetchFromGitHub {
       owner = "baraklevy20";
       repo = "memory-forest";
       rev = finalAttrs.version;
-      hash = "sha256-sdKtoypjJzBszywPBN9xAWuBIUdfqAJMiy9Rbl2pUo0=";
+      hash = "sha256-hFAXCAU0FQIMPCFXcQ4JVrMmrSGZpsiaqhpdzzi7oKA=";
     };
     sourceRoot = "${finalAttrs.src.name}";
   });

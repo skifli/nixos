@@ -1,0 +1,67 @@
+name: "Anki add-ons: check upstream releases"
+
+on:
+  schedule:
+    - cron: "23 2 * * 1" # Monday 02:23 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: anki-addon-updates
+  cancel-in-progress: false
+
+jobs:
+  update-addons:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Install Nix
+        uses: DeterminateSystems/determinate-nix-action@main
+
+      - name: Check Anki add-on releases and hashes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          ANKI_ADDON_PR_BODY: ${{ runner.temp }}/anki-addon-update-pr.md
+        run: python3 .github/scripts/update-anki-addons.py
+
+      - name: Create or update review PR
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          git add users/programs/misc/anki.nix
+          if git diff --cached --quiet; then
+            echo "No add-on files changed; no PR needed."
+            exit 0
+          fi
+
+          branch="automation/anki-addon-updates"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$branch"
+          git commit -m "chore(anki): update add-ons"
+          gh auth setup-git
+          git push --force --set-upstream origin "$branch"
+
+          existing_pr="$(gh pr list --head "$branch" --state open --json number --jq '.[0].number // empty')"
+          if [ -n "$existing_pr" ]; then
+            gh pr edit "$existing_pr" \
+              --title "Update Anki add-ons" \
+              --body-file "$RUNNER_TEMP/anki-addon-update-pr.md" \
+              --add-label dependencies \
+              --add-label automated
+          else
+            gh pr create \
+              --base main \
+              --head "$branch" \
+              --title "Update Anki add-ons" \
+              --body-file "$RUNNER_TEMP/anki-addon-update-pr.md" \
+              --label dependencies \
+              --label automated
+          fi
