@@ -153,6 +153,11 @@ in
 
   systemd.tmpfiles.rules = [
     "d /home/${primaryUser}/.cache 0755 ${primaryUser} users -"
+    # These files carry state only for the current boot. Clear them before
+    # Home Manager and the graphical session start.
+    "r /home/${primaryUser}/.local/state/systemd-inhibit-bag.pid - - - -"
+    "r /home/${primaryUser}/.local/state/niri-rotate-sleep-inhibit - - - -"
+    "r /home/${primaryUser}/.config/niri/input-override.kdl - - - -"
     "d /tmp/.X11-unix 1777 root root -"
   ];
 
