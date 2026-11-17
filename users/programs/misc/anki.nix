@@ -358,7 +358,9 @@ in
     allowedTCPPorts = allowedUDPPorts;
   };
 
-  networking.firewall.interfaces.tailscale0.allowedTCPPorts = lib.optionals ankiMcpTailscaleEnabled [ 3141 ];
+  networking.firewall.interfaces.tailscale0.allowedTCPPorts = lib.optionals ankiMcpTailscaleEnabled [
+    3141
+  ];
 
   # 1. Make Node.js available (npx comes with it)
   /*
