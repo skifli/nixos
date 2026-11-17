@@ -1,4 +1,5 @@
 {
+  fileOperationTitleRegex,
   hostVars,
   pkgs,
   userVars,
@@ -89,6 +90,7 @@
       "app_id"
       userVars.programs.explorer-gui
       userVars.programs.explorer-gui
+      fileOperationTitleRegex
     ];
   };
   "Mod+Shift+F" = {

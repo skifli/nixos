@@ -1,10 +1,12 @@
 {
+  fileOperationTitleRegex,
   hostVars,
   lib,
   userVars,
   ...
 }:
 let
+  fileOperationTitleRegexRaw = ''r#"(?i)${fileOperationTitleRegex}"#'';
   # On the Fydetab (RK3588 / Mesa panthor) recomputing blur over changing
   # scenes can render weirdly where two blurred/translucent surfaces overlap,
   # e.g., Zen under the Vicinae launcher.
@@ -28,6 +30,8 @@ let
   unimportantStatusWindow = {
     open-focused = false;
     open-floating = true;
+    # Keep transfer progress dialogs readable instead of letting Dolphin request full-screen width.
+    default-column-width = { proportion = 0.4; };
     default-floating-position._props = {
       x = 10;
       y = 10;
@@ -70,7 +74,7 @@ in
   # Gets the usually centered status window away and not focus it
   (
     {
-      match._props.title._raw = ''r#"(?i)(Deleting|Copying|Moving|Progress Dialogue|Compressing)"#'';
+      match._props.title._raw = fileOperationTitleRegexRaw;
       match._props.app-id._raw = ''r#"(?i)org.kde.dolphin"#'';
     }
     // unimportantStatusWindow
@@ -99,9 +103,14 @@ in
     match._props.app-id._raw = ''r#"(?i)${userVars.programs.launcher}"#'';
     background-effect.blur = true;
   }
-  # Explorer GUI open maximized
+  # Explorer GUI open maximized, except file-operation progress dialogs.
   {
     match._props.app-id._raw = ''r#"(?i)${userVars.programs.explorer-gui}"#'';
+    # This later generic rule must not override the floating progress-dialog rule above.
+    exclude._props = {
+      app-id._raw = ''r#"(?i)org\.kde\.dolphin"#'';
+      title._raw = fileOperationTitleRegexRaw;
+    };
     open-maximized = true;
   }
   # Remote desktop open maximized

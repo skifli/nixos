@@ -7,11 +7,13 @@
   ...
 }@attrs:
 let
-  binds = import ./binds.nix attrs;
+  fileOperationTitleRegex = "(Deleting|Copying|Moving|Progress Dialogue|Compressing)";
+  niriAttrs = attrs // { inherit fileOperationTitleRegex; };
+  binds = import ./binds.nix niriAttrs;
   input = import ./input.nix attrs;
   layerRules = import ./layer-rules.nix attrs;
   layout = import ./layout.nix attrs;
-  windowRules = import ./window-rules.nix attrs;
+  windowRules = import ./window-rules.nix niriAttrs;
 
   outputs = map (
     name:

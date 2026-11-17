@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
-# Usage: find-or-make.sh "app_id" "affinity.exe" "affinity-v3"
-
+# Usage: find-or-make.sh "app_id" "app-match" "launch-command" [excluded-title-regex]
 KEY="$1"
 VAL="$2"
 CMD="$3"
+EXCLUDE_TITLE_REGEX="${4:-}"
 
 WINDOWS=$(niri msg --json windows 2>/dev/null)
-FOUND=$(echo "$WINDOWS" | jq -r --arg key "$KEY" --arg val "${VAL,,}" '
-  .[] | select(.[$key] != null) | select(.[$key] | ascii_downcase | contains($val))
+FOUND=$(echo "$WINDOWS" | jq -r --arg key "$KEY" --arg val "${VAL,,}" --arg exclude "$EXCLUDE_TITLE_REGEX" '
+  .[]
+  | select(.[$key] != null)
+  | select(.[$key] | ascii_downcase | contains($val))
+  | select(if $exclude == "" then true else ((.title // "") | test($exclude; "i") | not) end)
 ')
 
 if [ -n "$FOUND" ]; then
