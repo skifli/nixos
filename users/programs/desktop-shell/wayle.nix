@@ -138,12 +138,14 @@ lib.mkIf (hostVars.hostname != "fydetabduo") {
               label-color = "status-error";
               label-max-length = 0;
               label-show = true;
+              # left/right click: view failed services (user + system) - no sudo needed
               left-click = "${userVars.programs.terminal} -e ${userVars.programs.terminal-shell} -c \"systemctl --type=service --state=failed; ${userVars.programs.terminal-shell}\"";
-              middle-click = "${userVars.programs.terminal} -e ${userVars.programs.terminal-shell} -c \"systemctl reset-failed; systemctl --user reset-failed; ${userVars.programs.terminal-shell}\"";
+              right-click = "${userVars.programs.terminal} -e ${userVars.programs.terminal-shell} -c \"systemctl --user --type=service --state=failed; ${userVars.programs.terminal-shell}\"";
+              # middle-click: reset failed units - uses polkit GUI for sudo (no terminal needed)
+              middle-click = "systemctl reset-failed; systemctl --user reset-failed";
               mode = "poll";
               restart-interval-ms = 1000;
               restart-policy = "never";
-              right-click = "${userVars.programs.terminal} -e ${userVars.programs.terminal-shell} -c \"systemctl --user --type=service --state=failed; ${userVars.programs.terminal-shell}\"";
               scroll-down = "";
               scroll-up = "";
             }
