@@ -11,7 +11,7 @@ printf '\n===== %s startup.sh %s =====\n' "$(date +'%F %T')" "$*"
 
 source "$HOME/.local/bin/startup-lib.sh"
 
-notify-send -e -a "gcr-prompter" -i "$HOME/.local/share/misc/Seahorse_icon_hicolor.svg" -u low -t 2500 "Keyring Locked" "Polling for keyring unlock..."
+notify-send -e -a "gcr-prompter" -i "$HOME/.local/share/misc/Seahorse_icon_hicolor.svg" -u low -t 2500 "Keyring Locked" "Polling for keyring unlock..." || true
 
 # As all keyring dependent applications are not open yet, the gcr prompt will not show / automatically hide.
 # So, this prompts it with dummy values to cause it to prompt the user via the GUI first.
@@ -31,7 +31,7 @@ start_and_manage "zen-beta" "app_id" "zen-beta" "" "" &
 start_and_manage "anki" "title" "User 1 - Anki" "" "" &
 start_and_manage "anytype" "app_id" "anytype" "" "" &
 
-notify-send -e -a "niri" -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 "Pre-keyring apps" "Apps spawned"
+notify-send -e -a "niri" -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 "Pre-keyring apps" "Apps spawned" || true
 
 # Parallel infrastructure waits (don't block app launches)
 wait_for_network 60 || true &
@@ -44,4 +44,4 @@ log "all startup jobs finished"
 # Window rules with at-startup + open-focused=false already leave focus
 # on the correct monitor/workspace. No need to force it.
 
-notify-send -e -a "niri" -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 5000 "Startup complete" "All startup tasks completed"
+notify-send -e -a "niri" -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 5000 "Startup complete" "All startup tasks completed" || true

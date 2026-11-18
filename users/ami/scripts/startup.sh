@@ -14,7 +14,7 @@ source "$HOME/.local/bin/startup-lib.sh"
 FOCUSED_MONITOR="${1:-}"
 SECOND_MONITOR="${2:-}"
 
-notify-send -e -a "gcr-prompter" -i "$HOME/.local/share/misc/Seahorse_icon_hicolor.svg" -u low -t 2500 "Keyring Locked" "Polling for keyring unlock..."
+notify-send -e -a "gcr-prompter" -i "$HOME/.local/share/misc/Seahorse_icon_hicolor.svg" -u low -t 2500 "Keyring Locked" "Polling for keyring unlock..." || true
 
 # As all keyring dependent applications are not open yet, the gcr prompt will not show / automatically hide.
 # So, this prompts it with dummy values to cause it to prompt the user via the GUI first.
@@ -47,4 +47,4 @@ wait_for_xwayland 20 || true &
 wait
 log "all startup jobs finished"
 
-notify-send -e -a "niri" -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 5000 "Startup complete" "All startup tasks completed"
+notify-send -e -a "niri" -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 5000 "Startup complete" "All startup tasks completed" || true
