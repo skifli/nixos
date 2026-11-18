@@ -13,6 +13,10 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # fydetabduo also installs the Anki Seara addon, but the upstream flake only
+  # exposes an x86_64-linux package and the arm host has no x86 binfmt. Warm
+  # that exact store path in the cache first, otherwise the aarch64 build fails
+  # with "a x86_64-linux builder is required" instead of just rebuilding.
   warm-anki-seara:
     name: Cache Anki Seara addon
     runs-on: ubuntu-latest
@@ -75,6 +79,7 @@ jobs:
 
   build:
     name: Build (${{ matrix.host }})
+    # Required for fydetabduo too: it consumes the x86_64-only Seara addon.
     needs: warm-anki-seara
     runs-on: ${{ matrix.runner }}
     strategy:
