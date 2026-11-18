@@ -173,27 +173,12 @@ common
           "sh"
           "-c"
           ''
-            PIDFILE="$HOME/.local/state/systemd-inhibit-bag.pid"
-            ROTATE_STATE="$HOME/.local/state/niri-rotate-sleep-inhibit"
-            if [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
-              kill "$(cat "$PIDFILE")" 2>/dev/null || true
-              rm -f "$PIDFILE"
-              ROTATE_WAS_ACTIVE="$(cat "$ROTATE_STATE" 2>/dev/null || true)"
-              rm -f "$ROTATE_STATE"
-              if [ "$ROTATE_WAS_ACTIVE" = active ]; then
-                systemctl --user start niri-rotate
-              fi
+            SERVICE=bag-sleep-inhibit.service
+            if systemctl --user is-active --quiet "$SERVICE"; then
+              systemctl --user stop "$SERVICE"
               notify-send -e -a "Inhibit" -i "$HOME/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 2500 "Sleep uninhibited" "Tablet may sleep again"
             else
-              mkdir -p "$(dirname "$PIDFILE")"
-              if systemctl --user is-active --quiet niri-rotate; then
-                printf '%s\n' active > "$ROTATE_STATE"
-                systemctl --user stop niri-rotate
-              else
-                printf '%s\n' inactive > "$ROTATE_STATE"
-              fi
-              systemd-inhibit --what=sleep:handle-lid-switch --mode=block --why="Keep tablet awake in bag" sleep infinity &
-              echo $! > "$PIDFILE"
+              systemctl --user start "$SERVICE"
               notify-send -e -a "Inhibit" -i "$HOME/.local/share/misc/nix-snowflake-rainbow.svg" -u low -t 2500 "Sleep inhibited" "Tablet may not sleep now"
             fi
           ''

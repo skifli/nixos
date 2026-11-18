@@ -1,5 +1,6 @@
 {
   inputs,
+  hostVars,
   lib,
   userVars,
   pkgs,
@@ -121,6 +122,52 @@ in
           "custom-xray-proxy"
           "systray"
         ];
+      };
+    };
+
+    # Bag mode pauses all idle handling (including lock and display blanking),
+    # not only system suspend. It restores the prior auto-rotation state when
+    # disabled.
+    systemd.user.services.bag-sleep-inhibit = lib.mkIf (hostVars.hostname == "fydetabduo") {
+      Unit = {
+        Description = "Keep the tablet awake and suppress idle handling while in a bag";
+        PartOf = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
+      };
+      Service = {
+        Type = "simple";
+        ExecStartPre = pkgs.writeShellScript "bag-sleep-inhibit-start" ''
+          set -eu
+          state_dir="$HOME/.local/state"
+          rotate_state="$state_dir/niri-rotate-sleep-inhibit"
+          idler_state="$state_dir/swayidle-sleep-inhibit"
+          mkdir -p "$state_dir"
+          if systemctl --user is-active --quiet niri-rotate.service; then
+            printf 'active\n' > "$rotate_state"
+            systemctl --user stop niri-rotate.service
+          else
+            printf 'inactive\n' > "$rotate_state"
+          fi
+          if systemctl --user is-active --quiet swayidle.service; then
+            printf 'active\n' > "$idler_state"
+          else
+            printf 'inactive\n' > "$idler_state"
+          fi
+          systemctl --user stop swayidle.service || true
+        '';
+        ExecStart = "${pkgs.systemd}/bin/systemd-inhibit --what=sleep:handle-lid-switch --mode=block --why=Keep tablet awake in bag ${pkgs.coreutils}/bin/sleep infinity";
+        ExecStopPost = pkgs.writeShellScript "bag-sleep-inhibit-stop" ''
+          state_dir="$HOME/.local/state"
+          rotate_state="$state_dir/niri-rotate-sleep-inhibit"
+          idler_state="$state_dir/swayidle-sleep-inhibit"
+          if [ "$(cat "$idler_state" 2>/dev/null || true)" = active ] && systemctl --user is-active --quiet graphical-session.target; then
+            systemctl --user start swayidle.service || true
+          fi
+          if [ "$(cat "$rotate_state" 2>/dev/null || true)" = active ] && systemctl --user is-active --quiet graphical-session.target; then
+            systemctl --user start niri-rotate.service || true
+          fi
+          rm -f "$rotate_state" "$idler_state"
+        '';
       };
     };
 
