@@ -1,5 +1,7 @@
 { pkgs, ... }: {
   environment.systemPackages = with pkgs; [
+    # Make Ghostty's advertised TERM usable on incoming SSH sessions.
+    ghostty.terminfo
     # fyde-nix fydetab-specific
     fydetab-update
     fydetab-wallpaper
