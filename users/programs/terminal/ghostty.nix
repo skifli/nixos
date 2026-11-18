@@ -73,6 +73,9 @@ in
         link-url = true;
         link-previews = true;
         gtk-single-instance = true;
+        # KDE's "Open Terminal Here" launches Ghostty from the selected
+        # directory; avoid Ghostty's desktop-launch fallback to $HOME.
+        working-directory = "inherit";
 
         # Both themes are always installed, so Ghostty's own light/dark
         # detection (which follows the portal live) can pick the right one.
