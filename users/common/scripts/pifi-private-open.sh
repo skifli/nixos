@@ -3,6 +3,10 @@ set -euo pipefail
 
 mountpoint=/mnt/pifi-private
 
+# Authenticate before waiting on the remote vault passphrase. Otherwise a
+# slow unlock can let sudo's timestamp expire and trigger a second prompt.
+sudo -v
+
 if [[ ! -t 0 ]]; then
   echo "Run pifi-private-open from a terminal so SSH can prompt for the vault passphrase." >&2
   exit 1
@@ -20,3 +24,4 @@ if ! sudo mount -t nfs -o rw,soft,timeo=20,retrans=2 pifi:/private "$mountpoint"
 fi
 
 echo "Private files are available at $mountpoint."
+xdg-open "$mountpoint" >/dev/null 2>&1 &

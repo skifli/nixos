@@ -3,6 +3,8 @@ set -euo pipefail
 
 mountpoint=/mnt/pifi-private
 
+sudo -v
+
 if mountpoint -q "$mountpoint"; then
   sudo umount "$mountpoint"
 fi
