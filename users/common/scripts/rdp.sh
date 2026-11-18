@@ -60,7 +60,7 @@ connect_oracle_vnc() {
 
     notify-send -e -a VNCViewer -i "$HOME/.local/share/misc/663376.png" -u low "VNC Connection" "Launching VNC viewer"
 
-    vncviewer "127.0.0.1::$port" "$@"
+    vncviewer -RemoteResize=1 "127.0.0.1::$port" "$@"
 }
 
 connect_wayvnc() {
@@ -131,7 +131,7 @@ connect_wayvnc() {
     fi
 
     notify-send -e -a VNCViewer -i "$HOME/.local/share/misc/663376.png" -u low "VNC Connection" "Opening secure SSH tunnel to $target"
-    vncviewer "127.0.0.1::$local_port" "$@"
+    vncviewer -RemoteResize=1 "127.0.0.1::$local_port" "$@"
 }
 
 TARGET="${1:-}"
