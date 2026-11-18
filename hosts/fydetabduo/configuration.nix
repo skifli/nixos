@@ -2,6 +2,7 @@
   hostname,
   inputs,
   hostVars,
+  lib,
   pkgs,
   ...
 }:
@@ -45,12 +46,28 @@ in
   # the upstream ReGreet compositor after removing that module.
   users.users.greeter.extraGroups = [ "video" ];
 
+  # fyde-nix's greeter runs under Labwc, separate from the Niri desktop.
+  # Keep the greeter in landscape without changing Niri's own output/rotation
+  # management.
+  environment.etc."xdg/kanshi/greeter-config".text = lib.mkForce ''
+    profile {
+      output DSI-1 transform 270
+    }
+  '';
+
+  # ReGreet requests the Papirus theme by name; install its icons in the
+  # system profile so the greeter can resolve them before user login.
+  environment.systemPackages = [ pkgs.papirus-icon-theme ];
+
   hardware.fydetabduo = {
     enable = true;
 
-    # ReGreet's pre-login compositor is separate; this selects Niri through
-    # UWSM as the session to start after authentication.
-    greeter.defaultSession = "Niri (UWSM)";
+    # Configure ReGreet's first-boot account and desktop selection through
+    # fyde-nix's supported options.
+    greeter = {
+      defaultUser = primaryUser;
+      defaultSession = "Niri (UWSM)";
+    };
 
     sensors.autoRotate = false; # Replaced by niri-specific rotation daemon (see below)
     tabletMode.enable = true;
