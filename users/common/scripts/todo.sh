@@ -179,10 +179,45 @@ fi
 if [ "${1:-}" = "--check" ]; then
     NOW=$(date +%s)
 
-    jq -r --argjson now "$NOW" '.[] | select(.done != true and .due_ts != null and .due_ts <= $now and .notified != true) | .id + "|" + .text' "$TODO_FILE" | while IFS='|' read -r id text; do
+    repeat_next_due() {
+        local previous="$1" interval="$2" previous_date previous_clock next_date next_month last_day day
+        previous_date=$(date -d "@$previous" +%F)
+        previous_clock=$(date -d "@$previous" +%H:%M:%S)
+        case "$interval" in
+            daily) next_date=$(date -d "$previous_date + 1 day" +%F) ;;
+            weekly) next_date=$(date -d "$previous_date + 7 days" +%F) ;;
+            monthly)
+                next_month=$(date -d "${previous_date%-*}-01 + 1 month" +%Y-%m)
+                last_day=$(date -d "$next_month-01 + 1 month - 1 day" +%d)
+                day=$(date -d "@$previous" +%d)
+                [ "$day" -gt "$last_day" ] && day="$last_day"
+                next_date="$next_month-$day"
+                ;;
+            *) return 1 ;;
+        esac
+        date -d "$next_date $previous_clock" +%s
+    }
+
+    jq -r --argjson now "$NOW" '
+        .[]
+        | select(.done != true and .due_ts != null and .due_ts <= $now and .notified != true)
+        | [.id, .text, (.repeat_interval // "none"), .due_ts]
+        | @tsv
+    ' "$TODO_FILE" | while IFS=$'\t' read -r id text repeat_interval due_ts; do
         notify-send -e -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" -u critical -t 0 "Reminder due" "$text"
         TMP=$(mktemp)
-        jq --arg id "$id" 'map(if .id == $id then .notified = true else . end)' "$TODO_FILE" > "$TMP" && state_commit "$TODO_FILE" "$TMP"
+        if [ "$repeat_interval" != "none" ]; then
+            next_due=$(repeat_next_due "$due_ts" "$repeat_interval")
+            while [ "$next_due" -le "$NOW" ]; do
+                next_due=$(repeat_next_due "$next_due" "$repeat_interval")
+            done
+            next_due_str=$(date -d "@$next_due" "+%b %d %H:%M")
+            jq --arg id "$id" --argjson due_ts "$next_due" --arg due_str "$next_due_str" \
+                'map(if .id == $id then .due_ts = $due_ts | .due_str = $due_str | .notified = false else . end)' \
+                "$TODO_FILE" > "$TMP" && state_commit "$TODO_FILE" "$TMP"
+        else
+            jq --arg id "$id" 'map(if .id == $id then .notified = true else . end)' "$TODO_FILE" > "$TMP" && state_commit "$TODO_FILE" "$TMP"
+        fi
     done
 
     exit 0
@@ -210,6 +245,8 @@ parse_time_preset() {
     DUE_TS="null"
     DUE_STR=""
     ON_STARTUP="false"
+    REPEAT_INTERVAL="null"
+    TIME_PRESET_CANCELLED="false"
 
     case "$sel_lower" in
         *"1 hour"*)
@@ -240,6 +277,37 @@ parse_time_preset() {
         *"1 week"*)
             DUE_TS=$((NOW + 604800))
             DUE_STR="$(format_ts_str "$DUE_TS")"
+            ;;
+        *"repeat reminder"*)
+            REPEAT_SEL=$(printf 'Daily (same local time)\nWeekly (same weekday and time)\nMonthly (same date and time)' | fuzzel_prompt "Repeat interval: " "Daily (same local time)\nWeekly (same weekday and time)\nMonthly (same date and time)" 3)
+            case "$(echo "$REPEAT_SEL" | tr '[:upper:]' '[:lower:]')" in
+                *daily*) REPEAT_INTERVAL='"daily"' ;;
+                *weekly*) REPEAT_INTERVAL='"weekly"' ;;
+                *monthly*) REPEAT_INTERVAL='"monthly"' ;;
+                *)
+                    REPEAT_INTERVAL="null"
+                    TIME_PRESET_CANCELLED="true"
+                    return
+                    ;;
+            esac
+            ABS_INPUT=$(echo "" | fuzzel_prompt "First reminder (e.g., 2026-11-23 16:00): " "" 0)
+            if [ -n "$ABS_INPUT" ]; then
+                set +e
+                PARSED_TS=$(date -d "$ABS_INPUT" +%s 2>/dev/null)
+                set -e
+                if [ -n "$PARSED_TS" ] && [ "$PARSED_TS" -gt "$NOW" ]; then
+                    DUE_TS="$PARSED_TS"
+                    DUE_STR="$(format_ts_str "$DUE_TS")"
+                else
+                    DUE_TS="null"
+                    REPEAT_INTERVAL="null"
+                    notify-send -e -u critical -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Invalid date" "Choose a future date and time."
+                    TIME_PRESET_CANCELLED="true"
+                fi
+            else
+                REPEAT_INTERVAL="null"
+                TIME_PRESET_CANCELLED="true"
+            fi
             ;;
         *"relative"*)
             REL_INPUT=$(echo "" | fuzzel_prompt "Time offset (e.g., 2 hours, 3 days): " "" 0)
@@ -296,11 +364,9 @@ ACTIVE_TODOS_JSON=$(jq -c --argjson now "$NOW" '
                 if .on_startup == true then
                     "[Boot] "
                 elif .due_ts != null then
-                    if .due_ts < $now then
-                        "[OVERDUE: " + .due_str + "] "
-                    else
-                        "[" + .due_str + "] "
-                    end
+                    (if .repeat_interval != null then "[Repeat " + (.repeat_interval | ascii_upcase) + ": " else "[" end) +
+                    (if .due_ts < $now then "OVERDUE: " else "" end) +
+                    .due_str + "] "
                 else
                     "[Task] "
                 end
@@ -336,14 +402,16 @@ if [[ "$SELECTED" == *"$ADD_HEADER"* ]]; then
 4. Next Morning (09:00)
 5. Tomorrow (Same Time)
 6. In 1 Week
-7. Custom Relative (e.g., 2 hours, 3 days)
-8. Custom Absolute (e.g., 2026-08-25 14:00)
-9. No Reminder (Task Only)"
+7. Repeat Reminder (daily, weekly, or monthly)
+8. Custom Relative (e.g., 2 hours, 3 days)
+9. Custom Absolute (e.g., 2026-08-25 14:00)
+10. No Reminder (Task Only)"
 
-    TIME_SEL=$(echo "$TIME_PRESETS" | fuzzel_prompt "Set Reminder Preset: " "$TIME_PRESETS" 9)
+    TIME_SEL=$(echo "$TIME_PRESETS" | fuzzel_prompt "Set Reminder Preset: " "$TIME_PRESETS" 10)
     [ -z "$TIME_SEL" ] && exit 0
 
     parse_time_preset "$TIME_SEL"
+    [ "$TIME_PRESET_CANCELLED" = "true" ] && exit 0
 
     NEW_ID=$(date +%s%N)
     TMP=$(mktemp)
@@ -352,7 +420,8 @@ if [[ "$SELECTED" == *"$ADD_HEADER"* ]]; then
        --argjson due_ts "$DUE_TS" \
        --arg due_str "$DUE_STR" \
        --argjson on_startup "$ON_STARTUP" \
-       '. += [{"id": $id, "text": $text, "done": false, "due_ts": $due_ts, "due_str": $due_str, "on_startup": $on_startup, "notified": false}]' \
+       --argjson repeat_interval "$REPEAT_INTERVAL" \
+       '. += [{"id": $id, "text": $text, "done": false, "due_ts": $due_ts, "due_str": $due_str, "on_startup": $on_startup, "repeat_interval": $repeat_interval, "notified": false}]' \
        "$TODO_FILE" > "$TMP" && state_commit "$TODO_FILE" "$TMP"
 
     if [ "$ON_STARTUP" = "true" ]; then
@@ -430,20 +499,23 @@ else
 4. Next Morning (09:00)
 5. Tomorrow (Same Time)
 6. In 1 Week
-7. Custom Relative (e.g., 2 hours, 3 days)
-8. Custom Absolute (e.g., 2026-08-25 14:00)
-9. Remove Reminder"
-            TIME_SEL=$(echo "$TIME_PRESETS" | fuzzel_prompt "New Reminder Preset: " "$TIME_PRESETS" 9)
+7. Repeat Reminder (daily, weekly, or monthly)
+8. Custom Relative (e.g., 2 hours, 3 days)
+9. Custom Absolute (e.g., 2026-08-25 14:00)
+10. Remove Reminder"
+            TIME_SEL=$(echo "$TIME_PRESETS" | fuzzel_prompt "New Reminder Preset: " "$TIME_PRESETS" 10)
             [ -z "$TIME_SEL" ] && exit 0
 
             parse_time_preset "$TIME_SEL"
+            [ "$TIME_PRESET_CANCELLED" = "true" ] && exit 0
 
             TMP=$(mktemp)
             jq --arg id "$TODO_ID" \
                --argjson due_ts "$DUE_TS" \
                --arg due_str "$DUE_STR" \
                --argjson on_startup "$ON_STARTUP" \
-               'map(if .id == $id then .due_ts = $due_ts | .due_str = $due_str | .on_startup = $on_startup | .notified = false else . end)' \
+               --argjson repeat_interval "$REPEAT_INTERVAL" \
+               'map(if .id == $id then .due_ts = $due_ts | .due_str = $due_str | .on_startup = $on_startup | .repeat_interval = $repeat_interval | .notified = false else . end)' \
                "$TODO_FILE" > "$TMP" && state_commit "$TODO_FILE" "$TMP"
             notify-send -e -u low -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Reminder updated"
             ;;
