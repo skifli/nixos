@@ -23,7 +23,7 @@ if is_in_scratchpad "title" "Anki Pomodoro"; then
     restore_from_scratchpad "title" "Anki Pomodoro"
 else
     # Ghostty specific but I only use Ghostty on this host so is fine!
-    ensure_window_exists "com.mitchellh.ghostty" "Anki Pomodoro" "${BASH_SOURCE%/*}/floating-term.sh ${TERMINAL} -w 50% -h 30% --title='Anki Pomodoro' -e ${BASH_SOURCE%/*}/anki-pomodoro.sh" "com.mitchellh.ghostty" "Anki Pomodoro"
+    ensure_window_exists "com.mitchellh.ghostty" "Anki Pomodoro" "${BASH_SOURCE%/*}/floating-term.sh ${TERMINAL} -w 35% -h 20% --title='Anki Pomodoro' -e ${BASH_SOURCE%/*}/anki-pomodoro.sh" "com.mitchellh.ghostty" "Anki Pomodoro"
 fi
 
 # 1st Monitor
@@ -32,7 +32,7 @@ move_windows "app_id" "gcr-prompter" "$MON_1" "1"
 
 # 2nd Monitor
 move_windows "app_id" "zen-beta" "$MON_2" "1" "100%"
-move_windows "title" "Anki Pomodoro" "$MON_2" "1" "50%"
+move_windows "title" "Anki Pomodoro" "$MON_2" "1" "35%"
 
 # Focus windows
 focus_window "app_id" "anki"

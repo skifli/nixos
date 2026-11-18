@@ -219,10 +219,10 @@ common
           relative-to = "top-left";
         };
         default-column-width = {
-          proportion = 0.50;
+          proportion = 0.35;
         };
         default-window-height = {
-          proportion = 0.30;
+          proportion = 0.20;
         };
       }
 

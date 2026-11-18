@@ -89,7 +89,7 @@ while true; do
             printf '%s\n' break > "$TMP"
             state_commit "$STATE_FILE" "$TMP" || true
             notify-send -e -a "anki" -i "/home/${USER}/.local/share/misc/Anki-icon.svg" -u normal "Break started" "5 minutes break time. Notifications unmuted."
-            termdown 5m -T "Break #$ROUND" || true
+            termdown --no-art 5m -T "Break #$ROUND" || true
             BREAK_NOTIF_ID=$(notify-send -p -e -a "anki" -i "/home/${USER}/.local/share/misc/Anki-icon.svg" -u critical -t 0 "Break ended" "Break finished. Ready for Round $((ROUND + 1))?")
         fi
         ROUND=$((ROUND + 1))
@@ -103,7 +103,7 @@ while true; do
     set_dnd "on"
     notify-send -e -a "anki" -i "/home/${USER}/.local/share/misc/Anki-icon.svg" -u low "Focus session started" "Round $ROUND: 25 minutes focus. Notifications muted."
 
-    termdown 25m -T "Focus #$ROUND" || true
+    termdown --no-art 25m -T "Focus #$ROUND" || true
 
     # Focus Complete
     set_dnd "off"
@@ -130,7 +130,7 @@ while true; do
     state_commit "$STATE_FILE" "$TMP" || true
     notify-send -e -a "anki" -i "/home/${USER}/.local/share/misc/Anki-icon.svg" -u normal "Break started" "5 minutes break time. Notifications unmuted."
 
-    termdown 5m -T "Break #$ROUND" || true
+    termdown --no-art 5m -T "Break #$ROUND" || true
 
     BREAK_NOTIF_ID=$(notify-send -p -e -a "anki" -i "/home/${USER}/.local/share/misc/Anki-icon.svg" -u critical -t 0 "Break ended" "Break finished. Ready for Round $((ROUND + 1))?")
 
