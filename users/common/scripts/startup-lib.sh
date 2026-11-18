@@ -66,8 +66,10 @@ start_and_manage() {
             niri msg action move-window-to-monitor --id "$win_id" "${target_mon}" \
                 || log "WARNING: could not move ${cmd} to monitor ${target_mon}"
         fi
-        niri msg action move-window-to-workspace "${target_ws}" --window-id "$win_id" \
-            || log "WARNING: could not move ${cmd} to workspace ${target_ws}"
+        if [ -n "$target_ws" ]; then
+            niri msg action move-window-to-workspace "${target_ws}" --window-id "$win_id" \
+                || log "WARNING: could not move ${cmd} to workspace ${target_ws}"
+        fi
     ) &
 }
 

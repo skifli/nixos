@@ -187,71 +187,41 @@ common
     };
 
     window-rules = [
-      {
-        match._props.app-id._raw = ''r#"(?i)gcr-prompter"#'';
-        block-out-from = "screen-capture";
-        open-focused = true;
-      }
-
+      # at-startup rules: place apps on correct workspace during niri's
+      # first 60s. These only apply at startup; later launches use regular rules.
       {
         match._props = {
-          title._raw = ''r#"(?i)Anki Pomodoro"#'';
+          app-id._raw = ''r#"(?i)anytype"#'';
+          at-startup = true;
         };
-        open-floating = true;
-        open-on-workspace = "5";
-        default-floating-position._props = {
-          x = 20;
-          y = 20;
-          relative-to = "top-left";
-        };
-        default-column-width = {
-          proportion = 0.50;
-        };
-        default-window-height = {
-          proportion = 0.30;
-        };
-      }
-
-      {
-        match._props.app-id._raw = ''r#"(?i)anki"#'';
+        open-on-workspace = "1";
+        open-focused = false;
         open-maximized = true;
       }
-
       {
-        match._props.app-id._raw = ''r#"(?i)anki"#'';
-        match._props.title._raw = ''r#"(?i)Study Deck"#'';
-        open-floating = true;
-        default-column-width = {
-          proportion = 0.75;
+        match._props = {
+          app-id._raw = ''r#"(?i)ferdium"#'';
+          at-startup = true;
         };
-        default-window-height = {
-          proportion = 0.75;
+        open-on-workspace = "2";
+        open-focused = false;
+      }
+      {
+        match._props = {
+          app-id._raw = ''r#"(?i)zen-beta"#'';
+          at-startup = true;
         };
-      }
-
-      {
-        match._props.title._raw = ''r#"(?i)anytype"#'';
+        open-on-workspace = "3";
+        open-focused = false;
         open-maximized = true;
       }
-
       {
-        match._props.app-id._raw = ''r#"(?i)ferdium"#'';
-        open-maximized = true;
-      }
-
-      {
-        match._props.app-id._raw = ''r#"(?i)org\.gnome\.Evince"#'';
-        open-maximized = true;
-      }
-
-      {
-        match._props.app-id._raw = ''r#"(?i)com\.wayle\.settings"#'';
-        open-maximized = true;
-      }
-
-      {
-        match._props.app-id._raw = ''r#"(?i)dev\.zed\.Zed"#'';
-        open-maximized = true;
+        match._props = {
+          app-id._raw = ''r#"(?i)anki"#'';
+          at-startup = true;
+        };
+        open-on-workspace = "4";
+        open-focused = false;
       }
     ];
   };

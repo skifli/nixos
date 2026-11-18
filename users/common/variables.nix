@@ -110,6 +110,61 @@ in
     ];
   };
 
+  niri.window-rules = [
+    # Open maximised train
+    {
+      match._props.app-id._raw = ''r#"(?i)anki"#'';
+      open-maximized = true;
+    }
+    {
+      match._props.title._raw = ''r#"(?i)anytype"#'';
+      open-maximized = true;
+    }
+    {
+      match._props.app-id._raw = ''r#"(?i)ferdium"#'';
+      open-maximized = true;
+    }
+    {
+      match._props.app-id._raw = ''r#"(?i)org\.gnome\.Evince"#'';
+      open-maximized = true;
+    }
+    {
+      match._props.app-id._raw = ''r#"(?i)com\.wayle\.settings"#'';
+      open-maximized = true;
+    }
+    {
+      # Maximise (in here and not users/programs/compositor/niri/window-rules.nix due to it being zeditor in the file path but that not matching the app-id)
+      match._props.app-id._raw = ''r#"(?i)dev\.zed\.Zed"#'';
+      open-maximized = true;
+    }
+    {
+      match._props.title._raw = ''r#"(?i)TigerVNC"#'';
+      open-maximized = true;
+      open-focused = true;
+
+      # Properties that apply once upon window opening.
+      default-column-width = {
+        proportion = 1.0;
+      };
+      default-window-height = {
+        proportion = 1.0;
+      };
+    }
+
+    # Other
+    {
+      match._props.app-id._raw = ''r#"(?i)anki"#'';
+      match._props.title._raw = ''r#"(?i)Study Deck"#'';
+      open-floating = true;
+      default-column-width = {
+        proportion = 0.65;
+      };
+      default-window-height = {
+        proportion = 0.65;
+      };
+    }
+  ];
+
   git = {
     enabled = true;
     name = "skifli";

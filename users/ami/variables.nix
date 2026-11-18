@@ -199,6 +199,39 @@ common
     };
 
     window-rules = [
+      # at-startup rules: place apps on correct monitor/workspace during niri's
+      # first 60s. These only apply at startup so later launches aren't affected.
+      {
+        match._props = {
+          app-id._raw = ''r#"(?i)zen-beta"#'';
+          at-startup = true;
+        };
+        open-on-output = "HDMI-A-2";
+        open-on-workspace = "1";
+        open-focused = false;
+      }
+      {
+        match._props = {
+          app-id._raw = ''r#"(?i)anki"#'';
+          at-startup = true;
+        };
+        open-on-output = "HDMI-A-2";
+        open-on-workspace = "2";
+        open-focused = false;
+        open-maximized = true;
+      }
+      {
+        match._props = {
+          app-id._raw = ''r#"(?i)ferdium"#'';
+          at-startup = true;
+        };
+        open-on-output = "DP-1";
+        open-on-workspace = "2";
+        open-focused = false;
+        open-maximized = true;
+      }
+
+      # Other
       {
         # Cus sometimes it doesn't open in 60 seconds or summat idk don't do at-startup
         match._props.app-id._raw = ''r#"(?i)gcr-prompter"#'';
@@ -206,7 +239,6 @@ common
         open-focused = true;
         # open-on-workspace = "1"; # Was annoying because sometimes it opens later on
       }
-
       {
         match._props = {
           title._raw = ''r#"(?i)Anki Pomodoro"#'';
@@ -225,9 +257,8 @@ common
           proportion = 0.20;
         };
       }
-
-      ## https://www.reddit.com/r/niri/comments/1skrhet/steam_notifications_appear_in_the_center_of_the/
       {
+        # https://www.reddit.com/r/niri/comments/1skrhet/steam_notifications_appear_in_the_center_of_the/
         match._props = {
           app-id._raw = ''r#"(?i)steam"#'';
           title._raw = ''r#"(?i)notificationtoasts_\d+_desktop"#'';
@@ -240,70 +271,6 @@ common
           relative-to = "bottom-right";
         };
       }
-
-      # Anki - maximize
-      {
-        match._props.app-id._raw = ''r#"(?i)anki"#'';
-        open-maximized = true;
-      }
-
-      {
-        match._props.app-id._raw = ''r#"(?i)anki"#'';
-        match._props.title._raw = ''r#"(?i)Study Deck"#'';
-        open-floating = true;
-        default-column-width = {
-          proportion = 0.75;
-        };
-        default-window-height = {
-          proportion = 0.75;
-        };
-      }
-
-      # Anytype - maximize
-      {
-        match._props.title._raw = ''r#"(?i)anytype"#'';
-        open-maximized = true;
-      }
-
-      # Ferdium - maximize
-      {
-        match._props.app-id._raw = ''r#"(?i)ferdium"#'';
-        open-maximized = true;
-      }
-
-      # Evince (PDF viewer) - maximize
-      {
-        match._props.app-id._raw = ''r#"(?i)org\.gnome\.Evince"#'';
-        open-maximized = true;
-      }
-
-      # Wayle settings - maximize
-      {
-        match._props.app-id._raw = ''r#"(?i)com\.wayle\.settings"#'';
-        open-maximized = true;
-      }
-
-      # Zed editor - maximize (in here and not users/programs/compositor/niri/window-rules.nix due to it being zeditor in the file path but that not matching the app-id)
-      {
-        match._props.app-id._raw = ''r#"(?i)dev\.zed\.Zed"#'';
-        open-maximized = true;
-      }
-
-      # TigerVNC viewer - maximize
-      {
-        match._props.title._raw = ''r#"(?i)TigerVNC"#'';
-        open-maximized = true;
-        open-focused = true;
-
-        # Properties that apply once upon window opening.
-        default-column-width = {
-          proportion = 1.0;
-        };
-        default-window-height = {
-          proportion = 1.0;
-        };
-      }
-
     ]
     ++ map (app: {
       match._props = {
