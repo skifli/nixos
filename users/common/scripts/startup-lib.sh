@@ -70,7 +70,7 @@ start_and_manage() {
             niri msg action move-window-to-workspace "${target_ws}" --window-id "$win_id" \
                 || log "WARNING: could not move ${cmd} to workspace ${target_ws}"
         fi
-    ) &
+    )
 }
 
 is_any_keyring_locked() {
