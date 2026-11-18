@@ -192,70 +192,72 @@ common
       };
     };
 
-    window-rules = [
-      # at-startup rules: place apps on correct monitor/workspace during niri's
-      # first 60s. These only apply at startup so later launches aren't affected.
-      {
-        match._props = {
-          app-id._raw = ''r#"(?i)zen-beta"#'';
-          at-startup = true;
-        };
-        open-on-output = "HDMI-A-2";
-        open-on-workspace = "1";
-        open-focused = false;
-      }
-      {
-        match._props = {
-          app-id._raw = ''r#"(?i)anki"#'';
-          at-startup = true;
-        };
-        open-on-output = "HDMI-A-2";
-        open-on-workspace = "2";
-        open-focused = false;
-        open-maximized = true;
-      }
-      {
-        match._props = {
-          app-id._raw = ''r#"(?i)ferdium"#'';
-          at-startup = true;
-        };
-        open-on-output = "DP-1";
-        open-on-workspace = "2";
-        open-focused = false;
-        open-maximized = true;
-      }
+    window-rules =
+      (common.niri.window-rules or [ ])
+      ++ [
+        # at-startup rules: place apps on correct monitor/workspace during niri's
+        # first 60s. These only apply at startup so later launches aren't affected.
+        {
+          match._props = {
+            app-id._raw = ''r#"(?i)zen-beta"#'';
+            at-startup = true;
+          };
+          open-on-output = "HDMI-A-2";
+          open-on-workspace = "1";
+          open-focused = false;
+        }
+        {
+          match._props = {
+            app-id._raw = ''r#"(?i)anki"#'';
+            at-startup = true;
+          };
+          open-on-output = "HDMI-A-2";
+          open-on-workspace = "2";
+          open-focused = false;
+          open-maximized = true;
+        }
+        {
+          match._props = {
+            app-id._raw = ''r#"(?i)ferdium"#'';
+            at-startup = true;
+          };
+          open-on-output = "DP-1";
+          open-on-workspace = "2";
+          open-focused = false;
+          open-maximized = true;
+        }
 
-      # Other
-      {
-        # Cus sometimes it doesn't open in 60 seconds or summat idk don't do at-startup
-        match._props.app-id._raw = ''r#"(?i)gcr-prompter"#'';
-        block-out-from = "screen-capture";
-        open-focused = true;
-        # open-on-workspace = "1"; # Was annoying because sometimes it opens later on
-      }
-      {
-        # https://www.reddit.com/r/niri/comments/1skrhet/steam_notifications_appear_in_the_center_of_the/
+        # Other
+        {
+          # Cus sometimes it doesn't open in 60 seconds or summat idk don't do at-startup
+          match._props.app-id._raw = ''r#"(?i)gcr-prompter"#'';
+          block-out-from = "screen-capture";
+          open-focused = true;
+          # open-on-workspace = "1"; # Was annoying because sometimes it opens later on
+        }
+        {
+          # https://www.reddit.com/r/niri/comments/1skrhet/steam_notifications_appear_in_the_center_of_the/
+          match._props = {
+            app-id._raw = ''r#"(?i)steam"#'';
+            title._raw = ''r#"(?i)notificationtoasts_\d+_desktop"#'';
+          };
+          open-maximized = false;
+          open-focused = false;
+          default-floating-position._props = {
+            x = 0;
+            y = 0;
+            relative-to = "bottom-right";
+          };
+        }
+      ]
+      ++ map (app: {
         match._props = {
-          app-id._raw = ''r#"(?i)steam"#'';
-          title._raw = ''r#"(?i)notificationtoasts_\d+_desktop"#'';
+          app-id._raw = ''r#"(?i)${lib.replaceStrings [ "." ] [ "\\." ] app.appId}"#'';
+          title._raw = ''r#"(?i)${lib.escapeRegex app.mainWindowTitle}"#'';
         };
-        open-maximized = false;
-        open-focused = false;
-        default-floating-position._props = {
-          x = 0;
-          y = 0;
-          relative-to = "bottom-right";
-        };
-      }
-    ]
-    ++ map (app: {
-      match._props = {
-        app-id._raw = ''r#"(?i)${lib.replaceStrings [ "." ] [ "\\." ] app.appId}"#'';
-        title._raw = ''r#"(?i)${lib.escapeRegex app.mainWindowTitle}"#'';
-      };
-      open-maximized = true;
-    }) (lib.filter (app: app ? mainWindowTitle) protectedCloseApps)
-    ++ protectedBreakRules;
+        open-maximized = true;
+      }) (lib.filter (app: app ? mainWindowTitle) protectedCloseApps)
+      ++ protectedBreakRules;
   };
 
   kanata.keyboards = {

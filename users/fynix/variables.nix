@@ -15,6 +15,7 @@ let
       pkgs
       username
       ;
+    terminal = "foot";
   };
 in
 common
@@ -186,7 +187,7 @@ common
       };
     };
 
-    window-rules = [
+    window-rules = (common.niri.window-rules or [ ]) ++ [
       # at-startup rules: place apps on correct workspace during niri's
       # first 60s. These only apply at startup; later launches use regular rules.
       {
