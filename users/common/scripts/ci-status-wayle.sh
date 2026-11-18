@@ -6,10 +6,12 @@ set -euo pipefail
 
 STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/ci-status"
 REPO_CACHE_FILE="$STATE_DIR/repos.json"
+ALL_RUNS_FILE="$STATE_DIR/all-runs.json"
 ACK_FILE="$STATE_DIR/acknowledged.json"
 WATCH_FILE="$STATE_DIR/watched-runs.json"
 OUTPUT_FILE="$STATE_DIR/last-output.txt"
 LOCK_FILE="$STATE_DIR/refresh.lock"
+ACK_LOCK_FILE="$STATE_DIR/acknowledged.lock"
 GITHUB_ICON="$HOME/.local/share/misc/github-icon.svg"
 mkdir -p "$STATE_DIR"
 
@@ -20,11 +22,13 @@ RUN_CACHE_TTL="${CI_STATUS_RUN_CACHE_TTL:-60}"
 ACTION="${1:-status}"
 FORCE_REFRESH=0
 
-# Serialise polling, refreshes, menus, and acknowledgements. If a periodic poll
-# is already fetching data, the bar keeps its last complete snapshot instead of
-# briefly displaying an empty result. Click actions wait for that fetch to end.
+# Keep refresh and notification state serialised. Menus read the last atomic
+# snapshot so opening one never waits for GitHub's API.
 exec 9>"$LOCK_FILE"
-if [[ "$ACTION" == "status" || "$ACTION" == "status-menu" || "$ACTION" == "ack-menu" ]]; then
+exec 8>"$ACK_LOCK_FILE"
+if [[ "$ACTION" == "status-menu" || "$ACTION" == "open" ]]; then
+    : # These actions use cached data and must stay responsive during a refresh.
+elif [[ "$ACTION" == "status" || "$ACTION" == "ack-menu" ]]; then
     if ! flock -n 9; then
         if [[ "$ACTION" == "status" && -f "$OUTPUT_FILE" ]]; then
             cat "$OUTPUT_FILE"
@@ -110,6 +114,34 @@ load_all_runs() {
         tagged=$(jq --arg repo "$repo" 'map(. + {repository: $repo})' <<<"$runs")
         ALL_RUNS_JSON=$(jq -cn --argjson left "$ALL_RUNS_JSON" --argjson right "$tagged" '$left + $right')
     done < <(jq -r '.[]' <<<"$REPOS_JSON")
+    printf '%s\n' "$ALL_RUNS_JSON" | atomic_write "$ALL_RUNS_FILE"
+}
+
+load_cached_runs() {
+    local repo cache_file runs tagged
+    ALL_RUNS_JSON='[]'
+    REPOS_JSON='[]'
+
+    if [[ -f "$ALL_RUNS_FILE" ]] && jq -e 'type == "array"' "$ALL_RUNS_FILE" >/dev/null 2>&1; then
+        ALL_RUNS_JSON=$(cat "$ALL_RUNS_FILE")
+        REPOS_JSON=$(cat "$REPO_CACHE_FILE" 2>/dev/null || printf '[]\n')
+        return
+    fi
+
+    # Migrate existing per-repository caches into the combined snapshot without
+    # making the first menu click perform network requests.
+    if [[ -f "$REPO_CACHE_FILE" ]] && jq -e 'type == "array"' "$REPO_CACHE_FILE" >/dev/null 2>&1; then
+        REPOS_JSON=$(cat "$REPO_CACHE_FILE")
+        while IFS= read -r repo; do
+            [[ -z "$repo" ]] && continue
+            cache_file="$STATE_DIR/cache_${repo//\//_}.json"
+            [[ -f "$cache_file" ]] || continue
+            jq -e 'type == "array"' "$cache_file" >/dev/null 2>&1 || continue
+            runs=$(cat "$cache_file")
+            tagged=$(jq --arg repo "$repo" 'map(. + {repository: $repo})' <<<"$runs")
+            ALL_RUNS_JSON=$(jq -cn --argjson left "$ALL_RUNS_JSON" --argjson right "$tagged" '$left + $right')
+        done < <(jq -r '.[]' <<<"$REPOS_JSON")
+    fi
 }
 
 notify_ci() {
@@ -123,8 +155,9 @@ notify_ci() {
 
 ack_run() {
     local id="$1"
+    flock -x 8
     jq --arg id "$id" '. + [$id] | unique' "$ACK_FILE" | atomic_write "$ACK_FILE"
-    jq --arg id "$id" 'del(.[$id])' "$WATCH_FILE" | atomic_write "$WATCH_FILE"
+    flock -u 8
 }
 
 CUTOFF=$(( $(date +%s) - MAX_AGE_DAYS * 86400 ))
@@ -239,7 +272,7 @@ show_status_menu() {
     ' <<<"$ALL_RUNS_JSON")
 
     if [[ -z "$menu_items" ]]; then
-        notify_ci "No recent workflows" "No workflow runs were found in the last $MAX_AGE_DAYS days."
+        notify_ci "No cached workflows" "A background refresh will fetch recent workflow runs."
         return
     fi
 
@@ -277,13 +310,13 @@ case "$ACTION" in
         FORCE_REFRESH=1
         ;;
     status-menu|ack-menu)
-        load_all_runs
-        notify_run_transitions
+        load_cached_runs
         show_status_menu
+        ( nohup "$0" status >/dev/null 2>&1 </dev/null & )
         exit 0
         ;;
     open)
-        load_all_runs
+        load_cached_runs
         TARGET_URL=$(jq -r '
             group_by([.repository, (.workflowName // "GitHub Actions")])
             | map(max_by(.createdAt))
@@ -296,6 +329,7 @@ case "$ACTION" in
             FIRST_REPO=$(jq -r '.[0] // "skifli/nixos"' <<<"$REPOS_JSON")
             xdg-open "https://github.com/$FIRST_REPO/actions" 2>/dev/null || true
         fi
+        ( nohup "$0" status >/dev/null 2>&1 </dev/null & )
         exit 0
         ;;
     ack)
