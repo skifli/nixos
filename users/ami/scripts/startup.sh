@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 
+# niri discards the stdout/stderr of spawn-at-startup commands. Keep a per-run log.
+log_dir="${XDG_STATE_HOME:-$HOME/.local/state}/startup"
+mkdir -p "$log_dir"
+log_file="$log_dir/startup-$(date +%Y%m%d-%H%M%S).log"
+ln -sfn "$log_file" "$log_dir/latest.log"
+find "$log_dir" -maxdepth 1 -name 'startup-*.log' -mtime +30 -delete 2>/dev/null || true
+exec >>"$log_file" 2>&1
+printf '\n===== %s startup.sh %s =====\n' "$(date +'%F %T')" "$*"
+
 source "$HOME/.local/bin/startup-lib.sh"
 
 FOCUSED_MONITOR="${1:-}"
@@ -15,6 +24,10 @@ spawn_keyring_poll
 
 wait_for_network 60 || true
 
+# niri starts xwayland-satellite on demand. Warm it up before the apps so an
+# X11-only app (Anki) can't race the server into existence and die silently.
+wait_for_xwayland 20 || true
+
 # Apps that don't need keyring unlock
 start_and_manage "zen-beta" "app_id" "zen-beta" "$FOCUSED_MONITOR" "1"
 start_and_manage "anki" "title" "User 1 - Anki" "$FOCUSED_MONITOR" "2" # Otherwise it would sometimes just move the syncing window not the actual window which was annoying... tad of a workaround... but it works!
@@ -28,8 +41,9 @@ wait_for_keyring_then \
     'start_and_manage "anytype" "app_id" "anytype" "$SECOND_MONITOR" "1"' \
     'safeeyes & disown'
 
-# Now wait for all background startAndManage jobs to finish
+# Now wait for all background startAndManage jobs to finish, with a timeout though!
 wait
+log "all startup jobs finished"
 
 niri msg action focus-monitor "$FOCUSED_MONITOR"
 niri msg action focus-workspace 1

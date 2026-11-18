@@ -2,6 +2,15 @@
 # Shared startup library for niri session initialisation
 # Source this in your startup.sh: source "$HOME/.local/bin/startup-lib.sh"
 
+log() {
+    printf '%s [startup] %s\n' "$(date +'%F %T')" "$*"
+}
+
+# Overridable from startup.sh or the environment.
+STARTUP_APP_TIMEOUT="${STARTUP_APP_TIMEOUT:-60}"
+STARTUP_POLL_INTERVAL="${STARTUP_POLL_INTERVAL:-0.25}"
+STARTUP_KEYRING_TIMEOUT="${STARTUP_KEYRING_TIMEOUT:-300}"
+
 # Arguments:
 #   cmd:        To run - e.g., ("anki", "anytype").
 #   key:        Target window property JSON filter ("app_id" or "title").
@@ -16,21 +25,49 @@ start_and_manage() {
     local target_ws="$5"
 
     (
+        local started=$SECONDS
+        local app_pid win_id=""
+
+        log "launching: ${cmd}"
         eval "${cmd} &"
-        while ! niri msg --json windows 2>/dev/null | grep -qi "\"${key}\": *\"[^\"]*${val}"; do
-            sleep 0.1
+        app_pid=$!
+
+        # Poll for the window, but never forever: a crashed app can leave
+        # this loop loopin for hours (and made the journal look empty).
+        while [ $((SECONDS - started)) -lt "$STARTUP_APP_TIMEOUT" ]; do
+            win_id=$(niri msg --json windows 2>/dev/null | jq -r --arg k "$key" --arg v "$val" '
+              .[] | select(.[$k] != null and (.[$k] | ascii_downcase | contains($v | ascii_downcase))) | .id
+            ' 2>/dev/null | head -n 1)
+
+            [ -n "$win_id" ] && break
+
+            # Give wrappers a few seconds to exec/fork before treating an exit
+            # as a failure, then bail out early instead of polling for a minute.
+            if [ $((SECONDS - started)) -ge 5 ] && ! kill -0 "$app_pid" 2>/dev/null; then
+                log "WARNING: ${cmd} exited before opening a matching window"
+                return 0
+            fi
+
+            sleep "$STARTUP_POLL_INTERVAL"
         done
 
-        WIN_ID=$(niri msg --json windows 2>/dev/null | jq -r --arg k "$key" --arg v "$val" '
-          .[] | select(.[$k] != null and (.[$k] | ascii_downcase | contains($v | ascii_downcase))) | .id
-        ' 2>/dev/null | head -n 1)
-
-        if [ -n "$WIN_ID" ]; then
-            if [ -n "$target_mon" ]; then
-                niri msg action move-window-to-monitor --id "$WIN_ID" "${target_mon}"
+        if [ -z "$win_id" ]; then
+            if kill -0 "$app_pid" 2>/dev/null; then
+                log "WARNING: ${cmd} produced no matching window within ${STARTUP_APP_TIMEOUT}s (still running)"
+            else
+                log "WARNING: ${cmd} produced no matching window within ${STARTUP_APP_TIMEOUT}s (already exited)"
             fi
-            niri msg action move-window-to-workspace "${target_ws}" --window-id "$WIN_ID"
+            return 0
         fi
+
+        log "found window ${win_id} for ${cmd}"
+
+        if [ -n "$target_mon" ]; then
+            niri msg action move-window-to-monitor --id "$win_id" "${target_mon}" \
+                || log "WARNING: could not move ${cmd} to monitor ${target_mon}"
+        fi
+        niri msg action move-window-to-workspace "${target_ws}" --window-id "$win_id" \
+            || log "WARNING: could not move ${cmd} to workspace ${target_ws}"
     ) &
 }
 
@@ -53,7 +90,9 @@ spawn_keyring_poll() {
                 break
             fi
 
-            secret-tool search --all --unlock xdg:schema org.freedesktop.Secret.Generic </dev/null >/tmp/secret-tool.log 2>&1 & # Redirects stdout to a log file not dev/null, but stdin is dev/null
+            secret_log="${XDG_STATE_HOME:-$HOME/.local/state}/startup/secret-tool.log"
+            mkdir -p "$(dirname "$secret_log")"
+            secret-tool search --all --unlock xdg:schema org.freedesktop.Secret.Generic </dev/null >"$secret_log" 2>&1 & # Log instead of /dev/null so unlock failures are diagnosable; stdin is /dev/null
             SECRET_PID=$!
 
             # Polls lock status every second for up to 25 seconds
@@ -86,11 +125,18 @@ spawn_keyring_poll() {
 wait_for_keyring_then() {
     (
         notify-send -e -a "gcr-prompter" -i "$HOME/.local/share/misc/Seahorse_icon_hicolor.svg" -u low -t 2500 "Keyring Locked" "Waiting for keyring to be unlocked..."
+        log "waiting for keyring to unlock (timeout ${STARTUP_KEYRING_TIMEOUT}s)"
 
+        local deadline=$((SECONDS + STARTUP_KEYRING_TIMEOUT))
         while is_any_keyring_locked; do
+            if [ "$SECONDS" -ge "$deadline" ]; then
+                log "WARNING: keyring still locked after ${STARTUP_KEYRING_TIMEOUT}s; skipping: $*"
+                return 0
+            fi
             sleep 0.5
         done
 
+        log "keyring unlocked"
         notify-send -e -a "gcr-prompter" -i "$HOME/.local/share/misc/Seahorse_icon_hicolor.svg" -u low -t 2500 "Keyring Unlocked" "Launching keyring-dependent apps..."
 
         sleep 1 # Just a tad of a delay to ensure the keyring is fully ready for use
@@ -119,5 +165,43 @@ wait_for_network() {
         sleep 1
     done
 
+    log "WARNING: network not connected after ${timeout}s"
+    return 1
+}
+
+# niri starts xwayland-satellite lazily when the first X11 client connects.
+wait_for_xwayland() {
+    local timeout="${1:-20}"
+    local display="${DISPLAY:-:0}"
+    local num="${display#*:}"
+
+    num="${num%%.*}"
+
+    if ! command -v python3 >/dev/null 2>&1; then
+        log "WARNING: python3 not found; cannot probe Xwayland"
+        return 1
+    fi
+
+    local started=$SECONDS
+    while [ $((SECONDS - started)) -lt "$timeout" ]; do
+        if python3 - "$num" >/dev/null 2>&1 <<'PY'
+import socket, struct, sys
+
+sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+sock.settimeout(2)
+sock.connect("\0/tmp/.X11-unix/X" + sys.argv[1])
+# Little-endian X11 connection setup: protocol 11.0, no auth data.
+sock.sendall(struct.pack("<BxHHHH2x", 0x6C, 11, 0, 0, 0))
+raise SystemExit(0 if sock.recv(8)[:1] == b"\x01" else 1)
+PY
+        then
+            log "Xwayland ready on ${display}"
+            return 0
+        fi
+
+        sleep 0.25
+    done
+
+    log "WARNING: Xwayland not ready after ${timeout}s"
     return 1
 }
