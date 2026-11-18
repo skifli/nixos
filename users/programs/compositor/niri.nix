@@ -12,7 +12,7 @@ let
     appId = "";
     breakWindowTitlePrefix = "";
   } (userVars.protectedCloseApps or [ ]);
-  nirius = pkgsUnstable.nirius;
+  inherit (pkgsUnstable) nirius;
   safeeyesFocusGuard = pkgs.writeShellScript "safeeyes-focus-guard" ''
     exec ${pkgs.python3}/bin/python3 ${./niri/safeeyes-focus-guard.py} \
       ${lib.escapeShellArg safeeyesApp.appId} \
