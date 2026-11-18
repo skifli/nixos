@@ -193,6 +193,9 @@ in
             layout = "one_beside";
             calendar_width = "full";
             calendar_colours = "ready:magenta";
+            # Busier days darker in both themes. The add-on default is "lighter",
+            # which inverts on dark pages (busier = brighter).
+            calendar_busier = "darker";
             calendar_tiles = "contours";
             calendar = "streak";
             environment = "misty_valley";
