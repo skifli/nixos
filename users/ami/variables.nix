@@ -33,8 +33,9 @@ let
       ;
   };
 
-  # Generate break-window placement from the shared app metadata so its
-  # app ID/title are defined in one place alongside its notification icon.
+  # Place each break on its own output. The event-driven focus guard moves it
+  # to that output's active workspace and refocuses it if another window gets
+  # focus, including another window on the same workspace.
   protectedBreakRules = lib.concatMap (
     app:
     lib.imap0 (idx: outputName: {

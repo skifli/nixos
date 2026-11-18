@@ -53,27 +53,22 @@ case "$ACTION" in
         rm -f "$STATE_DIR"/cache_*.json "$REPO_CACHE_FILE"
         ;;
     open)
-        # Open repo with most recent failed/running workflow
+        # Open most recent failed/running workflow run directly
         REPOS_JSON=$(get_user_repos)
-        TARGET_REPO=$(echo "$REPOS_JSON" | jq -r '.[]' | while IFS= read -r REPO; do
+        TARGET_URL=$(echo "$REPOS_JSON" | jq -r '.[]' | while IFS= read -r REPO; do
             [[ -z "$REPO" ]] && continue
             CACHE_FILE="$STATE_DIR/cache_${REPO//\//_}.json"
             if [[ -f "$CACHE_FILE" ]]; then
                 RUNS_JSON=$(cat "$CACHE_FILE")
-                # Check for failed or running
-                HAS_RELEVANT=$(echo "$RUNS_JSON" | jq '[.[] | select(.conclusion == "failure" or .conclusion == "timed_out" or .conclusion == "cancelled" or .conclusion == "" or .conclusion == null)] | length')
-                if [[ $HAS_RELEVANT -gt 0 ]]; then
-                    # Get most recent relevant run timestamp
-                    LATEST=$(echo "$RUNS_JSON" | jq -r '.[] | select(.conclusion == "failure" or .conclusion == "timed_out" or .conclusion == "cancelled" or .conclusion == "" or .conclusion == null) | .createdAt' | sort -r | head -1)
-                    echo "$LATEST	$REPO"
-                fi
+                # Get most recent failed or running run
+                echo "$RUNS_JSON" | jq -r '.[] | select(.conclusion == "failure" or .conclusion == "timed_out" or .conclusion == "cancelled" or .conclusion == "" or .conclusion == null) | "\(.createdAt)	\(.url)"'
             fi
         done | sort -r | head -1 | cut -f2)
         
-        if [[ -n "$TARGET_REPO" ]]; then
-            xdg-open "https://github.com/$TARGET_REPO/actions" 2>/dev/null || true
+        if [[ -n "$TARGET_URL" ]]; then
+            xdg-open "$TARGET_URL" 2>/dev/null || true
         else
-            # Fallback to first repo
+            # Fallback to first repo's actions page
             FIRST_REPO=$(jq -r '.[0].full_name' "$REPO_CACHE_FILE" 2>/dev/null || echo "skifli/nixos")
             xdg-open "https://github.com/$FIRST_REPO/actions" 2>/dev/null || true
         fi
@@ -83,6 +78,10 @@ case "$ACTION" in
         # Style matching other fuzzel menus in the config
         FONT="${FONT_MONOSPACE:-JetBrainsMono Nerd Font}"
         FONT_SIZE="${FONT_SIZE_APPLICATIONS:-11}"
+        
+        # GitHub icon for notifications
+        GITHUB_ICON="$HOME/.local/share/misc/github-icon.svg"
+        [[ -f "$GITHUB_ICON" ]] || curl -sL "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" -o "$GITHUB_ICON" 2>/dev/null || GITHUB_ICON=""
         
         REPOS_JSON=$(get_user_repos)
         
@@ -96,7 +95,7 @@ case "$ACTION" in
         done)
         
         if [[ -z "$MENU_ITEMS" ]]; then
-            notify-send -e -a "ci-status" -u low "No failed runs"
+            notify-send -e -a "ci-status" -i "$GITHUB_ICON" -u low "No failed runs"
             exit 0
         fi
         
@@ -104,10 +103,10 @@ case "$ACTION" in
         NUM_LINES=$(echo "$MENU_ITEMS" | wc -l)
         [ "$NUM_LINES" -gt 15 ] && NUM_LINES=15
         
-        # Use fuzzel with consistent styling
+        # Use fuzzel with consistent styling - bind Ctrl+A for ack
         SELECTED=$(echo "$MENU_ITEMS" | fuzzel --dmenu \
             --font="$FONT:size=$FONT_SIZE" \
-            --prompt="Failed runs (Enter=open, Ctrl+A=ack): " \
+            --prompt="Failed runs (Enter=open): " \
             --background-color=1e1e2eff \
             --text-color=cdd6f4ff \
             --input-color=cdd6f4ff \
@@ -117,8 +116,12 @@ case "$ACTION" in
             --lines="$NUM_LINES" \
             --horizontal-pad=12 \
             --border-radius=10 \
+            --keybinding="ctrl+a:acknowledge" \
             2>/dev/null)
         
+        # Check if Ctrl+A was pressed (fuzzel returns the item with index for custom actions)
+        # Since fuzzel doesn't support custom keybindings easily, we'll use a different approach
+        # Check if the selection is empty (Esc) or if we got a result
         if [[ -z "$SELECTED" ]]; then
             exit 0
         fi
@@ -135,8 +138,7 @@ case "$ACTION" in
             fi
         done | head -1)
         
-        # Check if Shift was held (fuzzel sets FUZZEL_SELECTION_INDEX for custom actions?)
-        # Since fuzzel doesn't easily support modifiers, use a second menu for action
+        # Use a second menu for action
         ACTION=$(printf "Open in browser\nAcknowledge (hide)\nCancel" | fuzzel --dmenu \
             --font="$FONT:size=$FONT_SIZE" \
             --prompt="Action for run $RUN_ID: " \
@@ -157,7 +159,7 @@ case "$ACTION" in
                 ;;
             "Acknowledge (hide)")
                 jq --arg id "$RUN_ID" '. + [$id] | unique' "$ACK_FILE" > "$ACK_FILE.tmp" && mv "$ACK_FILE.tmp" "$ACK_FILE"
-                notify-send -e -a "ci-status" -u low "Acknowledged run $RUN_ID"
+                notify-send -e -a "ci-status" -i "$GITHUB_ICON" -u low "Acknowledged run $RUN_ID"
                 ;;
             *)
                 ;;

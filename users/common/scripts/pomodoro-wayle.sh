@@ -12,6 +12,13 @@ mkdir -p "$STATE_DIR"
 # Read current state
 if [[ -f "$STATE_FILE" ]]; then
     source "$STATE_FILE"
+    # Sanitize state: idle must have zero durations
+    if [[ "$PHASE" == "idle" ]]; then
+        REMAINING=0
+        TOTAL_DURATION=0
+        START_TIME=0
+        PAUSED=0
+    fi
 else
     PHASE="idle"      # idle, focus, break
     REMAINING=0

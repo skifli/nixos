@@ -61,7 +61,7 @@ let
 
   protectedCloseGuard = lib.concatMapStringsSep "\n" (app: ''
     if [ "$app_id" = ${lib.escapeShellArg app.appId} ]; then
-      ${pkgs.libnotify}/bin/notify-send -a ${lib.escapeShellArg app.name} -i "$HOME/.local/share/misc/${app.icon}" -u low ${lib.escapeShellArg "${app.name} is still active"} ${lib.escapeShellArg app.message}
+      ${pkgs.libnotify}/bin/notify-send -e -t 5000 -a ${lib.escapeShellArg app.name} -i "$HOME/.local/share/misc/${app.icon}" -u low ${lib.escapeShellArg "${app.name} is still active"} ${lib.escapeShellArg app.message}
       exit 0
     fi
   '') protectedCloseApps;
