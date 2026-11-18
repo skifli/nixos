@@ -43,7 +43,9 @@ in
           style = "auto";
           inline_height = 15; # How many lines the history popup occupies
           show_preview = true; # Shows command details in a side preview pane
-          store_failed = false; # Whether or not to store commands that failed
+          store = {
+            failed = false; # Whether or not to store commands that failed
+          };
 
           ## Note that these regular expressions are unanchored, i.e. if they don't start
           ## with ^ or end with $, they'll match anywhere in the command.
