@@ -40,7 +40,7 @@ let
     lib.imap0 (idx: outputName: {
       match._props = {
         app-id._raw = ''r#"(?i)${lib.replaceStrings [ "." ] [ "\\." ] app.appId}"#'';
-        title._raw = ''r#"(?i)${lib.escapeRegex ("${app.breakWindowTitlePrefix}${toString idx}")}"#'';
+        title._raw = ''r#"(?i)${lib.escapeRegex "${app.breakWindowTitlePrefix}${toString idx}"}"#'';
       };
       open-on-output = outputName;
       open-focused = true;
