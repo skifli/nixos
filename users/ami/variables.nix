@@ -54,7 +54,7 @@ common
     "input" # Needed for Activity Watch / ActivityWatch / AW / aw (just so if I ever search it comes up in any form lol)
   ];
 
-  niri = {
+  niri = common.niri // {
     spawn-sh-at-startup = "$HOME/.local/bin/startup.sh \"${builtins.elemAt hostVars.orderedOutputs 0}\" \"${builtins.elemAt hostVars.orderedOutputs 1}\"";
 
     binds = {

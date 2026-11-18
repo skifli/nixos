@@ -10,7 +10,7 @@ let
     if (userVars.protectedCloseApps or [ ]) == [ ] then
       { close-window = [ ]; }
     else
-      { spawn = [ "/home/${userVars.username}/.local/bin/close-window-safely" ]; };
+      { spawn = [ "close-window-safely" ]; };  # Uses PATH from shellScripts (writeShellScriptBin)
 in
 {
   "Mod+Escape" = {

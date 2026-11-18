@@ -23,7 +23,7 @@ common
     "input"
   ];
 
-  niri = {
+  niri = common.niri // {
     # Startup apps are launched by the `apps-startup` systemd user service
     # (see user-packages.nix) instead of niri's spawn-sh-at-startup. The niri
     # config read races a slow first-login home-manager activation, so niri
