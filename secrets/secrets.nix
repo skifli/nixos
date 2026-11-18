@@ -54,7 +54,8 @@ let
   ];
   /*
     HOW TO USE:
-    1. Run `export RULES="$PWD/secrets/secrets.nix"` in the ROOT of this repository (`nixos`)
+    1. Run commands from the ROOT of this repository (`nixos`); agenix discovers
+       `agenix-rules.nix` there, which imports this file.
     2. Add secret entries to `secrets/secrets.nix` FIRST (ahoy).
     3. Register secrets in `modules/core/agenix.nix` SECOND.
     4. THEN create and edit the encrypted files - e.g., `agenix -e secrets/ami/vnc-pis.age`
@@ -75,7 +76,6 @@ in
   "secrets/ami/anki-keyFile.age".publicKeys = amiOnLyra;
   "secrets/ami/anki-usernameFile.age".publicKeys = amiOnLyra;
   "secrets/ami/cachix.dhall.age".publicKeys = amiOnLyra;
-  "secrets/ami/vnc-oracle.age".publicKeys = amiOnLyra;
   "secrets/ami/oracle-vnc-key.age".publicKeys = amiOnLyra;
   "secrets/ami/vnc-pis.age".publicKeys = amiOnLyra;
   "secrets/ami/ntfy-personal-token.age".publicKeys = amiOnLyra;
@@ -89,7 +89,6 @@ in
   "secrets/fynix/anki-usernameFile.age".publicKeys = fynixOnFydetabduo;
   "secrets/fynix/cachix.dhall.age".publicKeys = fynixOnFydetabduo;
   "secrets/fynix/ntfy-personal-token.age".publicKeys = fynixOnFydetabduo;
-  "secrets/fynix/vnc-oracle.age".publicKeys = fynixOnFydetabduo;
   "secrets/fynix/oracle-vnc-key.age".publicKeys = fynixOnFydetabduo;
   "secrets/fynix/vnc-pis.age".publicKeys = fynixOnFydetabduo;
   "secrets/fynix/wakatime.cfg.age".publicKeys = fynixOnFydetabduo;
@@ -97,7 +96,8 @@ in
   # Misc secrets
   "secrets/rescue/hashedPasswordFile.age".publicKeys = rescueRecipients;
 
-  # Read-only credentials for the private Sernix and Oracle Xilo caches.
+  # Read-only credentials for the Sernix and Oracle.
   # Both desktop hosts use the same encrypted netrc for Nix daemon downloads.
-  "secrets/xilo-cache-netrc.age".publicKeys = amiOnLyra ++ fynixOnFydetabduo;
+  "secrets/common/xilo-cache-netrc.age".publicKeys = amiOnLyra ++ fynixOnFydetabduo;
+  "secrets/common/vnc-oracle.age".publicKeys = amiOnLyra ++ fynixOnFydetabduo;
 }

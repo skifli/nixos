@@ -1,247 +1,323 @@
 #!/usr/bin/env bash
-# Wayle CI status module - auto-discovers repos with GitHub Actions
-# Requires: gh CLI authenticated (gh auth login)
-# Auto-detects repos from your account that have workflow runs
+# Wayle GitHub Actions status, notifications, and run menu.
+# Requires: gh authenticated with access to the user's repositories.
 
 set -euo pipefail
 
 STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/ci-status"
 REPO_CACHE_FILE="$STATE_DIR/repos.json"
 ACK_FILE="$STATE_DIR/acknowledged.json"
+WATCH_FILE="$STATE_DIR/watched-runs.json"
+OUTPUT_FILE="$STATE_DIR/last-output.txt"
+LOCK_FILE="$STATE_DIR/refresh.lock"
+GITHUB_ICON="$HOME/.local/share/misc/github-icon.svg"
 mkdir -p "$STATE_DIR"
 
-# Config (can override via env)
-MAX_RUNS_PER_REPO="${CI_STATUS_MAX_RUNS:-5}"
-MAX_AGE_DAYS="${CI_STATUS_MAX_AGE_DAYS:-14}"  # Ignore runs older than this
-REPO_CACHE_TTL="${CI_STATUS_REPO_CACHE_TTL:-3600}"  # 1 hour
-RUN_CACHE_TTL="${CI_STATUS_RUN_CACHE_TTL:-60}"      # 60 seconds
+MAX_RUNS_PER_REPO="${CI_STATUS_MAX_RUNS:-20}"
+MAX_AGE_DAYS="${CI_STATUS_MAX_AGE_DAYS:-14}"
+REPO_CACHE_TTL="${CI_STATUS_REPO_CACHE_TTL:-3600}"
+RUN_CACHE_TTL="${CI_STATUS_RUN_CACHE_TTL:-60}"
+ACTION="${1:-status}"
+FORCE_REFRESH=0
 
-# Ensure ack file exists
-[[ -f "$ACK_FILE" ]] || echo '[]' > "$ACK_FILE"
+# Serialise polling, refreshes, menus, and acknowledgements. If a periodic poll
+# is already fetching data, the bar keeps its last complete snapshot instead of
+# briefly displaying an empty result. Click actions wait for that fetch to end.
+exec 9>"$LOCK_FILE"
+if [[ "$ACTION" == "status" || "$ACTION" == "status-menu" || "$ACTION" == "ack-menu" ]]; then
+    if ! flock -n 9; then
+        if [[ "$ACTION" == "status" && -f "$OUTPUT_FILE" ]]; then
+            cat "$OUTPUT_FILE"
+        fi
+        exit 0
+    fi
+else
+    flock -x 9
+fi
 
-# Get list of user's repos (cached for 1 hour)
-get_user_repos() {
-    if [[ -f "$REPO_CACHE_FILE" ]] && [[ $(($(date +%s) - $(stat -c %Y "$REPO_CACHE_FILE" 2>/dev/null || echo 0))) -lt $REPO_CACHE_TTL ]]; then
-        cat "$REPO_CACHE_FILE"
-    else
-        # Fetch all repos for authenticated user (public + private)
-        gh repo list --limit 100 --json nameWithOwner,isPrivate --jq '[.[] | .nameWithOwner]' > "$REPO_CACHE_FILE" 2>/dev/null || echo '[]' > "$REPO_CACHE_FILE"
-        cat "$REPO_CACHE_FILE"
+atomic_write() {
+    local destination="$1" temporary
+    temporary=$(mktemp "$STATE_DIR/.ci-status.XXXXXX")
+    cat > "$temporary"
+    chmod 600 "$temporary"
+    mv -f -- "$temporary" "$destination"
+}
+
+ensure_json_file() {
+    local path="$1" default="$2" expected_type="$3"
+    if [[ ! -f "$path" ]] || ! jq -e --arg expected "$expected_type" 'type == $expected' "$path" >/dev/null 2>&1; then
+        printf '%s\n' "$default" | atomic_write "$path"
     fi
 }
 
-# Acknowledge all currently failed runs (across all repos)
-ack_all_failed() {
-    REPOS_JSON=$(get_user_repos)
-    echo "$REPOS_JSON" | jq -r '.[]' | while IFS= read -r REPO; do
-        [[ -z "$REPO" ]] && continue
-        CACHE_FILE="$STATE_DIR/cache_${REPO//\//_}.json"
-        if [[ -f "$CACHE_FILE" ]]; then
-            RUNS_JSON=$(cat "$CACHE_FILE")
-            echo "$RUNS_JSON" | jq -r '.[] | select(.conclusion == "failure" or .conclusion == "timed_out" or .conclusion == "cancelled") | "\(.databaseId) \(.workflowName)"' | while read -r id name; do
-                jq --arg id "$id" '. + [$id] | unique' "$ACK_FILE" > "$ACK_FILE.tmp" && mv "$ACK_FILE.tmp" "$ACK_FILE"
-                echo "Acknowledged: $name ($id)"
-            done
-        fi
-    done
+cache_is_fresh() {
+    local path="$1" ttl="$2" age
+    [[ -f "$path" ]] || return 1
+    age=$(( $(date +%s) - $(stat -c %Y "$path" 2>/dev/null || echo 0) ))
+    (( age < ttl ))
 }
 
-# Handle actions
-ACTION="${1:-}"
+ensure_json_file "$ACK_FILE" '[]' array
+ensure_json_file "$WATCH_FILE" '{}' object
+
+get_user_repos() {
+    local fetched
+    if (( ! FORCE_REFRESH )) && cache_is_fresh "$REPO_CACHE_FILE" "$REPO_CACHE_TTL" \
+        && jq -e 'type == "array"' "$REPO_CACHE_FILE" >/dev/null 2>&1; then
+        cat "$REPO_CACHE_FILE"
+        return
+    fi
+
+    if fetched=$(gh repo list --limit 100 --json nameWithOwner,isPrivate --jq '[.[] | .nameWithOwner]' 2>/dev/null) \
+        && jq -e 'type == "array"' <<<"$fetched" >/dev/null 2>&1; then
+        printf '%s\n' "$fetched" | atomic_write "$REPO_CACHE_FILE"
+        printf '%s\n' "$fetched"
+    elif [[ -f "$REPO_CACHE_FILE" ]] && jq -e 'type == "array"' "$REPO_CACHE_FILE" >/dev/null 2>&1; then
+        cat "$REPO_CACHE_FILE"
+    else
+        printf '[]\n'
+    fi
+}
+
+get_repo_runs() {
+    local repo="$1" cache_file="$STATE_DIR/cache_${1//\//_}.json" fetched
+    if (( ! FORCE_REFRESH )) && cache_is_fresh "$cache_file" "$RUN_CACHE_TTL" \
+        && jq -e 'type == "array"' "$cache_file" >/dev/null 2>&1; then
+        cat "$cache_file"
+        return
+    fi
+
+    if fetched=$(gh run list --repo "$repo" --limit "$MAX_RUNS_PER_REPO" \
+        --json databaseId,conclusion,status,headBranch,createdAt,url,displayTitle,workflowName 2>/dev/null) \
+        && jq -e 'type == "array"' <<<"$fetched" >/dev/null 2>&1; then
+        printf '%s\n' "$fetched" | atomic_write "$cache_file"
+        printf '%s\n' "$fetched"
+    elif [[ -f "$cache_file" ]] && jq -e 'type == "array"' "$cache_file" >/dev/null 2>&1; then
+        # Keep the last good data if GitHub is temporarily unavailable.
+        cat "$cache_file"
+    else
+        printf '[]\n'
+    fi
+}
+
+load_all_runs() {
+    local repo runs tagged
+    REPOS_JSON=$(get_user_repos)
+    ALL_RUNS_JSON='[]'
+    while IFS= read -r repo; do
+        [[ -z "$repo" ]] && continue
+        runs=$(get_repo_runs "$repo")
+        tagged=$(jq --arg repo "$repo" 'map(. + {repository: $repo})' <<<"$runs")
+        ALL_RUNS_JSON=$(jq -cn --argjson left "$ALL_RUNS_JSON" --argjson right "$tagged" '$left + $right')
+    done < <(jq -r '.[]' <<<"$REPOS_JSON")
+}
+
+notify_ci() {
+    local title="$1" body="$2"
+    if [[ -r "$GITHUB_ICON" ]]; then
+        notify-send -e -a "ci-status" -i "$GITHUB_ICON" -u low -t 7000 "$title" "$body" || true
+    else
+        notify-send -e -a "ci-status" -u low -t 7000 "$title" "$body" || true
+    fi
+}
+
+ack_run() {
+    local id="$1"
+    jq --arg id "$id" '. + [$id] | unique' "$ACK_FILE" | atomic_write "$ACK_FILE"
+    jq --arg id "$id" 'del(.[$id])' "$WATCH_FILE" | atomic_write "$WATCH_FILE"
+}
+
+CUTOFF=$(( $(date +%s) - MAX_AGE_DAYS * 86400 ))
+
+notify_run_transitions() {
+    local ack_json tracked initialized run id repo workflow title conclusion status previous body state_label next_state
+    ack_json=$(cat "$ACK_FILE")
+    tracked=$(jq -c 'if type == "object" then . else {} end' "$WATCH_FILE")
+    initialized=$(jq -r '._initialized // false' <<<"$tracked")
+
+    while IFS= read -r run; do
+        id=$(jq -r '.databaseId | tostring' <<<"$run")
+        repo=$(jq -r '.repository // "unknown repository"' <<<"$run")
+        workflow=$(jq -r '.workflowName // "GitHub Actions"' <<<"$run")
+        title=$(jq -r '.displayTitle // .headBranch // "Workflow run"' <<<"$run")
+        status=$(jq -r '.status // ""' <<<"$run")
+        conclusion=$(jq -r '.conclusion // ""' <<<"$run")
+
+        if jq -e --arg id "$id" 'index($id) != null' <<<"$ack_json" >/dev/null; then
+            tracked=$(jq --arg id "$id" 'del(.[$id])' <<<"$tracked")
+            continue
+        fi
+
+        previous=$(jq -r --arg id "$id" '.[$id].state // ""' <<<"$tracked")
+        body="$repo — $workflow: $title"
+
+        if [[ -z "$previous" ]]; then
+            if [[ "$status" == "in_progress" ]]; then
+                state_label="in progress"
+                next_state="running"
+            elif [[ -n "$conclusion" ]]; then
+                state_label="$conclusion"
+                next_state="finished:$conclusion"
+            else
+                state_label="${status:-queued}"
+                next_state="${status:-queued}"
+            fi
+            if [[ "$initialized" == "true" ]]; then
+                notify_ci "New workflow run" "$body ($state_label)"
+            fi
+            tracked=$(jq --arg id "$id" --arg repo "$repo" --arg workflow "$workflow" \
+                --arg title "$title" --arg state "$next_state" --arg seen_at "$(date -Is)" \
+                '.[$id] = {state: $state, repo: $repo, workflow: $workflow, title: $title, seenAt: $seen_at}' \
+                <<<"$tracked")
+            continue
+        fi
+
+        if [[ "$status" == "in_progress" ]]; then
+            if [[ "$previous" != "running" ]]; then
+                notify_ci "Workflow in progress" "$body"
+                tracked=$(jq --arg id "$id" --arg repo "$repo" --arg workflow "$workflow" \
+                    --arg title "$title" --arg seen_at "$(date -Is)" \
+                    '.[$id] = {state: "running", repo: $repo, workflow: $workflow, title: $title, seenAt: $seen_at}' \
+                    <<<"$tracked")
+            fi
+        elif [[ "$previous" != finished:* && -n "$conclusion" ]]; then
+            if [[ "$conclusion" == "success" ]]; then
+                notify_ci "Workflow succeeded" "$body"
+            fi
+            # A newly discovered failure gets the discovery notice; later
+            # failures stay quiet because GitHub already sends an email.
+            tracked=$(jq --arg id "$id" --arg conclusion "$conclusion" \
+                '.[$id].state = ("finished:" + $conclusion)' <<<"$tracked")
+        fi
+    done < <(jq -c --argjson cutoff "$CUTOFF" 'map(select((.createdAt | fromdateiso8601) >= $cutoff))[]' <<<"$ALL_RUNS_JSON")
+
+    printf '%s\n' "$(jq '._initialized = true' <<<"$tracked")" | atomic_write "$WATCH_FILE"
+}
+
+summarize_status() {
+    local ack_json filtered running failed success pending output
+    ack_json=$(cat "$ACK_FILE")
+    filtered=$(jq --argjson cutoff "$CUTOFF" --argjson ack "$ack_json" '
+        map(select((.createdAt | fromdateiso8601) >= $cutoff))
+        | group_by([.repository, (.workflowName // "GitHub Actions")])
+        | map(max_by(.createdAt))
+        | map(.databaseId as $id | select(($ack | index($id | tostring)) == null))
+    ' <<<"$ALL_RUNS_JSON")
+
+    running=$(jq '[.[] | select(.status == "in_progress")] | length' <<<"$filtered")
+    failed=$(jq '[.[] | select(.conclusion == "failure" or .conclusion == "timed_out" or .conclusion == "cancelled")] | length' <<<"$filtered")
+    success=$(jq '[.[] | select(.conclusion == "success")] | length' <<<"$filtered")
+    pending=$(jq '[.[] | select(.status == "queued" or .status == "requested" or .status == "waiting" or .status == "pending")] | length' <<<"$filtered")
+
+    output=""
+    (( running > 0 )) && output+="🟡 $running "
+    (( failed > 0 )) && output+="🔴 $failed "
+    if (( success > 0 && running == 0 && failed == 0 )); then output+="🟢 $success "; fi
+    (( pending > 0 )) && output+="⏳ $pending "
+    printf '%s' "${output% }"
+}
+
+show_status_menu() {
+    local ack_json menu_items selected run_id run_url menu_action lines
+    ack_json=$(cat "$ACK_FILE")
+    menu_items=$(jq -r --argjson cutoff "$CUTOFF" --argjson ack "$ack_json" '
+        map(select((.createdAt | fromdateiso8601) >= $cutoff))
+        | group_by([.repository, (.workflowName // "GitHub Actions")])
+        | map(max_by(.createdAt))
+        | map(.databaseId as $id | select(($ack | index($id | tostring)) == null))
+        | sort_by([(.status == "in_progress"), .createdAt]) | reverse
+        | .[]
+        | . as $run
+        | (if .conclusion == "success" then "SUCCESS"
+           elif .conclusion == "failure" then "FAILURE"
+           elif .conclusion == "timed_out" then "TIMED OUT"
+           elif .conclusion == "cancelled" then "CANCELLED"
+           elif .status == "in_progress" then "IN PROGRESS"
+           elif .status == "queued" or .status == "requested" or .status == "waiting" then "QUEUED"
+           else (.status // "UNKNOWN" | ascii_upcase) end) as $state
+        | "\($state) | \(.repository) | \(.workflowName // "GitHub Actions") | \(.displayTitle // .headBranch // "Workflow run") | \(.createdAt) | \(.databaseId)"
+    ' <<<"$ALL_RUNS_JSON")
+
+    if [[ -z "$menu_items" ]]; then
+        notify_ci "No recent workflows" "No workflow runs were found in the last $MAX_AGE_DAYS days."
+        return
+    fi
+
+    lines=$(wc -l <<<"$menu_items")
+    (( lines > 20 )) && lines=20
+    selected=$(printf '%s\n' "$menu_items" | fuzzel --dmenu \
+        --font="${FONT_MONOSPACE:-JetBrainsMono Nerd Font}:size=${FONT_SIZE_APPLICATIONS:-11}" \
+        --prompt="GitHub Actions: " \
+        --background-color=1e1e2eff --text-color=cdd6f4ff --input-color=cdd6f4ff \
+        --selection-color=585b70ff --selection-text-color=cdd6f4ff \
+        --width=130 --lines="$lines" --horizontal-pad=12 --border-radius=10 2>/dev/null) || true
+    [[ -z "$selected" ]] && return
+
+    run_id="${selected##* | }"
+    run_url=$(jq -r --arg id "$run_id" '.[] | select((.databaseId | tostring) == $id) | .url' <<<"$ALL_RUNS_JSON" | head -n 1)
+    menu_action=$(printf 'Open in browser\nAcknowledge (hide)\nCancel' | fuzzel --dmenu \
+        --font="${FONT_MONOSPACE:-JetBrainsMono Nerd Font}:size=${FONT_SIZE_APPLICATIONS:-11}" \
+        --prompt="Workflow $run_id: " \
+        --background-color=1e1e1eff --text-color=cdd6f4ff --input-color=cdd6f4ff \
+        --selection-color=585b70ff --selection-text-color=cdd6f4ff \
+        --width=35 --lines=3 --horizontal-pad=12 --border-radius=10 2>/dev/null) || true
+
+    case "$menu_action" in
+        "Open in browser") [[ -n "$run_url" ]] && xdg-open "$run_url" 2>/dev/null || true ;;
+        "Acknowledge (hide)")
+            ack_run "$run_id"
+            notify_ci "Workflow hidden" "Acknowledged workflow run $run_id."
+            ;;
+    esac
+}
+
 case "$ACTION" in
     refresh)
-        rm -f "$STATE_DIR"/cache_*.json "$REPO_CACHE_FILE"
+        # Keep the displayed snapshot while replacing caches under the lock.
+        FORCE_REFRESH=1
+        ;;
+    status-menu|ack-menu)
+        load_all_runs
+        notify_run_transitions
+        show_status_menu
+        exit 0
         ;;
     open)
-        # Open most recent failed/running workflow run directly
-        REPOS_JSON=$(get_user_repos)
-        TARGET_URL=$(echo "$REPOS_JSON" | jq -r '.[]' | while IFS= read -r REPO; do
-            [[ -z "$REPO" ]] && continue
-            CACHE_FILE="$STATE_DIR/cache_${REPO//\//_}.json"
-            if [[ -f "$CACHE_FILE" ]]; then
-                RUNS_JSON=$(cat "$CACHE_FILE")
-                # Get most recent failed or running run
-                echo "$RUNS_JSON" | jq -r '.[] | select(.conclusion == "failure" or .conclusion == "timed_out" or .conclusion == "cancelled" or .conclusion == "" or .conclusion == null) | "\(.createdAt)	\(.url)"'
-            fi
-        done | sort -r | head -1 | cut -f2)
-        
+        load_all_runs
+        TARGET_URL=$(jq -r '
+            group_by([.repository, (.workflowName // "GitHub Actions")])
+            | map(max_by(.createdAt))
+            | map(select(.conclusion == "failure" or .conclusion == "timed_out" or .conclusion == "cancelled" or .status != "completed"))
+            | sort_by(.createdAt) | last | .url // empty
+        ' <<<"$ALL_RUNS_JSON")
         if [[ -n "$TARGET_URL" ]]; then
             xdg-open "$TARGET_URL" 2>/dev/null || true
         else
-            # Fallback to first repo's actions page
-            FIRST_REPO=$(jq -r '.[0].full_name' "$REPO_CACHE_FILE" 2>/dev/null || echo "skifli/nixos")
+            FIRST_REPO=$(jq -r '.[0] // "skifli/nixos"' <<<"$REPOS_JSON")
             xdg-open "https://github.com/$FIRST_REPO/actions" 2>/dev/null || true
         fi
-        ;;
-    ack-menu)
-        # Show fuzzel menu to pick action for failed runs
-        # Style matching other fuzzel menus in the config
-        FONT="${FONT_MONOSPACE:-JetBrainsMono Nerd Font}"
-        FONT_SIZE="${FONT_SIZE_APPLICATIONS:-11}"
-        
-        # GitHub icon for notifications
-        GITHUB_ICON="$HOME/.local/share/misc/github-icon.svg"
-        [[ -f "$GITHUB_ICON" ]] || curl -sL "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" -o "$GITHUB_ICON" 2>/dev/null || GITHUB_ICON=""
-        
-        REPOS_JSON=$(get_user_repos)
-        
-        # Build menu items: "repo | workflow | conclusion | date | run_id" (no URL in display)
-        MENU_ITEMS=$(echo "$REPOS_JSON" | jq -r '.[]' | while IFS= read -r REPO; do
-            [[ -z "$REPO" ]] && continue
-            CACHE_FILE="$STATE_DIR/cache_${REPO//\//_}.json"
-            if [[ -f "$CACHE_FILE" ]]; then
-                cat "$CACHE_FILE" | jq -r --arg repo "$REPO" '.[] | select(.conclusion == "failure" or .conclusion == "timed_out" or .conclusion == "cancelled") | "\($repo) | \(.workflowName) | \(.conclusion) | \(.createdAt) | \(.databaseId)"'
-            fi
-        done)
-        
-        if [[ -z "$MENU_ITEMS" ]]; then
-            notify-send -e -a "ci-status" -i "$GITHUB_ICON" -u low "No failed runs"
-            exit 0
-        fi
-        
-        # Calculate lines and width for fuzzel
-        NUM_LINES=$(echo "$MENU_ITEMS" | wc -l)
-        [ "$NUM_LINES" -gt 15 ] && NUM_LINES=15
-        
-        # Use fuzzel with consistent styling - bind Ctrl+A for ack
-        SELECTED=$(echo "$MENU_ITEMS" | fuzzel --dmenu \
-            --font="$FONT:size=$FONT_SIZE" \
-            --prompt="Failed runs (Enter=open): " \
-            --background-color=1e1e2eff \
-            --text-color=cdd6f4ff \
-            --input-color=cdd6f4ff \
-            --selection-color=585b70ff \
-            --selection-text-color=cdd6f4ff \
-            --width=120 \
-            --lines="$NUM_LINES" \
-            --horizontal-pad=12 \
-            --border-radius=10 \
-            --keybinding="ctrl+a:acknowledge" \
-            2>/dev/null)
-        
-        # Check if Ctrl+A was pressed (fuzzel returns the item with index for custom actions)
-        # Since fuzzel doesn't support custom keybindings easily, we'll use a different approach
-        # Check if the selection is empty (Esc) or if we got a result
-        if [[ -z "$SELECTED" ]]; then
-            exit 0
-        fi
-        
-        # Extract run_id (last field)
-        RUN_ID=$(echo "$SELECTED" | awk -F' \\| ' '{print $NF}')
-        
-        # Look up URL from cache JSON using run_id
-        RUN_URL=$(echo "$REPOS_JSON" | jq -r '.[]' | while IFS= read -r REPO; do
-            [[ -z "$REPO" ]] && continue
-            CACHE_FILE="$STATE_DIR/cache_${REPO//\//_}.json"
-            if [[ -f "$CACHE_FILE" ]]; then
-                cat "$CACHE_FILE" | jq -r --arg id "$RUN_ID" '.[] | select(.databaseId == ($id | tonumber)) | .url' 2>/dev/null
-            fi
-        done | head -1)
-        
-        # Use a second menu for action
-        ACTION=$(printf "Open in browser\nAcknowledge (hide)\nCancel" | fuzzel --dmenu \
-            --font="$FONT:size=$FONT_SIZE" \
-            --prompt="Action for run $RUN_ID: " \
-            --background-color=1e1e2eff \
-            --text-color=cdd6f4ff \
-            --input-color=cdd6f4ff \
-            --selection-color=585b70ff \
-            --selection-text-color=cdd6f4ff \
-            --width=30 \
-            --lines=3 \
-            --horizontal-pad=12 \
-            --border-radius=10 \
-            2>/dev/null)
-        
-        case "$ACTION" in
-            "Open in browser")
-                xdg-open "$RUN_URL" 2>/dev/null || true
-                ;;
-            "Acknowledge (hide)")
-                jq --arg id "$RUN_ID" '. + [$id] | unique' "$ACK_FILE" > "$ACK_FILE.tmp" && mv "$ACK_FILE.tmp" "$ACK_FILE"
-                notify-send -e -a "ci-status" -i "$GITHUB_ICON" -u low "Acknowledged run $RUN_ID"
-                ;;
-            *)
-                ;;
-        esac
         exit 0
         ;;
     ack)
-        # Acknowledge a failed run by ID (gh run list --json databaseId,conclusion)
-        RUN_ID="${2:-}"
-        if [[ -n "$RUN_ID" ]]; then
-            jq --arg id "$RUN_ID" '. + [$id] | unique' "$ACK_FILE" > "$ACK_FILE.tmp" && mv "$ACK_FILE.tmp" "$ACK_FILE"
-            echo "Acknowledged run $RUN_ID"
-        fi
+        [[ -n "${2:-}" ]] && ack_run "$2"
         exit 0
         ;;
     ack-all)
-        # Acknowledge all currently failed runs
-        ack_all_failed
+        load_all_runs
+        FAILED_IDS=$(jq -r --argjson cutoff "$CUTOFF" '
+            .[] | select((.createdAt | fromdateiso8601) >= $cutoff)
+            | select(.conclusion == "failure" or .conclusion == "timed_out" or .conclusion == "cancelled")
+            | .databaseId | tostring
+        ' <<<"$ALL_RUNS_JSON")
+        while IFS= read -r id; do [[ -n "$id" ]] && ack_run "$id"; done <<<"$FAILED_IDS"
         exit 0
         ;;
+    status) ;;
+    *) echo "Unknown action: $ACTION" >&2; exit 2 ;;
 esac
 
-REPOS_JSON=$(get_user_repos)
-
-# Calculate cutoff timestamp (epoch seconds)
-CUTOFF=$(( $(date +%s) - MAX_AGE_DAYS * 86400 ))
-
-# Aggregate status across all repos
-echo "$REPOS_JSON" | jq -r '.[]' | while IFS= read -r REPO; do
-    [[ -z "$REPO" ]] && continue
-    
-    CACHE_FILE="$STATE_DIR/cache_${REPO//\//_}.json"
-    
-    # Read cached runs
-    if [[ -f "$CACHE_FILE" ]] && [[ $(($(date +%s) - $(stat -c %Y "$CACHE_FILE" 2>/dev/null || echo 0))) -lt $RUN_CACHE_TTL ]]; then
-        RUNS_JSON=$(cat "$CACHE_FILE")
-    else
-        # Fetch latest runs for this repo (all workflows)
-        RUNS_JSON=$(gh run list --repo "$REPO" --limit "$MAX_RUNS_PER_REPO" --json databaseId,conclusion,status,headBranch,createdAt,url,displayTitle,workflowName 2>/dev/null || echo '[]')
-        echo "$RUNS_JSON" > "$CACHE_FILE"
-    fi
-    
-    if [[ "$RUNS_JSON" == "[]" ]] || [[ -z "$RUNS_JSON" ]]; then
-        continue
-    fi
-    
-    # Filter out old runs and acknowledged runs (acknowledged = hide completely)
-    FILTERED_RUNS=$(echo "$RUNS_JSON" | jq --argjson cutoff "$CUTOFF" --argjson ack "$(cat "$ACK_FILE" | jq 'map(tonumber)')" '
-        map(.databaseId as $id | select(
-            (.createdAt | fromdateiso8601) >= $cutoff
-            and (
-                # Keep if not a failure/timed_out/cancelled
-                (.conclusion != "failure" and .conclusion != "timed_out" and .conclusion != "cancelled")
-                # AND not acknowledged (acknowledged runs are hidden completely)
-                and ($ack | map(. == $id) | any | not)
-            )
-        ))
-    ')
-    
-    if [[ "$FILTERED_RUNS" == "[]" ]]; then
-        continue
-    fi
-    
-    # Count statuses for this repo
-    RUNNING=$(echo "$FILTERED_RUNS" | jq '[.[] | select(.conclusion == "" or .conclusion == null)] | length')
-    FAILED=$(echo "$FILTERED_RUNS" | jq '[.[] | select(.conclusion == "failure" or .conclusion == "timed_out" or .conclusion == "cancelled")] | length')
-    SUCCESS=$(echo "$FILTERED_RUNS" | jq '[.[] | select(.conclusion == "success")] | length')
-    PENDING=$(echo "$FILTERED_RUNS" | jq '[.[] | select(.conclusion != "success" and .conclusion != "failure" and .conclusion != "timed_out" and .conclusion != "cancelled" and .conclusion != "" and .conclusion != null)] | length')
-    
-    # Output counts for this repo
-    echo "$REPO	$RUNNING	$FAILED	$SUCCESS	$PENDING"
-    
-done | awk -F'\t' '
-    BEGIN { running=0; failed=0; success=0; pending=0; any=0 }
-    { running+=$2; failed+=$3; success+=$4; pending+=$5; any=1 }
-    END {
-        if (any == 0) { print ""; exit }
-        output=""
-        if (running > 0) output = output "🟡 " running
-        if (failed > 0) output = output "🔴 " failed
-        if (success > 0 && running == 0 && failed == 0) output = output "🟢 " success
-        if (pending > 0) output = output "⏳ " pending
-        print output
-    }
-'
+load_all_runs
+notify_run_transitions
+STATUS_OUTPUT=$(summarize_status)
+printf '%s' "$STATUS_OUTPUT" | atomic_write "$OUTPUT_FILE"
+printf '%s' "$STATUS_OUTPUT"

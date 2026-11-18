@@ -50,9 +50,15 @@ let
       (mkHostSecret hostname "xray-proxy.env" { })
       (lib.mkIf (hostname == "lyra" || hostname == "fydetabduo") {
         xilo-cache-netrc = {
-          file = secretsDir + "/xilo-cache-netrc.age";
+          file = secretsDir + "/common/xilo-cache-netrc.age";
           owner = "root";
           group = "root";
+          mode = "0400";
+        };
+        vnc-oracle = {
+          file = secretsDir + "/common/vnc-oracle.age";
+          owner = builtins.head hostVars.enabledUsers;
+          group = "users";
           mode = "0400";
         };
       })
@@ -75,7 +81,6 @@ let
       (mkUserSecret username "anki-usernameFile" { })
 
       # --- Remote Desktop / VNC Secrets ---
-      (mkUserSecret username "vnc-oracle" { })
       (mkUserSecret username "oracle-vnc-key" { })
       (mkUserSecret username "vnc-pis" { })
 

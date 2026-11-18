@@ -31,7 +31,7 @@ common
     # nothing burger so this field stays a valid string (null breaks config stuff).
     spawn-sh-at-startup = "true";
 
-    binds = {
+    binds = common.niri.binds // {
       "Mod+1" = {
         _props = {
           hotkey-overlay-title = "Focus workspace 1";

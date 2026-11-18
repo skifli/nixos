@@ -39,13 +39,21 @@ if [ -x "$SWITCH_BIN" ]; then
     # Note: Changed from 'switch' to 'test' to not add to history to save a buncha clutter
     sudo "$SWITCH_BIN" test
 
-    # The KDE portal serves the file chooser (see niri-portals.conf) and is a
-    # long-lived Qt process. It builds its palette from kdeglobals once at
-    # startup and never re-reads it, so file dialogs keep the old light/dark
-    # colours until it restarts. Restart it after every theme change.
+    # Tell existing KDE/Qt applications that kdeglobals' palette changed.
+    # KDE apps listen for this standard session-bus notification and can
+    # refresh their palettes without being closed and relaunched.
+    if command -v dbus-send >/dev/null 2>&1; then
+        dbus-send --session --type=signal \
+            /KGlobalSettings org.kde.KGlobalSettings.notifyChange \
+            int32:0 int32:0 >/dev/null 2>&1 || true
+    fi
+
+    # The KDE portal serves file choosers (see niri-portals.conf). The palette
+    # notification above should refresh it too, but restarting it here remains
+    # a fallback for dialogs if its Qt palette does not update in place.
     # Absolute path because auto-theme-check.service's PATH has no systemctl.
-    # try-restart: if it isn't running, the next D-Bus activation starts it
-    # with the new theme anyway.
+    # try-restart leaves it stopped if it isn't running; next D-Bus activation
+    # starts it with the newly selected theme.
     /run/current-system/sw/bin/systemctl --user try-restart plasma-xdg-desktop-portal-kde.service 2>/dev/null || true
 
     # Niri workspace layout refresh transitions

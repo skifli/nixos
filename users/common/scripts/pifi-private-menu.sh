@@ -3,6 +3,7 @@ set -euo pipefail
 
 FONT="${FONT_MONOSPACE:-JetBrainsMono Nerd Font}"
 FONT_SIZE="${FONT_SIZE_APPLICATIONS:-11}"
+TERMINAL="${TERMINAL:-ghostty}"
 OPTIONS='Open private vault
 Close private vault'
 PROMPT='Pifi private vault: '
@@ -24,9 +25,9 @@ choice="$(printf '%s\n' "$OPTIONS" | fuzzel --dmenu \
 
 case "$choice" in
   'Open private vault')
-    exec floating-term.sh -w 55% -h 35% ghostty -e pifi-private-open
+    exec floating-term.sh -w 55% -h 35% "$TERMINAL" -e pifi-private-open
     ;;
   'Close private vault')
-    exec floating-term.sh -w 55% -h 35% ghostty -e pifi-private-close
+    exec floating-term.sh -w 55% -h 35% "$TERMINAL" -e pifi-private-close
     ;;
 esac

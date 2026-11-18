@@ -8,6 +8,16 @@ FONT="${FONT_MONOSPACE:-JetBrainsMono Nerd Font}"
 FONT_SIZE="${FONT_SIZE_APPLICATIONS:-11}"
 MODE="${1:-interactive}"
 
+# Mod+N is often pressed repeatedly while the shared NFS state is slow to
+# respond. Hold a local lock for the whole interactive session and discard
+# duplicate launches instead of letting them queue behind the NFS lock.
+if [ "$MODE" = "interactive" ]; then
+    RUNTIME_DIR="${XDG_RUNTIME_DIR:-$HOME/.cache}"
+    mkdir -p "$RUNTIME_DIR" 2>/dev/null || exit 0
+    exec 7>"$RUNTIME_DIR/todo-interactive-${UID:-$(id -u)}.lock" 2>/dev/null || exit 0
+    flock -n 7 || exit 0
+fi
+
 TARGET_DIR="$(dirname "$TODO_FILE")"
 TODO_NFS_HOST="${TODO_NFS_HOST:-pifi}"
 

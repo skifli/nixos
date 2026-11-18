@@ -12,7 +12,7 @@ cleanup_vnc_tunnels() {
 trap cleanup_vnc_tunnels EXIT
 
 connect_oracle_vnc() {
-    local secret_file="/run/agenix/${USER}-vnc-oracle"
+    local secret_file="/run/agenix/vnc-oracle"
     local key_file="/run/agenix/${USER}-oracle-vnc-key"
 
     if [ ! -f "$secret_file" ] || [ ! -f "$key_file" ]; then
@@ -35,6 +35,7 @@ connect_oracle_vnc() {
         -o ServerAliveInterval=15 \
         -o ServerAliveCountMax=3 \
         -o BatchMode=yes \
+        -o HostKeyAlias=oracle-nix \
         -L "127.0.0.1:$port:127.0.0.1:$port" \
         "$user@$host" &
     TUNNEL_PIDS+=("$!")
@@ -77,14 +78,16 @@ connect_wayvnc() {
     unset PIFI_VNC_HOST PIFI_VNC_USER PISTOR_VNC_HOST PISTOR_VNC_USER VNC_PORT VNC_PASS
     source "$secret_file"
 
-    local host local_port
+    local host host_alias local_port
     case "$target" in
         PIFI)
             host="${PIFI_VNC_HOST:-}"
+            host_alias="pifi"
             local_port=15900
             ;;
         PISTOR)
             host="${PISTOR_VNC_HOST:-}"
+            host_alias="pistor"
             local_port=15901
             ;;
         *)
@@ -105,6 +108,7 @@ connect_wayvnc() {
         -o ServerAliveInterval=15 \
         -o ServerAliveCountMax=3 \
         -o BatchMode=yes \
+        -o "HostKeyAlias=$host_alias" \
         -L "127.0.0.1:$local_port:127.0.0.1:5900" \
         "root@$host" &
     TUNNEL_PIDS+=("$!")
