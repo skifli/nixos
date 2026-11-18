@@ -1,5 +1,6 @@
 {
   inputs,
+  lib,
   pkgs,
   pkgsUnstable,
   userVars,
@@ -7,6 +8,64 @@
 }@attrs:
 let
   default = import ./niri/default.nix attrs;
+  safeeyesApp = lib.findFirst (app: app ? breakWindowTitlePrefix) {
+    appId = "";
+    breakWindowTitlePrefix = "";
+  } (userVars.protectedCloseApps or [ ]);
+  nirius =
+    if safeeyesApp.appId != "" then
+      pkgsUnstable.nirius.overrideAttrs (old: {
+        patches = (old.patches or [ ]) ++ [ ./niri/patches/nirius-set-follow-mode.patch ];
+      })
+    else
+      pkgsUnstable.nirius;
+  safeeyesFollowWatcher = pkgs.writeShellScript "safeeyes-follow-mode" ''
+    set -euo pipefail
+
+    declare -A followed_windows=()
+
+    follow_safeeyes_window() {
+      local id="$1"
+      [[ -n "$id" ]] || return 0
+      [[ -v "followed_windows[$id]" ]] && return 0
+
+      for attempt in {1..5}; do
+        if ${nirius}/bin/nirius set-follow-mode \
+          --id "$id" --policy if-invisible >/dev/null; then
+          followed_windows[$id]=1
+          echo "Enabled if-invisible follow mode for SafeEyes window $id"
+          return 0
+        fi
+        sleep 0.1
+      done
+      echo "Could not enable follow mode for SafeEyes window $id yet; a later window event will retry" >&2
+    }
+
+    # Catch break windows that were already open if the watcher starts late.
+    while IFS= read -r id; do
+      follow_safeeyes_window "$id"
+    done < <(
+      ${pkgs.niri}/bin/niri msg -j windows | ${pkgs.jq}/bin/jq -r \
+        --arg app ${lib.escapeShellArg safeeyesApp.appId} \
+        --arg prefix ${lib.escapeShellArg safeeyesApp.breakWindowTitlePrefix} \
+        '.[] | select(.app_id == $app and (.title | startswith($prefix))) | .id'
+    )
+
+    while IFS= read -r event; do
+      closed_id=$(${pkgs.jq}/bin/jq -r '.WindowClosed.id // empty' <<< "$event")
+      if [[ -n "$closed_id" ]]; then
+        unset "followed_windows[$closed_id]"
+      fi
+
+      id=$(${pkgs.jq}/bin/jq -r '
+        .WindowOpenedOrChanged.window as $window
+        | select($window != null and $window.app_id == $app and (($window.title // "") | startswith($prefix)))
+        | $window.id
+      ' --arg app ${lib.escapeShellArg safeeyesApp.appId} \
+        --arg prefix ${lib.escapeShellArg safeeyesApp.breakWindowTitlePrefix} <<< "$event")
+      follow_safeeyes_window "$id"
+    done < <(${pkgs.niri}/bin/niri msg -j event-stream)
+  '';
 in
 {
   imports = [
@@ -37,8 +96,26 @@ in
         };
         Service = {
           Type = "simple";
-          ExecStart = "${pkgsUnstable.nirius}/bin/niriusd";
+          ExecStart = "${nirius}/bin/niriusd";
           Restart = "on-failure";
+          RestartSec = "2s";
+        };
+        Install.WantedBy = [ "graphical-session.target" ];
+      };
+
+      systemd.user.services.safeeyes-follow-mode = lib.mkIf (safeeyesApp.appId != "") {
+        Unit = {
+          Description = "Keep SafeEyes break windows visible with Nirius follow mode";
+          PartOf = [ "graphical-session.target" ];
+          After = [
+            "graphical-session.target"
+            "niriusd.service"
+          ];
+        };
+        Service = {
+          Type = "simple";
+          ExecStart = safeeyesFollowWatcher;
+          Restart = "always";
           RestartSec = "2s";
         };
         Install.WantedBy = [ "graphical-session.target" ];
@@ -65,7 +142,7 @@ in
     pkgs.jq # Used for some scripts
     pkgs.libnotify # Used for sending notifications to the notification daemon
 
-    pkgsUnstable.nirius # niri utilities - currently on unstable 0.8.0 but normal packages only 0.7.1 as of 08/08/2026
+    nirius # Nirius, locally patched for SafeEyes only on ami@lyra
   ];
 
   programs = {

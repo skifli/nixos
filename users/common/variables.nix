@@ -1,6 +1,8 @@
 {
   commonHostVars,
+  lib,
   pkgs,
+  protectedCloseApps ? [ ],
   username,
   ...
 }:
@@ -56,9 +58,21 @@ let
       "ydotool"
     ];
   };
+
+  protectedCloseGuard = lib.concatMapStringsSep "\n" (app: ''
+    if [ "$app_id" = ${lib.escapeShellArg app.appId} ]; then
+      ${pkgs.libnotify}/bin/notify-send -a ${lib.escapeShellArg app.name} -i "$HOME/.local/share/misc/${app.icon}" -u low ${lib.escapeShellArg "${app.name} is still active"} ${lib.escapeShellArg app.message}
+      exit 0
+    fi
+  '') protectedCloseApps;
+  protectedCloseCheck = lib.optionalString (protectedCloseApps != [ ]) ''
+    app_id=$(printf '%s' "$focused" | ${pkgs.jq}/bin/jq -r '.app_id // empty')
+    ${protectedCloseGuard}
+  '';
+
 in
 {
-  inherit programs;
+  inherit programs protectedCloseApps;
 
   wallpaper = "Berries.JPG";
 
@@ -381,8 +395,30 @@ in
   };
 
   shellScripts = {
-    "killclick" = "kill -9 $(niri msg pick-window | grep PID | tail -n 1 | awk '{print $NF}')";
-    "killcurrent" = "kill -9 $(niri msg focused-window | grep PID | tail -n 1 | awk '{print $NF}')";
+    "close-window-safely" = ''
+      focused=$(niri msg -j focused-window 2>/dev/null || true)
+      ${protectedCloseCheck}
+      niri msg action close-window
+    '';
+    "killclick" = ''
+      picked=$(niri msg pick-window 2>/dev/null || true)
+      pid=$(printf '%s\n' "$picked" | ${pkgs.gnused}/bin/sed -n 's/.*PID: *\([0-9][0-9]*\).*/\1/p' | ${pkgs.coreutils}/bin/tail -n 1)
+      [ -n "$pid" ] || exit 0
+      case "$pid" in *[!0-9]*) exit 0 ;; esac
+      ${lib.optionalString (protectedCloseApps != [ ]) ''
+        focused=$(niri msg -j windows | ${pkgs.jq}/bin/jq -c --argjson pid "$pid" '[.[] | select(.pid == $pid)][0] // {}')
+        ${protectedCloseCheck}
+      ''}
+      kill -9 "$pid"
+    '';
+    "killcurrent" = ''
+      focused=$(niri msg -j focused-window 2>/dev/null || true)
+      pid=$(printf '%s' "$focused" | ${pkgs.jq}/bin/jq -r '.pid // empty')
+      ${protectedCloseCheck}
+      [ -n "$pid" ] || exit 0
+      case "$pid" in *[!0-9]*) exit 0 ;; esac
+      kill -9 "$pid"
+    '';
     "qrscan" = ''
       selected_area=$(${pkgs.slurp}/bin/slurp)
 

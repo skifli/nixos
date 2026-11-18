@@ -7,6 +7,11 @@
 }:
 let
   fileOperationTitleRegexRaw = ''r#"(?i)${fileOperationTitleRegex}"#'';
+  protectedCloseRules = map (app: {
+    match._props.app-id._raw = ''r#"(?i)${lib.replaceStrings [ "." ] [ "\\." ] app.appId}"#'';
+    open-focused = true;
+    open-maximized = true;
+  }) (userVars.protectedCloseApps or [ ]);
   # On the Fydetab (RK3588 / Mesa panthor) recomputing blur over changing
   # scenes can render weirdly where two blurred/translucent surfaces overlap,
   # e.g., Zen under the Vicinae launcher.
@@ -31,7 +36,9 @@ let
     open-focused = false;
     open-floating = true;
     # Keep transfer progress dialogs readable instead of letting Dolphin request full-screen width.
-    default-column-width = { proportion = 0.4; };
+    default-column-width = {
+      proportion = 0.4;
+    };
     default-floating-position._props = {
       x = 10;
       y = 10;
@@ -39,7 +46,8 @@ let
     };
   };
 in
-[
+protectedCloseRules
+++ [
   # Give floating windows a shadow
   {
     match._props.is-floating = true;

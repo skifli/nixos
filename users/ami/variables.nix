@@ -7,26 +7,46 @@
   ...
 }:
 let
+  protectedCloseApps =
+    if hostVars.hostname == "lyra" then
+      [
+        {
+          appId = "io.github.slgobinath.SafeEyes";
+          name = "SafeEyes";
+          icon = "safeeyes-icon.png";
+          message = "Use its own break controls so the break is recorded correctly.";
+          mainWindowTitle = "Safe Eyes";
+          breakWindowTitlePrefix = "SafeEyes-";
+        }
+      ]
+    else
+      [ ];
+
   common = import ../common/variables.nix {
     inherit
       commonHostVars
       hostVars
       lib
       pkgs
+      protectedCloseApps
       username
       ;
   };
 
-  # Dynamic SafeEyes window rules based on ze outputs
-  safeEyesRules = lib.imap0 (idx: outputName: {
-    match._props = {
-      app-id._raw = ''r#"(?i)io\.github\.slgobinath\.SafeEyes"#'';
-      title._raw = ''r#"(?i)SafeEyes-${toString idx}"#'';
-    };
-    open-on-output = outputName;
-    open-focused = true;
-    open-fullscreen = true;
-  }) hostVars.orderedOutputs;
+  # Generate break-window placement from the shared app metadata so its
+  # app ID/title are defined in one place alongside its notification icon.
+  protectedBreakRules = lib.concatMap (
+    app:
+    lib.imap0 (idx: outputName: {
+      match._props = {
+        app-id._raw = ''r#"(?i)${lib.replaceStrings [ "." ] [ "\\." ] app.appId}"#'';
+        title._raw = ''r#"(?i)${lib.escapeRegex ("${app.breakWindowTitlePrefix}${toString idx}")}"#'';
+      };
+      open-on-output = outputName;
+      open-focused = true;
+      open-fullscreen = true;
+    }) hostVars.orderedOutputs
+  ) (lib.filter (app: app ? breakWindowTitlePrefix) protectedCloseApps);
 in
 common
 // rec {
@@ -284,16 +304,15 @@ common
         };
       }
 
-      # SafeEyes - maximize
-      {
-        match._props = {
-          app-id._raw = ''r#"(?i)io\.github\.slgobinath\.SafeEyes"#'';
-          title._raw = ''r#"(?i)Safe Eyes"#'';
-        };
-        open-maximized = true;
-      }
     ]
-    ++ safeEyesRules;
+    ++ map (app: {
+      match._props = {
+        app-id._raw = ''r#"(?i)${lib.replaceStrings [ "." ] [ "\\." ] app.appId}"#'';
+        title._raw = ''r#"(?i)${lib.escapeRegex app.mainWindowTitle}"#'';
+      };
+      open-maximized = true;
+    }) (lib.filter (app: app ? mainWindowTitle) protectedCloseApps)
+    ++ protectedBreakRules;
   };
 
   kanata.keyboards = {

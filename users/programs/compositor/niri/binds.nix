@@ -5,6 +5,13 @@
   userVars,
   ...
 }:
+let
+  closeWindowBinding =
+    if (userVars.protectedCloseApps or [ ]) == [ ] then
+      { close-window = [ ]; }
+    else
+      { spawn = [ "/home/${userVars.username}/.local/bin/close-window-safely" ]; };
+in
 {
   "Mod+Escape" = {
     _props.hotkey-overlay-title = "Toggle keyboard shortcuts inhibit";
@@ -151,8 +158,16 @@
       repeat = false;
       allow-inhibiting = false;
     };
-    close-window = [ ];
-  };
+  }
+  // closeWindowBinding;
+  "Alt+F4" = {
+    _props = {
+      hotkey-overlay-title = "Close focused window";
+      repeat = false;
+      allow-inhibiting = false;
+    };
+  }
+  // closeWindowBinding;
   "Mod+Ctrl+Q" = {
     _props = {
       hotkey-overlay-title = "Kill click window";
@@ -873,6 +888,7 @@
     _props = {
       hotkey-overlay-title = null;
       allow-inhibiting = false;
+      allow-when-locked = true;
     };
     spawn = [
       "brightnessctl"
@@ -884,6 +900,7 @@
     _props = {
       hotkey-overlay-title = null;
       allow-inhibiting = false;
+      allow-when-locked = true;
     };
     spawn = [
       "brightnessctl"
