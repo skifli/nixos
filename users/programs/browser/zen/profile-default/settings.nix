@@ -49,11 +49,8 @@
     * New tab / Activity Stream                                                *
     **************************************************************************
   */
-  "browser.newtab.url" = "about:blank";
   "browser.newtabpage.activity-stream.enabled" = false;
-  "browser.newtabpage.enhanced" = false;
-  "browser.newtabpage.introShown" = true;
-  "browser.newtabpage.pinned" = false;
+  "browser.newtabpage.pinned" = "[]"; # string pref (a JSON list), not a bool
 
   # If Activity Stream is enabled again, these keep it quiet by default.
   "browser.topsites.contile.enabled" = false;
@@ -71,8 +68,6 @@
     * UI / tabs / URL bar                                                      *
     **************************************************************************
   */
-  "browser.ctrlTab.recentlyUsedOrder" = true;
-  "browser.ctrlTab.previews" = true;
   "browser.ctrlTab.sortByRecentlyUsed" = true;
 
   "browser.toolbars.bookmarks.visibility" = "never"; # always|never|newtab
@@ -106,7 +101,6 @@
   "extensions.extensions.activeThemeID" = "firefox-compact-light@mozilla.org";
 
   "extensions.screenshots.disabled" = true;
-  "extensions.pocket.enabled" = false;
 
   "extensions.getAddons.cache.enabled" = false;
   "extensions.getAddons.showPane" = false;
@@ -155,7 +149,6 @@
   "network.socket.ip_addr_any.disabled" = true; # Disallow binding to 0.0.0.0
 
   "privacy.globalprivacycontrol.enabled" = true;
-  "privacy.globalprivacycontrol.functionality.enabled" = true;
   "privacy.query_stripping.enabled" = true;
   "privacy.query_stripping.enabled.pbmode" = true;
   "privacy.donottrackheader.enabled" = true;
@@ -171,18 +164,21 @@
 
   # Popups
   "dom.block_multiple_popups" = true;
-  "privacy.popups.disable_from_plugins" = 3;
 
   # Clear on shutdown (these are defaults; enable in UI if desired)
+  # NOTE: Zen 1.24 / Firefox 128+ migrated to privacy.clearOnShutdown_v2.*.
+  # Once privacy.sanitize.clearOnShutdown.hasMigratedToNewPrefs3 is set, the
+  # old privacy.clearOnShutdown.* keys are ignored, so only the _v2 keys below
+  # have any effect (this is what was wiping cookies/logins on shutdown).
+  # The migration flag is set explicitly so a fresh profile cannot run the
+  # one-time migration and pull the legacy cookies=true default over these.
   "privacy.sanitize.sanitizeOnShutdown" = true;
-  "privacy.clearOnShutdown.cache" = true;
-  "privacy.clearOnShutdown.cookies" = false;
-  "privacy.clearOnShutdown.downloads" = false;
-  "privacy.clearOnShutdown.formdata" = true;
-  "privacy.clearOnShutdown.history" = false;
-  "privacy.clearOnShutdown.offlineApps" = false;
-  "privacy.clearOnShutdown.sessions" = false;
-  "privacy.clearOnShutdown.siteSettings" = false;
+  "privacy.sanitize.clearOnShutdown.hasMigratedToNewPrefs3" = true;
+  "privacy.clearOnShutdown_v2.cache" = true;
+  "privacy.clearOnShutdown_v2.cookiesAndStorage" = false;
+  "privacy.clearOnShutdown_v2.browsingHistoryAndDownloads" = false;
+  "privacy.clearOnShutdown_v2.formdata" = true;
+  "privacy.clearOnShutdown_v2.siteSettings" = false;
 
   # Login / autofill
   "signon.rememberSignons" = false;
@@ -251,7 +247,6 @@
   "widget.dmabuf.force-enabled" = true; # Required in recent Firefoxes - https://github.com/niri-wm/niri/blob/59a10015610bb7d068a82ce1c386fcd8b44f6c52/docs/wiki/Application-Issues.md#zen-browser
   "media.ffmpeg.vaapi.enabled" = true;
   "media.videocontrols.picture-in-picture.video-toggle.enabled" = true;
-  "privacy.webrtc.legacyGlobalIndicator" = false;
   "reader.parse-on-load.force-enabled" = true;
 
   "network.http.http3.enabled" = true;
@@ -263,17 +258,13 @@
   */
   "layout.css.devPixelsPerPx" = -1;
 
-  "browser.ssb.enabled" = true;
   "browser.tabs.allow_transparent_browser" = false; # So WEB PAGES (not the sidebar) cannot be transparent!
 
   "zen.window-sync.enabled" = true; # Decouple from windows and instead couple tabs to spaces
 
-  # Zen Library (new in 1.23) - unified sidebar for history/bookmarks/downloads/media
+  # Zen Library (new in 1.23; 1.24 keeps only the master switch - the
+  # last-tab/history/media sub-prefs no longer exist in 1.24.2b)
   "zen.library.enabled" = true;
-  "zen.library.last-tab" = "downloads";
-  "zen.library.history.closed-tabs" = true;
-  "zen.library.media.enabled" = false;
-  "zen.library.media.folders" = "downloads,documents,pictures";
 
   # Not using https://sameerasw.com/zen#intro anymore so now set to false
   "zen.theme.acrylic-urlbar" = true;
@@ -289,7 +280,6 @@
   "zen.theme.essentials-favicon-bg" = true;
   "zen.theme.gradient" = true;
   "zen.theme.hide-tab-throbber" = true;
-  "zen.theme.show-custom-colors" = true;
   "zen.theme.styled-status-panel" = false;
   "zen.theme.use-system-colors" = false;
 
