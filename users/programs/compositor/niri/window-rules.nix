@@ -1,5 +1,4 @@
 {
-  commonUserVars,
   fileOperationTitleRegex,
   hostVars,
   lib,
@@ -170,5 +169,4 @@ protectedCloseRules
   }
 ]
 ++ browserRules
-++ (commonUserVars.niri.window-rules or [ ])
 ++ (userVars.niri.window-rules or [ ])

@@ -240,24 +240,6 @@ common
         # open-on-workspace = "1"; # Was annoying because sometimes it opens later on
       }
       {
-        match._props = {
-          title._raw = ''r#"(?i)Anki Pomodoro"#'';
-        };
-        open-floating = true;
-        open-on-workspace = "5";
-        default-floating-position._props = {
-          x = 20;
-          y = 20;
-          relative-to = "top-left";
-        };
-        default-column-width = {
-          proportion = 0.35;
-        };
-        default-window-height = {
-          proportion = 0.20;
-        };
-      }
-      {
         # https://www.reddit.com/r/niri/comments/1skrhet/steam_notifications_appear_in_the_center_of_the/
         match._props = {
           app-id._raw = ''r#"(?i)steam"#'';

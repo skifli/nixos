@@ -242,6 +242,13 @@ in
       maximize-window-to-edges = [];
     };
   */
+  "Mod+Shift+M" = {
+    _props = {
+      hotkey-overlay-title = "Toggle maximise window to edges";
+      allow-inhibiting = false;
+    };
+    maximize-window-to-edges = [ ];
+  };
   "Mod+W" = {
     _props = {
       hotkey-overlay-title = "Toggle tabbed column view";
@@ -1231,7 +1238,7 @@ in
   };
   "Mod+Semicolon" = {
     _props = {
-      hotkey-overlay-title = "Grid mouse navigator";
+      hotkey-overlay-title = null;
       allow-inhibiting = false;
     };
     spawn = [ "waynav" ];
@@ -1239,7 +1246,7 @@ in
   # Windows-style emoji picker
   "Mod+Apostrophe" = {
     _props = {
-      hotkey-overlay-title = "Emoji picker";
+      hotkey-overlay-title = null;
       allow-inhibiting = false;
     };
     spawn = [

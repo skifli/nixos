@@ -64,6 +64,8 @@ lib.mkIf (hostVars.hostname != "fydetabduo") {
                 "microphone"
                 "network"
                 "bluetooth"
+                "custom-pomodoro"
+                "custom-ci_status"
                 "clock"
                 "notifications"
               ];
@@ -239,6 +241,56 @@ lib.mkIf (hostVars.hostname != "fydetabduo") {
               label-show = true;
               left-click = "${userVars.programs.terminal} -e btop";
               right-click = userVars.programs.system-monitor;
+              mode = "poll";
+              restart-interval-ms = 1000;
+              restart-policy = "never";
+              scroll-down = "";
+              scroll-up = "";
+            }
+            {
+              id = "pomodoro";
+              border-color = "auto";
+              border-show = true;
+              button-bg-color = "bg-surface-elevated";
+              command = "pomodoro-wayle.sh";
+              format = "{{ output }}";
+              hide-if-empty = true;
+              icon-bg-color = "auto";
+              icon-color = "status-warning";
+              icon-name = "preferences-system-time-symbolic";
+              icon-show = true;
+              interval-ms = 2000;
+              label-color = "fg-default";
+              label-max-length = 0;
+              label-show = true;
+              left-click = "pomodoro-wayle.sh start-pause";
+              right-click = "pomodoro-wayle.sh skip";
+              middle-click = "pomodoro-wayle.sh reset";
+              mode = "poll";
+              restart-interval-ms = 1000;
+              restart-policy = "never";
+              scroll-down = "";
+              scroll-up = "";
+            }
+            {
+              id = "ci_status";
+              border-color = "auto";
+              border-show = true;
+              button-bg-color = "bg-surface-elevated";
+              command = "ci-status-wayle.sh";
+              format = "{{ output }}";
+              hide-if-empty = true;
+              icon-bg-color = "auto";
+              icon-color = "fg-default";
+              icon-name = "emblem-system-symbolic";
+              icon-show = true;
+              interval-ms = 60000;
+              label-color = "fg-default";
+              label-max-length = 0;
+              label-show = true;
+              left-click = "ci-status-wayle.sh open";
+              right-click = "ci-status-wayle.sh refresh";
+              middle-click = "ci-status-wayle.sh ack-menu";
               mode = "poll";
               restart-interval-ms = 1000;
               restart-policy = "never";
