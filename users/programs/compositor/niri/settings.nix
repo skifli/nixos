@@ -8,7 +8,9 @@
 }@attrs:
 let
   fileOperationTitleRegex = "(Deleting|Copying|Moving|Progress Dialogue|Compressing)";
-  niriAttrs = attrs // { inherit fileOperationTitleRegex; };
+  niriAttrs = attrs // {
+    inherit fileOperationTitleRegex;
+  };
   binds = import ./binds.nix niriAttrs;
   input = import ./input.nix attrs;
   layerRules = import ./layer-rules.nix attrs;
