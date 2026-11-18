@@ -1,6 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+TUNNEL_PIDS=()
+cleanup_vnc_tunnels() {
+    local pid
+    for pid in "${TUNNEL_PIDS[@]:-}"; do
+        kill "$pid" 2>/dev/null || true
+        wait "$pid" 2>/dev/null || true
+    done
+}
+trap cleanup_vnc_tunnels EXIT
+
 connect_oracle_vnc() {
     local secret_file="/run/agenix/${USER}-vnc-oracle"
     local key_file="/run/agenix/${USER}-oracle-vnc-key"
@@ -19,12 +29,37 @@ connect_oracle_vnc() {
 
     notify-send -e -a VNCViewer -i "$HOME/.local/share/misc/663376.png" -u low "VNC Connection" "Connecting to Oracle server via SSH tunnel"
 
-    # Open SSH tunnel in background
-    ssh -f -i "$key_file" -L "$port:127.0.0.1:$port" "$user@$host" sleep 1 # Keeps the tunnel open just long enough for the local vncviewer to make a connection. Once closed, the SSH tunnel will automatically clean itself up and exit.
+    # Keep the SSH forward alive for the full viewer session.
+    ssh -N -i "$key_file" \
+        -o ExitOnForwardFailure=yes \
+        -o ServerAliveInterval=15 \
+        -o ServerAliveCountMax=3 \
+        -o BatchMode=yes \
+        -L "127.0.0.1:$port:127.0.0.1:$port" \
+        "$user@$host" &
+    TUNNEL_PIDS+=("$!")
+    local tunnel_pid="${TUNNEL_PIDS[-1]}"
+
+    local attempt ready=0
+    for attempt in {1..50}; do
+        if (exec 3<>"/dev/tcp/127.0.0.1/$port") 2>/dev/null; then
+            ready=1
+            break
+        fi
+        if ! kill -0 "$tunnel_pid" 2>/dev/null; then
+            notify-send -e -a VNCViewer -i "$HOME/.local/share/misc/663376.png" -u critical "VNC Error" "SSH tunnel to Oracle failed to start"
+            return 1
+        fi
+        sleep 0.1
+    done
+    if [ "$ready" -ne 1 ]; then
+        notify-send -e -a VNCViewer -i "$HOME/.local/share/misc/663376.png" -u critical "VNC Error" "Timed out waiting for the Oracle SSH tunnel"
+        return 1
+    fi
 
     notify-send -e -a VNCViewer -i "$HOME/.local/share/misc/663376.png" -u low "VNC Connection" "Launching VNC viewer"
 
-    vncviewer "127.0.0.1:$port" "$@"
+    vncviewer "127.0.0.1::$port" "$@"
 }
 
 connect_wayvnc() {
@@ -42,15 +77,15 @@ connect_wayvnc() {
     unset PIFI_VNC_HOST PIFI_VNC_USER PISTOR_VNC_HOST PISTOR_VNC_USER VNC_PORT VNC_PASS
     source "$secret_file"
 
-    local host user
+    local host local_port
     case "$target" in
         PIFI)
             host="${PIFI_VNC_HOST:-}"
-            user="${PIFI_VNC_USER:-}"
+            local_port=15900
             ;;
         PISTOR)
             host="${PISTOR_VNC_HOST:-}"
-            user="${PISTOR_VNC_USER:-}"
+            local_port=15901
             ;;
         *)
             echo "Error: Unknown VNC target: $target" >&2
@@ -58,17 +93,41 @@ connect_wayvnc() {
             ;;
     esac
 
-    local port="${VNC_PORT:-5900}"
-    local pass="${VNC_PASS:-}"
-
-    if [ -z "$host" ] || [ -z "$user" ] || [ -z "$pass" ]; then
-        notify-send -e -a VNCViewer -i "$HOME/.local/share/misc/663376.png" -u critical "VNC Error" "Missing host, user, or password in $secret_file"
-        echo "Error: Missing host, user, or password in $secret_file" >&2
+    if [ -z "$host" ]; then
+        notify-send -e -a VNCViewer -i "$HOME/.local/share/misc/663376.png" -u critical "VNC Error" "Missing host in $secret_file"
+        echo "Error: Missing host in $secret_file" >&2
         exit 1
     fi
 
-    notify-send -e -a VNCViewer -i "$HOME/.local/share/misc/663376.png" -u low "VNC Connection" "Connecting to $target ($host:$port)"
-    VNC_USERNAME="$user" VNC_PASSWORD="$pass" vncviewer "$host:$port" "$@"
+    local attempt ready=0
+    ssh -N \
+        -o ExitOnForwardFailure=yes \
+        -o ServerAliveInterval=15 \
+        -o ServerAliveCountMax=3 \
+        -o BatchMode=yes \
+        -L "127.0.0.1:$local_port:127.0.0.1:5900" \
+        "root@$host" &
+    TUNNEL_PIDS+=("$!")
+    local tunnel_pid="${TUNNEL_PIDS[-1]}"
+
+    for attempt in {1..50}; do
+        if (exec 3<>"/dev/tcp/127.0.0.1/$local_port") 2>/dev/null; then
+            ready=1
+            break
+        fi
+        if ! kill -0 "$tunnel_pid" 2>/dev/null; then
+            notify-send -e -a VNCViewer -i "$HOME/.local/share/misc/663376.png" -u critical "VNC Error" "SSH tunnel to $target failed to start"
+            return 1
+        fi
+        sleep 0.1
+    done
+    if [ "$ready" -ne 1 ]; then
+        notify-send -e -a VNCViewer -i "$HOME/.local/share/misc/663376.png" -u critical "VNC Error" "Timed out waiting for the $target SSH tunnel"
+        return 1
+    fi
+
+    notify-send -e -a VNCViewer -i "$HOME/.local/share/misc/663376.png" -u low "VNC Connection" "Opening secure SSH tunnel to $target"
+    vncviewer "127.0.0.1::$local_port" "$@"
 }
 
 TARGET="${1:-}"
