@@ -3,7 +3,7 @@ set -euo pipefail
 
 FONT="${FONT_MONOSPACE:-JetBrainsMono Nerd Font}"
 FONT_SIZE="${FONT_SIZE_APPLICATIONS:-11}"
-TERMINAL="${TERMINAL:-ghostty}"
+TERMINAL="${1:-${TERMINAL:-ghostty}}"
 OPTIONS='Open private vault
 Close private vault'
 PROMPT='Pifi private vault: '

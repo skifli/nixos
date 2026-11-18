@@ -3,6 +3,7 @@
   lib,
   pkgs,
   protectedCloseApps ? [ ],
+  terminal ? "ghostty",
   username,
   ...
 }:
@@ -31,7 +32,7 @@ let
     remote-desktop = "vnc";
     screen-recorder = "gpu-screen-recorder";
     system-monitor = "missioncenter";
-    terminal = "";
+    terminal = terminal;
     terminal-shell = "zsh";
     visual = "zeditor";
     vpn = "tailscale";
@@ -116,7 +117,10 @@ in
         hotkey-overlay-title = "Open or close Pifi private vault";
         allow-inhibiting = false;
       };
-      spawn = [ "pifi-private-menu" ];
+      spawn = [
+        "pifi-private-menu"
+        terminal
+      ];
     };
 
     window-rules = [
@@ -147,7 +151,8 @@ in
         open-maximized = true;
       }
       {
-        match._props.title._raw = ''r#"(?i)TigerVNC"#'';
+        # TigerVNC's title changes between connections; its app ID is stable.
+        match._props.app-id._raw = ''r#"(?i)^Vncviewer$"#'';
         open-maximized = true;
         open-focused = true;
 
