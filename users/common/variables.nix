@@ -32,7 +32,7 @@ let
     remote-desktop = "vnc";
     screen-recorder = "gpu-screen-recorder";
     system-monitor = "missioncenter";
-    terminal = terminal;
+    inherit terminal;
     terminal-shell = "zsh";
     visual = "zeditor";
     vpn = "tailscale";
