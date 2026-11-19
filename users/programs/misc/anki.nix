@@ -128,7 +128,7 @@ let
   # can finish while the profile is still loading, so that signal is missed
   # and Anki keeps the old theme until its own 5-minute poll. Re-apply once
   # the profile is open so the first paint is already correct.
-  theme-refresh = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
+  theme-refresh = pkgs.anki-utils.buildAnkiAddon (_finalAttrs: {
     pname = "theme-refresh";
     version = "1.0";
     src = pkgs.writeTextDir "__init__.py" ''
