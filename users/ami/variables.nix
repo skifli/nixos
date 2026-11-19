@@ -218,11 +218,21 @@ common
         }
         {
           match._props = {
+            app-id._raw = ''r#"(?i)anytype"#'';
+            at-startup = true;
+          };
+          open-on-output = "DP-1";
+          open-on-workspace = "5";
+          open-focused = false;
+          open-maximized = true;
+        }
+        {
+          match._props = {
             app-id._raw = ''r#"(?i)ferdium"#'';
             at-startup = true;
           };
           open-on-output = "DP-1";
-          open-on-workspace = "2";
+          open-on-workspace = "6";
           open-focused = false;
           open-maximized = true;
         }
