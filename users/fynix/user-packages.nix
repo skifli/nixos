@@ -32,66 +32,69 @@ in
       # We use custom one cus Niri mhm
       wallpaper.engine-enabled = lib.mkForce false;
 
-      modules.custom = lib.mkAfter [
-        {
-          id = "stylus-touch";
-          mode = "poll";
-          interval-ms = 1000;
-          command = ''
-            systemctl --user is-active --quiet stylus-touch-arbitration.service && printf '{"state":"On"}' || printf '{"state":"Off"}'
-          '';
-          left-click = ''
-            if systemctl --user is-active --quiet stylus-touch-arbitration.service; then
-              systemctl --user stop stylus-touch-arbitration.service
-              notify-send -a wayle -u low -t 2500 "Stylus touch" "Touch arbitration disabled"
-            else
-              systemctl --user start stylus-touch-arbitration.service
-              notify-send -a wayle -u low -t 2500 "Stylus touch" "Touch arbitration enabled"
-            fi
-          '';
-          on-action = ''
-            systemctl --user is-active --quiet stylus-touch-arbitration.service && printf '{"state":"On"}' || printf '{"state":"Off"}'
-          '';
-          format = "{{ state }}";
-          icon-name = "input-tablet-symbolic";
-          icon-color = "fg-default";
-          label-color = "fg-default";
-        }
-        {
-          id = "xray-proxy";
-          mode = "poll";
-          interval-ms = 5000;
-          command = ''
-            systemctl is-active xray-proxy.service >/dev/null 2>&1 && printf '{"state":"On"}' || printf '{"state":"Off"}'
-          '';
-          left-click = ''
-            OVERRIDE="$HOME/.config/xray-proxy/override"
-            mkdir -p "$(dirname "$OVERRIDE")"
+      modules.custom = lib.mkAfter (
+        [
+          {
+            id = "stylus-touch";
+            mode = "poll";
+            interval-ms = 1000;
+            command = ''
+              systemctl --user is-active --quiet stylus-touch-arbitration.service && printf '{"state":"On"}' || printf '{"state":"Off"}'
+            '';
+            left-click = ''
+              if systemctl --user is-active --quiet stylus-touch-arbitration.service; then
+                systemctl --user stop stylus-touch-arbitration.service
+                notify-send -a wayle -u low -t 2500 "Stylus touch" "Touch arbitration disabled"
+              else
+                systemctl --user start stylus-touch-arbitration.service
+                notify-send -a wayle -u low -t 2500 "Stylus touch" "Touch arbitration enabled"
+              fi
+            '';
+            on-action = ''
+              systemctl --user is-active --quiet stylus-touch-arbitration.service && printf '{"state":"On"}' || printf '{"state":"Off"}'
+            '';
+            format = "{{ state }}";
+            icon-name = "input-tablet-symbolic";
+            icon-color = "fg-default";
+            label-color = "fg-default";
+          }
+          {
+            id = "xray-proxy";
+            mode = "poll";
+            interval-ms = 5000;
+            command = ''
+              systemctl is-active xray-proxy.service >/dev/null 2>&1 && printf '{"state":"On"}' || printf '{"state":"Off"}'
+            '';
+            left-click = ''
+              OVERRIDE="$HOME/.config/xray-proxy/override"
+              mkdir -p "$(dirname "$OVERRIDE")"
 
-            if systemctl is-active xray-proxy.service >/dev/null 2>&1; then
-              printf 'off\n' > "$OVERRIDE"
-              sudo systemctl stop xray-proxy.service
-              notify-send -a nixOS -i /home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg -u low -t 2500 "Xray proxy" "Proxy disabled (manual override)"
-            else
-              printf 'on\n' > "$OVERRIDE"
-              sudo systemctl start xray-proxy.service
-              notify-send -a nixOS -i /home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg -u low -t 2500 "Xray proxy" "Proxy enabled (manual override)"
-            fi
-          '';
-          right-click = ''
-            rm -f "$HOME/.config/xray-proxy/override"
-            sudo systemctl start xray-proxy-ensure.service
-            notify-send -a nixOS -i /home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg -u low -t 2500 "Xray proxy" "Proxy back to auto (SSID)"
-          '';
-          on-action = ''
-            systemctl is-active xray-proxy.service >/dev/null 2>&1 && printf '{"state":"On"}' || printf '{"state":"Off"}'
-          '';
-          format = "{{ state }}";
-          icon-name = "network-vpn-symbolic";
-          icon-color = "fg-default";
-          label-color = "fg-default";
-        }
-      ];
+              if systemctl is-active xray-proxy.service >/dev/null 2>&1; then
+                printf 'off\n' > "$OVERRIDE"
+                sudo systemctl stop xray-proxy.service
+                notify-send -a nixOS -i /home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg -u low -t 2500 "Xray proxy" "Proxy disabled (manual override)"
+              else
+                printf 'on\n' > "$OVERRIDE"
+                sudo systemctl start xray-proxy.service
+                notify-send -a nixOS -i /home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg -u low -t 2500 "Xray proxy" "Proxy enabled (manual override)"
+              fi
+            '';
+            right-click = ''
+              rm -f "$HOME/.config/xray-proxy/override"
+              sudo systemctl start xray-proxy-ensure.service
+              notify-send -a nixOS -i /home/${userVars.username}/.local/share/misc/nix-snowflake-rainbow.svg -u low -t 2500 "Xray proxy" "Proxy back to auto (SSID)"
+            '';
+            on-action = ''
+              systemctl is-active xray-proxy.service >/dev/null 2>&1 && printf '{"state":"On"}' || printf '{"state":"Off"}'
+            '';
+            format = "{{ state }}";
+            icon-name = "network-vpn-symbolic";
+            icon-color = "fg-default";
+            label-color = "fg-default";
+          }
+        ]
+        ++ import ../programs/desktop-shell/wayle-pomodoro-ci.nix
+      );
     };
 
     fydetabShell.wayle = {
@@ -121,6 +124,19 @@ in
           "custom-stylus-touch" # New!
           "custom-xray-proxy"
           "systray"
+        ];
+        # The option default is dropped as soon as any definition exists, so
+        # repeat fyde-nix's default modules before appending ours.
+        right = [
+          "volume"
+          "microphone"
+          "brightness"
+          "network"
+          "bluetooth"
+          "custom-pomodoro"
+          "custom-ci_status"
+          "battery"
+          "notifications"
         ];
       };
     };
