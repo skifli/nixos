@@ -1218,6 +1218,26 @@ in
     };
     spawn = [ "/home/${userVars.username}/.local/bin/paste-sequence.sh" ];
   };
+  "Mod+Ctrl+C" = {
+    _props = {
+      hotkey-overlay-title = "Open CI status menu";
+      allow-inhibiting = false;
+    };
+    spawn = [
+      "/home/${userVars.username}/.local/bin/ci-status-wayle.sh"
+      "status-menu"
+    ];
+  };
+  "Mod+Ctrl+T" = {
+    _props = {
+      hotkey-overlay-title = "Start or pause pomodoro timer";
+      allow-inhibiting = false;
+    };
+    spawn = [
+      "/home/${userVars.username}/.local/bin/pomodoro-wayle.sh"
+      "start-pause"
+    ];
+  };
   "Mod+I" = {
     _props = {
       hotkey-overlay-title = "Copy focused window info to clipboard";
