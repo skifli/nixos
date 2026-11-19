@@ -59,6 +59,11 @@ in
   # system profile so the greeter can resolve them before user login.
   environment.systemPackages = [ pkgs.papirus-icon-theme ];
 
+  # Skip the username/session picker and sign in as the last used account and
+  # session. fyde-nix seeds both in /var/lib/regreet/state.toml, but ReGreet
+  # still shows the selection screen unless this is set.
+  programs.regreet.settings.skip_selection = true;
+
   hardware.fydetabduo = {
     enable = true;
 
