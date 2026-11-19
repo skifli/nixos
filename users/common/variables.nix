@@ -216,7 +216,11 @@ in
     "nixos-icons"
   ];
 
-  sessionVariables = { };
+  sessionVariables = {
+    # Restrict CI status scans to these organisations (comma-separated).
+    # Unset would scan all orgs the account belongs to.
+    CI_STATUS_ORGS = "exeme-project,warp-racing,NixOnFyde,STOGS-CSS,encore-sr";
+  };
 
   systemdServices = {
     todo-checker = {

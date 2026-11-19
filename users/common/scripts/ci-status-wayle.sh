@@ -20,6 +20,9 @@ MAX_AGE_DAYS="${CI_STATUS_MAX_AGE_DAYS:-14}"
 REPO_CACHE_TTL="${CI_STATUS_REPO_CACHE_TTL:-3600}"
 RUN_CACHE_TTL="${CI_STATUS_RUN_CACHE_TTL:-60}"
 NOTIFY_BATCH_GRACE="${CI_STATUS_BATCH_GRACE:-180}"
+# CI_STATUS_ORGS (unset) scans every organisation the account belongs to.
+# Set it to a comma-separated list of organisations to restrict the scan.
+REPO_PARALLELISM="${CI_STATUS_PARALLEL:-10}"
 ACTION="${1:-status}"
 FORCE_REFRESH=0
 
@@ -66,21 +69,47 @@ ensure_json_file "$ACK_FILE" '[]' array
 ensure_json_file "$WATCH_FILE" '{}' object
 
 get_user_repos() {
-    local fetched
+    local user_repos org_repos org_list all_repos
     if (( ! FORCE_REFRESH )) && cache_is_fresh "$REPO_CACHE_FILE" "$REPO_CACHE_TTL" \
         && jq -e 'type == "array"' "$REPO_CACHE_FILE" >/dev/null 2>&1; then
         cat "$REPO_CACHE_FILE"
         return
     fi
 
-    if fetched=$(gh repo list --limit 100 --json nameWithOwner,isPrivate --jq '[.[] | .nameWithOwner]' 2>/dev/null) \
-        && jq -e 'type == "array"' <<<"$fetched" >/dev/null 2>&1; then
-        printf '%s\n' "$fetched" | atomic_write "$REPO_CACHE_FILE"
-        printf '%s\n' "$fetched"
-    elif [[ -f "$REPO_CACHE_FILE" ]] && jq -e 'type == "array"' "$REPO_CACHE_FILE" >/dev/null 2>&1; then
-        cat "$REPO_CACHE_FILE"
+    # Repos owned by the authenticated user.
+    if user_repos=$(gh repo list --limit 100 --json nameWithOwner,isPrivate --jq '[.[] | .nameWithOwner]' 2>/dev/null) \
+        && jq -e 'type == "array"' <<<"$user_repos" >/dev/null 2>&1; then
+        :
     else
-        printf '[]\n'
+        user_repos='[]'
+    fi
+
+    # Repos owned by organisations. Unset CI_STATUS_ORGS discovers every
+    # organisation the account belongs to; set it to a comma-separated list
+    # to restrict the scan.
+    if [[ -n "${CI_STATUS_ORGS:-}" ]]; then
+        org_list=$(printf '%s\n' "$CI_STATUS_ORGS" | tr ',' '\n')
+    else
+        org_list=$(gh api --paginate /user/orgs --jq '.[].login' 2>/dev/null || true)
+    fi
+
+    if org_repos=$(printf '%s\n' "$org_list" | while read -r org; do
+        [[ -z "$org" ]] && continue
+        gh repo list "$org" --limit 100 --json nameWithOwner,isPrivate --jq '[.[] | .nameWithOwner]' 2>/dev/null || true
+    done | jq -s 'flatten') \
+        && jq -e 'type == "array"' <<<"$org_repos" >/dev/null 2>&1; then
+        :
+    else
+        org_repos='[]'
+    fi
+
+    all_repos=$(jq -cn --argjson user "$user_repos" --argjson org "$org_repos" '$user + $org | unique_by(.)')
+    if [[ "$all_repos" != "[]" ]] || [[ ! -f "$REPO_CACHE_FILE" ]]; then
+        printf '%s\n' "$all_repos" | atomic_write "$REPO_CACHE_FILE"
+        printf '%s\n' "$all_repos"
+    else
+        # GitHub was unreachable: keep the last good repo list.
+        cat "$REPO_CACHE_FILE"
     fi
 }
 
@@ -106,15 +135,34 @@ get_repo_runs() {
 }
 
 load_all_runs() {
-    local repo runs tagged
+    local repo runs tagged max_parallel files file
     REPOS_JSON=$(get_user_repos)
-    ALL_RUNS_JSON='[]'
+    max_parallel="${CI_STATUS_PARALLEL:-10}"
+
+    rm -f "$STATE_DIR"/tagged_*.json
     while IFS= read -r repo; do
         [[ -z "$repo" ]] && continue
-        runs=$(get_repo_runs "$repo")
-        tagged=$(jq --arg repo "$repo" 'map(. + {repository: $repo})' <<<"$runs")
-        ALL_RUNS_JSON=$(jq -cn --argjson left "$ALL_RUNS_JSON" --argjson right "$tagged" '$left + $right')
+        # One GitHub request per repo, throttled to max_parallel at a time.
+        while (( $(jobs -rp | wc -l) >= max_parallel )); do
+            wait -n || true
+        done
+        (
+            runs=$(get_repo_runs "$repo")
+            jq --arg repo "$repo" 'map(. + {repository: $repo})' <<<"$runs" \
+                > "$STATE_DIR/tagged_${repo//\//_}.json"
+        ) &
     done < <(jq -r '.[]' <<<"$REPOS_JSON")
+    wait
+
+    files=()
+    while IFS= read -r -d '' file; do
+        files+=("$file")
+    done < <(find "$STATE_DIR" -maxdepth 1 -name 'tagged_*.json' -print0)
+    if (( ${#files[@]} > 0 )); then
+        ALL_RUNS_JSON=$(jq -s 'flatten' "${files[@]}")
+    else
+        ALL_RUNS_JSON='[]'
+    fi
     printf '%s\n' "$ALL_RUNS_JSON" | atomic_write "$ALL_RUNS_FILE"
 }
 
