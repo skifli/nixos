@@ -122,6 +122,30 @@ let
       sourceRoot = "${finalAttrs.src.name}";
     });
   */
+
+  # Seara makes Anki react instantly to D-Bus theme changes, but it only
+  # starts listening when the profile opens. At login the auto-theme switch
+  # can finish while the profile is still loading, so that signal is missed
+  # and Anki keeps the old theme until its own 5-minute poll. Re-apply once
+  # the profile is open so the first paint is already correct.
+  theme-refresh = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
+    pname = "theme-refresh";
+    version = "1.0";
+    src = pkgs.writeTextDir "__init__.py" ''
+      from aqt import gui_hooks
+      from aqt.qt import QTimer
+      from aqt.theme import theme_manager
+
+
+      def _refresh_theme() -> None:
+          # Just enough to let the main window settle; Seara catches any
+          # theme change that happens after this point anyway.
+          QTimer.singleShot(500, theme_manager.apply_style)
+
+
+      gui_hooks.profile_did_open.append(_refresh_theme)
+    '';
+  });
 in
 {
   nixpkgs.overlays = [
@@ -149,6 +173,7 @@ in
       enable = true;
       addons = with pkgs; [
         inputs.anki-seara.packages."x86_64-linux".default # I :3 you https://github.com/rodrada/seara
+        theme-refresh
         (ankiAddons.anki-mcp-server.withConfig {
           config = {
             http_enabled = true;
