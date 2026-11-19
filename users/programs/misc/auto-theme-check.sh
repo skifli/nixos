@@ -37,8 +37,11 @@ fi
 
   if [ "$WANTED" != "$CURRENT_TAG" ]; then
     echo "Theme mismatch detected. Switching to $WANTED mode."
-    notify-send -e -a "nixOS" -i "$ICON_PATH" -u low -t 5000 "Auto-theme switcher" "Switching to $WANTED mode..."
-    "$SWITCHER_BIN" "$WANTED"
+    # The session bus/notification daemon may not be up yet on the first pass
+    # after login. Don't let a failed notification kill the service (and delay
+    # the actual theme switch until systemd restarts it).
+    notify-send -e -a "nixOS" -i "$ICON_PATH" -u low -t 5000 "Auto-theme switcher" "Switching to $WANTED mode..." || true
+    "$SWITCHER_BIN" "$WANTED" || echo "WARNING: theme switcher exited non-zero" >&2
   fi
 
   # Wait until the next solar transition (sunrise or sunset)
