@@ -51,6 +51,10 @@ in
       systemd.user.services = userVars.systemdServices;
       systemd.user.timers = userVars.systemdTimers;
 
+      # Shell session variables do not get to systemd user services such as
+      # Wayle, so mirror them into the user manager environment too.
+      systemd.user.sessionVariables = userVars.sessionVariables;
+
       # app-*.scopes (Electron apps like anytype) ignore SIGTERM, so the user
       # manager's default 90s stop timeout made shutdown hang for like 2 mins.
       systemd.user.settings = {

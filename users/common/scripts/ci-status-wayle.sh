@@ -6,6 +6,7 @@ set -euo pipefail
 
 STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/ci-status"
 REPO_CACHE_FILE="$STATE_DIR/repos.json"
+REPO_FILTER_FILE="$STATE_DIR/repos.filter"
 ALL_RUNS_FILE="$STATE_DIR/all-runs.json"
 ACK_FILE="$STATE_DIR/acknowledged.json"
 WATCH_FILE="$STATE_DIR/watched-runs.json"
@@ -18,7 +19,10 @@ mkdir -p "$STATE_DIR"
 MAX_RUNS_PER_REPO="${CI_STATUS_MAX_RUNS:-20}"
 MAX_AGE_DAYS="${CI_STATUS_MAX_AGE_DAYS:-14}"
 REPO_CACHE_TTL="${CI_STATUS_REPO_CACHE_TTL:-3600}"
-RUN_CACHE_TTL="${CI_STATUS_RUN_CACHE_TTL:-60}"
+# A 60s TTL over a large org scan burns through GitHub's 5,000 requests/hour
+# quota (~240 repos x 60 polls/hour = 14,400 requests). Five minutes keeps a
+# full scan comfortably below the limit while still feeling live.
+RUN_CACHE_TTL="${CI_STATUS_RUN_CACHE_TTL:-300}"
 NOTIFY_BATCH_GRACE="${CI_STATUS_BATCH_GRACE:-180}"
 # CI_STATUS_ORGS (unset) scans every organisation the account belongs to.
 # Set it to a comma-separated list of organisations to restrict the scan.
@@ -69,8 +73,11 @@ ensure_json_file "$ACK_FILE" '[]' array
 ensure_json_file "$WATCH_FILE" '{}' object
 
 get_user_repos() {
-    local user_repos org_repos org_list all_repos
-    if (( ! FORCE_REFRESH )) && cache_is_fresh "$REPO_CACHE_FILE" "$REPO_CACHE_TTL" \
+    local user_repos org_repos org_list all_repos current_filter cached_filter
+    current_filter="${CI_STATUS_ORGS:-__all__}"
+    cached_filter=$(cat "$REPO_FILTER_FILE" 2>/dev/null || true)
+    if (( ! FORCE_REFRESH )) && [[ "$cached_filter" == "$current_filter" ]] \
+        && cache_is_fresh "$REPO_CACHE_FILE" "$REPO_CACHE_TTL" \
         && jq -e 'type == "array"' "$REPO_CACHE_FILE" >/dev/null 2>&1; then
         cat "$REPO_CACHE_FILE"
         return
@@ -106,10 +113,17 @@ get_user_repos() {
     all_repos=$(jq -cn --argjson user "$user_repos" --argjson org "$org_repos" '$user + $org | unique_by(.)')
     if [[ "$all_repos" != "[]" ]] || [[ ! -f "$REPO_CACHE_FILE" ]]; then
         printf '%s\n' "$all_repos" | atomic_write "$REPO_CACHE_FILE"
+        # Written after the repo list so an interrupted refresh cannot make a
+        # stale list look current.
+        printf '%s\n' "$current_filter" | atomic_write "$REPO_FILTER_FILE"
         printf '%s\n' "$all_repos"
-    else
+    elif [[ "$cached_filter" == "$current_filter" ]]; then
         # GitHub was unreachable: keep the last good repo list.
         cat "$REPO_CACHE_FILE"
+    else
+        # The filter changed and GitHub was unreachable. Scan nothing rather
+        # than fall back to a list from a different (possibly larger) scope.
+        printf '[]\n'
     fi
 }
 
@@ -449,10 +463,11 @@ notify_run_transitions() {
             notify_ci "$(jq -r '.repo' <<<"$payload")" "$(jq -r '.summary' <<<"$payload")" "$(jq -r '.body' <<<"$payload")"
             tracked=$(jq -c --argjson ids "$(jq -c '.ids' <<<"$payload")" \
                 'reduce $ids[] as $id (. ; .[$id].notified = true)' <<<"$tracked")
-        done < <(jq -c '
+        done < <(jq -c --argjson repos "$REPOS_JSON" '
             to_entries
             | map(select(.key | startswith("_") | not))
             | map(.value + {id: .key})
+            | map(select(.repo as $repo | $repos | index($repo)))
             | map(select((.state // "") | startswith("finished:")))
             | map(select((.state // "") != "finished:cancelled"))
             | map(select(.notified != true))
