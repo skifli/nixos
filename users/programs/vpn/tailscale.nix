@@ -65,7 +65,10 @@
     description = "Receive Taildrop files into Downloads";
     wantedBy = [ "multi-user.target" ];
     wants = [ "tailscaled.service" ];
-    after = [ "tailscaled.service" "local-fs.target" ];
+    after = [
+      "tailscaled.service"
+      "local-fs.target"
+    ];
     serviceConfig = {
       Type = "simple";
       Group = "users";
