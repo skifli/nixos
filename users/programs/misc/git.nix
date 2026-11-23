@@ -70,12 +70,6 @@ in
       gh = {
         enable = true;
 
-        hosts = {
-          "github.com" = {
-            user = userVars.git.name;
-          };
-        };
-
         gitCredentialHelper = {
           enable = !hasGitCredential;
           hosts = [
