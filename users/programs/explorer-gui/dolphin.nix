@@ -110,6 +110,7 @@ in
                   "Exec=${config.home.profileDirectory}/bin/linux-file-converter-addon.py --dolphin-run %U"
                 ]
                 (builtins.readFile lfcaServicemenu);
+            executable = true;
           };
 
           # Modern adaption UI, built from source so it works on x86_64 and aarch64
