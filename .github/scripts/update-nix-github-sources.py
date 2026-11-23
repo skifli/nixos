@@ -84,6 +84,9 @@ class GitHub:
     def config(self,owner,repo,ref,root,raw_ref=False):
         import io,tarfile
         from pathlib import PurePosixPath
+        # Config comparison is only meaningful for sources with an explicit
+        # sourceRoot; don't download an archive just to look for a root config.
+        if not root: return None
         escaped=urllib.parse.quote(ref,safe="")
         url=(f"https://github.com/{owner}/{repo}/archive/{escaped}.tar.gz" if raw_ref else
              f"https://github.com/{owner}/{repo}/archive/refs/tags/{escaped}.tar.gz")
@@ -141,6 +144,12 @@ def inspect(path,source,gh):
         ver=VERSION.search(parent)
         if uses_ver and not ver: skipped.append(f"{rel}: {owner}/{repo} has no literal version"); continue
         current=ver.group(2) if uses_ver and ver else (rev.group(1) if rev else "")
+        # A quoted Nix interpolation is not a literal Git ref. Treating
+        # rev = "${version}" as a ref makes the archive lookup request
+        # /archive/${version}.tar.gz, which fails with a misleading 404.
+        if "${" in current:
+            skipped.append(f"{rel}: {owner}/{repo} uses a dynamic Nix revision ({current}); only literal refs can be checked.")
+            continue
         release=gh.release(owner,repo)
         if release is None:
             commit=gh.latest_commit(owner,repo)
