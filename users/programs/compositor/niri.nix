@@ -1,4 +1,5 @@
 {
+  hostVars,
   inputs,
   lib,
   pkgs,
@@ -17,7 +18,8 @@ let
     exec ${pkgs.python3}/bin/python3 ${./niri/safeeyes-focus-guard.py} \
       ${lib.escapeShellArg safeeyesApp.appId} \
       ${lib.escapeShellArg safeeyesApp.breakWindowTitlePrefix} \
-      ${pkgs.niri}/bin/niri
+      ${pkgs.niri}/bin/niri \
+      ${lib.escapeShellArg (builtins.toJSON hostVars.orderedOutputs)}
   '';
 in
 {

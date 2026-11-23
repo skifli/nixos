@@ -46,6 +46,7 @@ let
       open-on-output = outputName;
       open-focused = true;
       open-fullscreen = true;
+      open-floating = false;
     }) hostVars.orderedOutputs
   ) (lib.filter (app: app ? breakWindowTitlePrefix) protectedCloseApps);
 in

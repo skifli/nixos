@@ -1,47 +1,38 @@
 #!/usr/bin/env python3
-"""Keep each active SafeEyes break focused on its own monitor in Niri."""
+"""Keep SafeEyes break windows tiled on their assigned Niri output."""
 
 from __future__ import annotations
 
 import json
 import os
+import re
 import socket
 import subprocess
 import sys
 from typing import Any
 
 
-APP_ID, TITLE_PREFIX, NIRI = sys.argv[1:4]
+APP_ID, TITLE_PREFIX, NIRI, OUTPUTS_JSON = sys.argv[1:5]
+OUTPUTS = json.loads(OUTPUTS_JSON)
 break_window_ids: set[int] = set()
 
 
 def niri_json(*args: str) -> Any:
     result = subprocess.run(
-        [NIRI, "msg", "-j", *args],
-        check=True,
-        capture_output=True,
-        text=True,
+        [NIRI, "msg", "-j", *args], check=True, capture_output=True, text=True
     )
     return json.loads(result.stdout)
 
 
 def ipc_action(name: str, fields: dict[str, Any]) -> None:
-    # Target workspaces by their compositor ID. Workspace indices/names can
-    # repeat across outputs, which could otherwise pull an overlay onto the
-    # wrong monitor when another output has focus.
-    socket_path = os.environ["NIRI_SOCKET"]
     request = json.dumps({"Action": {name: fields}}).encode() + b"\n"
     with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as connection:
-        connection.connect(socket_path)
+        connection.connect(os.environ["NIRI_SOCKET"])
         connection.sendall(request)
         reply = connection.makefile("rb").readline()
     response = json.loads(reply)
     if "Err" in response:
         raise RuntimeError(response["Err"])
-
-
-def refresh() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    return niri_json("windows"), niri_json("workspaces")
 
 
 def is_break(window: dict[str, Any]) -> bool:
@@ -50,7 +41,22 @@ def is_break(window: dict[str, Any]) -> bool:
     )
 
 
-def keep_break_on_output(output: str, focus_it: bool) -> None:
+def assigned_output(window: dict[str, Any]) -> str | None:
+    title = str(window.get("title", ""))
+    if not is_break(window):
+        return None
+    match = re.match(r"^(\d+)", title[len(TITLE_PREFIX) :])
+    if match is None:
+        return None
+    index = int(match.group(1))
+    return OUTPUTS[index] if 0 <= index < len(OUTPUTS) else None
+
+
+def refresh() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    return niri_json("windows"), niri_json("workspaces")
+
+
+def keep_breaks_on_output(output: str, focus_it: bool = False) -> None:
     windows, workspaces = refresh()
     active = next(
         (
@@ -63,20 +69,9 @@ def keep_break_on_output(output: str, focus_it: bool) -> None:
     if active is None:
         return
 
-    overlays = [
-        window
-        for window in windows
-        if is_break(window)
-        and any(
-            workspace.get("id") == window.get("workspace_id")
-            and workspace.get("output") == output
-            for workspace in workspaces
-        )
-    ]
+    overlays = [window for window in windows if assigned_output(window) == output]
     for overlay in overlays:
         if overlay.get("workspace_id") != active.get("id"):
-            # The exact workspace ID keeps the break on this same output even
-            # when another monitor has focus and uses the same workspace index.
             ipc_action(
                 "MoveWindowToWorkspace",
                 {
@@ -85,11 +80,27 @@ def keep_break_on_output(output: str, focus_it: bool) -> None:
                     "focus": False,
                 },
             )
+        # Niri 26.04 has no idempotent fullscreen-set action or fullscreen state
+        # in its window snapshot. Keep the break out of floating mode here;
+        # `open-fullscreen = true` handles its initial state in the window rule.
+        if overlay.get("is_floating"):
+            ipc_action("MoveWindowToTiling", {"id": overlay["id"]})
 
     if focus_it and overlays:
-        # Moving is done without focus first; focusing the break afterwards
-        # makes a same-workspace focus change unable to bypass the break.
         ipc_action("FocusWindow", {"id": overlays[0]["id"]})
+
+
+def reconcile_active(focus_output: str | None = None) -> None:
+    windows, workspaces = refresh()
+    active_outputs = {
+        workspace.get("output")
+        for workspace in workspaces
+        if workspace.get("is_active")
+        and any(assigned_output(window) == workspace.get("output") for window in windows)
+    }
+    for output in active_outputs:
+        if output is not None:
+            keep_breaks_on_output(output, focus_it=output == focus_output)
 
 
 def handle_event(event: dict[str, Any]) -> None:
@@ -97,33 +108,30 @@ def handle_event(event: dict[str, Any]) -> None:
 
     snapshot = event.get("WindowsChanged")
     if snapshot is not None:
-        break_window_ids = {
-            window["id"] for window in snapshot.get("windows", []) if is_break(window)
-        }
+        windows = snapshot.get("windows", [])
+        break_window_ids = {window["id"] for window in windows if is_break(window)}
+        reconcile_active()
         return
 
     opened = event.get("WindowOpenedOrChanged", {}).get("window")
     if opened is not None:
         if is_break(opened):
-            already_tracked = opened["id"] in break_window_ids
             break_window_ids.add(opened["id"])
-            # SafeEyes can emit multiple updates for one break window during
-            # startup. Only focus it on its first appearance; repeated focus
-            # actions can cause pointer warps and make its controls awkward.
-            if already_tracked:
-                return
-            windows, workspaces = refresh()
-            workspace = next(
-                (
-                    workspace
-                    for workspace in workspaces
-                    if workspace.get("id") == opened.get("workspace_id")
-                ),
-                None,
-            )
-            if workspace is not None:
-                keep_break_on_output(
-                    str(workspace["output"]), focus_it=bool(workspace.get("is_focused"))
+            output = assigned_output(opened)
+            if output is not None:
+                workspaces = niri_json("workspaces")
+                active = next(
+                    (
+                        workspace
+                        for workspace in workspaces
+                        if workspace.get("output") == output
+                        and workspace.get("is_active")
+                    ),
+                    None,
+                )
+                keep_breaks_on_output(
+                    output,
+                    focus_it=bool(active and active.get("is_focused")),
                 )
         else:
             break_window_ids.discard(opened.get("id"))
@@ -134,8 +142,6 @@ def handle_event(event: dict[str, Any]) -> None:
         break_window_ids.discard(closed.get("id"))
         return
 
-    # When no break is active, focus changes and workspace switches need no
-    # compositor queries or actions.
     if not break_window_ids:
         return
 
@@ -145,51 +151,39 @@ def handle_event(event: dict[str, Any]) -> None:
         if focused is None or is_break(focused):
             return
         workspace = next(
-            (
-                workspace
-                for workspace in workspaces
-                if workspace.get("id") == focused.get("workspace_id")
-            ),
+            (ws for ws in workspaces if ws.get("id") == focused.get("workspace_id")),
             None,
         )
         if workspace is not None:
-            keep_break_on_output(str(workspace["output"]), focus_it=True)
+            keep_breaks_on_output(str(workspace["output"]), focus_it=True)
         return
 
     activated = event.get("WorkspaceActivated")
     if activated is not None:
-        workspaces = niri_json("workspaces")
         workspace = next(
-            (workspace for workspace in workspaces if workspace.get("id") == activated.get("id")),
+            (
+                ws
+                for ws in niri_json("workspaces")
+                if ws.get("id") == activated.get("id")
+            ),
             None,
         )
         if workspace is not None:
-            keep_break_on_output(
-                str(workspace["output"]), focus_it=bool(activated.get("focused"))
+            keep_breaks_on_output(
+                str(workspace["output"]), focus_it=bool(activated.get("is_focused"))
             )
-        return
 
 
 def main() -> None:
     global break_window_ids
 
-    # Reconcile any breaks already open when the service starts, preserving
-    # their output assignment and focusing only the output currently in use.
     windows, workspaces = refresh()
     break_window_ids = {window["id"] for window in windows if is_break(window)}
-    outputs_with_breaks = {
-        workspace["output"]
-        for window in windows
-        if is_break(window)
-        for workspace in workspaces
-        if workspace.get("id") == window.get("workspace_id")
-    }
-    for output in outputs_with_breaks:
-        focus_it = any(
-            workspace.get("output") == output and workspace.get("is_focused")
-            for workspace in workspaces
-        )
-        keep_break_on_output(str(output), focus_it=focus_it)
+    focused_output = next(
+        (workspace.get("output") for workspace in workspaces if workspace.get("is_focused")),
+        None,
+    )
+    reconcile_active(focus_output=focused_output)
 
     stream = subprocess.Popen(
         [NIRI, "msg", "-j", "event-stream"],
@@ -210,8 +204,6 @@ def main() -> None:
             RuntimeError,
             subprocess.SubprocessError,
         ):
-            # A transient compositor/event race is harmless; later focus or
-            # workspace events will reconcile the break again.
             continue
 
 
