@@ -39,6 +39,14 @@ let
     };
 in
 {
+  # Dolphin's KIO NFS worker uses mount.nfs for user-initiated nfs:// mounts.
+  # Nix store files cannot carry setuid bits, so provide the standard runtime
+  # wrapper required by mount.nfs for these user mounts.
+  security.wrappers."mount.nfs" = {
+    source = "${pkgs.nfs-utils}/bin/mount.nfs";
+    setuid = true;
+  };
+
   fileSystems = builtins.listToAttrs (
     map (share: {
       name = share.mountPoint;
