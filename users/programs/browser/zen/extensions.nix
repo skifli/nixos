@@ -4,6 +4,16 @@ _:
 # https://github.com/0xc000022070/zen-browser-flake/tree/b6b1e625e4aa049b59930611fc20790c0ccbc840?tab=readme-ov-file#extensions
 let
   mkAmoXpiUrl = amoSlug: "https://addons.mozilla.org/firefox/downloads/latest/${amoSlug}/latest.xpi";
+  mkLocalXpiUrl =
+    path:
+    "file://${
+      toString (
+        builtins.path {
+          path = path;
+          name = baseNameOf (toString path);
+        }
+      )
+    }";
 
   mkForceInstalled =
     {
@@ -50,6 +60,16 @@ let
       private_browsing = true;
       installation_mode = "force_installed";
       install_url = "https://github.com/mkaply/queryamoid/releases/download/v0.2/query_amo_addon_id-0.2-fx.xpi";
+    };
+
+    "openhands-clipboard-paste@skifli.github.io" = {
+      installation_mode = "force_installed";
+      install_url = mkLocalXpiUrl ./profile-default/hidden/extensions/clipboard-paste.xpi;
+    };
+
+    "tinysub-seed@skifli.github.io" = {
+      installation_mode = "force_installed";
+      install_url = mkLocalXpiUrl ./profile-default/hidden/extensions/tinysub-seed.xpi;
     };
   };
 in
@@ -138,6 +158,13 @@ in
 
     # query-amoid (mkaply) - no settings outside its popup
     "queryamoid@kaply.com" = {
+    };
+
+    # OpenHands clipboard helper and TinySub seed store their state in the
+    # extension/site themselves; neither reads Firefox managed storage.
+    "openhands-clipboard-paste@skifli.github.io" = {
+    };
+    "tinysub-seed@skifli.github.io" = {
     };
   };
 }
