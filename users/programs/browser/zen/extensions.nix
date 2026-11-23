@@ -9,7 +9,7 @@ let
     "file://${
       toString (
         builtins.path {
-          path = path;
+          inherit path;
           name = baseNameOf (toString path);
         }
       )
