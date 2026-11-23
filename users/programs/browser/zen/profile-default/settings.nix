@@ -299,7 +299,9 @@
 
   "zen.watermark.enabled" = false;
   "zen.welcome-screen.seen" = true;
-  "zen.widget.linux.transparency" = true; # ENABLE transparent sidebar
+  # Zen currently makes light-theme chrome fully transparent with this enabled,
+  # which can leave dark tab labels unreadable against a dark desktop scene.
+  "zen.widget.linux.transparency" = false;
   "zen.workspaces.continue-where-left-off" = true;
   "zen.workspaces.switch-animation-duration" = 0; # THANK YOU https://discord.com/channels/1234768000293535785/1234768002675638364/1552598227314942013
 
