@@ -113,6 +113,9 @@
   # Stops any potential conflict with Nix/Home Manager installing extensions.
   "extensions.autoDisableScopes" = 0;
   "extensions.enabledScopes" = 15;
+  # These locally maintained XPI files are unsigned. Zen honors this preference
+  # (unlike official Firefox release builds, which ignore it).
+  "xpinstall.signatures.required" = false;
 
   "extensions.formautofill.available" = "off";
   "extensions.formautofill.addresses.enabled" = false;
