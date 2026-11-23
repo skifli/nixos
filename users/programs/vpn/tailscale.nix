@@ -1,5 +1,7 @@
 {
   config,
+  hostVars,
+  lib,
   pkgs,
   userVars,
   ...
@@ -58,6 +60,26 @@
   # Prevent systemd from waiting for network online
   systemd.network.wait-online.enable = false;
   boot.initrd.systemd.network.wait-online.enable = false;
+
+  systemd.services.tailscale-taildrop = lib.mkIf (hostVars.hostname == "lyra") {
+    description = "Receive Taildrop files into Downloads";
+    wantedBy = [ "multi-user.target" ];
+    wants = [ "tailscaled.service" ];
+    after = [ "tailscaled.service" "local-fs.target" ];
+    serviceConfig = {
+      Type = "simple";
+      Group = "users";
+      UMask = "0002";
+      ExecStartPre = [
+        "${pkgs.coreutils}/bin/mkdir -p /home/${userVars.username}/Downloads/Taildrop"
+        "${pkgs.coreutils}/bin/chown ${userVars.username}:users /home/${userVars.username}/Downloads/Taildrop"
+        "${pkgs.coreutils}/bin/chmod 2775 /home/${userVars.username}/Downloads/Taildrop"
+      ];
+      ExecStart = "${config.services.tailscale.package}/bin/tailscale file get --loop --conflict=rename /home/${userVars.username}/Downloads/Taildrop";
+      Restart = "on-failure";
+      RestartSec = "30s";
+    };
+  };
 
   home-manager.users.${userVars.username} = { lib, ... }: {
     systemd.user.services.ktailctl = {
