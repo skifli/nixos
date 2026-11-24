@@ -66,6 +66,9 @@ notify-send -e -a nixOS \
       -u low -t 8000 \\
       'Rebuild complete' \"Took \$duration seconds.\" || true
 
+    pw-play /run/current-system/sw/share/sounds/freedesktop/stereo/complete.oga \\
+      >/dev/null 2>&1 || true
+
     case '$POST_ACTION' in
       reboot)
         echo 'Rebuilding complete. Rebooting in 5 seconds (Ctrl+C to abort)...'
