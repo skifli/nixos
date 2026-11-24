@@ -21,6 +21,7 @@ before_paths="$(mktemp "$temporary_dir/xilo-before.XXXXXX")"
 after_paths="$(mktemp "$temporary_dir/xilo-after.XXXXXX")"
 new_paths="$(mktemp "$temporary_dir/xilo-new.XXXXXX")"
 watch_log="$(mktemp "$temporary_dir/xilo-watch.XXXXXX")"
+attempt_log="$(mktemp "$temporary_dir/xilo-build.XXXXXX")"
 nix path-info --all | LC_ALL=C sort -u > "$before_paths"
 
 push_enabled=false
@@ -92,7 +93,7 @@ finish() {
     fi
   fi
 
-  rm -f "$before_paths" "$after_paths" "$new_paths" "$new_paths.raw" "$watch_log"
+  rm -f "$before_paths" "$after_paths" "$new_paths" "$new_paths.raw" "$watch_log" "$attempt_log"
   exit "$status"
 }
 
@@ -102,18 +103,44 @@ trap 'exit 143' TERM
 
 build_status=1
 build_attempts=5
+previous_failure_transient=false
+
+run_build_attempt() {
+  local log_file="$1"
+  shift
+  local command_status
+
+  : > "$log_file"
+  set +e
+  "$@" 2>&1 | tee "$log_file"
+  command_status=${PIPESTATUS[0]}
+  set -e
+  return "$command_status"
+}
+
+is_transient_network_failure() {
+  grep -Eiq \
+    'HTTP (error|status code):?[[:space:]]*(408|425|429|500|502|503|504)|HTTP/[0-9.]+[[:space:]]+(408|425|429|500|502|503|504)|curl: \(22\).*returned error: (408|425|429|500|502|503|504)|API rate limit exceeded|temporary failure in name resolution|could not resolve host|name or service not known|connection timed out|operation timed out|connection reset by peer|network is unreachable|no route to host|connection refused|TLS handshake timeout|SSL connect error|unexpected EOF|unexpected end of file|premature EOF|curl: \((6|7|18|28|35|52|55|56|92)\)' \
+    "$1"
+}
+
 for ((attempt = 1; attempt <= build_attempts; attempt++)); do
   echo "Build attempt $attempt/$build_attempts: $*"
-  if [[ "$attempt" -eq "$build_attempts" && "${1:-}" == "nix" && "${2:-}" == "build" ]]; then
-    echo "Final attempt enables Nix fallback builds for failed substitutes."
-    if "$@" --fallback; then
+  if [[ "$attempt" -eq "$build_attempts" && "$previous_failure_transient" == true && "${1:-}" == "nix" && "${2:-}" == "build" ]]; then
+    echo "Final retry uses Nix fallback after a detected transient fetch/substitute failure."
+    if run_build_attempt "$attempt_log" "$@" --fallback; then
       build_status=0
       break
     fi
-  elif "$@"; then
+  elif run_build_attempt "$attempt_log" "$@"; then
     build_status=0
     break
   fi
+  if ! is_transient_network_failure "$attempt_log"; then
+    echo "Build failed with no recognized transient network error; not retrying." >&2
+    break
+  fi
+  previous_failure_transient=true
   if [[ "$attempt" -eq "$build_attempts" ]]; then
     echo "Build failed after $attempt attempts; preserving and pushing completed store paths." >&2
     break
