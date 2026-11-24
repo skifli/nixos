@@ -80,18 +80,31 @@ def keep_breaks_on_output(output: str, focus_it: bool = False) -> None:
                     "focus": False,
                 },
             )
-        # Niri 26.04 has no idempotent fullscreen-set action or fullscreen state
-        # in its window snapshot. Keep the break out of floating mode here;
-        # `open-fullscreen = true` handles its initial state in the window rule.
+        # Keep the break tiled so it cannot be dragged to another output.
         if overlay.get("is_floating"):
             ipc_action("MoveWindowToTiling", {"id": overlay["id"]})
 
     if focus_it and overlays:
         ipc_action("FocusWindow", {"id": overlays[0]["id"]})
+        # Niri has no per-window "not resizable" setting. Restore the break
+        # column to full output width whenever it changes, preventing a narrow
+        # tiled window from being used to shorten the break.
+        subprocess.run(
+            [NIRI, "msg", "action", "set-column-width", "100%"],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
 
 
 def reconcile_active(focus_output: str | None = None) -> None:
     windows, workspaces = refresh()
+    if focus_output is None:
+        focus_output = next(
+            (workspace.get("output") for workspace in workspaces if workspace.get("is_focused")),
+            None,
+        )
+
     active_outputs = {
         workspace.get("output")
         for workspace in workspaces

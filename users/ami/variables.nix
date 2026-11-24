@@ -45,8 +45,14 @@ let
       };
       open-on-output = outputName;
       open-focused = true;
-      open-fullscreen = true;
+      # Full-width tiled column keeps the break visible without floating it.
+      open-maximized = true;
+      default-column-width = {
+        proportion = 1.0;
+      };
       open-floating = false;
+      # Niri applies window opacity to the break itself, not SafeEyes settings.
+      opacity = 0.85;
     }) hostVars.orderedOutputs
   ) (lib.filter (app: app ? breakWindowTitlePrefix) protectedCloseApps);
 in
