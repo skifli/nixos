@@ -16,13 +16,16 @@ source "$HOME/.local/bin/startup-lib.sh"
 FOCUSED_MONITOR="${1:-}"
 SECOND_MONITOR="${2:-}"
 
-notify-send -e -a "gcr-prompter" -i "$HOME/.local/share/misc/Seahorse_icon_hicolor.svg" -u low -t 2500 "Keyring Locked" "Polling for keyring unlock..." || true
-
 # As all keyring dependent applications are not open yet, the gcr prompt will not show / automatically hide.
 # So, this prompts it with dummy values to cause it to prompt the user via the GUI first.
 # Done this early just to give it as much time to spawn the GUI.
 # And redirect stdin to /dev/null to avoid it blocking the script if it prompts for input.
-spawn_keyring_poll
+if is_any_keyring_locked; then
+    notify-send -e -a "gcr-prompter" -i "$HOME/.local/share/misc/Seahorse_icon_hicolor.svg" -u low -t 2500 "Keyring Locked" "Polling for keyring unlock..." || true
+    spawn_keyring_poll
+else
+    log "keyring already unlocked; skipping unlock prompt polling"
+fi
 
 # Launch all apps IMMEDIATELY in background so they open within niri's 60s
 # at-startup window. Window rules with at-startup=true will place them.

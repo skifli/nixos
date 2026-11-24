@@ -74,13 +74,33 @@ start_and_manage() {
 }
 
 is_any_keyring_locked() {
-    local l_login l_def
-    l_login=$(busctl --user get-property org.freedesktop.secrets /org/freedesktop/secrets/collection/login org.freedesktop.Secret.Collection Locked 2>/dev/null | awk '{print $2}')
-    l_def=$(busctl --user get-property org.freedesktop.secrets /org/freedesktop/secrets/collection/Default_5fkeyring org.freedesktop.Secret.Collection Locked 2>/dev/null | awk '{print $2}')
-    # Treat a missing D-Bus service/collection as not ready. Only report
-    # unlocked after both collections were queried successfully.
-    [ "$l_login" = "false" ] && [ "$l_def" = "false" ] && return 1
-    return 0
+    local objects object_path collection locked checked=0
+
+    # Don't assume every machine has the stock "Default keyring" object.
+    objects=$(busctl --user --list tree org.freedesktop.secrets 2>/dev/null) || return 0
+
+    while IFS= read -r object_path; do
+        case "$object_path" in
+            /org/freedesktop/secrets/collection/*) ;;
+            *) continue ;;
+        esac
+
+        collection="${object_path#/org/freedesktop/secrets/collection/}"
+        # Only inspect direct children: deeper paths are individual secrets.
+        [[ -n "$collection" && "$collection" != */* ]] || continue
+
+        locked=$(busctl --user get-property org.freedesktop.secrets "$object_path" \
+            org.freedesktop.Secret.Collection Locked 2>/dev/null | awk '{print $2}')
+        # A collection disappearing during the check means the service is not
+        # ready to trust yet; retry on the next poll.
+        [ -n "$locked" ] || return 0
+        checked=1
+        [ "$locked" = "false" ] || return 0
+    done <<< "$objects"
+
+    # No visible collections means the Secret Service is not ready/unlocked.
+    [ "$checked" -gt 0 ] || return 0
+    return 1
 }
 
 # As all keyring dependent applications are not open yet, the gcr prompt will not show / automatically hide. So, this prompts it with dummy values to cause it to prompt the user via the GUI first. Done this early just to give it as much time to spawn the GUI.
@@ -134,8 +154,14 @@ spawn_keyring_poll() {
 # Usage: wait_for_keyring_then "cmd1" "cmd2" ...
 wait_for_keyring_then() {
     (
-        notify-send -e -a "gcr-prompter" -i "$HOME/.local/share/misc/Seahorse_icon_hicolor.svg" -u low -t 2500 "Keyring Locked" "Waiting for keyring to be unlocked..."
-        log "waiting for keyring to unlock (timeout ${STARTUP_KEYRING_TIMEOUT}s)"
+        local waited_for_keyring=false
+        if is_any_keyring_locked; then
+            waited_for_keyring=true
+            notify-send -e -a "gcr-prompter" -i "$HOME/.local/share/misc/Seahorse_icon_hicolor.svg" -u low -t 2500 "Keyring Locked" "Waiting for keyring to be unlocked..."
+            log "waiting for keyring to unlock (timeout ${STARTUP_KEYRING_TIMEOUT}s)"
+        else
+            log "keyring already unlocked; starting keyring-dependent apps"
+        fi
 
         local deadline=$((SECONDS + STARTUP_KEYRING_TIMEOUT))
         while is_any_keyring_locked; do
@@ -147,7 +173,9 @@ wait_for_keyring_then() {
         done
 
         log "keyring unlocked"
-        notify-send -e -a "gcr-prompter" -i "$HOME/.local/share/misc/Seahorse_icon_hicolor.svg" -u low -t 2500 "Keyring Unlocked" "Launching keyring-dependent apps..."
+        if [ "$waited_for_keyring" = true ]; then
+            notify-send -e -a "gcr-prompter" -i "$HOME/.local/share/misc/Seahorse_icon_hicolor.svg" -u low -t 2500 "Keyring Unlocked" "Launching keyring-dependent apps..."
+        fi
 
         sleep 1 # Just a tad of a delay to ensure the keyring is fully ready for use
 
