@@ -88,5 +88,20 @@ in
       };
       systemd.enable = true; # Nyoom startup times
     };
+
+    # Dolphin resolves TerminalService via the user's local applications
+    # directory. Putting this only in the Nix profile makes Dolphin's built-in
+    # "Open Terminal Here" fall back to an iconless action on this setup.
+    # Keep the entry category-free (so it stays out of the app launcher) and
+    # non-single-instance (so Dolphin's working directory is preserved).
+    home.file.".local/share/applications/ghostty-terminal.desktop".text = ''
+      [Desktop Entry]
+      Type=Application
+      Name=Ghostty
+      Exec=${pkgs.ghostty}/bin/ghostty --gtk-single-instance=false
+      Icon=utilities-terminal
+      Terminal=false
+      DBusActivatable=false
+    '';
   };
 }
