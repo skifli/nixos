@@ -110,11 +110,10 @@ let
   kdeglobalsBase = ''
     [General]
     TerminalApplication=${userVars.programs.terminal}
+    # Use the hidden non-single-instance Ghostty entry so KTerminalLauncherJob
+    # keeps the selected directory for "Open Terminal Here".
     TerminalService=${
-      if userVars.programs.terminal == "ghostty" then
-        "com.mitchellh.ghostty"
-      else
-        userVars.programs.terminal
+      if userVars.programs.terminal == "ghostty" then "ghostty-terminal" else userVars.programs.terminal
     }.desktop
 
     [KFileDialog Settings]
