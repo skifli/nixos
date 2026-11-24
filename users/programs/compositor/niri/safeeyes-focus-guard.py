@@ -94,6 +94,14 @@ def keep_breaks_on_output(output: str, focus_it: bool = False) -> None:
             capture_output=True,
             text=True,
         )
+        # SafeEyes break windows must also stay full-height; otherwise the
+        # user can shrink the break vertically while its column stays wide.
+        subprocess.run(
+            [NIRI, "msg", "action", "set-window-height", "100%"],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
 
 
 def reconcile_active(focus_output: str | None = None) -> None:
@@ -141,7 +149,23 @@ def handle_event(event: dict[str, Any]) -> None:
             if isinstance(change, list) and change
         }
         if changed_ids & break_window_ids:
-            reconcile_active()
+            # Resizing or dragging a break can change the focused output. Put
+            # the break back on its assigned output and focus it immediately,
+            # even when another window is already on that workspace.
+            windows, _ = refresh()
+            changed_break = next(
+                (
+                    window
+                    for window in windows
+                    if window.get("id") in changed_ids and is_break(window)
+                ),
+                None,
+            )
+            output = assigned_output(changed_break) if changed_break else None
+            if output is not None:
+                keep_breaks_on_output(output, focus_it=True)
+            else:
+                reconcile_active()
         return
 
     opened = event.get("WindowOpenedOrChanged", {}).get("window")
