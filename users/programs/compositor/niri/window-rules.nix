@@ -79,6 +79,18 @@ protectedCloseRules
     open-floating = true;
     # By default, new floating windows open at the center of the screen, and windows from the tiling layout open close to their visual screen position.
   }
+  {
+    match._props.app-id._raw = ''r#"(?i)org\.kde\.kdialog"#'';
+    match._props.title._raw = ''r#"(?i)^Send via Taildrop$"#'';
+    open-floating = true;
+    open-focused = true;
+    default-column-width = {
+      fixed = 600;
+    };
+    default-window-height = {
+      fixed = 420;
+    };
+  }
   # Gets the usually centered status window away and not focus it
   (
     {

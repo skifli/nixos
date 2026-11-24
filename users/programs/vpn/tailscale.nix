@@ -1,11 +1,55 @@
 {
   config,
-  hostVars,
-  lib,
   pkgs,
   userVars,
   ...
 }:
+let
+  taildropSend = pkgs.writeShellApplication {
+    name = "taildrop-send";
+    runtimeInputs = [
+      config.services.tailscale.package
+      pkgs.kdePackages.kdialog
+    ];
+    text = ''
+      if [ "$#" -eq 0 ]; then
+        exit 0
+      fi
+
+      if ! targets="$(tailscale file cp --targets)"; then
+        kdialog --title "Taildrop" --error "Could not list Taildrop peers. Is Tailscale running?"
+        exit 1
+      fi
+
+      menu=()
+      while IFS=$'\t' read -r ip host status; do
+        : "$ip"
+        [ -n "$host" ] || continue
+        label="$host"
+        if [ -n "$status" ]; then
+          label="$host ($status)"
+        fi
+        menu+=("$host" "$label")
+      done <<< "$targets"
+
+      if [ "''${#menu[@]}" -eq 0 ]; then
+        kdialog --title "Taildrop" --error "No Taildrop peers found."
+        exit 1
+      fi
+
+      if ! peer="$(kdialog --title "Send via Taildrop" --menu "Send to which peer?" "''${menu[@]}")"; then
+        exit 0
+      fi
+
+      if ! output="$(tailscale file cp "$@" "''${peer}:" 2>&1)"; then
+        kdialog --title "Taildrop failed" --error "$output"
+        exit 1
+      fi
+
+      kdialog --title "Taildrop" --passivepopup "Sent $# file(s) to $peer." 5
+    '';
+  };
+in
 {
   environment.systemPackages = with pkgs; [ ktailctl ];
 
@@ -61,7 +105,7 @@
   systemd.network.wait-online.enable = false;
   boot.initrd.systemd.network.wait-online.enable = false;
 
-  systemd.services.tailscale-taildrop = lib.mkIf (hostVars.hostname == "lyra") {
+  systemd.services.tailscale-taildrop = {
     description = "Receive Taildrop files into Downloads";
     wantedBy = [ "multi-user.target" ];
     wants = [ "tailscaled.service" ];
@@ -73,6 +117,7 @@
       Type = "simple";
       Group = "users";
       UMask = "0002";
+      requiresMountsFor = [ "/home/${userVars.username}" ];
       ExecStartPre = [
         "${pkgs.coreutils}/bin/mkdir -p /home/${userVars.username}/Downloads/Taildrop"
         "${pkgs.coreutils}/bin/chown ${userVars.username}:users /home/${userVars.username}/Downloads/Taildrop"
@@ -85,6 +130,22 @@
   };
 
   home-manager.users.${userVars.username} = { lib, ... }: {
+    home.file.".local/share/kio/servicemenus/taildrop-send.desktop" = {
+      text = ''
+        [Desktop Entry]
+        Type=Service
+        ServiceTypes=KonqPopupMenu/Plugin
+        MimeType=all/allfiles;
+        Actions=taildropSend;
+
+        [Desktop Action taildropSend]
+        Name=Send via Taildrop...
+        Icon=network-wired
+        Exec=${taildropSend}/bin/taildrop-send %F
+      '';
+      executable = true;
+    };
+
     systemd.user.services.ktailctl = {
       Unit = {
         Description = "KTailctl system tray applet";
