@@ -41,7 +41,11 @@ fi
     # after login. Don't let a failed notification kill the service (and delay
     # the actual theme switch until systemd restarts it).
     notify-send -e -a "nixOS" -i "$ICON_PATH" -u low -t 5000 "Auto-theme switcher" "Switching to $WANTED mode..." || true
-    "$SWITCHER_BIN" "$WANTED" || echo "WARNING: theme switcher exited non-zero" >&2
+    if ! "$SWITCHER_BIN" "$WANTED"; then
+      echo "WARNING: theme switcher failed; retrying in 3 seconds" >&2
+      sleep 3
+      continue
+    fi
   fi
 
   # Wait until the next solar transition (sunrise or sunset)
