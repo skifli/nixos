@@ -44,6 +44,8 @@ in
   # wrapper required by mount.nfs for these user mounts.
   security.wrappers."mount.nfs" = {
     source = "${pkgs.nfs-utils}/bin/mount.nfs";
+    owner = "root";
+    group = "root";
     setuid = true;
   };
 
