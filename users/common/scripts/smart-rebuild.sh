@@ -36,6 +36,7 @@ notify-send -e -a nixOS \
   'nixOS Rebuild' 'Initing nixOS-rebuild switch'
 
 "$HOME/.local/bin/floating-term.sh" "$TERMINAL" -e "$SHELL_BIN" -i -c "
+  sudo -v || exit
   cd '$HOME/nixos' && sudo chown -R '$USER' .git/
   git pull &&
   git submodule update --init --recursive &&
@@ -43,9 +44,18 @@ notify-send -e -a nixOS \
 
   start_time=\$(date +%s.%N)
 
+  # Keep the sudo timestamp alive only while nh runs, so activation does not
+  # prompt after a long build when nobody is at the keyboard.
+  (
+    while sleep 60; do sudo -n -v || exit; done
+  ) &
+  sudo_keepalive_pid=\$!
   nh os switch path:. --accept-flake-config -H $HOSTNAME
+  nh_status=\$?
+  kill \$sudo_keepalive_pid 2>/dev/null || true
+  wait \$sudo_keepalive_pid 2>/dev/null || true
 
-  if [ \$? -eq 0 ]; then
+  if [ \$nh_status -eq 0 ]; then
     end_time=\$(date +%s.%N)
     duration=\$(echo \"scale=2; \$end_time - \$start_time\" | bc)
     log_date=\$(date '+%Y-%m-%d %H:%M:%S')
