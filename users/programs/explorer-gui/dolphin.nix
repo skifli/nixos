@@ -18,6 +18,42 @@ let
     sha256 = "0884932762304d536ae01e66cc6d6d87b6d7228765ce97194d63e6f16f65a01d";
   };
 
+  # Upstream rewrites its config and the Dolphin servicemenu on every start.
+  # Both are symlinks into the read-only Nix store here, so the config write
+  # prints a traceback and the servicemenu write kills the process with EROFS
+  # before the UI appears. Keep our declarative servicemenu (it has the
+  # absolute wrapper path) and make the config a real file in the activation
+  # script below; this copy just neutralises the writes and self-updates.
+  lfcaScriptPatched = pkgs.runCommand "linux-file-converter-addon.py" { } ''
+    cp ${lfcaScript} $out
+    chmod +w $out
+    ${pkgs.python3}/bin/python3 - "$out" <<'PY'
+    import sys
+
+    path = sys.argv[1]
+    with open(path) as f:
+        text = f.read()
+
+    text = text.replace(
+        "open(DOLPHIN_SERVICE_MENU_LOCATION, 'w')",
+        "open(os.devnull, 'w')",
+    )
+    text = text.replace("os.chmod(DOLPHIN_SERVICE_MENU_LOCATION,", "#")
+    text = text.replace(
+        'if user_configuration["automaticUpdates"]:',
+        "if False:",
+        1,
+    )
+    text = text.replace(
+        '"automaticUpdates": True,',
+        '"automaticUpdates": False,',
+    )
+
+    with open(path, "w") as f:
+        f.write(text)
+    PY
+  '';
+
   lfcaServicemenu = pkgs.fetchurl {
     url = "https://codeberg.org/Lich-Corals/linux-file-converter-addon/raw/commit/3353f531c7b30ee415510c306a97368946234bb8/linux-file-converter-addon.kde_servicemenu";
     sha256 = "005840b6039d313ede83b3359a2b2a487bf4872cb6c5174e1709d2b1b7597904";
@@ -75,7 +111,15 @@ let
 
   lfcaWrapper = pkgs.writeShellScriptBin "linux-file-converter-addon.py" ''
     export GI_TYPELIB_PATH="${pkgs.gtk3}/lib/girepository-1.0"
-    exec '${lfcaPython}/bin/python3' -OOt '${lfcaScript}' "$@"
+    # The adaption UI's winit backend dlopens Wayland/xkbcommon at runtime;
+    # without these it panics with `NoWaylandLib` before showing anything.
+    export LD_LIBRARY_PATH="${
+      pkgs.lib.makeLibraryPath [
+        pkgs.wayland
+        pkgs.libxkbcommon
+      ]
+    }''${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    exec '${lfcaPython}/bin/python3' -OOt '${lfcaScriptPatched}' "$@"
   '';
 in
 {
@@ -100,13 +144,16 @@ in
         file = {
           # kio servicemenu; Exec rewritten to the wrapper's absolute path (no
           # "python3 " prefix since NixOS has no /usr/bin/python3 and ~ isn't safe)
+          # and a monochrome Breeze/Papirus action icon added to the group.
           ".local/share/kio/servicemenus/linux-file-converter-addon.desktop" = {
             text =
               builtins.replaceStrings
                 [
+                  "Name=Convert to..."
                   "Exec=python3 ~/.local/bin/linux-file-converter-addon.py --dolphin-run %U"
                 ]
                 [
+                  "Name=Convert to...\nIcon=transform-crop-and-resize"
                   "Exec=${config.home.profileDirectory}/bin/linux-file-converter-addon.py --dolphin-run %U"
                 ]
                 (builtins.readFile lfcaServicemenu);
@@ -117,14 +164,6 @@ in
           ".config/linux-file-converter-addon/libconverter_addon_adaption_ui.so" = {
             source = "${adaptionUI}/lib/libconverter_addon_adaption_ui.so";
           };
-
-          # Don't let the addon try to rewrite itself (read-only store) or download
-          # an x86-only UI binary
-          ".config/linux-file-converter-addon/config.json" = {
-            text = builtins.toJSON {
-              automaticUpdates = false;
-            };
-          };
         };
 
         # KDE service cache refresh.
@@ -134,6 +173,21 @@ in
           KBUILD="${pkgs.kdePackages.kservice}/bin/kbuildsycoca6"
           if [ -x "$KBUILD" ]; then
             "$KBUILD" >/tmp/kbuildsycoca6.log 2>&1 || true
+          fi
+        '';
+
+        # The addon wants to write its config at runtime; home.file would make
+        # it a read-only store symlink (the script logs EROFS, though it
+        # continues). Replace the old symlink with a real writable file, but
+        # leave an existing user-edited file alone.
+        activation.setupConverterConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          CONFIG_FILE="$HOME/.config/linux-file-converter-addon/config.json"
+          if [ -L "$CONFIG_FILE" ]; then
+            ${pkgs.coreutils}/bin/rm -f "$CONFIG_FILE"
+          fi
+          if [ ! -e "$CONFIG_FILE" ]; then
+            ${pkgs.coreutils}/bin/mkdir -p "$HOME/.config/linux-file-converter-addon"
+            printf '%s\n' '{"automaticUpdates": false}' > "$CONFIG_FILE"
           fi
         '';
 
