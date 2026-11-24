@@ -11,7 +11,6 @@ import subprocess
 import sys
 from typing import Any
 
-
 APP_ID, TITLE_PREFIX, NIRI, OUTPUTS_JSON = sys.argv[1:5]
 OUTPUTS = json.loads(OUTPUTS_JSON)
 break_window_ids: set[int] = set()
@@ -101,7 +100,11 @@ def reconcile_active(focus_output: str | None = None) -> None:
     windows, workspaces = refresh()
     if focus_output is None:
         focus_output = next(
-            (workspace.get("output") for workspace in workspaces if workspace.get("is_focused")),
+            (
+                workspace.get("output")
+                for workspace in workspaces
+                if workspace.get("is_focused")
+            ),
             None,
         )
 
@@ -109,7 +112,9 @@ def reconcile_active(focus_output: str | None = None) -> None:
         workspace.get("output")
         for workspace in workspaces
         if workspace.get("is_active")
-        and any(assigned_output(window) == workspace.get("output") for window in windows)
+        and any(
+            assigned_output(window) == workspace.get("output") for window in windows
+        )
     }
     for output in active_outputs:
         if output is not None:
@@ -124,6 +129,19 @@ def handle_event(event: dict[str, Any]) -> None:
         windows = snapshot.get("windows", [])
         break_window_ids = {window["id"] for window in windows if is_break(window)}
         reconcile_active()
+        return
+
+    # Niri reports tile resizing separately from WindowOpenedOrChanged. Restore
+    # full width as soon as a SafeEyes break's layout changes.
+    layouts_changed = event.get("WindowLayoutsChanged")
+    if layouts_changed is not None:
+        changed_ids = {
+            change[0]
+            for change in layouts_changed.get("changes", [])
+            if isinstance(change, list) and change
+        }
+        if changed_ids & break_window_ids:
+            reconcile_active()
         return
 
     opened = event.get("WindowOpenedOrChanged", {}).get("window")
@@ -193,7 +211,11 @@ def main() -> None:
     windows, workspaces = refresh()
     break_window_ids = {window["id"] for window in windows if is_break(window)}
     focused_output = next(
-        (workspace.get("output") for workspace in workspaces if workspace.get("is_focused")),
+        (
+            workspace.get("output")
+            for workspace in workspaces
+            if workspace.get("is_focused")
+        ),
         None,
     )
     reconcile_active(focus_output=focused_output)
