@@ -17,14 +17,6 @@ let
   focusGate = mkCustomExtension ./profile-default/hidden/extensions/focus-gate;
 
   mkAmoXpiUrl = amoSlug: "https://addons.mozilla.org/firefox/downloads/latest/${amoSlug}/latest.xpi";
-  mkLocalXpiUrl =
-    path:
-    "file://${
-      toString (path {
-        inherit path;
-        name = baseNameOf (toString path);
-      })
-    }";
 
   mkForceInstalled =
     {

@@ -7,7 +7,7 @@
   assets ? { },
 }:
 let
-  lib = pkgs.lib;
+  inherit (pkgs) lib;
   hostPatterns =
     if policy == null then [ ] else map (site: "*://*.${site.domain}/*") policy.blockedSites;
   packagedManifest =
