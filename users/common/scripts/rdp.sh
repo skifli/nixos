@@ -11,24 +11,49 @@ cleanup_vnc_tunnels() {
 }
 trap cleanup_vnc_tunnels EXIT
 
-launch_vncviewer() {
-    local server="$1"
-    shift
+focused_desktop_size() {
+    niri msg -j focused-output 2>/dev/null \
+        | jq -er '"\(.logical.width | ceil)x\(.logical.height | ceil)"' 2>/dev/null
+}
 
-    # RemoteResize reacts to changes in the local viewer window. If the server
-    # retained a smaller framebuffer from the previous session, reconnecting
-    # into an already-maximized window may not produce a geometry change.
-    # Request the focused Niri output size explicitly during the VNC handshake
-    # so each connection starts at the current monitor's full dimensions.
-    local desktop_size
-    desktop_size="$(niri msg -j focused-output 2>/dev/null \
-        | jq -er '"\(.logical.width | ceil)x\(.logical.height | ceil)"' 2>/dev/null || true)"
+set_remote_output_size() {
+    local ssh_target="$1"
+    local host_alias="$2"
+    local key_file="$3"
+    local desktop_size="$4"
+    local -a ssh_options=(
+        -o BatchMode=yes
+        -o ConnectTimeout=10
+        -o "HostKeyAlias=$host_alias"
+    )
 
-    local -a viewer_options=(-Maximize -RemoteResize=1)
-    if [[ -n "$desktop_size" ]]; then
-        viewer_options+=(-DesktopSize "$desktop_size")
+    if [[ -n "$key_file" ]]; then
+        ssh_options+=(-i "$key_file")
     fi
 
+    # Set the compositor output before connecting, then prevent TigerVNC from
+    # feeding later window-manager size changes back into the server output.
+    ssh "${ssh_options[@]}" "$ssh_target" \
+        "XDG_RUNTIME_DIR=/run/user/1000 WAYLAND_DISPLAY=wayland-0 /run/current-system/sw/bin/wlr-randr --output HEADLESS-1 --custom-mode ${desktop_size}@60Hz"
+}
+
+launch_vncviewer() {
+    local server="$1"
+    local desktop_size="$2"
+    shift 2
+    local resize_log="${XDG_STATE_HOME:-$HOME/.local/state}/rdp/resize.log"
+    mkdir -p "${resize_log%/*}"
+
+    log_resize() {
+        printf '%s %s\n' "$(date +'%F %T')" "$*" >>"$resize_log"
+    }
+
+    log_resize "starting viewer; fixed server desktop size: $desktop_size"
+
+    # Fullscreen uses the whole output, including space reserved by the local
+    # panel. A maximised window is shorter than the output on some primary
+    # monitors, which otherwise leaves scrollbars around the remote desktop.
+    local -a viewer_options=(-FullScreen=1 -FullScreenMode=Current -RemoteResize=0)
     vncviewer "${viewer_options[@]}" "$server" "$@"
 }
 
@@ -47,6 +72,16 @@ connect_oracle_vnc() {
     local host="${SSH_HOST:-}"
     local user="${SSH_USER:-}"
     local port="${VNC_PORT:-5901}"
+    local desktop_size
+    desktop_size="$(focused_desktop_size)" || {
+        notify-send -e -a VNCViewer -i "$HOME/.local/share/misc/663376.png" -u critical "VNC Error" "Could not read the focused monitor size"
+        return 1
+    }
+
+    if ! set_remote_output_size "$user@$host" oracle-nix "$key_file" "$desktop_size"; then
+        notify-send -e -a VNCViewer -i "$HOME/.local/share/misc/663376.png" -u critical "VNC Error" "Could not set Oracle's VNC desktop to $desktop_size. Check that wlr-randr is installed on the server."
+        return 1
+    fi
 
     notify-send -e -a VNCViewer -i "$HOME/.local/share/misc/663376.png" -u low "VNC Connection" "Connecting to Oracle server via SSH tunnel"
 
@@ -81,7 +116,7 @@ connect_oracle_vnc() {
 
     notify-send -e -a VNCViewer -i "$HOME/.local/share/misc/663376.png" -u low "VNC Connection" "Launching VNC viewer"
 
-    launch_vncviewer "127.0.0.1::$port" "$@"
+    launch_vncviewer "127.0.0.1::$port" "$desktop_size" "$@"
 }
 
 connect_wayvnc() {
@@ -123,6 +158,17 @@ connect_wayvnc() {
         exit 1
     fi
 
+    local desktop_size
+    desktop_size="$(focused_desktop_size)" || {
+        notify-send -e -a VNCViewer -i "$HOME/.local/share/misc/663376.png" -u critical "VNC Error" "Could not read the focused monitor size"
+        return 1
+    }
+
+    if ! set_remote_output_size "root@$host" "$host_alias" "" "$desktop_size"; then
+        notify-send -e -a VNCViewer -i "$HOME/.local/share/misc/663376.png" -u critical "VNC Error" "Could not set $target's VNC desktop to $desktop_size. Check that wlr-randr is installed on the server."
+        return 1
+    fi
+
     local attempt ready=0
     ssh -N \
         -o ExitOnForwardFailure=yes \
@@ -152,7 +198,7 @@ connect_wayvnc() {
     fi
 
     notify-send -e -a VNCViewer -i "$HOME/.local/share/misc/663376.png" -u low "VNC Connection" "Opening secure SSH tunnel to $target"
-    launch_vncviewer "127.0.0.1::$local_port" "$@"
+    launch_vncviewer "127.0.0.1::$local_port" "$desktop_size" "$@"
 }
 
 TARGET="${1:-}"
