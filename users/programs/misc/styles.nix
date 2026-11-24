@@ -109,11 +109,18 @@ let
 
   kdeglobalsBase = ''
     [General]
-    TerminalApplication=${userVars.programs.terminal}
-    # Use the hidden non-single-instance Ghostty entry so KTerminalLauncherJob
-    # keeps the selected directory for "Open Terminal Here".
+    TerminalApplication=${
+      if userVars.programs.terminal == "foot" then "footclient" else userVars.programs.terminal
+    }
+    # Use a dedicated service entry where the terminal needs a distinct
+    # desktop identity for Dolphin's "Open Terminal Here" action.
     TerminalService=${
-      if userVars.programs.terminal == "ghostty" then "ghostty-terminal" else userVars.programs.terminal
+      if userVars.programs.terminal == "ghostty" then
+        "ghostty-terminal"
+      else if userVars.programs.terminal == "foot" then
+        "footclient"
+      else
+        userVars.programs.terminal
     }.desktop
 
     [KFileDialog Settings]

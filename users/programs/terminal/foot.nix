@@ -38,5 +38,22 @@
         };
       };
     };
+
+    # Dolphin's terminal launcher should connect to the already-running Foot
+    # server, and the packaged desktop entry references an icon that is not
+    # shipped by Foot. Override it locally so KDE can resolve a standard icon
+    # for the context-menu action.
+    home.file.".local/share/applications/footclient.desktop".text = ''
+      [Desktop Entry]
+      Type=Application
+      Name=Foot Client
+      GenericName=Terminal
+      Comment=A Wayland terminal client
+      Exec=footclient
+      Icon=utilities-terminal
+      Terminal=false
+      Categories=System;TerminalEmulator;
+      Keywords=shell;prompt;command;commandline;
+    '';
   };
 }
