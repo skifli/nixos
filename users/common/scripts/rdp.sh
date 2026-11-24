@@ -11,6 +11,27 @@ cleanup_vnc_tunnels() {
 }
 trap cleanup_vnc_tunnels EXIT
 
+launch_vncviewer() {
+    local server="$1"
+    shift
+
+    # RemoteResize reacts to changes in the local viewer window. If the server
+    # retained a smaller framebuffer from the previous session, reconnecting
+    # into an already-maximized window may not produce a geometry change.
+    # Request the focused Niri output size explicitly during the VNC handshake
+    # so each connection starts at the current monitor's full dimensions.
+    local desktop_size
+    desktop_size="$(niri msg -j focused-output 2>/dev/null \
+        | jq -er '"\(.logical.width | ceil)x\(.logical.height | ceil)"' 2>/dev/null || true)"
+
+    local -a viewer_options=(-Maximize -RemoteResize=1)
+    if [[ -n "$desktop_size" ]]; then
+        viewer_options+=(-DesktopSize "$desktop_size")
+    fi
+
+    vncviewer "${viewer_options[@]}" "$server" "$@"
+}
+
 connect_oracle_vnc() {
     local secret_file="/run/agenix/vnc-oracle"
     local key_file="/run/agenix/${USER}-oracle-vnc-key"
@@ -60,7 +81,7 @@ connect_oracle_vnc() {
 
     notify-send -e -a VNCViewer -i "$HOME/.local/share/misc/663376.png" -u low "VNC Connection" "Launching VNC viewer"
 
-    vncviewer -RemoteResize=1 "127.0.0.1::$port" "$@"
+    launch_vncviewer "127.0.0.1::$port" "$@"
 }
 
 connect_wayvnc() {
@@ -131,7 +152,7 @@ connect_wayvnc() {
     fi
 
     notify-send -e -a VNCViewer -i "$HOME/.local/share/misc/663376.png" -u low "VNC Connection" "Opening secure SSH tunnel to $target"
-    vncviewer -RemoteResize=1 "127.0.0.1::$local_port" "$@"
+    launch_vncviewer "127.0.0.1::$local_port" "$@"
 }
 
 TARGET="${1:-}"
