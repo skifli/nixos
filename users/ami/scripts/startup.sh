@@ -9,6 +9,8 @@ find "$log_dir" -maxdepth 1 -name 'startup-*.log' -mtime +30 -delete 2>/dev/null
 exec >>"$log_file" 2>&1
 printf '\n===== %s startup.sh %s =====\n' "$(date +'%F %T')" "$*"
 
+# Anytype sometimes unlocks just after the previous five-minute deadline.
+STARTUP_KEYRING_TIMEOUT="${STARTUP_KEYRING_TIMEOUT:-900}"
 source "$HOME/.local/bin/startup-lib.sh"
 
 FOCUSED_MONITOR="${1:-}"
@@ -33,8 +35,8 @@ start_and_manage "zen-beta" "app_id" "zen-beta" "" "" &
 start_and_manage "anki" "title" "User 1 - Anki" "" "" &
 start_and_manage "ferdium" "app_id" "ferdium" "" "" &
 
-# Keyring-dependent apps launched after unlock (outside at-startup window)
-# These still need manual moves since at-startup rules won't apply
+# Anytype needs the unlocked keyring. Move it explicitly because it may open
+# after Niri's at-startup window-placement rules have expired.
 wait_for_keyring_then \
     'start_and_manage "anytype" "app_id" "anytype" "$SECOND_MONITOR" "1"' \
     'safeeyes & disown' &

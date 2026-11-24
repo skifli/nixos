@@ -77,48 +77,56 @@ is_any_keyring_locked() {
     local l_login l_def
     l_login=$(busctl --user get-property org.freedesktop.secrets /org/freedesktop/secrets/collection/login org.freedesktop.Secret.Collection Locked 2>/dev/null | awk '{print $2}')
     l_def=$(busctl --user get-property org.freedesktop.secrets /org/freedesktop/secrets/collection/Default_5fkeyring org.freedesktop.Secret.Collection Locked 2>/dev/null | awk '{print $2}')
-    [ "$l_login" = "true" ] || [ "$l_def" = "true" ]
+    # Treat a missing D-Bus service/collection as not ready. Only report
+    # unlocked after both collections were queried successfully.
+    [ "$l_login" = "false" ] && [ "$l_def" = "false" ] && return 1
+    return 0
 }
 
 # As all keyring dependent applications are not open yet, the gcr prompt will not show / automatically hide. So, this prompts it with dummy values to cause it to prompt the user via the GUI first. Done this early just to give it as much time to spawn the GUI.
 # Do as early as possible though to give time for the GUI to exist
 # And redirect stdin to /dev/null to avoid it blocking the script if it prompts for input (which is probably why something still hung all my startup stuff...)
 
-# Loop the secret-tool dummy lookup safely without overlapping windows because I think it sometimes times out awaiting user input which is annoying
+# Make non-overlapping Secret Service requests so GCR can reopen an unlock
+# prompt if it closes. Let each request exit naturally; killing a client while
+# a D-Bus call is in flight can trigger a GNOME Keyring 50.0 assertion crash.
 spawn_keyring_poll() {
     (
-        while true; do
-            if ! is_any_keyring_locked; then
-                break
+        local deadline=$((SECONDS + STARTUP_KEYRING_TIMEOUT))
+        while is_any_keyring_locked; do
+            if [ "$SECONDS" -ge "$deadline" ]; then
+                log "keyring still locked after ${STARTUP_KEYRING_TIMEOUT}s; stopping prompt retries"
+                return 0
             fi
 
-            secret_log="${XDG_STATE_HOME:-$HOME/.local/state}/startup/secret-tool.log"
-            mkdir -p "$(dirname "$secret_log")"
-            secret-tool search --all --unlock xdg:schema org.freedesktop.Secret.Generic </dev/null >"$secret_log" 2>&1 & # Log instead of /dev/null so unlock failures are diagnosable; stdin is /dev/null
-            SECRET_PID=$!
+            log "requesting keyring unlock prompt"
+            # Suppress command output: secret-tool can print stored item data.
+            secret-tool search --all --unlock xdg:schema org.freedesktop.Secret.Generic \
+                </dev/null >/dev/null 2>&1 &
+            local secret_pid=$!
 
-            # Polls lock status every second for up to 25 seconds
-            # I THINK 25 is the standard d-bus method call timeout? Idk!
-            for i in $(seq 1 25); do
-                nirius focus --app-id gcr-prompter # Thanks to nirius - before it was this behemoth - niri msg action focus-window --id $(niri msg --json windows | jq -r '.[] | select(.app_id == "gcr-prompter") | .id' | head -n 1)
-
-                sleep 1
-
-                if ! is_any_keyring_locked; then
-                    kill $SECRET_PID 2>/dev/null
-                    break 2 # Break out of the main while-loop
-                fi
-
-                # If secret-tool died/timed-out early on its own, break the inner loop to spawn a new one
-                if ! kill -0 $SECRET_PID 2>/dev/null; then
+            # Focus the prompt once if it appears, but leave the request alive.
+            for _ in $(seq 1 60); do
+                if ! kill -0 "$secret_pid" 2>/dev/null; then
                     break
                 fi
+                if niri msg --json windows 2>/dev/null | jq -e \
+                    'any(.[]; .app_id == "gcr-prompter")' >/dev/null 2>&1; then
+                    nirius focus --app-id gcr-prompter || true
+                    break
+                fi
+                sleep 0.5
             done
 
-            # Cleanup old PID if it's still alive after 25 seconds before restarting loop
-            kill $SECRET_PID 2>/dev/null
-            wait $SECRET_PID 2>/dev/null
+            # Never overlap requests or cancel a live D-Bus call.
+            wait "$secret_pid" 2>/dev/null || true
+            if is_any_keyring_locked; then
+                log "unlock request ended while keyring remains locked; retrying after a short pause"
+                sleep 5
+            fi
         done
+
+        log "keyring unlocked"
     ) & disown
 }
 
