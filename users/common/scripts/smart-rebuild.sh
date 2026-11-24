@@ -61,6 +61,11 @@ notify-send -e -a nixOS \
     log_date=\$(date '+%Y-%m-%d %H:%M:%S')
     echo \"[\$log_date] [$HOSTNAME] switch execution time: \$duration seconds\" >> '$HOME/Documents/custom-scripts/nixos_rebuild.log'
 
+    notify-send -e -a nixOS \\
+      -i \"\$HOME/.local/share/misc/nix-snowflake-rainbow.svg\" \\
+      -u low -t 8000 \\
+      'Rebuild complete' \"Took \$duration seconds.\" || true
+
     case '$POST_ACTION' in
       reboot)
         echo 'Rebuilding complete. Rebooting in 5 seconds (Ctrl+C to abort)...'
