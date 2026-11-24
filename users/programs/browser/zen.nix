@@ -60,7 +60,7 @@ in
         setAsDefaultBrowser = primaryBrowser == "zen-beta" || primaryBrowser == "zen";
         enablePrivateDesktopEntry = true;
 
-        policies = import ./zen/policies.nix { inherit hostVars; };
+        policies = import ./zen/policies.nix { inherit hostVars pkgs; };
         languagePacks = [ hostVars.locale-simple ];
         profiles.default = import ./zen/profile-default.nix { inherit hostVars inputs pkgs; };
       };

@@ -1,6 +1,6 @@
-{ hostVars, ... }:
+{ hostVars, pkgs, ... }:
 let
-  extensions = import ./extensions.nix { inherit hostVars; };
+  extensions = import ./extensions.nix { inherit hostVars pkgs; };
   extensionButtons = import ./extension-buttons.nix;
 
   lockPref = value: {

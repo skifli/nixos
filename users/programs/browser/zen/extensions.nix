@@ -1,18 +1,29 @@
-_:
+{ pkgs, ... }:
 # Extension policy wiring for zen-browser-flake.
 # Learn more:
 # https://github.com/0xc000022070/zen-browser-flake/tree/b6b1e625e4aa049b59930611fc20790c0ccbc840?tab=readme-ov-file#extensions
 let
+  packageExtension = import ./extension-package.nix { inherit pkgs; };
+
+  mkCustomExtension =
+    path:
+    let
+      definition = import (path + "/package.nix") { inherit pkgs; };
+    in
+    packageExtension definition;
+
+  clipboardPaste = mkCustomExtension ./profile-default/hidden/extensions/clipboard-paste;
+  tinySubSeed = mkCustomExtension ./profile-default/hidden/extensions/tinysub-seed;
+  focusGate = mkCustomExtension ./profile-default/hidden/extensions/focus-gate;
+
   mkAmoXpiUrl = amoSlug: "https://addons.mozilla.org/firefox/downloads/latest/${amoSlug}/latest.xpi";
   mkLocalXpiUrl =
     path:
     "file://${
-      toString (
-        builtins.path {
-          inherit path;
-          name = baseNameOf (toString path);
-        }
-      )
+      toString (path {
+        inherit path;
+        name = baseNameOf (toString path);
+      })
     }";
 
   mkForceInstalled =
@@ -41,9 +52,6 @@ let
     "firefox@vicinae.com" = {
       amoSlug = "vicinae";
     };
-    "anti-social@conniptions.org" = {
-      amoSlug = "anti-social-blocker";
-    };
     "78272b6fa58f4a1abaac99321d503a20@proton.me" = {
       amoSlug = "proton-pass";
     };
@@ -62,15 +70,11 @@ let
       install_url = "https://github.com/mkaply/queryamoid/releases/download/v0.2/query_amo_addon_id-0.2-fx.xpi";
     };
 
-    "openhands-clipboard-paste@skifli.github.io" = {
-      installation_mode = "force_installed";
-      install_url = mkLocalXpiUrl ./profile-default/hidden/extensions/clipboard-paste.xpi;
-    };
-
-    "tinysub-seed@skifli.github.io" = {
-      installation_mode = "force_installed";
-      install_url = mkLocalXpiUrl ./profile-default/hidden/extensions/tinysub-seed.xpi;
-    };
+  }
+  // {
+    "${clipboardPaste.id}" = clipboardPaste.settings;
+    "${tinySubSeed.id}" = tinySubSeed.settings;
+    "${focusGate.id}" = focusGate.settings;
   };
 in
 {
@@ -143,11 +147,6 @@ in
     "firefox@vicinae.com" = {
     };
 
-    # anti-social-blocker (wgmyers/anti-social) - settings in browser.storage.local
-    # (blockOnFlag, settings)
-    "anti-social@conniptions.org" = {
-    };
-
     # proton-pass - Proton-internal storage
     "78272b6fa58f4a1abaac99321d503a20@proton.me" = {
     };
@@ -160,11 +159,11 @@ in
     "queryamoid@kaply.com" = {
     };
 
-    # OpenHands clipboard helper and TinySub seed store their state in the
-    # extension/site themselves; neither reads Firefox managed storage.
-    "openhands-clipboard-paste@skifli.github.io" = {
+    "${clipboardPaste.id}" = {
     };
-    "tinysub-seed@skifli.github.io" = {
+    "${tinySubSeed.id}" = {
+    };
+    "${focusGate.id}" = {
     };
   };
 }

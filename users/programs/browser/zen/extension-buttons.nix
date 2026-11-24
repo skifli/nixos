@@ -16,7 +16,7 @@
   zen-sidebar-top-buttons = [
     "78272b6fa58f4a1abaac99321d503a20@proton.me" # Proton Pass: Free Password Manager
     "authenticator@mymindstorm" # Authenticator
-    "anti-social@conniptions.org" # anti-social
+    "focus-gate@skifli.github.io" # Focus Gate
   ];
 }
 # The placements are merged into the layout Zen saved last, so anything you
