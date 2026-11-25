@@ -162,5 +162,10 @@ in
 
   environment.pathsToLink = [ "/share/zsh" ];
 
+  # /etc/shells is also what AccountsService consults when deciding whether a
+  # user is a normal account. Keep it in sync with the login shell above,
+  # otherwise the user is hidden from greeters that use AccountsService.
+  environment.shells = [ pkgs.zsh ];
+
   users.users.${userVars.username}.shell = pkgs.zsh;
 }
