@@ -14,6 +14,16 @@ in
 {
   _module.args = { inherit hostname; };
 
+  # The pinned nixpkgs ships ReGreet 0.3.0, which does not understand
+  # `skip_selection`. Use the 0.5.0 build from the already-tracked unstable
+  # input. An overlay is needed because fyde-nix's Labwc greeter autostart
+  # references pkgs.regreet directly instead of programs.regreet.package.
+  nixpkgs.overlays = [
+    (_final: prev: {
+      regreet = inputs.nixpkgs-unstable.legacyPackages.${prev.stdenv.hostPlatform.system}.regreet;
+    })
+  ];
+
   # Allow the fixed netcheck command without a password; its UDP probes use
   # the direct outbound rule in the sing-box TUN configuration.
   security.sudo.extraRules = [
