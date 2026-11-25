@@ -65,6 +65,7 @@ common
   niri = common.niri // {
     spawn-sh-at-startup = "$HOME/.local/bin/startup.sh \"${builtins.elemAt hostVars.orderedOutputs 0}\" \"${builtins.elemAt hostVars.orderedOutputs 1}\"";
 
+    # Edit ../common/variables.nix>niri.binds if applies to all users!
     binds = common.niri.binds // {
       "Mod+1" = {
         _props = {

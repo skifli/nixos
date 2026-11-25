@@ -32,6 +32,7 @@ common
     # nothing burger so this field stays a valid string (null breaks config stuff).
     spawn-sh-at-startup = "true";
 
+    # Edit ../common/variables.nix>niri.binds if applies to all users!
     binds = common.niri.binds // {
       "Mod+1" = {
         _props = {

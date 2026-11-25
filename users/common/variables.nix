@@ -49,6 +49,7 @@ let
       "nix-index-database"
       "nix-your-shell"
       "ntfy-notifications"
+      "phone-control"
       "opencode"
       "styles"
       "typst"
@@ -112,14 +113,23 @@ in
   };
 
   niri = {
-    binds."Mod+Alt+Shift+P" = {
-      _props = {
-        hotkey-overlay-title = "Open or close Pifi private vault";
+    binds = {
+      "Mod+Alt+Shift+P" = {
+        _props = {
+          hotkey-overlay-title = "Open or close Pifi private vault";
+        };
+        spawn = [
+          "pifi-private-menu"
+          terminal
+        ];
       };
-      spawn = [
-        "pifi-private-menu"
-        terminal
-      ];
+      "Mod+Shift+O" = {
+        _props = {
+          hotkey-overlay-title = "Control phone";
+          allow-inhibiting = false;
+        };
+        spawn = [ "phone-control" ];
+      };
     };
 
     window-rules = [
@@ -161,6 +171,17 @@ in
         };
         default-window-height = {
           proportion = 1.0;
+        };
+      }
+      {
+        # Keep the scrcpy phone-control window compact and out of the main layout.
+        match._props = {
+          app-id._raw = ''r#"(?i)^\.scrcpy-wrapped$"#'';
+          title._raw = ''r#"^Phone$"#'';
+        };
+        open-floating = true;
+        default-window-height = {
+          proportion = 0.75;
         };
       }
 

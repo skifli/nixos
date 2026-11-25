@@ -13,7 +13,6 @@
       kdePackages.qtwayland # Needed by typstwriter
       kicad
       prismlauncher
-      qtscrcpy
       scrcpy
       # siyuan
       termdown

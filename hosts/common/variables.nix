@@ -68,6 +68,7 @@
     };
     oneplus-be2013 = {
       address = "100.71.197.78";
+      adbPort = 42069;
       sshUser = null;
     };
     oracle-nix = {
