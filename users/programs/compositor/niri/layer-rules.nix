@@ -30,12 +30,16 @@
     opacity = 0.9;
   }
 
-  # Blur behind top/overlay layers (launchers, desktop shell)
+  # Keep launcher blur when it uses the overlay layer above fullscreen apps.
+  {
+    match._props.namespace = "^${userVars.programs.launcher}$";
+    background-effect.blur = true;
+  }
+  # Blur behind the desktop shell while it remains on the top layer.
   {
     match._props = {
-      namespace = "^(${userVars.programs.launcher}|${userVars.programs.desktop-shell}.*)$";
+      namespace = "^${userVars.programs.desktop-shell}.*$";
       # Needs .* because e.g., wayle-bar-DP-1
-      # E.g., vicinae
       layer = "top";
     };
     background-effect.blur = true;

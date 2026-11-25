@@ -307,6 +307,10 @@
           launcher_window = {
             opacity = lib.mkForce 0.9;
             material = "blur"; # Otherwise breaks blur
+            layer_shell = {
+              enabled = true;
+              layer = "overlay";
+            };
 
             compact_mode = {
               enabled = false;

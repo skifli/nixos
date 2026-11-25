@@ -53,7 +53,12 @@ launch_vncviewer() {
     # Fullscreen uses the whole output, including space reserved by the local
     # panel. A maximised window is shorter than the output on some primary
     # monitors, which otherwise leaves scrollbars around the remote desktop.
-    local -a viewer_options=(-FullScreen=1 -FullScreenMode=Current -RemoteResize=0)
+    local -a viewer_options=(
+        -FullScreen=1
+        -FullScreenMode=Current
+        -FullscreenSystemKeys=1
+        -RemoteResize=0
+    )
     vncviewer "${viewer_options[@]}" "$server" "$@"
 }
 
