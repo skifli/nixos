@@ -11,6 +11,7 @@ ALL_RUNS_FILE="$STATE_DIR/all-runs.json"
 ACK_FILE="$STATE_DIR/acknowledged.json"
 WATCH_FILE="$STATE_DIR/watched-runs.json"
 OUTPUT_FILE="$STATE_DIR/last-output.txt"
+AUTH_STATE_FILE="$STATE_DIR/github-auth-state"
 LOCK_FILE="$STATE_DIR/refresh.lock"
 ACK_LOCK_FILE="$STATE_DIR/acknowledged.lock"
 GITHUB_ICON="$HOME/.local/share/misc/github-icon.svg"
@@ -227,6 +228,38 @@ notify_msg() {
         notify-send -e -a "ci-status" -u low -t 7000 "$summary" "$body" || true
     fi
 }
+
+report_missing_github_auth() {
+    local previous_state
+    previous_state=$(cat "$AUTH_STATE_FILE" 2>/dev/null || true)
+    if [[ "$previous_state" != "unauthenticated" ]]; then
+        notify_msg "GitHub login needed" "CI status cannot load workflows. Run gh auth login, then it will refresh automatically."
+        printf 'unauthenticated\n' | atomic_write "$AUTH_STATE_FILE"
+    fi
+}
+
+# Check for a locally available GitHub credential before touching caches.
+# Without this guard, gh failures were converted to empty repo/run arrays and
+# cached, so Wayle looked like there were no workflows and could stay empty
+# after the user signed in.
+if gh auth token --hostname github.com >/dev/null 2>&1; then
+    PREVIOUS_AUTH_STATE=$(cat "$AUTH_STATE_FILE" 2>/dev/null || true)
+    if [[ "$PREVIOUS_AUTH_STATE" != "authenticated" ]]; then
+        # Discard empty snapshots made while unauthenticated, forcing the next
+        # poll to fetch repositories and workflows with the restored login.
+        if [[ "$PREVIOUS_AUTH_STATE" == "unauthenticated" ]] \
+            || jq -e 'type == "array" and length == 0' "$REPO_CACHE_FILE" >/dev/null 2>&1; then
+            rm -f "$REPO_CACHE_FILE" "$REPO_FILTER_FILE" "$ALL_RUNS_FILE"
+        fi
+        printf 'authenticated\n' | atomic_write "$AUTH_STATE_FILE"
+        if [[ "$PREVIOUS_AUTH_STATE" == "unauthenticated" ]]; then
+            notify_msg "GitHub login restored" "Refreshing CI status now."
+        fi
+    fi
+    GH_AUTHENTICATED=1
+else
+    GH_AUTHENTICATED=0
+fi
 
 ack_run() {
     local id="$1"
@@ -611,7 +644,11 @@ show_status_menu() {
     ' <<<"$ALL_RUNS_JSON")
 
     if [[ -z "$menu_items" ]]; then
-        notify_msg "No cached workflows" "A background refresh will fetch recent workflow runs."
+        if (( GH_AUTHENTICATED )); then
+            notify_msg "No cached workflows" "A background refresh will fetch recent workflow runs."
+        else
+            report_missing_github_auth
+        fi
         return
     fi
 
@@ -642,6 +679,14 @@ show_status_menu() {
             ;;
     esac
 }
+
+if (( ! GH_AUTHENTICATED )) && [[ "$ACTION" == "status" || "$ACTION" == "refresh" || "$ACTION" == "ack-all" ]]; then
+    report_missing_github_auth
+    STATUS_OUTPUT="🔒 GH login"
+    printf '%s' "$STATUS_OUTPUT" | atomic_write "$OUTPUT_FILE"
+    printf '%s' "$STATUS_OUTPUT"
+    exit 0
+fi
 
 case "$ACTION" in
     refresh)
