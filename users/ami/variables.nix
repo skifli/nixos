@@ -69,49 +69,42 @@ common
       "Mod+1" = {
         _props = {
           hotkey-overlay-title = "Focus monitor left (also with left arrow and Mod+Alt+H)";
-          allow-inhibiting = false;
         };
         focus-monitor-left = [ ];
       };
       "Mod+2" = {
         _props = {
           hotkey-overlay-title = null;
-          allow-inhibiting = false;
         };
         focus-monitor-right = [ ];
       };
       "Mod+Alt+H" = {
         _props = {
           hotkey-overlay-title = null;
-          allow-inhibiting = false;
         };
         focus-monitor-left = [ ];
       };
       "Mod+Alt+Left" = {
         _props = {
           hotkey-overlay-title = null;
-          allow-inhibiting = false;
         };
         focus-monitor-left = [ ];
       };
       "Mod+Alt+L" = {
         _props = {
           hotkey-overlay-title = null;
-          allow-inhibiting = false;
         };
         focus-monitor-right = [ ];
       };
       "Mod+Alt+Right" = {
         _props = {
           hotkey-overlay-title = null;
-          allow-inhibiting = false;
         };
         focus-monitor-right = [ ];
       };
       "Mod+Shift+A" = {
         _props = {
           hotkey-overlay-title = null;
-          allow-inhibiting = false;
         };
         spawn = [
           "/home/${username}/.local/bin/find-or-make.sh"
@@ -123,7 +116,6 @@ common
       "Mod+Shift+N" = {
         _props = {
           hotkey-overlay-title = null;
-          allow-inhibiting = false;
         };
         spawn = [
           "/home/${username}/.local/bin/find-or-make.sh"
@@ -135,7 +127,6 @@ common
       "Mod+Shift+C" = {
         _props = {
           hotkey-overlay-title = null;
-          allow-inhibiting = false;
         };
         spawn = [
           "/home/${username}/.local/bin/find-or-make.sh"
@@ -147,7 +138,6 @@ common
       "Mod+Shift+Z" = {
         _props = {
           hotkey-overlay-title = null;
-          allow-inhibiting = false;
         };
         spawn = [
           "/home/${username}/.local/bin/find-or-make.sh"
@@ -159,7 +149,6 @@ common
       "Mod+Shift+Y" = {
         _props = {
           hotkey-overlay-title = null;
-          allow-inhibiting = false;
         };
         spawn = [
           "/home/${username}/.local/bin/find-or-make.sh"
@@ -172,28 +161,24 @@ common
       "Mod+Ctrl+1" = {
         _props = {
           hotkey-overlay-title = null;
-          allow-inhibiting = false;
         };
         spawn = [ "/home/${username}/.local/bin/1-niri.sh" ];
       };
       "Mod+Ctrl+2" = {
         _props = {
           hotkey-overlay-title = null;
-          allow-inhibiting = false;
         };
         spawn = [ "/home/${username}/.local/bin/2-niri.sh" ];
       };
       "Mod+Ctrl+3" = {
         _props = {
           hotkey-overlay-title = null;
-          allow-inhibiting = false;
         };
         spawn = [ "/home/${username}/.local/bin/3-niri.sh" ];
       };
       "Mod+Ctrl+4" = {
         _props = {
           hotkey-overlay-title = null;
-          allow-inhibiting = false;
         };
         spawn = [ "/home/${username}/.local/bin/4-niri.sh" ];
       };

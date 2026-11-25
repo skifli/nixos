@@ -115,7 +115,6 @@ in
     binds."Mod+Alt+Shift+P" = {
       _props = {
         hotkey-overlay-title = "Open or close Pifi private vault";
-        allow-inhibiting = false;
       };
       spawn = [
         "pifi-private-menu"
