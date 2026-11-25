@@ -43,7 +43,10 @@ let
   };
   lightDconfRaw = {
     "org/gnome/desktop/interface" = {
-      color-scheme = "default";
+      # Advertise a real light preference to xdg-desktop-portal and Electron.
+      # "default" becomes portal value 0 (no preference), which can leave
+      # Electron apps using their own dark default.
+      color-scheme = "prefer-light";
       gtk-theme = commonHostVars.theme.gtk.lightName;
     };
     /*
@@ -284,6 +287,10 @@ in
 
       # DAY THEME CONFIGURATION OUTSIDE THE SPECIALISATIONS RESUME
       enable = true;
+      # The base system is the light specialisation. Without an explicit
+      # polarity Stylix reports "either" and its GTK icon integration falls
+      # back to the dark icon set even though the light icons are configured.
+      polarity = lib.mkDefault "light";
       inherit (commonHostVars) fonts; # There is no stylix.fonts.enable so this is fine!
 
       # Stylix's Home Manager module injects an internal package overlay itself.
@@ -359,6 +366,7 @@ in
           '';
 
           stylix = {
+            polarity = lib.mkForce "dark";
             base16Scheme = "${pkgs.base16-schemes}/share/themes/${commonHostVars.theme.dark}.yaml";
             cursor.name = commonHostVars.cursor.dark.name;
           };
