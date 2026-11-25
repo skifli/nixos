@@ -56,6 +56,10 @@ if [ -x "$SWITCH_BIN" ]; then
     # starts it with the newly selected theme.
     /run/current-system/sw/bin/systemctl --user try-restart plasma-xdg-desktop-portal-kde.service 2>/dev/null || true
 
+    # The central portal caches its Settings provider. Restart it after the KDE
+    # backend so GTK/Electron apps see the new color-scheme immediately.
+    /run/current-system/sw/bin/systemctl --user try-restart xdg-desktop-portal.service 2>/dev/null || true
+
     # Niri workspace layout refresh transitions
     # niri msg action do-screen-transition -d 1000 2>/dev/null || true
     # Got annoyed at the screen transition being a bit haphazard and yeah...
