@@ -250,7 +250,8 @@ in
       };
 
       xdg.mimeApps.defaultApplications = {
-        "inode/directory" = [ "dolphin.desktop" ];
+        "inode/directory" = [ "org.kde.dolphin.desktop" ];
+        "inode/mount-point" = [ "org.kde.dolphin.desktop" ];
         "application/zip" = [ "org.kde.ark.desktop" ];
         "application/x-7z-compressed" = [ "org.kde.ark.desktop" ];
         "application/x-bzip-compressed-tar" = [ "org.kde.ark.desktop" ];

@@ -41,4 +41,4 @@ if ! timeout 8 ls -A "$mountpoint" >/dev/null; then
 fi
 
 echo "Private files are available at $mountpoint."
-xdg-open "$mountpoint" >/dev/null 2>&1 &
+niri msg action spawn -- xdg-open "$mountpoint" >/dev/null 2>&1
