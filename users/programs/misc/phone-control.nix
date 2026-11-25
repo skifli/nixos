@@ -1,5 +1,6 @@
 {
   commonHostVars,
+  hostVars,
   lib,
   pkgs,
   userVars,
@@ -9,6 +10,7 @@ let
   phone = commonHostVars.tailscaleDevices.oneplus-be2013;
   phoneTarget = "${phone.address}:${toString phone.adbPort}";
   scrcpyIcon = "${pkgs.scrcpy}/share/icons/hicolor/256x256/apps/scrcpy.png";
+  renderDriverArg = lib.optionalString (hostVars.hostname == "fydetabduo") "--render-driver=software";
 
   phoneControl = pkgs.writeShellApplication {
     name = "phone-control";
@@ -49,6 +51,7 @@ let
       fi
 
       exec scrcpy \
+        ${renderDriverArg} \
         --serial="$target" \
         --window-title="Phone" \
         --shortcut-mod=lalt \
