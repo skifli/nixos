@@ -74,33 +74,19 @@ start_and_manage() {
 }
 
 is_any_keyring_locked() {
-    local objects object_path collection locked checked=0
+    local locked
 
-    # Don't assume every machine has the stock "Default keyring" object.
-    objects=$(busctl --user --list tree org.freedesktop.secrets 2>/dev/null) || return 0
+    # Only the default collection matters: that is the one libsecret apps
+    # (Anytype, Chromium, ...) use. Other collections, notably the PAM
+    # "login" keyring, may legitimately stay locked forever because there is
+    # no PAM hook to unlock them; waiting on those blocks app startup.
+    locked=$(busctl --user get-property org.freedesktop.secrets \
+        /org/freedesktop/secrets/aliases/default \
+        org.freedesktop.Secret.Collection Locked 2>/dev/null | awk '{print $2}')
 
-    while IFS= read -r object_path; do
-        case "$object_path" in
-            /org/freedesktop/secrets/collection/*) ;;
-            *) continue ;;
-        esac
-
-        collection="${object_path#/org/freedesktop/secrets/collection/}"
-        # Only inspect direct children: deeper paths are individual secrets.
-        [[ -n "$collection" && "$collection" != */* ]] || continue
-
-        locked=$(busctl --user get-property org.freedesktop.secrets "$object_path" \
-            org.freedesktop.Secret.Collection Locked 2>/dev/null | awk '{print $2}')
-        # A collection disappearing during the check means the service is not
-        # ready to trust yet; retry on the next poll.
-        [ -n "$locked" ] || return 0
-        checked=1
-        [ "$locked" = "false" ] || return 0
-    done <<< "$objects"
-
-    # No visible collections means the Secret Service is not ready/unlocked.
-    [ "$checked" -gt 0 ] || return 0
-    return 1
+    # If the alias cannot be read (service not ready), treat it as locked.
+    [ "$locked" = "false" ] && return 1
+    return 0
 }
 
 # As all keyring dependent applications are not open yet, the gcr prompt will not show / automatically hide. So, this prompts it with dummy values to cause it to prompt the user via the GUI first. Done this early just to give it as much time to spawn the GUI.
@@ -153,40 +139,38 @@ spawn_keyring_poll() {
 # Wait for keyring to unlock, then run the provided commands
 # Usage: wait_for_keyring_then "cmd1" "cmd2" ...
 wait_for_keyring_then() {
-    (
-        local waited_for_keyring=false
-        if is_any_keyring_locked; then
-            waited_for_keyring=true
-            notify-send -e -a "gcr-prompter" -i "$HOME/.local/share/misc/Seahorse_icon_hicolor.svg" -u low -t 2500 "Keyring Locked" "Waiting for keyring to be unlocked..."
-            log "waiting for keyring to unlock (timeout ${STARTUP_KEYRING_TIMEOUT}s)"
-        else
-            log "keyring already unlocked; starting keyring-dependent apps"
+    local waited_for_keyring=false
+    if is_any_keyring_locked; then
+        waited_for_keyring=true
+        notify-send -e -a "gcr-prompter" -i "$HOME/.local/share/misc/Seahorse_icon_hicolor.svg" -u low -t 2500 "Keyring Locked" "Waiting for keyring to be unlocked..."
+        log "waiting for keyring to unlock (timeout ${STARTUP_KEYRING_TIMEOUT}s)"
+    else
+        log "keyring already unlocked; starting keyring-dependent apps"
+    fi
+
+    local deadline=$((SECONDS + STARTUP_KEYRING_TIMEOUT))
+    while is_any_keyring_locked; do
+        if [ "$SECONDS" -ge "$deadline" ]; then
+            log "WARNING: keyring still locked after ${STARTUP_KEYRING_TIMEOUT}s; skipping: $*"
+            return 0
         fi
+        sleep 0.5
+    done
 
-        local deadline=$((SECONDS + STARTUP_KEYRING_TIMEOUT))
-        while is_any_keyring_locked; do
-            if [ "$SECONDS" -ge "$deadline" ]; then
-                log "WARNING: keyring still locked after ${STARTUP_KEYRING_TIMEOUT}s; skipping: $*"
-                return 0
-            fi
-            sleep 0.5
-        done
+    log "keyring unlocked"
+    if [ "$waited_for_keyring" = true ]; then
+        notify-send -e -a "gcr-prompter" -i "$HOME/.local/share/misc/Seahorse_icon_hicolor.svg" -u low -t 2500 "Keyring Unlocked" "Launching keyring-dependent apps..."
+    fi
 
-        log "keyring unlocked"
-        if [ "$waited_for_keyring" = true ]; then
-            notify-send -e -a "gcr-prompter" -i "$HOME/.local/share/misc/Seahorse_icon_hicolor.svg" -u low -t 2500 "Keyring Unlocked" "Launching keyring-dependent apps..."
-        fi
+    sleep 1 # Just a tad of a delay to ensure the keyring is fully ready for use
 
-        sleep 1 # Just a tad of a delay to ensure the keyring is fully ready for use
+    for cmd in "$@"; do
+        eval "$cmd"
+    done
 
-        for cmd in "$@"; do
-            eval "$cmd"
-        done
+    wait # Wait for the apps spawned above; this function runs as a background job
 
-        wait # As we are in a subshell, this wait is for the background jobs in this subshell only
-
-        notify-send -e -a "niri" -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 "Post-keyring apps" "Apps spawned"
-    ) &
+    notify-send -e -a "niri" -i "$HOME/.local/share/misc/niri-icon.svg" -u low -t 2500 "Post-keyring apps" "Apps spawned"
 }
 
 # Wait until NetworkManager says there is an established connection so apps that
