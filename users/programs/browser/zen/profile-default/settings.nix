@@ -235,10 +235,10 @@
   "permissions.default.geo" = 0;
   "permissions.default.camera" = 0;
   "permissions.default.microphone" = 0;
-  "permissions.default.desktop-notification" = 0;
   "permissions.default.xr" = 0; # Virtual Reality
 
-  "dom.webnotifications.enabled" = false;
+  # Enable the page API; ../policies.nix handles the default block and exception.
+  "dom.webnotifications.enabled" = true;
   "dom.webnotifications.serviceworker.enabled" = false;
 
   /**
