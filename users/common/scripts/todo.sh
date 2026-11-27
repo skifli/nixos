@@ -14,7 +14,7 @@ MODE="${1:-interactive}"
 if [ "$MODE" = "interactive" ]; then
     RUNTIME_DIR="${XDG_RUNTIME_DIR:-$HOME/.cache}"
     mkdir -p "$RUNTIME_DIR" 2>/dev/null || exit 0
-    exec 7>"$RUNTIME_DIR/todo-interactive-${UID:-$(id -u)}.lock" 2>/dev/null || exit 0
+    { exec 7>"$RUNTIME_DIR/todo-interactive-${UID:-$(id -u)}.lock"; } 2>/dev/null || exit 0
     flock -n 7 || exit 0
 fi
 
@@ -69,7 +69,7 @@ fi
 # Serialise todo readers and read/modify/write operations across machines.
 # Scheduled invocations skip when the UI is active; interactive invocations
 # wait briefly so they never race another editor.
-exec 8>"$TARGET_DIR/.todo-state.guard" 2>/dev/null || exit 0
+{ exec 8>"$TARGET_DIR/.todo-state.guard"; } 2>/dev/null || exit 0
 case "$MODE" in
     "--check"|"--startup") flock -n 8 || exit 0 ;;
     *) flock -w 20 8 || { notify-send -e -a "todos" -u critical "Reminders busy" "Another todo operation is still running"; exit 1; } ;;
@@ -186,27 +186,27 @@ if [ "${1:-}" = "--startup" ]; then
     exit 0
 fi
 
+repeat_next_due() {
+    local previous="$1" interval="$2" previous_date previous_clock next_date next_month last_day day
+    previous_date=$(date -d "@$previous" +%F)
+    previous_clock=$(date -d "@$previous" +%H:%M:%S)
+    case "$interval" in
+        daily) next_date=$(date -d "$previous_date + 1 day" +%F) ;;
+        weekly) next_date=$(date -d "$previous_date + 7 days" +%F) ;;
+        monthly)
+            next_month=$(date -d "${previous_date%-*}-01 + 1 month" +%Y-%m)
+            last_day=$(date -d "$next_month-01 + 1 month - 1 day" +%d)
+            day=$(date -d "@$previous" +%d)
+            [ "$day" -gt "$last_day" ] && day="$last_day"
+            next_date="$next_month-$day"
+            ;;
+        *) return 1 ;;
+    esac
+    date -d "$next_date $previous_clock" +%s
+}
+
 if [ "${1:-}" = "--check" ]; then
     NOW=$(date +%s)
-
-    repeat_next_due() {
-        local previous="$1" interval="$2" previous_date previous_clock next_date next_month last_day day
-        previous_date=$(date -d "@$previous" +%F)
-        previous_clock=$(date -d "@$previous" +%H:%M:%S)
-        case "$interval" in
-            daily) next_date=$(date -d "$previous_date + 1 day" +%F) ;;
-            weekly) next_date=$(date -d "$previous_date + 7 days" +%F) ;;
-            monthly)
-                next_month=$(date -d "${previous_date%-*}-01 + 1 month" +%Y-%m)
-                last_day=$(date -d "$next_month-01 + 1 month - 1 day" +%d)
-                day=$(date -d "@$previous" +%d)
-                [ "$day" -gt "$last_day" ] && day="$last_day"
-                next_date="$next_month-$day"
-                ;;
-            *) return 1 ;;
-        esac
-        date -d "$next_date $previous_clock" +%s
-    }
 
     jq -r --argjson now "$NOW" '
         .[]
@@ -300,18 +300,32 @@ parse_time_preset() {
                     return
                     ;;
             esac
-            ABS_INPUT=$(echo "" | fuzzel_prompt "First reminder (e.g., 2026-11-23 16:00): " "" 0)
+            FIRST_EXAMPLE=$(date -d 'tomorrow 09:00' '+%Y-%m-%d %H:%M')
+            ABS_INPUT=$(echo "" | fuzzel_prompt "First reminder (e.g., $FIRST_EXAMPLE): " "" 0)
             if [ -n "$ABS_INPUT" ]; then
                 set +e
                 PARSED_TS=$(date -d "$ABS_INPUT" +%s 2>/dev/null)
+                # Accept UK-style DD/MM/YYYY and DD-MM-YYYY too.
+                if [ -z "$PARSED_TS" ] && [[ "$ABS_INPUT" =~ ^([0-9]{2})[/-]([0-9]{2})[/-]([0-9]{4})(.*)$ ]]; then
+                    PARSED_TS=$(date -d "${BASH_REMATCH[3]}-${BASH_REMATCH[2]}-${BASH_REMATCH[1]}${BASH_REMATCH[4]}" +%s 2>/dev/null)
+                fi
                 set -e
-                if [ -n "$PARSED_TS" ] && [ "$PARSED_TS" -gt "$NOW" ]; then
+                if [ -n "$PARSED_TS" ]; then
+                    # A daily/weekly/monthly reminder can start in the past;
+                    # roll it forward to the next occurrence instead of rejecting.
+                    REPEAT_KIND=${REPEAT_INTERVAL//\"/}
+                    while [ "$PARSED_TS" -le "$NOW" ]; do
+                        NEXT_TS=$(repeat_next_due "$PARSED_TS" "$REPEAT_KIND") || { PARSED_TS=""; break; }
+                        PARSED_TS="$NEXT_TS"
+                    done
+                fi
+                if [ -n "$PARSED_TS" ]; then
                     DUE_TS="$PARSED_TS"
                     DUE_STR="$(format_ts_str "$DUE_TS")"
                 else
                     DUE_TS="null"
                     REPEAT_INTERVAL="null"
-                    notify-send -e -u critical -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Invalid date" "Choose a future date and time."
+                    notify-send -u critical -t 0 -a "todos" -i "$HOME/.local/share/misc/niri-icon.svg" "Invalid date" "Could not parse '$ABS_INPUT'. Try e.g. $FIRST_EXAMPLE."
                     TIME_PRESET_CANCELLED="true"
                 fi
             else
