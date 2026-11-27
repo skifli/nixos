@@ -1,8 +1,10 @@
 {
   commonHostVars,
+  hostVars,
   hostname,
   lib,
   pkgs,
+  usersVars,
   ...
 }:
 let
@@ -18,6 +20,13 @@ let
       };
     }
     .${hostname} or null;
+  terminalUsername = builtins.head hostVars.enabledUsers;
+  gitIdentity = usersVars.${terminalUsername}.git;
+  gitConfigDirectory = pkgs.writeTextDir "gitconfig/open-terminal.conf" ''
+    [user]
+      name = ${gitIdentity.name}
+      email = ${gitIdentity.email}
+  '';
   nixosSource =
     {
       lyra = "/home/ami/nixos";
@@ -121,6 +130,7 @@ in
       ports = [ "${tailscaleAddress}:8000:8000" ];
       environment = {
         OPEN_TERMINAL_CORS_ALLOWED_ORIGINS = "https://oracle-nix.tail1b960.ts.net:9443";
+        GIT_CONFIG_SYSTEM = "/run/open-terminal-gitconfig/open-terminal.conf";
         GIT_CONFIG_COUNT = "1";
         GIT_CONFIG_KEY_0 = "credential.helper";
         GIT_CONFIG_VALUE_0 = "";
@@ -138,6 +148,7 @@ in
         "${projectDirectory}:/projects"
         "${nixosSource}:/projects/nixos"
         "${credentialDirectory}:/run/secrets/github:ro"
+        "${gitConfigDirectory}/gitconfig:/run/open-terminal-gitconfig:ro"
       ];
       extraOptions = [
         "--init"
