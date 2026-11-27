@@ -26,6 +26,13 @@ let
     [user]
       name = ${gitIdentity.name}
       email = ${gitIdentity.email}
+
+    # Keep submodule URLs in the shared live checkout in the HTTPS form from
+    # .gitmodules. Rewrite only the transport inside this container, where the
+    # read-only deploy key is available through the SSH alias below.
+    [url "git@github-zen-profile-default:skifli/zen-profile-default.git"]
+      insteadOf = https://github.com/skifli/zen-profile-default
+      insteadOf = https://github.com/skifli/zen-profile-default.git
   '';
   nixosSource =
     {
