@@ -12,7 +12,6 @@ let
     in
     packageExtension definition;
 
-  clipboardPaste = mkCustomExtension ./profile-default/hidden/extensions/clipboard-paste;
   tinySubSeed = mkCustomExtension ./profile-default/hidden/extensions/tinysub-seed;
   focusGate = mkCustomExtension ./profile-default/hidden/extensions/focus-gate;
 
@@ -64,7 +63,6 @@ let
 
   }
   // {
-    "${clipboardPaste.id}" = clipboardPaste.settings;
     "${tinySubSeed.id}" = tinySubSeed.settings;
     "${focusGate.id}" = focusGate.settings;
   };
@@ -151,8 +149,6 @@ in
     "queryamoid@kaply.com" = {
     };
 
-    "${clipboardPaste.id}" = {
-    };
     "${tinySubSeed.id}" = {
     };
     "${focusGate.id}" = {
