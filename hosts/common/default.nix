@@ -47,6 +47,7 @@ in
     ./host-packages.nix
     ../../modules/core/agenix.nix
     ../../modules/core/nix-cache.nix
+    ../../modules/services/open-terminal.nix
     ../../users/default.nix
   ]
   ++ lib.flatten (
