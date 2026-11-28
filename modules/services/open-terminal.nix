@@ -20,6 +20,13 @@ let
       };
     }
     .${hostname} or null;
+  openTerminalImageTag = "0.18.0-nix-${
+    builtins.substring 0 12 (
+      builtins.hashString "sha256" (
+        builtins.readFile ./open-terminal-image/Dockerfile + device.imageDigest
+      )
+    )
+  }";
   terminalUsername = builtins.head hostVars.enabledUsers;
   gitIdentity = usersVars.${terminalUsername}.git;
   gitConfigDirectory = pkgs.writeTextDir "gitconfig/open-terminal.conf" ''
@@ -105,6 +112,18 @@ let
     set -euo pipefail
     ${pkgs.coreutils}/bin/install -d -o 1000 -g 1000 -m 0750 ${projectDirectory}
   '';
+  prepareOpenTerminalImage = pkgs.writeShellScript "prepare-open-terminal-nix-tools-image" ''
+    set -euo pipefail
+    export PATH="${pkgs.buildah}/bin:${pkgs.podman}/bin:$PATH"
+    image=local/open-terminal:${openTerminalImageTag}
+    if ! ${pkgs.podman}/bin/podman image inspect "$image" >/dev/null 2>&1; then
+      ${pkgs.podman}/bin/podman build \
+        --build-arg "OPEN_TERMINAL_BASE_IMAGE=ghcr.io/open-webui/open-terminal:0.18.0@${device.imageDigest}" \
+        --tag "$image" \
+        --file ${./open-terminal-image/Dockerfile} \
+        ${./open-terminal-image}
+    fi
+  '';
   prepareOpenTerminal = pkgs.writeShellScript "prepare-open-terminal" ''
     set -euo pipefail
     ${pkgs.coreutils}/bin/install -d -m 0700 /var/lib/open-terminal
@@ -133,7 +152,7 @@ in
     virtualisation.podman.enable = true;
     virtualisation.oci-containers.backend = "podman";
     virtualisation.oci-containers.containers.open-terminal = {
-      image = "ghcr.io/open-webui/open-terminal:0.18.0@${device.imageDigest}";
+      image = "local/open-terminal:${openTerminalImageTag}";
       ports = [ "${tailscaleAddress}:8000:8000" ];
       environment = {
         OPEN_TERMINAL_CORS_ALLOWED_ORIGINS = "https://oracle-nix.tail1b960.ts.net:9443";
@@ -175,6 +194,7 @@ in
         "+${prepareOpenTerminal}"
         "+${prepareGitCredentials}"
         "+${prepareWorkspace}"
+        "+${prepareOpenTerminalImage}"
         "+${waitForTailscale}"
       ];
     };
