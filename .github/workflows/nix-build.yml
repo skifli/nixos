@@ -33,7 +33,7 @@ jobs:
         uses: DeterminateSystems/determinate-nix-action@main
 
       - name: Setup Xilo cache
-        uses: stubbedev/xilo@v1.2.8
+        uses: stubbedev/xilo@v2.0.2
         with:
           url: https://nixos-cache.warp-racing.com
           token: ${{ secrets.XILO_PUSH_TOKEN }}
@@ -111,7 +111,7 @@ jobs:
         uses: DeterminateSystems/determinate-nix-action@main
 
       - name: Setup Xilo cache # For anyone as it also sets up the pull token
-        uses: stubbedev/xilo@v1.2.8
+        uses: stubbedev/xilo@v2.0.2
         with:
           url: https://nixos-cache.warp-racing.com
           token: ${{ secrets.XILO_PUSH_TOKEN }}
