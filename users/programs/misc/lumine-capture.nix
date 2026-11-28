@@ -6,19 +6,19 @@
 let
   lumine-capture = pkgs.stdenv.mkDerivation {
     pname = "lumine-capture";
-    version = "0.3.0";
+    version = "0.5.0";
 
     src = pkgs.fetchurl {
       url =
         if pkgs.stdenv.hostPlatform.system == "x86_64-linux" then
-          "https://github.com/Netflate/LumineCapture/releases/download/v0.3.0/lumine-capture_0.3.0-1_amd64.deb"
+          "https://github.com/Netflate/LumineCapture/releases/download/v0.5.0/lumine-capture_0.5.0-1_amd64.deb"
         else
-          "https://github.com/Netflate/LumineCapture/releases/download/v0.3.0/lumine-capture_0.3.0-1_arm64.deb";
+          "https://github.com/Netflate/LumineCapture/releases/download/v0.5.0/lumine-capture_0.5.0-1_arm64.deb";
       hash =
         if pkgs.stdenv.hostPlatform.system == "x86_64-linux" then
-          "sha256-w97zkBbBquCn2Oetrix2arFs+YYcAbeUzvg/AzGE5Yg="
+          "sha256-DkTe2O0lTB2l4GYnBNP7m+81WqOrFh9bo6SSBcF1byI="
         else
-          "sha256-onxvQAayz47gsY84SWP320prp4pKdckPc+QX4ItF4Jw=";
+          "sha256-J+WfFgOk26SX9i3HkCqY5YCFc7TaI7hiw1C13PJR3Sc=";
     };
 
     nativeBuildInputs = [
@@ -47,6 +47,12 @@ let
       substituteInPlace $out/share/applications/lumine-capture.desktop \
         --replace 'Exec=/usr/bin/lumine-capture' "Exec=$out/bin/lumine-capture"
       cp -r $out/usr/share/icons $out/share/
+      # Install default config for selection.remember = "off"
+      mkdir -p $out/share/lumine-capture
+      cat > $out/share/lumine-capture/default-config.toml <<EOF
+[selection]
+remember = "off"
+EOF
     '';
 
     meta = with pkgs.lib; {
