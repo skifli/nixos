@@ -9,10 +9,24 @@ let
   containers = import ./containers.nix;
 in
 {
-  Example = {
-    id = "5e76f9c8-00c0-4443-a6ae-d239879bb1d5";
-    icon = "📚";
+  Personal = {
+    id = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
+    icon = "🏠";
     position = 1;
-    container = containers.Example.id;
+    container = containers.Personal.id;
+  };
+
+  Work = {
+    id = "bbbbbbbb-cccc-dddd-eeee-ffffffffffff";
+    icon = "💼";
+    position = 2;
+    container = containers.Work.id;
+  };
+
+  Research = {
+    id = "cccccccc-dddd-eeee-ffff-000000000000";
+    icon = "🔬";
+    position = 3;
+    container = containers.Research.id;
   };
 }

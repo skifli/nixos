@@ -7,6 +7,8 @@
 # `openIn` / `defaultExternalRoute` take a space id or the literal
 # "most-recent-space". A space id is brace-wrapped internally to match Zen's
 # workspace uuid — declare it here without braces, exactly like `pins.workspace`.
+#
+# matchType options: "contains" (default), "regex", "startsWith", "endsWith", "equals"
 let
   spaces = import ./spaces.nix;
 in
@@ -15,15 +17,28 @@ in
   defaultExternalRoute = "most-recent-space";
 
   routes = {
-    "example" = {
-      reference = "example.com";
-      openIn = spaces.Example.id;
+    "github" = {
+      reference = "github.com";
+      matchType = "contains";
+      openIn = spaces.Work.id;
     };
 
-    "example.com" = {
-      reference = "https?://.*example\\.com";
+    "github-prs" = {
+      reference = "https?://github\\.com/.*/pull/\\d+";
       matchType = "regex";
-      openIn = spaces.Example.id;
+      openIn = spaces.Work.id;
+    };
+
+    "arxiv" = {
+      reference = "arxiv.org";
+      matchType = "contains";
+      openIn = spaces.Research.id;
+    };
+
+    "docs" = {
+      reference = "docs.";
+      matchType = "startsWith";
+      openIn = spaces.Personal.id;
     };
   };
 }
@@ -33,11 +48,25 @@ in
 # attribute name (namespaced per space, so equal names don't collide).
 /*
   spaces = {
-    "Example" = {
-      id = exampleID;
+    "Personal" = {
+      id = personalID;
 
-      routes."Example Route" = {
-        reference = "example.com"; # matchType = "contains" (default)
+      routes."Personal Docs" = {
+        reference = "docs."; # matchType = "startsWith"
+      };
+    };
+    "Work" = {
+      id = workID;
+
+      routes."GitHub" = {
+        reference = "github.com"; # matchType = "contains"
+      };
+    };
+    "Research" = {
+      id = researchID;
+
+      routes."arXiv" = {
+        reference = "arxiv.org"; # matchType = "contains"
       };
     };
   };

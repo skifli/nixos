@@ -8,30 +8,54 @@
 # GitHub kinds reuse the browser's logged-in github.com session — no token.
 # Keep "zen.window-sync.enabled" = true (the default) or Zen may drop the
 # entries on restore.
+#
+# Example shows RSS and GitHub live folders in the Research space.
 let
   spaces = import ./spaces.nix;
+  # UUIDs are stable identifiers; generate with `uuidgen` or similar.
+  # RSS feeds require a valid RSS/Atom URL.
+  # GitHub kinds use the browser's logged-in session.
 in
 {
-  "My Pull Requests" = {
-    id = "zen-live-folder-github-pull-requests";
-    kind = "github:pull-requests";
+  "RSS - Tech News" = {
+    id = "zen-live-folder-rss-tech-news";
+    kind = "rss";
     position = 1;
-    workspace = spaces.Example.id;
-    github = {
-      assignedMe = true; # default
-      reviewRequested = true;
-      authorMe = true;
-      # repoExcludes = ["owner/noisy-repo"];
+    workspace = spaces.Research.id;
+    rss = {
+      url = "https://feeds.arstechnica.com/arstechnica/technology-lab";
+      # maxItems = 50;          # default: 50
+      # fetchInterval = 900000; # 15 min; omit to let browser manage
     };
-    # timeRange = 86400000;   # only items from the last 24 h; 0 (default) keeps all
-    # fetchInterval = 900000; # 15 min; omit to let the browser manage it
   };
 
-  "My Issues" = {
+  "RSS - Research Papers" = {
+    id = "zen-live-folder-rss-research";
+    kind = "rss";
+    position = 2;
+    workspace = spaces.Research.id;
+    rss = {
+      url = "https://export.arxiv.org/rss/cs.AI";
+    };
+  };
+
+  "GitHub Pull Requests" = {
+    id = "zen-live-folder-github-prs";
+    kind = "github:pull-requests";
+    position = 3;
+    workspace = spaces.Work.id;
+    github = {
+      assignedMe = true;
+      reviewRequested = true;
+      authorMe = true;
+    };
+  };
+
+  "GitHub Issues" = {
     id = "zen-live-folder-github-issues";
     kind = "github:issues";
-    position = 2;
-    workspace = spaces.Example.id;
+    position = 4;
+    workspace = spaces.Work.id;
     github.authorMe = true;
   };
 }

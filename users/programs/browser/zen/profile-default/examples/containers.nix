@@ -7,15 +7,21 @@
 # Note: containersForce = true (as I have done) deletes containers not declared here.
 # Set to false to keep manually created containers.
 {
-  Example = {
-    color = "blue";
+  Personal = {
+    color = "pink";
     icon = "fingerprint";
     id = 1;
   };
 
-  "Example 2" = {
-    color = "green";
+  Work = {
+    color = "blue";
     icon = "briefcase";
     id = 2;
+  };
+
+  Research = {
+    color = "green";
+    icon = "microscope";
+    id = 3;
   };
 }
