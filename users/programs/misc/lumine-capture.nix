@@ -27,32 +27,32 @@ let
     ];
 
     installPhase = ''
-      dpkg-deb -x $src $out
-      install -Dm755 $out/usr/bin/lumine-capture $out/bin/lumine-capture
-      wrapProgram $out/bin/lumine-capture \
-        --prefix LD_LIBRARY_PATH : ${
-          builtins.toString (
-            builtins.foldl' (acc: p: acc + p + "/lib:") "" [
-              pkgs.openssl
-              pkgs.libxkbcommon
-              pkgs.pipewire
-              pkgs.wayland
-              pkgs.libGL
-              pkgs.vulkan-loader
-            ]
-          )
-        }
-      install -Dm644 $out/usr/share/applications/lumine-capture.desktop \
-        $out/share/applications/lumine-capture.desktop
-      substituteInPlace $out/share/applications/lumine-capture.desktop \
-        --replace 'Exec=/usr/bin/lumine-capture' "Exec=$out/bin/lumine-capture"
-      cp -r $out/usr/share/icons $out/share/
-      # Install default config for selection.remember = "off"
-      mkdir -p $out/share/lumine-capture
-      cat > $out/share/lumine-capture/default-config.toml <<EOF
-[selection]
-remember = "off"
-EOF
+            dpkg-deb -x $src $out
+            install -Dm755 $out/usr/bin/lumine-capture $out/bin/lumine-capture
+            wrapProgram $out/bin/lumine-capture \
+              --prefix LD_LIBRARY_PATH : ${
+                builtins.toString (
+                  builtins.foldl' (acc: p: acc + p + "/lib:") "" [
+                    pkgs.openssl
+                    pkgs.libxkbcommon
+                    pkgs.pipewire
+                    pkgs.wayland
+                    pkgs.libGL
+                    pkgs.vulkan-loader
+                  ]
+                )
+              }
+            install -Dm644 $out/usr/share/applications/lumine-capture.desktop \
+              $out/share/applications/lumine-capture.desktop
+            substituteInPlace $out/share/applications/lumine-capture.desktop \
+              --replace 'Exec=/usr/bin/lumine-capture' "Exec=$out/bin/lumine-capture"
+            cp -r $out/usr/share/icons $out/share/
+            # Install default config for selection.remember = "off"
+            mkdir -p $out/share/lumine-capture
+            cat > $out/share/lumine-capture/default-config.toml <<EOF
+      [selection]
+      remember = "off"
+      EOF
     '';
 
     meta = with pkgs.lib; {
