@@ -503,11 +503,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1795226110,
-        "narHash": "sha256-RwmcxOhBAaglHPQHEI8w86Vzdfp048W8FwXzbTNDj88=",
+        "lastModified": 1795877071,
+        "narHash": "sha256-MtTSS8f0mrG5SRTMQ2ojzD///msnyGfVHGMrdMyKzBA=",
         "owner": "Netflate",
         "repo": "LumineCapture",
-        "rev": "d6e5e7ea8190ff3852a2540d91201698b3c0d4e0",
+        "rev": "328e485eb8755a29691cabdbc23a3c52bb4448b6",
         "type": "github"
       },
       "original": {
