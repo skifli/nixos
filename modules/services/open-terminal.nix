@@ -47,6 +47,9 @@ let
       fydetabduo = "/home/fynix/nixos";
     }
     .${hostname} or null;
+  zenProfileSubmodulePath = "users/programs/browser/zen/profile-default/hidden";
+  zenProfileContainerPath = "/projects/nixos/${zenProfileSubmodulePath}";
+  zenProfileWorkspacePath = "${projectDirectory}/zen-profile-default";
   tailscaleAddress = commonHostVars.tailscaleDevices.${hostname}.address;
   terminalContext = ''
     This Open Terminal session runs in a container connected to ${hostname}. Its shell hostname describes the container, not necessarily the physical device. Verify the target before host-specific work.
@@ -56,6 +59,7 @@ let
       else
         "FydeTab Duo is the tablet. /projects/nixos is the live local checkout at /home/fynix/nixos for the public skifli/nixos repository; its hardware base comes from NixOnFyde/fyde-nix."
     }
+    /projects/zen-profile-default is a symlink to the hidden Zen profile Git submodule inside /projects/nixos. Editing it changes the same submodule in ~/nixos; inspect both the parent repository and submodule status separately.
     Inspect the target directory and git status before editing, and preserve unrelated changes. Never read or print secret files, keys, tokens, or passwords. Do not commit, push, rebuild, restart, or deploy unless the user explicitly asks.
   '';
   githubSshConfig = pkgs.writeText "open-terminal-github-ssh-config" ''
@@ -111,6 +115,26 @@ let
   prepareWorkspace = pkgs.writeShellScript "prepare-open-terminal-workspace" ''
     set -euo pipefail
     ${pkgs.coreutils}/bin/install -d -o 1000 -g 1000 -m 0750 ${projectDirectory}
+    submodule_source=${nixosSource}/${zenProfileSubmodulePath}
+    workspace_alias=${zenProfileWorkspacePath}
+    container_target=${zenProfileContainerPath}
+    if [ ! -d "$submodule_source" ]; then
+      echo "The live Zen profile submodule is missing: $submodule_source" >&2
+      exit 1
+    fi
+    if [ -L "$workspace_alias" ]; then
+      if [ "$(${pkgs.coreutils}/bin/readlink "$workspace_alias")" != "$container_target" ]; then
+        echo "The Zen profile workspace alias points somewhere unexpected: $workspace_alias" >&2
+        exit 1
+      fi
+    elif [ -e "$workspace_alias" ]; then
+      echo "Refusing to replace an existing Zen profile workspace directory: $workspace_alias" >&2
+      exit 1
+    else
+      # Keep Git's relative .git pointer valid by resolving through the mounted
+      # NixOS checkout instead of bind-mounting the nested submodule elsewhere.
+      ${pkgs.coreutils}/bin/ln -s "$container_target" "$workspace_alias"
+    fi
   '';
   prepareOpenTerminalImage = pkgs.writeShellScript "prepare-open-terminal-nix-tools-image" ''
     set -euo pipefail
